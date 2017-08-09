@@ -1,0 +1,107 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
+using JetBrains.Annotations;
+using NLog;
+using NLog.Fluent;
+using Tauron.Application.CelloManager.Properties;
+using Tauron.Application.CelloManager.Resources;
+using Tauron.Application.Implement;
+using Tauron.Application.Implementation;
+using Tauron.Application.Views;
+
+namespace Tauron.Application.CelloManager
+{
+    internal class App : WpfApplication, ISingleInstanceApp
+    {
+        public App()
+            : base(true)
+        {
+        }
+
+        public bool SignalExternalCommandLineArgs(IList<string> args)
+        {
+            MainWindow?.Focus();
+            return true;
+        }
+
+        public static void Setup([NotNull] Mutex mutex, [NotNull] string channelName)
+        {
+            if (mutex == null) throw new ArgumentNullException(nameof(mutex));
+            if (channelName == null) throw new ArgumentNullException(nameof(channelName));
+
+            Run<App>(app => SingleInstance<App>.InitializeAsFirstInstance(mutex, channelName, app), Settings.Default.Language);
+        }
+
+        protected override void ConfigSplash()
+        {
+            var dic = new PackUriHelper().Load<ResourceDictionary>("StartResources.xaml");
+
+            CurrentWpfApplication.Resources = dic;
+
+            var control = new ContentControl
+            {
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                Height = 236,
+                Width = 414,
+                Content = dic["MainLabel"]
+            };
+
+            SplashMessageListener.CurrentListner.SplashContent = control;
+            SplashMessageListener.CurrentListner.MainLabelForeground = "Black";
+            SplashMessageListener.CurrentListner.MainLabelBackground = dic["MainLabelbackground"];
+        }
+
+        protected override IWindow DoStartup(CommandLineProcessor prcessor)
+        {
+            var temp = ViewManager.Manager.CreateWindow(AppConststands.MainWindowName);
+            MainWindow = temp;
+
+            CurrentWpfApplication.Dispatcher.Invoke(() =>
+            {
+                Current.MainWindow = temp;
+                CurrentWpfApplication.MainWindow = (Window) temp.TranslateForTechnology();
+            });
+            return temp;
+        }
+
+        protected override void LoadCommands()
+        {
+            base.LoadCommands();
+            CommandBinder.AutoRegister = true;
+        }
+
+        protected override void LoadResources()
+        {
+            SimpleLocalize.Register(UIResources.ResourceManager, GetType().Assembly);
+
+            System.Windows.Application.Current.Resources.MergedDictionaries.Add(
+                (ResourceDictionary) System.Windows.Application.LoadComponent(
+                    new Uri(
+                        "/PresentationFramework.Aero, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35;component/themes/Aero.NormalColor.xaml",
+                        UriKind.Relative)));
+        }
+
+        protected override string GetdefaultFileLocation()
+        {
+            return GetDicPath();
+        }
+
+        protected override void MainWindowClosed(object sender, EventArgs e)
+        {
+            base.MainWindowClosed(sender, e);
+
+            OnExit();
+        }
+
+        private static string GetDicPath()
+        {
+            return
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
+                    .CombinePath("Tauron\\CelloManager");
+        }
+    }
+}
