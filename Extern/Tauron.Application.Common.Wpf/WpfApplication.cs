@@ -22,7 +22,6 @@ using System.Windows;
 using JetBrains.Annotations;
 using NLog;
 using NLog.Config;
-using NLog.Layouts;
 using NLog.Targets;
 using Tauron.Application.Composition;
 using Tauron.Application.Implementation;
@@ -126,15 +125,7 @@ namespace Tauron.Application
                 true);
         }
 
-        /// <summary>
-        ///     The main window closed.
-        /// </summary>
-        /// <param name="sender">
-        ///     The sender.
-        /// </param>
-        /// <param name="e">
-        ///     The e.
-        /// </param>
+
         protected override void MainWindowClosed(object sender, EventArgs e)
         {
             Shutdown();
@@ -153,7 +144,7 @@ namespace Tauron.Application
             {
                 Name = "CommonFile",
                 Layout = "${log4jxmlevent}",
-                ArchiveAboveSize = 10240,
+                ArchiveAboveSize = 10485760,
                 MaxArchiveFiles = 10,
                 ArchiveFileName = GetdefaultFileLocation().CombinePath("Logs\\Tauron.Application.Common.{##}.log"),
                 FileName = GetdefaultFileLocation().CombinePath("Logs\\Tauron.Application.Common.log"),

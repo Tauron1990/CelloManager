@@ -26,15 +26,18 @@
                 <Button Margin="5,10,5,5" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="5"
                         Content="{hlp:SimpleLocalize LabelOptionsLayout}" FontSize="20"
                         hlp:CommandBinder.Command="LayoutOptions:LayoutOptions" />
+                <Button Margin="5,10,5,5" VerticalAlignment="Top" HorizontalAlignment="Center" Padding="5"
+                        Content="{hlp:SimpleLocalize LabelOptionsAutoUpdate}" FontSize="20"
+                        hlp:CommandBinder.Command="AutoUpdateOptions:AutoUpdateOptions" />
             </StackPanel>
             <Rectangle Grid.Column="1" Grid.Row="0" MaxWidth="2" MinWidth="2" Stroke="DarkGray" />
             <ContentControl Grid.Column="2" Grid.Row="0" Margin="5" Content="{hlp:ViewModelBinding CurrentSelection}" />
             <Rectangle Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="1" Stroke="DarkGray" MinHeight="2" MaxHeight="2" />
             <StackPanel Grid.Column="2" Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button VerticalContentAlignment="Center" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCancel}"
-                        hlp:CommandBinder.Command="Cancel:Cancel" FontSize="20" Padding="5" />
+                        hlp:CommandBinder.Command="Cancel:Cancel" FontSize="20" Padding="5"/>
                 <Button VerticalContentAlignment="Center" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCommit}"
-                        hlp:CommandBinder.Command="Commit:Commit" FontSize="20" Padding="5" />
+                        hlp:CommandBinder.Command="Commit:Commit" FontSize="20" Padding="5"/>
             </StackPanel>
         </Grid>
     </Border>

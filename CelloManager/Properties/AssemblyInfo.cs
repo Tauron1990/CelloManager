@@ -8,9 +8,9 @@ using System.Windows;
 // die einer Assembly zugeordnet sind.
 [assembly: AssemblyTitle("CelloManager")]
 [assembly: AssemblyDescription("CelloManager")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyConfiguration("Retail")]
 [assembly: AssemblyCompany("Tauron Cooperation")]
-[assembly: AssemblyProduct("CelloManager")]
+[assembly: AssemblyProduct("Cello Manager")]
 [assembly: AssemblyCopyright("Tauron ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -50,7 +50,7 @@ using System.Windows;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("0.2.6462.22542")]
+[assembly: AssemblyFileVersion("0.2.6462.22542")]
 
 [assembly: Dependency("Tauron.Application.CelloManager.Data", LoadHint.Always)]

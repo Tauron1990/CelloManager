@@ -6807,21 +6807,6 @@
         <member name="T:Tauron.Application.WeakCleanUp">
             <summary>The weak clean up.</summary>
         </member>
-        <member name="M:Tauron.Application.WeakCleanUp.GcNotifier.#ctor(System.Threading.AutoResetEvent)">
-            <summary>
-                Initializes a new instance of the <see cref="T:Tauron.Application.WeakCleanUp.GcNotifier" /> class.
-                Initialisiert eine neue Instanz der <see cref="T:Tauron.Application.WeakCleanUp.GcNotifier" /> Klasse.
-            </summary>
-            <param name="resetEvent">
-                The reset event.
-            </param>
-        </member>
-        <member name="M:Tauron.Application.WeakCleanUp.GcNotifier.Finalize">
-            <summary>
-                Finalizes an instance of the <see cref="T:Tauron.Application.WeakCleanUp.GcNotifier" /> class.
-                Finalisiert eine Instanz der <see cref="T:Tauron.Application.WeakCleanUp.GcNotifier" /> Klasse.
-            </summary>
-        </member>
         <member name="F:Tauron.Application.WeakCleanUp.WeakCleanUpExceptionPolicy">
             <summary>WeakCleanUpExceptionPolicy.</summary>
         </member>
@@ -6840,7 +6825,7 @@
             <summary>The initialize.</summary>
             <returns>The List.</returns>
         </member>
-        <member name="M:Tauron.Application.WeakCleanUp.InvokeCleanUp">
+        <member name="M:Tauron.Application.WeakCleanUp.InvokeCleanUp(System.Object)">
             <summary>The invoke clean up.</summary>
         </member>
         <member name="T:Tauron.Application.WeakCollection`1">

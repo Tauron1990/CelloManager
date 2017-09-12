@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager", "CelloManager\CelloManager.csproj", "{DE4F32BD-C602-491B-96FA-A4F9BBA27B60}"
 EndProject
@@ -37,6 +37,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataTest", "DataTest\DataTest.csproj", "{A27E9871-5B86-4B3F-9EBF-D914278923C7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{A4106485-11DE-4735-8F30-039E167ECEB7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tauron.Application.Common.Updater", "Tauron.Application.Common.Updater\Tauron.Application.Common.Updater.csproj", "{6E580435-365A-417D-8E25-AA427B375233}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UpdateUploader", "UpdateUploader", "{CDCE3138-8126-4895-A6B7-6BF1CB54AB53}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateUploader", "UpdateUploader\UpdateUploader.csproj", "{441C0B22-C91D-401C-9857-B9CF79EC3A98}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{1A0B4BF8-D48A-413B-89DA-040C60A71E9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup\Setup.csproj", "{FD68C5DE-4741-40CC-A741-C4A9B6149060}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +133,24 @@ Global
 		{A4106485-11DE-4735-8F30-039E167ECEB7}.Release Debug|Any CPU.Build.0 = Release|Any CPU
 		{A4106485-11DE-4735-8F30-039E167ECEB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4106485-11DE-4735-8F30-039E167ECEB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E580435-365A-417D-8E25-AA427B375233}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E580435-365A-417D-8E25-AA427B375233}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E580435-365A-417D-8E25-AA427B375233}.Release Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{6E580435-365A-417D-8E25-AA427B375233}.Release Debug|Any CPU.Build.0 = Release|Any CPU
+		{6E580435-365A-417D-8E25-AA427B375233}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E580435-365A-417D-8E25-AA427B375233}.Release|Any CPU.Build.0 = Release|Any CPU
+		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release Debug|Any CPU.Build.0 = Release|Any CPU
+		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release Debug|Any CPU.Build.0 = Release|Any CPU
+		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -135,8 +163,12 @@ Global
 		{70D5DB1C-8D81-4EC9-9C5C-7C7A5FA53572} = {32E008CC-34A1-4EF7-91C2-8FC713B2556C}
 		{A27E9871-5B86-4B3F-9EBF-D914278923C7} = {32E008CC-34A1-4EF7-91C2-8FC713B2556C}
 		{A4106485-11DE-4735-8F30-039E167ECEB7} = {32E008CC-34A1-4EF7-91C2-8FC713B2556C}
+		{6E580435-365A-417D-8E25-AA427B375233} = {49F661E2-BF60-4F98-9260-42A9A74299CA}
+		{441C0B22-C91D-401C-9857-B9CF79EC3A98} = {CDCE3138-8126-4895-A6B7-6BF1CB54AB53}
+		{FD68C5DE-4741-40CC-A741-C4A9B6149060} = {1A0B4BF8-D48A-413B-89DA-040C60A71E9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.Logging.6.0.1304.0\lib\NET45
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution

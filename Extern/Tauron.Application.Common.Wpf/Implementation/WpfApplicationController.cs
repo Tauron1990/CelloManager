@@ -133,7 +133,7 @@ namespace Tauron.Application.Implementation
 
         internal static void Shutdown()
         {
-            Application.Dispatcher.Invoke(Application.Shutdown);
+            Application?.Dispatcher?.Invoke(Application.Shutdown);
         }
 
         private static void RunApplication()

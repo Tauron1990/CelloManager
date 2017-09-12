@@ -350,6 +350,7 @@ namespace Tauron.Application
                 Thread.Sleep(2000);
                 Scheduler.Dispose();
                 Factory.CreateController().Shutdown();
+                Environment.Exit(-1);
             }
         }
 

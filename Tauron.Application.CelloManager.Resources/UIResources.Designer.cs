@@ -61,7 +61,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die von ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die of ähnelt.
         /// </summary>
         public static string CommonLabelOf {
             get {
@@ -70,7 +70,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Entfernen ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Remove ähnelt.
         /// </summary>
         public static string CommonLabelRemove {
             get {
@@ -79,7 +79,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Hinzufügen ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Add ähnelt.
         /// </summary>
         public static string ComonLabelAdd {
             get {
@@ -88,7 +88,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Ein Negativer wert ist nicht erlaubt! ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Negative is not allowed! ähnelt.
         /// </summary>
         public static string LabelErrorNonNegativeInt {
             get {
@@ -97,7 +97,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Auffüllen ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Refill ähnelt.
         /// </summary>
         public static string LabelMainWindowRefill {
             get {
@@ -106,7 +106,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Optionen ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Options ähnelt.
         /// </summary>
         public static string LabelOptions {
             get {
@@ -115,7 +115,16 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Abbrechen ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Updates ähnelt.
+        /// </summary>
+        public static string LabelOptionsAutoUpdate {
+            get {
+                return ResourceManager.GetString("LabelOptionsAutoUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
         /// </summary>
         public static string LabelOptionsCancel {
             get {
@@ -124,7 +133,16 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Speichern ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Check for Updates ähnelt.
+        /// </summary>
+        public static string LabelOptionsCheckforUpdates {
+            get {
+                return ResourceManager.GetString("LabelOptionsCheckforUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Save ähnelt.
         /// </summary>
         public static string LabelOptionsCommit {
             get {
@@ -133,7 +151,16 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Daten ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Install ähnelt.
+        /// </summary>
+        public static string LabelOptionsInstallUpdates {
+            get {
+                return ResourceManager.GetString("LabelOptionsInstallUpdates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Data ähnelt.
         /// </summary>
         public static string LabelOptionsLayout {
             get {
@@ -142,7 +169,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Menge ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Count ähnelt.
         /// </summary>
         public static string LabelOptionsLayoutAmount {
             get {
@@ -160,7 +187,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Benötigte Menge ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Needed Count ähnelt.
         /// </summary>
         public static string LabelOptionsLayoutNeedAmount {
             get {
@@ -169,7 +196,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Kategorie ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Category ähnelt.
         /// </summary>
         public static string LabelOptionsLayoutType {
             get {
@@ -178,7 +205,7 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die Folie Bestellung: ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die Film order: ähnelt.
         /// </summary>
         public static string PrintOrderHeaderText {
             get {

@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using NLog;
 
@@ -152,82 +151,10 @@ namespace Tauron.Application
         #endregion
     }
 
-    /////// <summary>The gc notification.</summary>
-    ////[DebuggerNonUserCode]
-    ////public sealed class GCNotification
-    ////{
-    ////    #region Fields
-
-    ////    /// <summary>The _invoke clean up.</summary>
-    ////    private readonly Action _invokeCleanUp;
-
-    ////    #endregion
-
-    ////    #region Constructors and Destructors
-
-    ////    /// <summary>Initialisiert eine neue Instanz der <see cref="GCNotification"/> Klasse.
-    ////    ///     Initializes a new instance of the <see cref="GCNotification"/> class.</summary>
-    ////    /// <param name="invokeCleanUp">The invoke clean up.</param>
-    ////    public GCNotification(Action invokeCleanUp)
-    ////    {
-    ////        this._invokeCleanUp = invokeCleanUp;
-    ////    }
-
-    ////    /// <summary>Finalisiert eine Instanz der <see cref="GCNotification"/> Klasse.
-    ////    ///     Finalizes an instance of the <see cref="GCNotification"/> class.</summary>
-    ////    ~GCNotification()
-    ////    {
-    ////        Task.Factory.StartNew(this._invokeCleanUp);
-    ////    }
-
-    ////    #endregion
-    ////}
-
     /// <summary>The weak clean up.</summary>
     [PublicAPI]
     public static class WeakCleanUp
     {
-        private class GcNotifier
-        {
-            #region Fields
-
-            private readonly AutoResetEvent _resetEvent;
-
-            #endregion
-
-            #region Constructors and Destructors
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="GcNotifier" /> class.
-            ///     Initialisiert eine neue Instanz der <see cref="GcNotifier" /> Klasse.
-            /// </summary>
-            /// <param name="resetEvent">
-            ///     The reset event.
-            /// </param>
-            public GcNotifier(AutoResetEvent resetEvent)
-            {
-                _resetEvent = resetEvent;
-            }
-
-            /// <summary>
-            ///     Finalizes an instance of the <see cref="GcNotifier" /> class.
-            ///     Finalisiert eine Instanz der <see cref="GcNotifier" /> Klasse.
-            /// </summary>
-            ~GcNotifier()
-            {
-                if (Environment.HasShutdownStarted) return;
-
-                if (AppDomain.CurrentDomain.IsFinalizingForUnload()) return;
-
-
-                _resetEvent.Set();
-// ReSharper disable once ObjectCreationAsStatement
-                new GcNotifier(_resetEvent);
-            }
-
-            #endregion
-        }
-
         #region Constants
 
         /// <summary>WeakCleanUpExceptionPolicy.</summary>
@@ -239,6 +166,8 @@ namespace Tauron.Application
 
         /// <summary>The actions.</summary>
         private static readonly List<WeakDelegate> Actions = Initialize();
+
+        private static Timer _timer;
 
         private static readonly Logger Logger = LogManager.GetLogger(nameof(WeakCleanUp), typeof(WeakCleanUp));
         #endregion
@@ -268,42 +197,29 @@ namespace Tauron.Application
         /// <returns>The List.</returns>
         private static List<WeakDelegate> Initialize()
         {
-            Task.Factory.StartNew(InvokeCleanUp, TaskCreationOptions.LongRunning);
+            _timer = new Timer(InvokeCleanUp, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
             return new List<WeakDelegate>();
         }
 
         /// <summary>The invoke clean up.</summary>
-        private static void InvokeCleanUp()
+        private static void InvokeCleanUp(object state)
         {
-            var resetEvent = new AutoResetEvent(false);
-            try
+            lock (Actions)
             {
-// ReSharper disable once ObjectCreationAsStatement
-                new GcNotifier(resetEvent);
+                var dead = new List<WeakDelegate>();
+                foreach (var weakDelegate in Actions.ToArray())
+                    if (weakDelegate != null && weakDelegate.IsAlive)
+                        try
+                        {
+                            weakDelegate.Invoke();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex);
+                        }
+                    else dead.Add(weakDelegate);
 
-                while (true)
-                {
-                    resetEvent.WaitOne();
-
-                    var dead = new List<WeakDelegate>();
-                    foreach (var weakDelegate in Actions.ToArray())
-                        if (weakDelegate != null && weakDelegate.IsAlive)
-                            try
-                            {
-                                weakDelegate.Invoke();
-                            }
-                            catch (Exception ex)
-                            {
-                                Logger.Error(ex);
-                            }
-                        else dead.Add(weakDelegate);
-
-                    dead.ForEach(del => Actions.Remove(del));
-                }
-            }
-            finally
-            {
-                resetEvent.Dispose();
+                dead.ForEach(del => Actions.Remove(del));
             }
         }
 

@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using JetBrains.Annotations;
 
 #endregion
@@ -14,7 +15,7 @@ namespace Tauron.Application.Implement
     public class CommandLineProcessor
     {
         /// <summary>The command.</summary>
-        private class Command
+        public class Command : IEquatable<Command>
         {
             #region Constructors and Destructors
 
@@ -48,6 +49,36 @@ namespace Tauron.Application.Implement
             public List<string> Parms { get; }
 
             #endregion
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != GetType()) return false;
+                return Equals((Command) obj);
+            }
+
+            public bool Equals(Command other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return string.Equals(Name, other.Name);
+            }
+
+            public override int GetHashCode()
+            {
+                return Name.GetHashCode();
+            }
+
+            public static bool operator ==(Command left, Command right)
+            {
+                return Equals(left, right);
+            }
+
+            public static bool operator !=(Command left, Command right)
+            {
+                return !Equals(left, right);
+            }
         }
 
         #region Constructors and Destructors
@@ -62,8 +93,7 @@ namespace Tauron.Application.Implement
         /// </param>
         public CommandLineProcessor([NotNull] CommonApplication application)
         {
-            if (application == null) throw new ArgumentNullException(nameof(application));
-            _application = application;
+            _application = application ?? throw new ArgumentNullException(nameof(application));
             ParseCommandLine();
         }
 
@@ -75,7 +105,7 @@ namespace Tauron.Application.Implement
         private readonly CommonApplication _application;
 
         /// <summary>The _commands.</summary>
-        private List<Command> _commands = new List<Command>();
+        private HashSet<Command> _commands;
 
         /// <summary>The _factory.</summary>
         private IShellFactory _factory;
@@ -92,7 +122,7 @@ namespace Tauron.Application.Implement
         public object CreateShellView()
         {
             SelectViewFacotry();
-            return _factory == null ? null : _factory.CreateView();
+            return _factory?.CreateView();
         }
 
         /// <summary>The execute commands.</summary>
@@ -130,9 +160,14 @@ namespace Tauron.Application.Implement
         /// <summary>The parse command line.</summary>
         private void ParseCommandLine()
         {
+            _commands = new HashSet<Command>(ParseCommandLine(_application.GetArgs()).Where(c => c != null));
+        }
+
+        public static IEnumerable<Command> ParseCommandLine(IEnumerable<string> args, bool skipfirst = true)
+        {
             Command current = null;
-            var first = true;
-            foreach (var arg in _application.GetArgs())
+            var first = skipfirst;
+            foreach (var arg in args)
             {
                 if (first)
                 {
@@ -144,22 +179,22 @@ namespace Tauron.Application.Implement
                 {
                     var temp = new Command("FileCommand");
                     temp.Parms.Add(arg);
-                    _commands.Add(temp);
+                    yield return temp;
                 }
 
                 if (arg.StartsWith("-", StringComparison.Ordinal))
                 {
-                    if (current != null) _commands.Add(current);
+                    if (current != null) yield return current;
 
                     current = new Command(arg.TrimStart('-'));
                 }
-                else if (current != null)
+                else
                 {
-                    current.Parms.Add(arg);
+                    current?.Parms.Add(arg);
                 }
             }
 
-            if (current != null && !_commands.Contains(current)) _commands.Add(current);
+            yield return current;
         }
 
         /// <summary>The select view facotry.</summary>

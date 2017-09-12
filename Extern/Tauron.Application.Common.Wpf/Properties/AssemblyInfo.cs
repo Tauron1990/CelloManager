@@ -35,6 +35,6 @@ using Tauron.Application.Ioc;
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("0.9.0.0")]
-[assembly: AssemblyFileVersion("0.9.0.0")]
+[assembly: AssemblyVersion("1.0.6462.22542")]
+[assembly: AssemblyFileVersion("1.0.6462.22542")]
 [assembly: ExportLevel(0)]

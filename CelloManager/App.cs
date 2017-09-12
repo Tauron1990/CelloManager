@@ -1,15 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using JetBrains.Annotations;
-using NLog;
-using NLog.Fluent;
+using Tauron.Application.CelloManager.Data;
+using Tauron.Application.CelloManager.Logic;
 using Tauron.Application.CelloManager.Properties;
 using Tauron.Application.CelloManager.Resources;
+using Tauron.Application.CelloManager.UI;
+using Tauron.Application.Common.Updater;
+using Tauron.Application.Common.Updater.UI;
 using Tauron.Application.Implement;
 using Tauron.Application.Implementation;
+using Tauron.Application.Ioc;
 using Tauron.Application.Views;
 
 namespace Tauron.Application.CelloManager
@@ -76,7 +81,8 @@ namespace Tauron.Application.CelloManager
 
         protected override void LoadResources()
         {
-            SimpleLocalize.Register(UIResources.ResourceManager, GetType().Assembly);
+            SimpleLocalize.Register(UIResources.ResourceManager, typeof(UIModule).Assembly);
+            SimpleLocalize.Register(UILabels.ResourceManager, typeof(UpdaterService).Assembly);
 
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(
                 (ResourceDictionary) System.Windows.Application.LoadComponent(
@@ -102,6 +108,24 @@ namespace Tauron.Application.CelloManager
             return
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)
                     .CombinePath("Tauron\\CelloManager");
+        }
+
+        protected override void Fill(IContainer container)
+        {
+            ExportResolver resolver = new ExportResolver();
+            resolver.AddAssembly(typeof(App).Assembly);
+            resolver.AddAssembly(typeof(WpfApplication).Assembly);
+            resolver.AddAssembly(typeof(CommonApplication).Assembly);
+            resolver.AddAssembly(typeof(DialogFactory).Assembly);
+            resolver.AddAssembly(typeof(UpdaterService).Assembly);
+
+            resolver.AddAssembly(typeof(AppConststands).Assembly);
+            resolver.AddAssembly(typeof(DataModule).Assembly);
+            resolver.AddAssembly(typeof(LogicModule).Assembly);
+            resolver.AddAssembly(typeof(UIModule).Assembly);
+            resolver.AddAssembly(typeof(UIResources).Assembly);
+
+            container.Register(resolver);
         }
     }
 }

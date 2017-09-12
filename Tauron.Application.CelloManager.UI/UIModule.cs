@@ -7,7 +7,7 @@ using Tauron.Application.Ioc;
 namespace Tauron.Application.CelloManager.UI
 {
     [ExportModule]
-    public sealed class Module : IModule
+    public sealed class UIModule : IModule
     {
         [Inject]
         public IEventAggregator EventAggregator { private get; set; }

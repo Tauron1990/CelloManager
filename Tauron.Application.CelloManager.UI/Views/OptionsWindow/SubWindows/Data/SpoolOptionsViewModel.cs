@@ -216,6 +216,8 @@ namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow.SubWindows
             _operation.Dispose();
         }
 
+        public event EventHandler LockUIEvent;
+
         public void Reset()
         {
             Rollback();

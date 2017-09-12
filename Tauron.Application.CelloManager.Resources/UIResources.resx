@@ -118,45 +118,54 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="CommonLabelOf" xml:space="preserve">
-    <value>von</value>
+    <value>of</value>
   </data>
   <data name="CommonLabelRemove" xml:space="preserve">
-    <value>Entfernen</value>
+    <value>Remove</value>
   </data>
   <data name="ComonLabelAdd" xml:space="preserve">
-    <value>Hinzufügen</value>
+    <value>Add</value>
   </data>
   <data name="LabelErrorNonNegativeInt" xml:space="preserve">
-    <value>Ein Negativer wert ist nicht erlaubt!</value>
+    <value>Negative is not allowed!</value>
   </data>
   <data name="LabelMainWindowRefill" xml:space="preserve">
-    <value>Auffüllen</value>
+    <value>Refill</value>
   </data>
   <data name="LabelOptions" xml:space="preserve">
-    <value>Optionen</value>
+    <value>Options</value>
+  </data>
+  <data name="LabelOptionsAutoUpdate" xml:space="preserve">
+    <value>Updates</value>
   </data>
   <data name="LabelOptionsCancel" xml:space="preserve">
-    <value>Abbrechen</value>
+    <value>Cancel</value>
   </data>
   <data name="LabelOptionsCommit" xml:space="preserve">
-    <value>Speichern</value>
+    <value>Save</value>
   </data>
   <data name="LabelOptionsLayout" xml:space="preserve">
-    <value>Daten</value>
+    <value>Data</value>
   </data>
   <data name="LabelOptionsLayoutAmount" xml:space="preserve">
-    <value>Menge</value>
+    <value>Count</value>
   </data>
   <data name="LabelOptionsLayoutName" xml:space="preserve">
     <value>Name</value>
   </data>
   <data name="LabelOptionsLayoutNeedAmount" xml:space="preserve">
-    <value>Benötigte Menge</value>
+    <value>Needed Count</value>
   </data>
   <data name="LabelOptionsLayoutType" xml:space="preserve">
-    <value>Kategorie</value>
+    <value>Category</value>
   </data>
   <data name="PrintOrderHeaderText" xml:space="preserve">
-    <value>Folie Bestellung:</value>
+    <value>Film order:</value>
+  </data>
+  <data name="LabelOptionsInstallUpdates" xml:space="preserve">
+    <value>Install</value>
+  </data>
+  <data name="LabelOptionsCheckforUpdates" xml:space="preserve">
+    <value>Check for Updates</value>
   </data>
 </root>
