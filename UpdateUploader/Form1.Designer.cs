@@ -55,7 +55,7 @@
             this._uploadButton.TabIndex = 0;
             this._uploadButton.Text = "Hochladen";
             this._uploadButton.UseVisualStyleBackColor = true;
-            this._uploadButton.Click += new System.EventHandler(this.UploadButton_Click);
+            this._uploadButton.Click += new System.EventHandler(this.UploadButton_Click_Async);
             // 
             // _upLoadProgress
             // 

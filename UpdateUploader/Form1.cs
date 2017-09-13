@@ -94,10 +94,10 @@ namespace UpdateUploader
             UnblockUI();
         }
 
-        private void UploadButton_Click(object sender, EventArgs e)
+        private async void UploadButton_Click_Async(object sender, EventArgs e)
         {
             StartProgress();
-            Task.Run(new Action(StartUploadProgress)).ContinueWith(t => StopProgress());
+            await StartUploadProgressAsync().ContinueWith(t => StopProgress());    
         }
         private void OpenApplicationPath_Click(object sender, EventArgs e)
         {
@@ -161,8 +161,7 @@ namespace UpdateUploader
             _repositoryBox.Text = _settings.RepoName;
         }
 
-
-        private void StartUploadProgress()
+        private async Task StartUploadProgressAsync()
         {
             string userName = GetInvokeText(_userNameBox);
             string repo = GetInvokeText(_repositoryBox);
@@ -175,6 +174,8 @@ namespace UpdateUploader
             if (Check(() => Directory.Exists(appPath), "Anwendungs verzeichniss muss Existieren!")) return;
             if (Check(() => !string.IsNullOrWhiteSpace(nametext), "Ein Name muss angegeben werden!")) return;
             if (Check(() => !string.IsNullOrWhiteSpace(versiontext), "Ein Version Tag muss angegeben werden")) return;
+
+            MemoryStream stream = null;
 
             try
             {
@@ -191,18 +192,10 @@ namespace UpdateUploader
                     Name = nametext
                 };
 
-                var release = client.Repository.Release.Create(userName, repo, newRelease).Result;
-                //string file = CreateAsset(appPath);
+                stream = await CreateAssetAsync(appPath).ConfigureAwait(false);
+                var release = await client.Repository.Release.Create(userName, repo, newRelease).ConfigureAwait(false);
+                await client.Repository.Release.UploadAsset(release, new ReleaseAssetUpload {ContentType = "application/zip", FileName = "Release.zip", RawData = stream}).ConfigureAwait(false);
 
-                //using (FileStream stream = new FileStream(file, FileMode.Open))
-                using (MemoryStream stream = new MemoryStream())
-                {
-                    CreateAsset(appPath, stream);
-                    stream.Seek(0, SeekOrigin.Begin);
-                    client.Repository.Release.UploadAsset(release, new ReleaseAssetUpload {ContentType = "application/zip", FileName = "Release.zip", RawData = stream}).Wait();
-                }
-
-                //File.Delete(file);
             }
             catch (Exception e) when (e is IOException || e is ApiException || e is AggregateException)
             {
@@ -216,31 +209,43 @@ namespace UpdateUploader
 
                 MessageBox.Show(messege, "Fehler", MessageBoxButtons.OK);
             }
+            finally
+            {
+                stream?.Dispose();
+            }
         }
 
-        private void CreateAsset(string basepath, MemoryStream stream)
+        private Task<MemoryStream> CreateAssetAsync(string basepath)
         {
-            string[] blacklist = { ".nuspec", ".xml" };
-
-            //string tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
-            //if (!Directory.Exists(tempPath)) Directory.CreateDirectory(tempPath);
-
-            using (ZipFile file = new ZipFile())
+            return Task.Run(() =>
             {
-                file.CompressionLevel = CompressionLevel.BestCompression;
-                file.CompressionMethod = CompressionMethod.BZip2;
-                file.AddDirectory(basepath);
-                
-                file.RemoveEntries((from entry in file
-                        let name = entry.FileName
-                        where blacklist.Any(s => name.Trim().EndsWith(s))
-                        select entry)
-                    .ToList());
+                string[] blacklist = {".nuspec", ".xml"};
 
-                file.Save(stream);
-            }
+                //string tempPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Temp");
+                //if (!Directory.Exists(tempPath)) Directory.CreateDirectory(tempPath);
 
-           // return tempPath;
+                MemoryStream stream = new MemoryStream();
+
+                using (ZipFile file = new ZipFile())
+                {
+                    file.CompressionLevel = CompressionLevel.BestCompression;
+                    file.CompressionMethod = CompressionMethod.BZip2;
+                    file.AddDirectory(basepath);
+
+                    file.RemoveEntries((from entry in file
+                            let name = entry.FileName
+                            where blacklist.Any(s => name.Trim().EndsWith(s))
+                            select entry)
+                        .ToList());
+
+                    file.Save(stream);
+                }
+
+                stream.Seek(0, SeekOrigin.Begin);
+                return stream;
+            });
+
+            // return tempPath;
         }
         private bool Check(Func<bool> expression, string messege)
         {

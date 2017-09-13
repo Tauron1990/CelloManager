@@ -93,7 +93,7 @@ namespace Tauron.Application.Common.Updater.Impl
         private Release GetCurrent()
         {
             var temp = UpdaterService.Configuration.Provider.GetReleases().ToArray();
-            return temp.OrderBy(t => t.Version).First();
+            return temp.OrderByDescending(t => t.Version).First();
         }
 
         private void KillProcess(string id)
