@@ -1,0 +1,15 @@
+Update Manager (Migration für andere einstellungen)
+
+Neugestalltung GUI (Docking GUI)
+
+Einstellungen in die Datenbank
+
+Neue Optionen für Rollen Commit (E-mail)
+
+Kaufmanager (Betätigung von Bestellungen)
+
+Template für Bestellung
+
+Integration von Auftrgsverwaltung (Daten abrufen und senden)
+
+Barcode leser

@@ -90,13 +90,23 @@ namespace Tauron.Application.CelloManager.Data.Core
         [Serializable]
         private class SettingImpl : ISettings
         {
+            [OptionalField]
+            private string _version;
+
             public SettingImpl()
             {
                 MaximumSpoolHistorie = 256;
+                Version = null;
             }
 
             public string DefaultPrinter { get; set; }
             public int MaximumSpoolHistorie { get; set; }
+
+            public string Version
+            {
+                get { return _version; }
+                set { _version = value; }
+            }
         }
 
         public ManagerEnviroment()

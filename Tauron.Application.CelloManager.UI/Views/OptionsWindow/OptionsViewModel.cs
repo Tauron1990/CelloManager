@@ -8,10 +8,11 @@ namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow
     [ExportViewModel(AppConststands.OptionsWindow)]
     public sealed class OptionsViewModel : ViewModelBase
     {
-        private readonly List<IOptionsPanel> _optionsPanels = new List<IOptionsPanel>();
+        private readonly Dictionary<string, IOptionsPanel> _optionsPanels = new Dictionary<string, IOptionsPanel>();
         private ModelBase _currentSelection;
         private bool _isHandeled;
         private IWindow _window;
+        private bool _isUnlock = true;
 
         public ModelBase CurrentSelection
         {
@@ -23,21 +24,17 @@ namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow
             }
         }
 
-        private void ResolveOptionsModel(string name)
+        private void SetPanel(string name)
         {
-            SetPanel(ResolveViewModel(name));
-        }
-
-        private void SetPanel(ModelBase model)
-        {
-            var panel = model as IOptionsPanel;
-            if (panel != null)
+            if (!_optionsPanels.TryGetValue(name, out var panel))
             {
+                panel = (IOptionsPanel)ResolveViewModel(name);
                 panel.Reset();
-                _optionsPanels.Add(panel);
+                panel.LockUIEvent += (sender, args) => _isUnlock = false;
+                _optionsPanels[name] = panel;
             }
-
-            CurrentSelection = model;
+            
+            CurrentSelection = (ModelBase)panel;
         }
 
         public override void OnShow(IWindow window)
@@ -59,7 +56,7 @@ namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow
         private void Rollback()
         {
             foreach (var panel in _optionsPanels)
-                panel.Rollback();
+                panel.Value.Rollback();
         }
 
         [CommandTarget]
@@ -73,12 +70,15 @@ namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow
         }
 
         [CommandTarget]
+        public bool CanCancel() => _isUnlock;
+
+        [CommandTarget]
         public void Commit()
         {
             _isHandeled = true;
 
             foreach (var panel in _optionsPanels)
-                panel.Commit();
+                panel.Value.Commit();
 
             _window.Close();
         }
@@ -86,13 +86,17 @@ namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow
         [CommandTarget]
         public bool CanCommit()
         {
-            return !_optionsPanels.Any(p => p.HasErrors);
+            return !_optionsPanels.Select(e => e.Value).Any(p => p.HasErrors) && _isUnlock;
         }
 
         [CommandTarget]
-        public void LayoutOptions()
-        {
-            ResolveOptionsModel(AppConststands.LayoutOptionsView);
-        }
+        public void LayoutOptions() => SetPanel(AppConststands.LayoutOptionsView);
+        [CommandTarget]
+        public bool CanLayoutOptions() => _isUnlock;
+
+        [CommandTarget]
+        public void AutoUpdateOptions() => SetPanel(AppConststands.UpdateOptionsView);
+        [CommandTarget]
+        public bool CanAutoUpdateOptions() => _isUnlock;
     }
 }
