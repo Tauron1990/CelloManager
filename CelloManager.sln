@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager", "CelloManager\CelloManager.csproj", "{DE4F32BD-C602-491B-96FA-A4F9BBA27B60}"
 EndProject
@@ -47,6 +47,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{1A0B4BF8-D48A-413B-89DA-040C60A71E9E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup\Setup.csproj", "{FD68C5DE-4741-40CC-A741-C4A9B6149060}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupBoottrapper", "SetupBoottrapper\SetupBoottrapper.csproj", "{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SetupPacker", "SetupPacker\SetupPacker.csproj", "{C87D66BC-EC11-4792-BCE7-16CE51FFE748}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -151,6 +155,18 @@ Global
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release Debug|Any CPU.Build.0 = Release|Any CPU
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3}.Release Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3}.Release Debug|Any CPU.Build.0 = Release|Any CPU
+		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87D66BC-EC11-4792-BCE7-16CE51FFE748}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87D66BC-EC11-4792-BCE7-16CE51FFE748}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87D66BC-EC11-4792-BCE7-16CE51FFE748}.Release Debug|Any CPU.ActiveCfg = Release|Any CPU
+		{C87D66BC-EC11-4792-BCE7-16CE51FFE748}.Release Debug|Any CPU.Build.0 = Release|Any CPU
+		{C87D66BC-EC11-4792-BCE7-16CE51FFE748}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87D66BC-EC11-4792-BCE7-16CE51FFE748}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -166,10 +182,12 @@ Global
 		{6E580435-365A-417D-8E25-AA427B375233} = {49F661E2-BF60-4F98-9260-42A9A74299CA}
 		{441C0B22-C91D-401C-9857-B9CF79EC3A98} = {CDCE3138-8126-4895-A6B7-6BF1CB54AB53}
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060} = {1A0B4BF8-D48A-413B-89DA-040C60A71E9E}
+		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3} = {1A0B4BF8-D48A-413B-89DA-040C60A71E9E}
+		{C87D66BC-EC11-4792-BCE7-16CE51FFE748} = {1A0B4BF8-D48A-413B-89DA-040C60A71E9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}
 		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.Logging.6.0.1304.0\lib\NET45
+		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		UpdateAssemblyVersion.Release|Any CPU = True

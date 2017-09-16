@@ -331,8 +331,7 @@ namespace Tauron.Application
             #endregion
 
             #region Methods
-
-            /// <summary>The data context changed.</summary>
+            
             protected override void DataContextChanged()
             {
                 Free();
@@ -411,8 +410,7 @@ namespace Tauron.Application
 
             var simpleMode = false;
 
-            var newValue = e.NewValue as string;
-            if (newValue == null) return;
+            if (!(e.NewValue is string newValue)) return;
 
             if (newValue.StartsWith("SimpleMode"))
             {
@@ -420,9 +418,7 @@ namespace Tauron.Application
                 newValue = newValue.Remove(0, 10);
             }
 
-            var oldValue = e.OldValue as string;
-
-            if (oldValue != null)
+            if (e.OldValue is string oldValue)
                 foreach (var linker in
                     EventLinkerCollection.Where(ele => ele.Commands == oldValue && Equals(ele.Target, d)))
                 {

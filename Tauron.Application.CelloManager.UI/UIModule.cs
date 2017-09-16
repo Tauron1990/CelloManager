@@ -9,6 +9,8 @@ namespace Tauron.Application.CelloManager.UI
     [ExportModule]
     public sealed class UIModule : IModule
     {
+        public const string OperationContextModelName = "OperationContext";
+
         [Inject]
         public IEventAggregator EventAggregator { private get; set; }
 

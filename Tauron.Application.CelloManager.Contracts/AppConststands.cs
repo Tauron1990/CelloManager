@@ -6,8 +6,8 @@
         public const string ManagerEnviromentPolicy = "ManagerEnviromentPolicy";
 
         public const string OptionsWindow = "Options";
-        public const string LayoutOptionsView = "LayoutOptions";
-        public const string UpdateOptionsView = "AutoUpdateOptions";
+        public const string SpoolDataEditingView = "SpoolDataEditing";
+        public const string UpdateView = "AutoUpdateOptions";
 
         public const string SpoolView = "SpoolView";
         public const string SpoolViewWorkspaceViewModel = "SpoolViewWorkspaceViewModel";

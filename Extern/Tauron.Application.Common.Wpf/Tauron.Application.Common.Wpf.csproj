@@ -235,6 +235,7 @@
     <Compile Include="SimpleLocalize.cs" />
     <Compile Include="SimpleLocalizeWithArg.cs" />
     <Compile Include="TabWorkspace.cs" />
+    <Compile Include="TabWorkspaceHolderBase.cs" />
     <Compile Include="ViewModelBinding.cs" />
     <Compile Include="ViewModelConverter.cs" />
     <Compile Include="Views\Core\AttributeBasedLocator.cs" />

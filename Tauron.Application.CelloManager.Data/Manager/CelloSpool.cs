@@ -11,7 +11,7 @@ namespace Tauron.Application.CelloManager.Data.Manager
     public sealed class CelloSpool : CelloSpoolBase, IEquatable<CelloSpool>
     {
         public static ObservableProperty NameProperty = RegisterProperty("Name", typeof(CelloSpool), typeof(string), new ObservablePropertyMetadata().SetValidationRules(new RequiredRule()));
-        public static ObservableProperty TypeProperty = RegisterProperty("Type", typeof(CelloSpool), typeof(string));
+        public static ObservableProperty TypeProperty = RegisterProperty("Type", typeof(CelloSpool), typeof(string), new ObservablePropertyMetadata().SetValidationRules(new RequiredRule()));
 
         public static ObservableProperty AmountProperty = RegisterProperty("Amount", typeof(CelloSpool), typeof(int),
             new ObservablePropertyMetadata().SetValidationRules(new ModelRule(IntValidator) {Message = () => UIResources.LabelErrorNonNegativeInt}));
@@ -109,15 +109,7 @@ namespace Tauron.Application.CelloManager.Data.Manager
             return Equals(CoreEntry, other.CoreEntry);
         }
 
-        private static bool IntValidator(object o, ValidatorContext validatorContext)
-        {
-            if (!(o is int)) return false;
-
-            var val = (int) o;
-
-            if (val < 0) return false;
-            return true;
-        }
+        private static bool IntValidator(object o, ValidatorContext validatorContext) => o as int? >= 0;
 
         private static void SpoolSetValueCommon(CelloSpool spool, ObservableProperty property, object o)
         {

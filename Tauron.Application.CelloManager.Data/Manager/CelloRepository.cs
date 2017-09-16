@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Manager;
@@ -10,25 +9,16 @@ namespace Tauron.Application.CelloManager.Data.Manager
     [Export(typeof(ICelloRepository))]
     public sealed class CelloRepository : RepositoryBase, ICelloRepository
     {
-        public bool Add(string name, string type, int amount, int neededamount, out CelloSpoolBase spool)
+        public CelloSpoolBase Add()
         {
             using (CoreManager.StartOperation())
             {
-                var uname = CelloSpoolBase.BuildUinqueId(name, type);
-                var temp = CoreManager.Database.CelloSpools.ToList().FirstOrDefault(e => CelloSpool.BuildUinqueId(e) == uname);
-                if (temp != null)
-                {
-                    spool = new CelloSpool(temp, this);
-                    return false;
-                }
-
-                temp = new CelloSpoolEntry {Name = name, Type = type, Amount = amount, Neededamount = neededamount, Timestamp = DateTime.Now};
+                var temp = new CelloSpoolEntry();
 
                 CoreManager.Database.CelloSpools.Add(temp);
-                spool = new CelloSpool(temp, this, true);
+                return new CelloSpool(temp, this, true);
             }
-
-            return true;
+            
         }
 
         public void Remove(CelloSpoolBase entry)

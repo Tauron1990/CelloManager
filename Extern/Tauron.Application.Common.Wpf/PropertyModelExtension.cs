@@ -26,9 +26,8 @@ namespace Tauron.Application
                 if (!_metadatas.Contains(metadata)) return true;
 
                 var viewModel = (ViewModelBase) target;
-                var model = value as ModelBase;
 
-                if (model == null) return true;
+                if (!(value is ModelBase model)) return true;
 
                 viewModel.RegisterInheritedModel(metadata.ContractName, model);
 
@@ -38,12 +37,10 @@ namespace Tauron.Application
 
         private class InternalProxyService : IProxyService
         {
-            private readonly ModuleScope _moduleScope;
-
             public InternalProxyService()
             {
-                _moduleScope = new ModuleScope();
-                GenericGenerator = new ProxyGenerator(new DefaultProxyBuilder(_moduleScope));
+                var moduleScope = new ModuleScope();
+                GenericGenerator = new ProxyGenerator(new DefaultProxyBuilder(moduleScope));
             }
 
             public ProxyGenerator Generate(ExportMetadata metadata, ImportMetadata[] imports, out IImportInterceptor interceptor)
