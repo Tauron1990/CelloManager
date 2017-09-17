@@ -181,7 +181,7 @@ namespace UpdateUploader
             {
                 GitHubClient client = new GitHubClient(new ProductHeaderValue("Update_Uploader", "1.0"))
                 {
-                    Connection = {Credentials = new Credentials("b65b7c067bc5296df71ea2b439090410d1e2fcf2")}
+                    Connection = {Credentials = new Credentials("ca5c0d8f19ec6abc3dcb873f65a90637dad6350f") }
                 };
 
 

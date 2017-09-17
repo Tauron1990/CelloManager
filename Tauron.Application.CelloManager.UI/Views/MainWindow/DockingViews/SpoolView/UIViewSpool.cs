@@ -107,34 +107,6 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
         #region ICelloImpl
 
-        public void BeginEdit()
-        {
-            _spool.BeginEdit();
-        }
-
-        public void EndEdit()
-        {
-            _spool.EndEdit();
-        }
-
-        public void CancelEdit()
-        {
-            _spool.CancelEdit();
-        }
-
-        public IEnumerable GetErrors(string propertyName)
-        {
-            return _spool.GetErrors(propertyName);
-        }
-
-        public bool HasErrors => _spool.HasErrors;
-
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
-        {
-            add => _spool.ErrorsChanged += value;
-            remove => _spool.ErrorsChanged -= value;
-        }
-
         public string Name
         {
             get => _spool.Name;
