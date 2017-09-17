@@ -3,16 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
-             xmlns:sample="clr-namespace:Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SampleData"
-             xmlns:sync="http://schemas.syncfusion.com/wpf" x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SpoolDataEditingView" 
-             mc:Ignorable="d" 
+    xmlns:sync="http://schemas.syncfusion.com/wpf"
+    x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SpoolDataEditingView" 
+             mc:Ignorable="d" MinWidth="700"
              d:DesignHeight="300" d:DesignWidth="800">
     <Grid>
         <Grid.Resources>
             <Style TargetType="{x:Type sync:AddNewRowControl}">
                 <Setter Property="Background" Value="#00FFFFFF" />
-                <Setter Property="Foreground" Value="{StaticResource ContentForegroundBrush}" />
-                <Setter Property="BorderBrush" Value="{StaticResource ContentBorderBrush}" />
+                <Setter Property="Foreground" Value="{DynamicResource ContentForegroundBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource ContentBorderBrush}" />
                 <Setter Property="BorderThickness" Value="0" />
                 <Setter Property="Template">
                     <Setter.Value>
@@ -47,12 +47,12 @@
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Rectangle Name="PART_CurrentFocusRow" Margin="2,2,0,2" HorizontalAlignment="Right" Stroke="{StaticResource ActiveBorderBrush}" StrokeDashArray="2,2" StrokeThickness="1" Visibility="{TemplateBinding sync:VirtualizingCellsControl.CurrentFocusRowVisibility}" />
+                                <Rectangle Name="PART_CurrentFocusRow" Margin="2,2,0,2" HorizontalAlignment="Right" Stroke="{DynamicResource ActiveBorderBrush}" StrokeDashArray="2,2" StrokeThickness="1" Visibility="{TemplateBinding sync:VirtualizingCellsControl.CurrentFocusRowVisibility}" />
                                 <Border Background="{TemplateBinding sync:VirtualizingCellsControl.RowSelectionBrush}" Clip="{TemplateBinding sync:VirtualizingCellsControl.SelectionBorderClipRect}" Visibility="{TemplateBinding sync:VirtualizingCellsControl.SelectionBorderVisiblity}" />
                                 <Border Name="PART_AddNewRowBorder" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}">
                                     <ContentPresenter />
                                 </Border>
-                                <Border Name="PART_AddNewRowTextBorder" Background="{StaticResource ContentAlternativeBackground}" BorderBrush="#00FFFFFF" BorderThickness="0,0,1,1" Clip="{TemplateBinding sync:AddNewRowControl.TextBorderClip}" IsHitTestVisible="False">
+                                <Border Name="PART_AddNewRowTextBorder" Background="{DynamicResource ContentAlternativeBackground}" BorderBrush="#00FFFFFF" BorderThickness="0,0,1,1" Clip="{TemplateBinding sync:AddNewRowControl.TextBorderClip}" IsHitTestVisible="False">
                                     <ContentPresenter Margin="{TemplateBinding sync:AddNewRowControl.TextMargin}" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{hlp:SimpleLocalize SpoolGridViewAddNewRowLabel}" />
                                 </Border>
                             </Grid>
@@ -71,22 +71,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <sync:SfDataGrid Name="DataGrid" Grid.Row="0" Grid.ColumnSpan="3" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Row" ItemsSource="{Binding Spools}" 
-                         AllowGrouping="True"  AllowResizingColumns="True" AllowDraggingColumns="True" ColumnSizer="Auto" AllowSorting="False" AllowTriStateSorting="True"
-                         ShowGroupDropArea="True" GroupDropAreaText="{hlp:SimpleLocalize SpoolGridGroupingBoxLabel}" AllowEditing="True" NavigationMode="Cell" EditTrigger="OnTap"
+                         AllowGrouping="True"  AllowResizingColumns="True" AllowDraggingColumns="True" AllowSorting="False" AllowTriStateSorting="True" ShowRowHeader="True"
+                         ShowGroupDropArea="True" GroupDropAreaText="{hlp:SimpleLocalize SpoolGridGroupingBoxLabel}" AllowEditing="True" NavigationMode="Cell" EditTrigger="OnDoubleTap"
                          EditorSelectionBehavior="SelectAll" GridValidationMode="InView" LiveDataUpdateMode="AllowDataShaping" AddNewRowPosition="Top" AllowDeleting="True"
-                         hlp:EventBinder.Events="AddNewRowInitiating:AddNew:RecordDeleted:Remove" NewItemPlaceholderPosition="AtBeginning" Loaded="Grid_OnLoaded">
-            <sync:SfDataGrid.GroupColumnDescriptions>
-                <sync:GroupColumnDescription ColumnName="Type" SortGroupRecords="True"/>
-            </sync:SfDataGrid.GroupColumnDescriptions>
+                         hlp:EventBinder.Events="AddNewRowInitiating:AddElement:RecordDeleted:Remove" NewItemPlaceholderPosition="AtBeginning" Loaded="Grid_OnLoaded">
             <sync:SfDataGrid.Columns>
-                <sync:GridTextColumn MappingName="Name" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutName}" AllowSorting="True"/>
-                <sync:GridTextColumn MappingName="Type" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutType}" AllowSorting="True"/>
-                <sync:GridNumericColumn MappingName="Amount" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutAmount}" NumberDecimalDigits="0" ParsingMode="Int" AllowScrollingOnCircle="True"/>
+                <sync:GridNumericColumn MappingName="Id" HeaderText="Id" AllowSorting="True" AllowEditing="False" NumberDecimalDigits="0" MaximumWidth="30"/>
+                <sync:GridTextColumn MappingName="Name" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutName}" AllowSorting="True" UseBindingValue="True"/>
+                <sync:GridTextColumn MappingName="Type" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutType}" AllowSorting="True" UseBindingValue="True"/>
+                <sync:GridNumericColumn MappingName="Amount" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutAmount}" NumberDecimalDigits="0" ParsingMode="Int" AllowScrollingOnCircle="True" 
+                                        UseBindingValue="True"/>
                 <sync:GridNumericColumn MappingName="Neededamount" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutNeedAmount}" NumberDecimalDigits="0" ParsingMode="Int" 
-                                        AllowScrollingOnCircle="True" AllowNullValue="False"/>
+                                        AllowScrollingOnCircle="True" AllowNullValue="False" UseBindingValue="True"/>
             </sync:SfDataGrid.Columns>
         </sync:SfDataGrid>
-        <Button Grid.Row="1" Grid.Column="2" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCommit}" hlp:CommandBinder.Command="Save:Save"/>
-        <Button Grid.Row="1" Grid.Column="1" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCancel}"/>
+        <Button Grid.Row="1" Grid.Column="2" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCommit}" hlp:CommandBinder.Command="SaveData:Save"/>
+        <Button Grid.Row="1" Grid.Column="1" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCancel}" hlp:CommandBinder.Command="CancelData:Cancel"/>
     </Grid>
 </UserControl>

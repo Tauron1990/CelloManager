@@ -14,6 +14,8 @@ namespace Tauron.Application.CelloManager.Logic.Manager
 
         public abstract int Neededamount { get; set; }
 
+        public abstract int Id { get; }
+
         public static string BuildUinqueId(CelloSpoolBase sbase)
         {
             return BuildUinqueId(sbase.Name, sbase.Type);

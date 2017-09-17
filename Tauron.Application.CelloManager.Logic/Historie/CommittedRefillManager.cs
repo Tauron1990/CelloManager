@@ -13,7 +13,7 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         public ICommittedRefillRepository CommittedRefillRepository { private get; set; }
 
         [Inject]
-        public IManagerEnvioment Envioment { private get; set; }
+        public IManagerEnviroment Enviroment { private get; set; }
 
 
         public IEnumerable<CommittedRefill> CommitedRefills => CommittedRefillRepository.GetCommittedRefills().OrderBy(val => val.SentTime);
@@ -22,7 +22,7 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         {
             using (CommittedRefillRepository.Manager.StartOperation())
             {
-                var maxamount = Envioment.Settings.MaximumSpoolHistorie;
+                var maxamount = Enviroment.Settings.MaximumSpoolHistorie;
                 var count = CommittedRefillRepository.GetCommittedRefills().Count();
 
                 if (count < maxamount) return;

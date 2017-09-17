@@ -10,8 +10,11 @@ namespace Tauron.Application.CelloManager.Data.Manager
 {
     public sealed class CelloSpool : CelloSpoolBase, IEquatable<CelloSpool>
     {
-        public static ObservableProperty NameProperty = RegisterProperty("Name", typeof(CelloSpool), typeof(string), new ObservablePropertyMetadata().SetValidationRules(new RequiredRule()));
-        public static ObservableProperty TypeProperty = RegisterProperty("Type", typeof(CelloSpool), typeof(string), new ObservablePropertyMetadata().SetValidationRules(new RequiredRule()));
+        public static ObservableProperty NameProperty = RegisterProperty("Name", typeof(CelloSpool), typeof(string), new ObservablePropertyMetadata()
+            .SetValidationRules(new RequiredRule{ FieldName = UIResources.LabelOptionsLayoutName }));
+
+        public static ObservableProperty TypeProperty = RegisterProperty("Type", typeof(CelloSpool), typeof(string), new ObservablePropertyMetadata()
+            .SetValidationRules(new RequiredRule { FieldName = UIResources.LabelOptionsLayoutType}));
 
         public static ObservableProperty AmountProperty = RegisterProperty("Amount", typeof(CelloSpool), typeof(int),
             new ObservablePropertyMetadata().SetValidationRules(new ModelRule(IntValidator) {Message = () => UIResources.LabelErrorNonNegativeInt}));
@@ -29,6 +32,7 @@ namespace Tauron.Application.CelloManager.Data.Manager
             CoreEntry = entry;
             IsNew = isNew;
             _repository = repository;
+            entry.IdChangedEvent += () => OnPropertyChangedExplicit(nameof(Id));
         }
 
         private readonly CelloRepository _repository;
@@ -59,6 +63,8 @@ namespace Tauron.Application.CelloManager.Data.Manager
             get => GetValue<int>(NeededamountProperty);
             set => SetValue(NeededamountProperty, value);
         }
+
+        public override int Id => CoreEntry.Id;
 
         public override void UpdateSpool()
         {

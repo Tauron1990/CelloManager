@@ -5,8 +5,10 @@
         public RequiredRule()
         {
             Id = "RequiredRule";
-            Message = () => ResourceMessages.RequireRuleError;
+            Message = () => ResourceMessages.RequireRuleError.SFormat(FieldName);
         }
+
+        public string FieldName { get; set; }
 
         public bool AllowStringEmpty { get; set; }
 

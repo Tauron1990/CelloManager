@@ -1,9 +1,11 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
-using System.IO.IsolatedStorage;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using Syncfusion.UI.Xaml.Grid;
+using Tauron.Application.CelloManager.Data.Core;
+using Tauron.Application.Ioc;
 using Tauron.Application.Views;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
@@ -14,6 +16,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
     [ExportView(AppConststands.SpoolDataEditingView)]
     public partial class SpoolDataEditingView : UserControl
     {
+        [Inject]
+        public IManagerEnviroment Enviroment { get; set; }
+
         public SpoolDataEditingView()
         {
             InitializeComponent();
@@ -23,17 +28,25 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         {
             System.Windows.Application.Current.MainWindow.Closing += MainWindowOnClosing;
 
-            using (var storeFile = IsolatedStorageFile.GetUserStoreForAssembly().OpenFile("Grid.xml", FileMode.OpenOrCreate))
+            string text = Enviroment.Settings.SpoolDataGridState;
+
+            if(string.IsNullOrWhiteSpace(text)) return;
+
+            using (MemoryStream stream = new MemoryStream(Encoding.Default.GetBytes(text)))
             {
-                if(storeFile.Length == 0) return;
-                DataGrid.Deserialize(storeFile);
+                stream.Seek(0, SeekOrigin.Begin);
+                DataGrid.Deserialize(stream);
             }
         }
 
         private void MainWindowOnClosing(object sender, CancelEventArgs cancelEventArgs)
         {
-            using (var storeFile = IsolatedStorageFile.GetUserStoreForAssembly().OpenFile("Grid.xml", FileMode.OpenOrCreate))
-                DataGrid.Serialize(storeFile);
+            using (MemoryStream stream = new MemoryStream())
+            {
+                DataGrid.Serialize(stream);
+                Enviroment.Settings.SpoolDataGridState = Encoding.Default.GetString(stream.ToArray());
+            }
+            Enviroment.Save();
         }
     }
 }

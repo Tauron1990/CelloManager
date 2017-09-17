@@ -1,2 +1,4 @@
-﻿Version 0.2: 
+﻿Version 0.3:
+	GUI Rewrite
+Version 0.2: 
 	Initial Release

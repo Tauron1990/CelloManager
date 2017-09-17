@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Tauron.Application.CelloManager.UI.Views.MainWindow.SpoolView.Tabs
+namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 {
     /// <summary>
     ///     Interaktionslogik für SpoolViewWorkspaceView.xaml

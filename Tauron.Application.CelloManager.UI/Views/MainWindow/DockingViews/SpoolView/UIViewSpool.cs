@@ -4,11 +4,11 @@ using System.ComponentModel;
 using System.Windows.Input;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Resources;
-using Tauron.Application.CelloManager.UI.Views.MainWindow.SpoolView.Tabs.Helper;
+using Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helper;
 using Tauron.Application.Commands;
 using Tauron.Application.Models;
 
-namespace Tauron.Application.CelloManager.UI.Views.MainWindow.SpoolView.Tabs
+namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 {
     //[ExportViewModel(AppConststands.SingleUISpoolViwName)]
     public class UIViewSpool : ViewModelBase, IEquatable<UIViewSpool>

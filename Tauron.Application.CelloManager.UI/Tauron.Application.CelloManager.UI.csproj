@@ -35,7 +35,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>Key.pfx</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -84,6 +84,16 @@
       <DependentUpon>SpoolDataEditingView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow\DockingViews\SpoolDataEditing\SpoolDataEditingViewModel.cs" />
+    <Compile Include="Views\MainWindow\DockingViews\SpoolView\Helper\UIDummyCelloSpool.cs" />
+    <Compile Include="Views\MainWindow\DockingViews\SpoolView\Helper\UIDummySpoolManager.cs" />
+    <Compile Include="Views\MainWindow\DockingViews\SpoolView\SingleUISpoolView.xaml.cs">
+      <DependentUpon>SingleUISpoolView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainWindow\DockingViews\SpoolView\SpoolViewWorkspaceView.xaml.cs">
+      <DependentUpon>SpoolViewWorkspaceView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MainWindow\DockingViews\SpoolView\SpoolViewWorkspaceViewModel.cs" />
+    <Compile Include="Views\MainWindow\DockingViews\SpoolView\UIViewSpool.cs" />
     <Compile Include="Views\MainWindow\DockingViews\Updater\UpdaterContainerModel.cs" />
     <Compile Include="Views\MainWindow\DockingViews\Updater\UpdaterContainerView.xaml.cs">
       <DependentUpon>UpdaterContainerView.xaml</DependentUpon>
@@ -92,20 +102,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainWindow\MainWindowViewModel.cs" />
-    <Compile Include="Views\MainWindow\SpoolView\SpoolView.xaml.cs">
-      <DependentUpon>SpoolView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainWindow\SpoolView\SpoolViewModel.cs" />
-    <Compile Include="Views\MainWindow\SpoolView\Tabs\Helper\UIDummyCelloSpool.cs" />
-    <Compile Include="Views\MainWindow\SpoolView\Tabs\Helper\UIDummySpoolManager.cs" />
-    <Compile Include="Views\MainWindow\SpoolView\Tabs\SingleUISpoolView.xaml.cs">
-      <DependentUpon>SingleUISpoolView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainWindow\SpoolView\Tabs\SpoolViewWorkspaceView.xaml.cs">
-      <DependentUpon>SpoolViewWorkspaceView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\MainWindow\SpoolView\Tabs\SpoolViewWorkspaceViewModel.cs" />
-    <Compile Include="Views\MainWindow\SpoolView\Tabs\UIViewSpool.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Extern\Tauron.Application.Common.Wpf.Controls\Tauron.Application.Common.Wpf.Controls.csproj">
@@ -134,6 +130,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="key.snk" />
     <None Include="packages.config" />
     <None Include="PrintOrder\UserControl1.xaml">
       <SubType>Designer</SubType>
@@ -141,6 +138,14 @@
     <Page Include="Views\MainWindow\DockingViews\SpoolDataEditing\SpoolDataEditingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\MainWindow\DockingViews\SpoolView\SingleUISpoolView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\MainWindow\DockingViews\SpoolView\SpoolViewWorkspaceView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\MainWindow\DockingViews\Updater\UpdaterContainerView.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -150,22 +155,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\MainWindow\SpoolView\SpoolView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\MainWindow\SpoolView\Tabs\SingleUISpoolView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Views\MainWindow\SpoolView\Tabs\SpoolViewWorkspaceView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="icon.ico" />
-    <None Include="Key.pfx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,4 +1,5 @@
-﻿using Tauron.Application.CelloManager.Resources;
+﻿using Syncfusion.Windows.Tools.Controls;
+using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI.Helper;
 using Tauron.Application.CelloManager.UI.Models;
 using Tauron.Application.CelloManager.UI.Views.OptionsWindow.SubWindows;
@@ -12,7 +13,10 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         public UpdaterContainerModel()
             : base(UIResources.LabelOptionsAutoUpdate, "UpdaterView")
         {
-            
+            CanClose = false;
+            DesiredWidth = 600;
+            CanAutoHide = true;
+            State = DockState.Dock;
         }
 
         [InjectModel(UIModule.OperationContextModelName)]

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Tauron.Application.CelloManager.Logic.Manager;
 
-namespace Tauron.Application.CelloManager.UI.Views.MainWindow.SpoolView.Tabs.Helper
+namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helper
 {
     internal sealed class UIDummySpoolManager : ISpoolManager
     {

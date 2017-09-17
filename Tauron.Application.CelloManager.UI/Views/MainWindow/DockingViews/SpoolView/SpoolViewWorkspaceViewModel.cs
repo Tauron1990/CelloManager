@@ -1,26 +1,33 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using Syncfusion.Windows.Tools.Controls;
 using Tauron.Application.CelloManager.Data.Historie;
 using Tauron.Application.CelloManager.Logic.Manager;
+using Tauron.Application.CelloManager.UI.Helper;
 using Tauron.Application.Ioc;
 using Tauron.Application.Models;
 
-namespace Tauron.Application.CelloManager.UI.Views.MainWindow.SpoolView.Tabs
+namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 {
     [ExportViewModel(AppConststands.SpoolViewWorkspaceViewModel)]
     [NotShared]
-    public class SpoolViewWorkspaceViewModel : TabWorkspace
+    public class SpoolViewWorkspaceViewModel : DockingTabworkspace
     {
         private readonly ISpoolManager _manager;
 
-        public SpoolViewWorkspaceViewModel([NotNull] string type, [NotNull] ISpoolManager manager, IEnumerable<CelloSpoolBase> spools) : base(type)
+        public SpoolViewWorkspaceViewModel([NotNull] string type, [NotNull] ISpoolManager manager, IEnumerable<CelloSpoolBase> spools) 
+            : base(type, "SpoolTab" + type)
         {
+            CanDocument = true;
+            CanClose = false;
+            State = DockState.Document;
+
             _manager = manager;
             Type = type;
             Spools = new UISyncObservableCollection<UIViewSpool>();
 
-            Spools.AddRange(spools.Select(s => new UIViewSpool(s, manager)));
+            Spools.AddRange(spools.OrderByDescending(b => b.Name).Select(s => new UIViewSpool(s, manager)));
 
 
             EventAggregator.Aggregator.GetEvent<OrderSentEvent, CommittedRefill>().Subscribe(RefillSend);

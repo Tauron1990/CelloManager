@@ -54,5 +54,15 @@ namespace Tauron.Application
         }
 
         #endregion
+
+        public static void Update(object toBuild)
+        {
+            if (toBuild == null) throw new ArgumentNullException(nameof(toBuild));
+            var errorTracer = new ErrorTracer();
+
+            CommonApplication.Current.Container.BuildUp(toBuild, errorTracer);
+            if (errorTracer.Exceptional)
+                throw new BuildUpException(errorTracer);
+        }
     }
 }

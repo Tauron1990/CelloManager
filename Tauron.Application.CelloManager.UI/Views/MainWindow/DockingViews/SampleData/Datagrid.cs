@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Tauron.Application.CelloManager.Logic.Manager;
-using Tauron.Application.CelloManager.UI.Views.MainWindow.SpoolView.Tabs.Helper;
+using Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helper;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SampleData
 {

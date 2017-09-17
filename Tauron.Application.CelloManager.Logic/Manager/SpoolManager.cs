@@ -12,7 +12,7 @@ namespace Tauron.Application.CelloManager.Logic.Manager
     public sealed class SpoolManager : ISpoolManager
     {
         [Inject]
-        public IManagerEnvioment Envioment { private get; set; }
+        public IManagerEnviroment Enviroment { private get; set; }
 
         [Inject]
         public ICommittedRefillRepository RefillRepository { private get; set; }
@@ -80,7 +80,7 @@ namespace Tauron.Application.CelloManager.Logic.Manager
 
         private void ResetSpools(CommittedRefill refill)
         {
-            Envioment.Save();
+            Enviroment.Save();
 
             foreach (var entry in refill.CommitedSpools.Select(spool => CelloSpools.First(s => s.Name == spool.Name)))
                 entry.Amount = entry.Neededamount;
