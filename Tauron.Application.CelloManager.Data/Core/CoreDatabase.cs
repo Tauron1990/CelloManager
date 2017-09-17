@@ -16,6 +16,7 @@ namespace Tauron.Application.CelloManager.Data.Core
         }
 
         #if DEBUG
+        // ReSharper disable once UnusedMember.Global
         public static void OverrideConnection(string path)
         {
             string conn = ConfigurationManager.ConnectionStrings["MainDatabase"].ConnectionString;
@@ -25,6 +26,7 @@ namespace Tauron.Application.CelloManager.Data.Core
 
         public DbSet<CommittedRefill> CommittedRefills { get; set; }
         public DbSet<CelloSpoolEntry> CelloSpools { get; set; }
+        public DbSet<OptionEntry> OptionEntries { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

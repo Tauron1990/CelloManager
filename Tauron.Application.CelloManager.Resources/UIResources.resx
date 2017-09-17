@@ -168,4 +168,10 @@
   <data name="LabelOptionsCheckforUpdates" xml:space="preserve">
     <value>Check for Updates</value>
   </data>
+  <data name="SpoolGridGroupingBoxLabel" xml:space="preserve">
+    <value>Drag and drop the columns here</value>
+  </data>
+  <data name="SpoolGridViewAddNewRowLabel" xml:space="preserve">
+    <value>Add New Spool</value>
+  </data>
 </root>

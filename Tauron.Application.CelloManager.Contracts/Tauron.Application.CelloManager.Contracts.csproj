@@ -63,7 +63,7 @@
     <Compile Include="Data\Historie\CommittedRefill.cs" />
     <Compile Include="Data\Historie\CommittedSpool.cs" />
     <Compile Include="Data\Manager\ICelloRepository.cs" />
-    <Compile Include="Data\Core\IManagerEnvioment.cs" />
+    <Compile Include="Data\Core\IManagerEnviroment.cs" />
     <Compile Include="Data\Core\ISettings.cs" />
     <Compile Include="Logic\Manager\CelloSpoolBase.cs" />
     <Compile Include="Data\Historie\ICommittedRefillRepository.cs" />

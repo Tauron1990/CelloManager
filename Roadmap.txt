@@ -1,4 +1,4 @@
-Update Manager (Migration für andere einstellungen)
+Update Manager (Migration für andere einstellungen) - ok
 
 Neugestalltung GUI (Docking GUI)
 

@@ -10,11 +10,7 @@ using JetBrains.Annotations;
 
 namespace Tauron.Application
 {
-    /// <summary>
-    ///     The workspace manager.
-    /// </summary>
-    /// <typeparam name="TWorkspace">
-    /// </typeparam>
+
     [PublicAPI]
     public sealed class WorkspaceManager<TWorkspace> : UISyncObservableCollection<TWorkspace>
         where TWorkspace : class, ITabWorkspace

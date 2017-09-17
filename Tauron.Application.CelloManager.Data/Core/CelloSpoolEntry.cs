@@ -4,7 +4,14 @@ namespace Tauron.Application.CelloManager.Data.Core
 {
     public sealed class CelloSpoolEntry : IEquatable<CelloSpoolEntry>
     {
-        public int Id { get; set; }
+        private int _id;
+        public event Action IdChangedEvent;
+
+        public int Id
+        {
+            get => _id;
+            set { _id = value; IdChangedEvent?.Invoke();}
+        }
 
         public DateTime Timestamp { get; set; }
 

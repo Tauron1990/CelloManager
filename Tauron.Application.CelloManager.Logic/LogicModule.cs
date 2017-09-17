@@ -1,4 +1,5 @@
-﻿using Tauron.Application.CelloManager.Logic.Historie;
+﻿using System;
+using Tauron.Application.CelloManager.Logic.Historie;
 using Tauron.Application.Ioc;
 
 namespace Tauron.Application.CelloManager.Logic
@@ -7,13 +8,13 @@ namespace Tauron.Application.CelloManager.Logic
     public class LogicModule : IModule
     {
         [Inject]
-        public ICommittedRefillManager CommittedRefillManager { get; set; }
+        public Lazy<ICommittedRefillManager> CommittedRefillManager { get; set; }
 
-        public int Order { get; } = 0;
+        public int Order { get; } = -1;
 
         public void Initialize(CommonApplication application)
         {
-            CommittedRefillManager.Purge();
+            CommittedRefillManager.Value.Purge();
         }
     }
 }

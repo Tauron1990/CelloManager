@@ -50,7 +50,7 @@ using System.Windows;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.2.6462.22542")]
-[assembly: AssemblyFileVersion("0.2.6462.22542")]
+[assembly: AssemblyVersion("0.3.6462.22542")]
+[assembly: AssemblyFileVersion("0.3.6462.22542")]
 
 [assembly: Dependency("Tauron.Application.CelloManager.Data", LoadHint.Always)]

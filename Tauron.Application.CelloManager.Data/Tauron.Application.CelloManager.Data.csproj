@@ -233,6 +233,7 @@
     <Compile Include="Core\CoreDatabase.cs" />
     <Compile Include="Core\DatabaseManager.cs" />
     <Compile Include="Core\ManagerEnviroment.cs" />
+    <Compile Include="Core\OptionEntry.cs" />
     <Compile Include="Core\RepositoryBase.cs" />
     <Compile Include="DataModule.cs" />
     <Compile Include="Historie\CommittedRefillRepository.cs" />
@@ -241,6 +242,10 @@
     <Compile Include="Migrations\20170805175327_Version1.cs" />
     <Compile Include="Migrations\20170805175327_Version1.designer.cs">
       <DependentUpon>20170805175327_Version1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20170917053817_Version2.cs" />
+    <Compile Include="Migrations\20170917053817_Version2.designer.cs">
+      <DependentUpon>20170917053817_Version2.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\CoreDatabaseModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

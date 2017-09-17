@@ -1,28 +1,27 @@
-﻿<Window x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.MainWindow"
+﻿<Window 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
         xmlns:contracts="clr-namespace:Tauron.Application.CelloManager;assembly=Tauron.Application.CelloManager.Contracts"
-        xmlns:local="clr-namespace:Tauron.Application.CelloManager.UI.Views.MainWindow.SpoolView"
-        mc:Ignorable="d"
-        d:DesignHeight="300" d:DesignWidth="300" hlp:DataContextServices.Activate="True"
-        Background="{x:Static SystemColors.ControlBrush}" WindowState="Maximized"
+        xmlns:sync="http://schemas.syncfusion.com/wpf" x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.MainWindow"
+        mc:Ignorable="d" Loaded="MainWindow_OnLoaded" Title="Cello Manager"
+        d:DesignHeight="500" d:DesignWidth="700" hlp:DataContextServices.Activate="True"
+        Background="{x:Static SystemColors.ControlBrush}" WindowState="Maximized" Closing="MainWindow_OnClosing"
         hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.MainWindowName}"
         Icon="pack://siteoforigin:,,,/icon.ico">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Menu IsMainMenu="True" Margin="0,0,0,5">
-            <MenuItem Header="{hlp:SimpleLocalize Name=LabelOptions}" hlp:CommandBinder.Command="Options:Options" />
-        </Menu>
-        <local:SpoolView Grid.Column="0" Grid.Row="1" Margin="5, 0" />
-        <Button Grid.Column="0" Grid.Row="2" Content="{hlp:SimpleLocalize LabelMainWindowRefill}"
-                HorizontalAlignment="Right" Margin="5" FontSize="20"
-                hlp:CommandBinder.Command="Refill:Refill" />
-    </Grid>
+    <DockPanel LastChildFill="True">
+        <Button DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Right" MinWidth="80" Content="{hlp:SimpleLocalize LabelMainWindowRefill}"
+                FontSize="20" hlp:CommandBinder.Command="Refill:Refill"/>
+        <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}" Loaded="DockingManager_OnLoaded"  MinimizeButtonEnabled="True" MaximizeButtonEnabled="True"
+                             IsTDIDragDropEnabled="True" IsVS2013SidePanelEnable="True" IsVS2010DraggingEnabled="True"  Name="DockingManager" ContainerMode="TDI" SwitchMode="VistaFlip" 
+                             AutoHideAnimationMode="Fade">
+            <!--<TextBlock Text="Matt" sync:DockingManager.Header="Matt" sync:DockingManager.State="Document"/>
+            <TextBlock Text="Soft" sync:DockingManager.Header="Soft" sync:DockingManager.State="Document" />
+            <TextBlock Text="Protect" sync:DockingManager.Header="Protect" sync:DockingManager.State="Document" />
+            <TextBlock Text="Daten" sync:DockingManager.Header="Daten" sync:DockingManager.CanDocument="True" />
+            <TextBlock Text="Update" sync:DockingManager.Header="Update" />-->
+        </sync:DockingManager>
+    </DockPanel>
 </Window>

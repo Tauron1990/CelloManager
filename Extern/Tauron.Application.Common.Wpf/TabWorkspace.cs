@@ -26,9 +26,10 @@ namespace Tauron.Application
         /// <param name="title">
         ///     The title.
         /// </param>
-        protected TabWorkspace([NotNull] string title)
+        protected TabWorkspace([NotNull] string title, string name = null)
         {
             _title = title;
+            _name = name;
             _canClose = true;
             CloseWorkspace = new SimpleCommand(obj => CanClose, obj => InvokeClose());
         }
@@ -58,12 +59,12 @@ namespace Tauron.Application
         private bool _canClose;
 
         private string _title;
+        private readonly string _name;
 
         #endregion
 
         #region Public Properties
-
-        /// <summary>Gets or sets a value indicating whether can close.</summary>
+        
         public bool CanClose
         {
             get => _canClose;
@@ -74,11 +75,9 @@ namespace Tauron.Application
                 OnPropertyChanged();
             }
         }
-
-        /// <summary>Gets the close workspace.</summary>
+        
         public ICommand CloseWorkspace { get; private set; }
-
-        /// <summary>Gets or sets the title.</summary>
+        
         public string Title
         {
             get => _title;
@@ -89,6 +88,8 @@ namespace Tauron.Application
                 OnPropertyChanged();
             }
         }
+
+        public string Name => _name ?? _title;
 
         public virtual void OnClose()
         {

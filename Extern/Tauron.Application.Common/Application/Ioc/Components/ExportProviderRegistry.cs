@@ -91,8 +91,7 @@ namespace Tauron.Application.Ioc.Components
         {
             foreach (var exportProvider in _providers)
             {
-                var dipo = exportProvider as IDisposable;
-                if (dipo != null) dipo.Dispose();
+                if (exportProvider is IDisposable dipo) dipo.Dispose();
             }
         }
 
