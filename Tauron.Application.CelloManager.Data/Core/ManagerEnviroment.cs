@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Tauron.Application.Ioc;
 
 namespace Tauron.Application.CelloManager.Data.Core
 {
     [Export(typeof(IManagerEnviroment))]
-    public sealed class ManagerEnviroment : RepositoryBase, IManagerEnviroment, INotifyBuildCompled
+    public sealed class ManagerEnviroment :  IManagerEnviroment, INotifyBuildCompled
     {
-        private readonly Dictionary<string, string> _cache = new Dictionary<string, string>();
-
         [Serializable]
         private class SettingImpl : ISettings
         {
@@ -56,29 +53,18 @@ namespace Tauron.Application.CelloManager.Data.Core
             Settings = new SettingImpl(_cache);
         }
 
+        private readonly Dictionary<string, string> _cache = new Dictionary<string, string>();
+
+
         public ISettings Settings { get; }
+
+        [Inject]
+        public IUnitOfWorkFactory UnitOfWorkFactory { get; set; }
 
         public void Save()
         {
-            using (Manager.StartOperation())
-            {
-                List<OptionEntry> entrys = CoreManager.Database.OptionEntries.ToList();
-
-                var keyValuePairs = new Dictionary<string, string>(_cache);
-
-                foreach (var optionEntry in entrys)
-                {
-                    if (!keyValuePairs.TryGetValue(optionEntry.key, out var usedValue)) continue;
-
-                    optionEntry.Value = usedValue;
-                    keyValuePairs.Remove(optionEntry.key);
-                }
-
-                foreach (var pair in keyValuePairs)
-                {
-                    CoreManager.Database.OptionEntries.Add(new OptionEntry {key = pair.Key, Value = pair.Value});
-                }
-            }
+            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
+                work.OptionsRepository.Save(_cache);
         }
 
         private static string GetDicPath()
@@ -88,11 +74,8 @@ namespace Tauron.Application.CelloManager.Data.Core
 
         public void BuildCompled()
         {
-            using (Manager.StartOperation())
-            {
-                foreach (var optionEntry in CoreManager.Database.OptionEntries)
-                    _cache[optionEntry.key] = optionEntry.Value;
-            }
+            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
+                work.OptionsRepository.Fill(_cache);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Manager;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helper
@@ -30,7 +31,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helpe
             return false;
         }
 
-        public void UpdateSpools(IEnumerable<Action> updater)
+        public void UpdateSpools(IEnumerable<Action<IUnitOfWork>> updater)
         {
             
         }

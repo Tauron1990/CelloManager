@@ -76,6 +76,8 @@ namespace Tauron.Application.CelloManager.Data.Migrations
 
                     b.Property<int>("OrderedCount");
 
+                    b.Property<int>("SpoolId");
+
                     b.Property<string>("Type");
 
                     b.HasKey("Id");

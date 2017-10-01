@@ -30,20 +30,17 @@ using System.Linq;
 using JetBrains.Annotations;
 using Tauron.Application.Ioc.BuildUp;
 using Tauron.Application.Ioc.BuildUp.Exports;
+using Tauron.Application.Ioc.BuildUp.Exports.DefaultExports;
 using Tauron.Application.Ioc.Components;
 
 #endregion
 
 namespace Tauron.Application.Ioc
 {
-    /// <summary>The default container.</summary>
     public sealed class DefaultContainer : MarshalByRefObject, IContainer
     {
         #region Constructors and Destructors
-
-        /// <summary>
-        ///     Initialisiert eine neue Instanz der <see cref="DefaultContainer" /> Klasse.
-        /// </summary>
+        
         public DefaultContainer()
         {
             _extensions = new List<IContainerExtension>();
@@ -53,6 +50,7 @@ namespace Tauron.Application.Ioc
             _exportproviders.ExportsChanged += ExportsChanged;
             Register(new DefaultExtension());
             _buildEngine = new BuildEngine(this, _exportproviders, _componetnts);
+            _exports.Register(DefaultExportFactory.Factory.CreateAnonymosWithTarget(typeof(IContainer), this), 0);
         }
 
         #endregion

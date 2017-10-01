@@ -67,8 +67,7 @@ namespace Tauron.Application.Ioc.Components
 
             public void Add(int location, [NotNull] Type type, [NotNull] IExport export)
             {
-                ExportEntry entry;
-                if (TryGetValue(location, out entry))
+                if (TryGetValue(location, out var entry))
                 {
                     entry[type].Add(export);
                 }
@@ -87,8 +86,7 @@ namespace Tauron.Application.Ioc.Components
 
                 foreach (var pair in this.Where(p => p.Key <= at))
                 {
-                    ICollection<IExport> exports;
-                    if (pair.Value.TryGetValue(type, out exports))
+                    if (pair.Value.TryGetValue(type, out var exports))
                         exports.SelectMany(ep => ep.SelectContractName(contractName)).Foreach(ex => realExports.Add(ex));
                 }
 
@@ -139,20 +137,7 @@ namespace Tauron.Application.Ioc.Components
                 return Enumerable.Empty<ExportMetadata>();
             }
         }
-
-        /// <summary>
-        ///     The find optional.
-        /// </summary>
-        /// <param name="type">
-        ///     The type.
-        /// </param>
-        /// <param name="contractName">
-        ///     The contract name.
-        /// </param>
-        /// <param name="errorTracer"></param>
-        /// <returns>
-        ///     The <see cref="ExportMetadata" />.
-        /// </returns>
+        
         [CanBeNull]
         public ExportMetadata FindOptional([NotNull] Type type, [CanBeNull] string contractName, [NotNull] ErrorTracer errorTracer, int level = int.MaxValue)
         {
@@ -176,19 +161,7 @@ namespace Tauron.Application.Ioc.Components
             }
         }
 
-        /// <summary>
-        ///     The find single.
-        /// </summary>
-        /// <param name="type">
-        ///     The type.
-        /// </param>
-        /// <param name="contractName">
-        ///     The contract name.
-        /// </param>
-        /// <param name="errorTracer"></param>
-        /// <returns>
-        ///     The <see cref="ExportMetadata" />.
-        /// </returns>
+
         [CanBeNull]
         public ExportMetadata FindSingle([NotNull] Type type, [NotNull] string contractName, [NotNull] ErrorTracer errorTracer, int level = int.MaxValue)
         {

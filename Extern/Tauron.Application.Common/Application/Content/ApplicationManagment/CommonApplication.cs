@@ -81,8 +81,7 @@ namespace Tauron.Application
         /// </param>
         protected CommonApplication(bool doStartup, [CanBeNull] ISplashService service, [NotNull] IUIControllerFactory factory)
         {
-            if (factory == null) throw new ArgumentNullException(nameof(factory));
-            Factory = factory;
+            Factory = factory ?? throw new ArgumentNullException(nameof(factory));
             Current = this;
             _scheduler = new TaskScheduler(UiSynchronize.Synchronize);
             _splash = service ?? new NullSplash();

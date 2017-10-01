@@ -29,7 +29,7 @@ namespace Tauron.Application.CelloManager.UI.PrintOrder
             public string RightType { get; set; }
             public List<CommittedSpool> RightSpools { get; }
         }
-
+        
         public static bool PrintOrder(CommittedRefill refill)
         {
             bool temp = false;
@@ -49,7 +49,7 @@ namespace Tauron.Application.CelloManager.UI.PrintOrder
                 fd.ColumnWidth = pd.PrintableAreaWidth;
 
                 IDocumentPaginatorSource dps = fd;
-                pd.PrintDocument(dps.DocumentPaginator, "flow doc");
+                pd.PrintDocument(dps.DocumentPaginator, "Cello Spool Order Document");
             });
 
             return temp;

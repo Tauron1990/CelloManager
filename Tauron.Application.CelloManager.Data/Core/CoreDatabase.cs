@@ -11,7 +11,9 @@ namespace Tauron.Application.CelloManager.Data.Core
 
         private static string Create()
         {
-            string conn = ConfigurationManager.ConnectionStrings["MainDatabase"].ConnectionString;
+            string conn = ConfigurationManager.ConnectionStrings["MainDatabase"]?.ConnectionString;
+            if (string.IsNullOrWhiteSpace(conn))
+                return string.Empty;
             return string.Format(conn, Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).CombinePath("Tauron\\CelloManager"));
         }
 
@@ -19,8 +21,8 @@ namespace Tauron.Application.CelloManager.Data.Core
         // ReSharper disable once UnusedMember.Global
         public static void OverrideConnection(string path)
         {
-            string conn = ConfigurationManager.ConnectionStrings["MainDatabase"].ConnectionString;
-            ConnectionString = string.Format(conn, path);
+            string conn = ConfigurationManager.ConnectionStrings["MainDatabase"]?.ConnectionString;
+            ConnectionString = string.IsNullOrWhiteSpace(conn) ? path : string.Format(conn, path);
         }
         #endif
 
@@ -36,6 +38,7 @@ namespace Tauron.Application.CelloManager.Data.Core
         public void UpdateSchema()
         {
             Database.Migrate();
+            SaveChanges();
         }
     }
 }

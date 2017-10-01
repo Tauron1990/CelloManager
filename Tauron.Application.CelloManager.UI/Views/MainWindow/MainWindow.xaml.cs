@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using Syncfusion.Themes.VisualStudio2015.WPF;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews;
 using Tauron.Application.Ioc;
@@ -33,21 +32,21 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow
         {
             //SkinStorage.SetVisualStyle(this, "Metro");
 
-            var helper = new VisualStudio2015SkinHelper();
-            List<List<string>> xamlThemes = new List<List<string>>
-            {
-                helper.GetDictionaries("MSControls", string.Empty),
-                helper.GetDictionaries("DockingManager", string.Empty),
-                helper.GetDictionaries("DocumentContainer", string.Empty),
-                helper.GetDictionaries("ChromelessWindow", string.Empty),
-                helper.GetDictionaries("SfDataGrid", string.Empty),
-                helper.GetDictionaries("PivotGridControl", string.Empty)
-            };
+            //var helper = new VisualStudio2015SkinHelper();
+            //List<List<string>> xamlThemes = new List<List<string>>
+            //{
+            //    helper.GetDictionaries("MSControls", string.Empty),
+            //    helper.GetDictionaries("DockingManager", string.Empty),
+            //    helper.GetDictionaries("DocumentContainer", string.Empty),
+            //    helper.GetDictionaries("ChromelessWindow", string.Empty),
+            //    helper.GetDictionaries("SfDataGrid", string.Empty),
+            //    helper.GetDictionaries("PivotGridControl", string.Empty)
+            //};
 
-            foreach (var theme in xamlThemes.SelectMany(list => list).Distinct())
-            {
-                Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(theme, UriKind.RelativeOrAbsolute) });
-            }
+            //foreach (var theme in xamlThemes.SelectMany(list => list).Distinct())
+            //{
+            //    Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(theme, UriKind.RelativeOrAbsolute) });
+            //}
         }
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
@@ -76,10 +75,18 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow
                 if (!(child2.Content is SpoolDataEditingView)) continue;
 
                 var temp = VisualTreeHelper.GetParent(child2);
-                if(temp == null) continue;
-                temp = VisualTreeHelper.GetParent(temp);
-                if(temp == null) continue;
-                var temp2 = VisualTreeHelper.GetParent(temp) as DockPanel;
+                var temp2 = temp as DockPanel;
+                if (temp2 == null)
+                {
+                    if(temp == null) continue;
+                    temp = VisualTreeHelper.GetParent(temp);
+                    temp2 = temp as DockPanel;
+                    if (temp2 == null)
+                    {
+                        if(temp == null) continue;
+                        temp2 = VisualTreeHelper.GetParent(temp) as DockPanel;
+                    }
+                }
                 temp2?.SetBinding(MinWidthProperty, new Binding(nameof(MinWidth)) {Source = child2.Content}).UpdateTarget();
             }
         }

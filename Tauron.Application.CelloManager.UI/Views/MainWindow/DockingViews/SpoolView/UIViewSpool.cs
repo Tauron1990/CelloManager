@@ -1,7 +1,7 @@
 using System;
-using System.Collections;
 using System.ComponentModel;
 using System.Windows.Input;
+using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helper;
@@ -21,6 +21,8 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         {
             _spool = spool;
             _manager = manager;
+            RegisterInheritedModel("CelloSpool", spool);
+            EditingInheritedModel = true;
 
             _spool.PropertyChanged += SpoolOnPropertyChanged;
             StepCount = 1;
@@ -34,10 +36,10 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         {
         }
 
-        public string FirstTwo => Name.Substring(0, 2);
-        public string LastText => Name.Substring(2, Name.Length - 2);
+        public string FirstTwo => _spool.Name.Substring(0, 2);
+        public string LastText => _spool.Name.Substring(2, _spool.Name.Length - 2);
 
-        public string AmountText => Amount + " " + UIResources.CommonLabelOf + " " + Neededamount;
+        public string AmountText => _spool.Amount + " " + UIResources.CommonLabelOf + " " + _spool.Neededamount;
 
         public int StepCount
         {
@@ -53,20 +55,22 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
         public override string ToString()
         {
-            return $"Name: {Name} + Type: {Type}";
+            return $"Name: {_spool.Name} + Type: {_spool.Type}";
         }
 
         private void SpoolOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             OnPropertyChanged(propertyChangedEventArgs);
-            if (propertyChangedEventArgs.PropertyName == nameof(Name))
+            if (propertyChangedEventArgs.PropertyName == nameof(_spool.Name))
             {
                 OnPropertyChangedExplicit(nameof(FirstTwo));
                 OnPropertyChangedExplicit(nameof(LastText));
             }
 
-            if (propertyChangedEventArgs.PropertyName == nameof(Amount) || propertyChangedEventArgs.PropertyName == nameof(Neededamount))
+            if (propertyChangedEventArgs.PropertyName == nameof(_spool.Amount) || propertyChangedEventArgs.PropertyName == nameof(_spool.Neededamount))
                 OnPropertyChangedExplicit(nameof(AmountText));
+
+            _manager.UpdateSpools(new []{GetAmoutUpdaterAction()});
         }
 
         public ICommand AddCommand { get; private set; }
@@ -85,13 +89,12 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
                 _manager.SpoolEmty(_spool);
         }
 
-        public Action GetAmoutUpdaterAction()
+        public Action<IUnitOfWork> GetAmoutUpdaterAction()
         {
-            return () =>
+            return u =>
             {
-                _spool.UpdateSpool();
+                _spool.UpdateSpool(u);
                 
-                OnPropertyChangedExplicit(nameof(Amount));
                 OnPropertyChangedExplicit(nameof(AmountText));
             };
         }
@@ -104,34 +107,6 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
             return temp;
         }
-
-        #region ICelloImpl
-
-        public string Name
-        {
-            get => _spool.Name;
-            set => throw new InvalidOperationException();
-        }
-
-        public string Type
-        {
-            get => _spool.Type;
-            set => throw new InvalidOperationException();
-        }
-
-        public int Amount
-        {
-            get => _spool.Amount;
-            set => throw new InvalidOperationException();
-        }
-
-        public int Neededamount
-        {
-            get => _spool.Neededamount;
-            set => throw new InvalidOperationException();
-        }
-
-        #endregion
 
         #region Equals
 

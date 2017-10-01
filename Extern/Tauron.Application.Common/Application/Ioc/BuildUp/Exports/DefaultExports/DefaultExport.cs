@@ -48,6 +48,8 @@ namespace Tauron.Application.Ioc.BuildUp.Exports.DefaultExports
         /// </param>
         private void Initialize(bool anonym)
         {
+            _isAnonymos = anonym;
+
             Globalmetadata = new Dictionary<string, object>();
 
             IEnumerable<ExportMetadataBaseAttribute> metadata =
@@ -120,6 +122,8 @@ namespace Tauron.Application.Ioc.BuildUp.Exports.DefaultExports
 
         /// <summary>The _exports.</summary>
         private ExportMetadata[] _exports;
+
+        private bool _isAnonymos;
 
         #endregion
 
@@ -246,7 +250,7 @@ namespace Tauron.Application.Ioc.BuildUp.Exports.DefaultExports
         /// </returns>
         public ExportMetadata GetNamedExportMetadata(string contractName)
         {
-            return _exports.Single(exm => exm.ContractName == contractName);
+            return _isAnonymos ? _exports[0] : _exports.Single(exm => exm.ContractName == contractName);
         }
 
         /// <summary>
@@ -260,7 +264,7 @@ namespace Tauron.Application.Ioc.BuildUp.Exports.DefaultExports
         /// </returns>
         public IEnumerable<ExportMetadata> SelectContractName(string contractName)
         {
-            return _exports.Where(meta => meta.ContractName == contractName);
+            return _isAnonymos ? _exports : _exports.Where(meta => meta.ContractName == contractName);
         }
 
         /// <summary>

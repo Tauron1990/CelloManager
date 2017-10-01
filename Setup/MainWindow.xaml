@@ -60,7 +60,7 @@
                                CancelVisible="False" BackVisible="False">
             <StackPanel Margin="0, 70">
                 <CheckBox Margin="5"  Content="{Binding ResourceWrapper.WizardContentFinishStartAppLabel}" IsChecked="{Binding PageContext.StartApp}"/>
-                <CheckBox Margin="5" Content="{Binding ResourceWrapper.WizardCreateShortcutLabel}" IsChecked="{Binding PageContext.CreateShortcut}"/>
+                <!--<CheckBox Margin="5" Content="{Binding ResourceWrapper.WizardCreateShortcutLabel}" IsChecked="{Binding PageContext.CreateShortcut}"/>-->
             </StackPanel>
         </syncfusion:WizardPage>
     </syncfusion:WizardControl>

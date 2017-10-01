@@ -1,4 +1,5 @@
-﻿using Tauron.Application.Models;
+﻿using Tauron.Application.CelloManager.Data.Core;
+using Tauron.Application.Models;
 
 namespace Tauron.Application.CelloManager.Logic.Manager
 {
@@ -26,6 +27,6 @@ namespace Tauron.Application.CelloManager.Logic.Manager
             return name + "+" + type;
         }
 
-        public abstract void UpdateSpool();
+        public abstract void UpdateSpool(IUnitOfWork work);
     }
 }

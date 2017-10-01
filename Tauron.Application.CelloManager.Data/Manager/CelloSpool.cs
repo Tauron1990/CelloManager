@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Resources;
@@ -22,22 +21,18 @@ namespace Tauron.Application.CelloManager.Data.Manager
         public static ObservableProperty NeededamountProperty = RegisterProperty("Neededamount", typeof(CelloSpool),
             typeof(int), new ObservablePropertyMetadata().SetValidationRules(new ModelRule(IntValidator) {Message = () => UIResources.LabelErrorNonNegativeInt}));
 
-        public CelloSpool(CelloSpoolEntry entry, CelloRepository repository, bool isNew = false)
+        public CelloSpool(CelloSpoolEntry entry, bool isNew = false)
         {
             Name = entry.Name;
             Type = entry.Type;
             Amount = entry.Amount;
             Neededamount = entry.Neededamount;
+            Id = entry.Id;
 
-            CoreEntry = entry;
             IsNew = isNew;
-            _repository = repository;
             entry.IdChangedEvent += () => OnPropertyChangedExplicit(nameof(Id));
         }
-
-        private readonly CelloRepository _repository;
-
-        public CelloSpoolEntry CoreEntry { get; private set; }
+        
         public bool IsNew { get; }
 
         public override string Name
@@ -64,55 +59,21 @@ namespace Tauron.Application.CelloManager.Data.Manager
             set => SetValue(NeededamountProperty, value);
         }
 
-        public override int Id => CoreEntry.Id;
+        public override int Id { get; }
 
-        public override void UpdateSpool()
+        public override void UpdateSpool(IUnitOfWork work)
         {
-            CoreEntry = _repository.GetEntry(Name, Type);
-
-            Name = CoreEntry.Name;
-            Type = CoreEntry.Type;
-            Amount = CoreEntry.Amount;
-            Neededamount = CoreEntry.Neededamount;
+            work.SpoolRepository.UpdateEntry(this);
         }
 
         public override string UniquieId => BuildUinqueId(this);
 
-        public override void OnPropertyChanged(PropertyChangedEventArgs eventArgs)
-        {
-            if (CoreEntry != null)
-                switch (eventArgs.PropertyName)
-                {
-                    case nameof(Name):
-                        CoreEntry = UpdateCoreEntry(CoreEntry.Id, entry => entry.Name = Name);
-                        break;
-                    case nameof(Type):
-                        CoreEntry = UpdateCoreEntry(CoreEntry.Id, entry => entry.Type = Type);
-                        break;
-                    case nameof(Amount):
-                        CoreEntry = UpdateCoreEntry(CoreEntry.Id, entry => entry.Amount = Amount);
-                        break;
-                    case nameof(Neededamount):
-                        CoreEntry = UpdateCoreEntry(CoreEntry.Id, entry => entry.Neededamount = Neededamount);
-                        break;
-                }
-
-            base.OnPropertyChanged(eventArgs);
-        }
-
-        private CelloSpoolEntry UpdateCoreEntry(int id, Action<CelloSpoolEntry> entryUpdate)
-        {
-            entryUpdate(CoreEntry);
-            if(!IsNew)
-                _repository.UpdateEntry(CoreEntry);
-            return CoreEntry;
-        }
 
         public bool Equals(CelloSpool other)
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(CoreEntry, other.CoreEntry);
+            return Equals(Id, other.Id);
         }
 
         private static bool IntValidator(object o, ValidatorContext validatorContext) => o as int? >= 0;
@@ -137,7 +98,7 @@ namespace Tauron.Application.CelloManager.Data.Manager
 
         public override int GetHashCode()
         {
-            return CoreEntry?.GetHashCode() ?? 0;
+            return Id;
         }
 
         public static bool operator ==(CelloSpool left, CelloSpool right)
