@@ -1,13 +1,16 @@
-﻿<Window 
+﻿<win:SfChromelessWindow 
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
         xmlns:contracts="clr-namespace:Tauron.Application.CelloManager;assembly=Tauron.Application.CelloManager.Contracts"
-        xmlns:sync="http://schemas.syncfusion.com/wpf" x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.MainWindow"
+        xmlns:sync="http://schemas.syncfusion.com/wpf"
+        xmlns:win="clr-namespace:Syncfusion.Windows.Controls;assembly=Syncfusion.SfChromelessWindow.Wpf"
+        xmlns:sfSkinManager="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+        x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.MainWindow"
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded" Title="Cello Manager"
-        d:DesignHeight="500" d:DesignWidth="700" hlp:DataContextServices.Activate="True"
+        d:DesignHeight="500" d:DesignWidth="700" hlp:DataContextServices.Activate="True" sfSkinManager:SfSkinManager.VisualStyle="Metro"
         Background="{x:Static SystemColors.ControlBrush}" WindowState="Maximized" Closing="MainWindow_OnClosing"
         hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.MainWindowName}"
         Icon="pack://siteoforigin:,,,/icon.ico">
@@ -24,4 +27,4 @@
             <TextBlock Text="Update" sync:DockingManager.Header="Update" />-->
         </sync:DockingManager>
     </DockPanel>
-</Window>
+</win:SfChromelessWindow>

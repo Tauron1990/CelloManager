@@ -145,8 +145,7 @@ namespace Tauron.Application.Ioc.BuildUp.Exports.DefaultExports
         {
             if (type == null) throw new ArgumentNullException(nameof(type));
             if (target == null) throw new ArgumentNullException(nameof(target));
-            var info = new ExternalExportInfo(true, true, true, true, (context, service) => target,
-                type.Name);
+            var info = new ExternalExportInfo(true, true, true, true, (context, service) => target, null);
 
             var export = new DefaultExport(type, info, true);
             export.ImportMetadata = _chain.SelectImport(export);

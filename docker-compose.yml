@@ -1,8 +1,0 @@
-version: '2.1'
-
-services:
-  newdata2:
-    image: newdata2
-    build:
-      context: .\NewData2
-      dockerfile: Dockerfile

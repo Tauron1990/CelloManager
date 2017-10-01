@@ -32,6 +32,7 @@ using Castle.DynamicProxy;
 using JetBrains.Annotations;
 using Tauron.Application.Ioc.BuildUp.Strategy;
 using Tauron.Application.Ioc.BuildUp.Strategy.DafaultStrategys;
+using Tauron.Application.Ioc.Components;
 
 #endregion
 
@@ -58,7 +59,7 @@ namespace Tauron.Application.Ioc.BuildUp
             foreach (var parameterInfo in info.GetParameters())
             {
                 var attr = parameterInfo.GetCustomAttribute<InjectAttribute>();
-                if (attr == null) yield return Tuple.Create<Type, string, bool>(parameterInfo.ParameterType, null, false);
+                if (attr == null) yield return Tuple.Create<Type, string, bool>(parameterInfo.ParameterType, null, true);
                 else
                     yield return
                         Tuple.Create(attr.Interface ?? parameterInfo.ParameterType, attr.ContractName, attr.Optional);
@@ -105,31 +106,46 @@ namespace Tauron.Application.Ioc.BuildUp
                 //CContract.Ensures(CContract.Result<object>() != null);
 
                 var parameters = from parm in MapParameters(constructor)
-                    select
-                    build.Container.Resolve(parm.Item1, parm.Item2, parm.Item3, new BuildParameter[0]);
+                    select TryResolveConstructorParameter(parm, build);
+                    
 
                 var policy = build.Policys.Get<InterceptionPolicy>();
 
-                if (policy != null)
-                {
-                    context.ErrorTracer.Phase = "Creating Direct Proxy for " + context.Metadata;
+                if (policy == null) return constructor.Invoke(parameters.ToArray());
 
-                    return service.CreateClassProxy(
-                        build.ExportType,
-                        null,
-                        new ProxyGenerationOptions
-                        {
-                            Selector =
-                                new InternalInterceptorSelector
-                                    ()
-                        },
-                        parameters.ToArray(),
-                        policy.MemberInterceptor.Select(mem => mem.Value)
-                            .ToArray());
-                }
+                build.ErrorTracer.Phase = "Creating Direct Proxy for " + build.Metadata;
 
-                return constructor.Invoke(parameters.ToArray());
+                return service.CreateClassProxy(
+                    build.ExportType,
+                    null,
+                    new ProxyGenerationOptions
+                    {
+                        Selector =
+                            new InternalInterceptorSelector
+                                ()
+                    },
+                    parameters.ToArray(),
+                    policy.MemberInterceptor.Select(mem => mem.Value)
+                        .ToArray());
             };
+        }
+
+
+        private static object TryResolveConstructorParameter(Tuple<Type, string, bool> parm, IBuildContext context)
+        {
+            var temp = context.Container.Resolve(parm.Item1, parm.Item2, parm.Item3, context.Parameters);
+            if (temp != null) return temp;
+            if (context.Parameters == null) return null;
+
+            ExportRegistry tempRegistry = new ExportRegistry();
+
+            foreach (var parameter in context.Parameters)
+                tempRegistry.Register(parameter.CreateExport() ?? throw new InvalidOperationException(), 0);
+
+            var data = tempRegistry.FindOptional(parm.Item1, parm.Item2, context.ErrorTracer);
+            if (data == null) return null;
+
+            return context.Container.BuildUp(data, context.ErrorTracer, context.Parameters);
         }
 
         #endregion

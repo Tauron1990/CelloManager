@@ -1,13 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
-using IWshRuntimeLibrary;
 using Ookii.Dialogs.Wpf;
 using Syncfusion.Windows.Tools.Controls;
 using Tauron.Application.CelloManager.Setup.Resources;
@@ -40,23 +37,15 @@ namespace Tauron.Application.CelloManager.Setup
         public void OnFinish()
         {
             string path = Path.Combine(PageContext.InstallLocation, "CelloManager.exe");
-            try
-            {
-                if (File.Exists(path) && PageContext.CreateShortcut)
-                {
-                    object shDesktop = "Desktop";
-                    WshShell shell = new WshShell();
-                    string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\Cello Manager.lnk";
-                    IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
-                    shortcut.Description = "Cello Manager Shortcut";
-                    //shortcut.Hotkey = "Ctrl+Shift+N";
-                    shortcut.TargetPath = path;
-                    shortcut.Save();
-                }
-            }
-            catch(Exception e) when(e is COMException || e is Win32Exception || e is UnauthorizedAccessException)
-            {
-            }
+            //try
+            //{
+            //    if (File.Exists(path) && PageContext.CreateShortcut)
+            //    {
+            //    }
+            //}
+            //catch(Exception e) when(e is COMException || e is Win32Exception || e is UnauthorizedAccessException)
+            //{
+            //}
 
             if (PageContext.StartApp == true && File.Exists(path))
                 Process.Start(path);

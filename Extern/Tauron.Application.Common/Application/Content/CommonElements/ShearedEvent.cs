@@ -118,6 +118,12 @@ namespace Tauron.Application
                     (IEventAggregator) CommonApplication.Current.Container.Resolve(typeof(IEventAggregator), null);
                 return _aggregator;
             }
+
+            set
+            {
+                if(_aggregator == null)
+                    _aggregator = value;
+            }
         }
 
         #endregion

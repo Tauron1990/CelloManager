@@ -1,10 +1,9 @@
 ﻿using System.Linq;
 using JetBrains.Annotations;
-using Tauron.Application.CelloManager.Data.Core;
 
 namespace Tauron.Application.CelloManager.Data.Historie
 {
-    public interface ICommittedRefillRepository : IRepositoryBase
+    public interface ICommittedRefillRepository
     {
         [ItemNotNull]
         [NotNull]

@@ -1,0 +1,167 @@
+﻿<win:SfChromelessWindow x:Class="AutoReleaser.MainWindow"
+                        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                        xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+                        xmlns:sync="http://schemas.syncfusion.com/wpf"
+                        xmlns:local="clr-namespace:AutoReleaser"
+                        xmlns:data="clr-namespace:AutoReleaser.Datastore"
+                        xmlns:converter="clr-namespace:AutoReleaser.Converter"
+                        xmlns:win="clr-namespace:Syncfusion.Windows.Controls;assembly=Syncfusion.SfChromelessWindow.Wpf"
+                        mc:Ignorable="d" skin:SfSkinManager.VisualStyle="Metro"
+                        Title="Automatic Releaser" Height="500" Width="900" Initialized="MainWindow_OnInitialized">
+    <win:SfChromelessWindow.DataContext>
+        <local:MainWindowViewModel />
+    </win:SfChromelessWindow.DataContext>
+    <win:SfChromelessWindow.Resources>
+        <Thickness x:Key="CommonThickness" Bottom="2" Left="5" Right="5" Top="2" />
+        <BitmapImage x:Key="OkImage" UriSource="Resources/ok.png"/>
+        <BitmapImage x:Key="CancelImage" UriSource="Resources/cancel.png"/>
+        <BitmapImage x:Key="NeutralImage" UriSource="Resources/neutral.png"/>
+        <converter:BoolToImageConverter x:Key="BoolToImageConverter" FalseSource="{StaticResource CancelImage}" TrueSource="{StaticResource OkImage}"/>
+        <converter:TriBoolToImageConverter x:Key="TriBoolToImageConverter" FalseSource="{StaticResource CancelImage}" TrueSource="{StaticResource OkImage}" NeutralSource="{StaticResource NeutralImage}"/>
+    </win:SfChromelessWindow.Resources>
+    <sync:TabControlExt CloseButtonType="Hide" ShowTabListContextMenu="False">
+        <sync:TabItemExt Header="Start" IsEnabled="{Binding UnLocked}">
+            <Grid Margin="5">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="Git Hub:" Margin="{StaticResource CommonThickness}" />
+                <TextBlock Margin="{StaticResource CommonThickness}" Text="Benutzername: " Grid.Row="0" Grid.Column="1" />
+                <TextBox Text="{Binding Options.GitHubName, Delay=1000, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="{StaticResource CommonThickness}" Grid.Row="0" Grid.Column="2" />
+                <TextBlock Margin="5, 0" Text="Repository: " Grid.Row="0" Grid.Column="3" />
+                <TextBox Text="{Binding Options.GitHubRepository, Delay=1000, UpdateSourceTrigger=PropertyChanged}"
+                         Margin="{StaticResource CommonThickness}" Grid.Row="0" Grid.Column="4" />
+                <TextBlock Text="Projekt Mappe: " Margin="{StaticResource CommonThickness}" Grid.Row="1"
+                           Grid.Column="0" />
+                <TextBox Text="{Binding Options.SolutionPath}" Margin="{StaticResource CommonThickness}" Grid.Row="1"
+                         Grid.Column="1" Grid.ColumnSpan="4" />
+                <Button Content="Suchen..." Command="{Binding OpenFolderSolution}"
+                        Margin="{StaticResource CommonThickness}" Grid.Row="1" Grid.Column="5" />
+                <TextBlock Text="Tests: " Margin="{StaticResource CommonThickness}" Grid.Row="2" Grid.Column="0" />
+                <sync:CheckListBox Margin="5, 10" ItemsSource="{Binding Projects}"
+                                   Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2">
+                    <sync:CheckListBox.ItemContainerStyle>
+                        <Style TargetType="sync:CheckListBoxItem">
+                            <Setter Property="IsSelected" Value="{Binding IsTest, Mode=TwoWay}"/>
+                            <Setter Property="Content" Value="{Binding Name}"/>
+                        </Style>
+                    </sync:CheckListBox.ItemContainerStyle>
+                </sync:CheckListBox>
+                <TextBlock Text="Projekte: " Margin="{StaticResource CommonThickness}" Grid.Row="2" Grid.Column="3" />
+                <sync:CheckListBox Margin="5, 10" ItemsSource="{Binding Projects}"
+                                   Grid.Row="2" Grid.Column="4" Grid.ColumnSpan="2">
+                    <sync:CheckListBox.ItemContainerStyle>
+                        <Style TargetType="sync:CheckListBoxItem">
+                            <Setter Property="IsSelected" Value="{Binding IsApp, Mode=TwoWay}"/>
+                            <Setter Property="Content" Value="{Binding Name}"/>
+                        </Style>
+                    </sync:CheckListBox.ItemContainerStyle>
+                </sync:CheckListBox>
+                <TextBlock Text="Setup: " Margin="{StaticResource CommonThickness}" Grid.Row="3" Grid.Column="0"/>
+                <ComboBox ItemsSource="{Binding Projects}" SelectedValuePath="Name" SelectedValue="{Binding Options.SetupProject}" Margin="{StaticResource CommonThickness}" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <TextBlock Text="Boottrapper: " Margin="{StaticResource CommonThickness}" Grid.Row="3" Grid.Column="3"/>
+                <ComboBox ItemsSource="{Binding Projects}" SelectedValuePath="Name" SelectedValue="{Binding Options.SetupBootstrapper}" Margin="{StaticResource CommonThickness}" Grid.Row="3" Grid.Column="4" Grid.ColumnSpan="2"/>
+            </Grid>
+        </sync:TabItemExt>
+        <sync:TabItemExt Header="Releases" IsEnabled="{Binding UnLocked}" IsSelected="{Binding IsSelected}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ItemsControl Grid.ColumnSpan="5" ItemsSource="{Binding ReleaseItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="data:ReleaseItem">
+                            <Border BorderThickness="2" BorderBrush="Black" Margin="5">
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Margin="5"
+                                        Source="{Binding Completed, Converter={StaticResource BoolToImageConverter}}"
+                                        MaxWidth="30" />
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Margin="2" Text="{Binding InitialTime, StringFormat=d, ConverterCulture=de}"/>
+                                        <TextBlock Margin="2" Text="{Binding InitialTime, StringFormat=t, ConverterCulture=de}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <Button Grid.Row="1" Grid.Column="4" Margin="5" Command="{Binding RestartCommand}">
+                    <TextBlock Margin="3">Fortsetzen</TextBlock>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="3" Margin="5" Command="{Binding MinorCommand}">
+                    <TextBlock Margin="3">Minor</TextBlock>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="2" Margin="5" Command="{Binding MajorCommand}">
+                    <TextBlock Margin="3">Major</TextBlock>
+                </Button>
+                <Button Grid.Row="1" Grid.Column="1" Margin="5" Command="{Binding SetupCommand}">
+                    <TextBlock Margin="3">Setup</TextBlock>
+                </Button>
+            </Grid>
+        </sync:TabItemExt>
+        <sync:TabItemExt Header="Prozess" IsSelected="{Binding IsBusy}">
+            <Grid Background="DarkGray">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition Height="15"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="15"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <RichTextBox x:Name="ConsoleBox" Grid.ColumnSpan="6" BorderThickness="0" Background="#FF1E1E1E" Foreground="WhiteSmoke" 
+                                   FontFamily="Lucida Console" IsReadOnly="True" IsReadOnlyCaretVisible="True"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="1" Margin="10">
+                    <TextBlock Text="Test:" Margin="1" VerticalAlignment="Center"/>
+                    <Image Margin="1" Source="{Binding CommonBuilder.TestOk, Converter={StaticResource TriBoolToImageConverter}}" MaxWidth="20"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="2" Margin="10">
+                    <TextBlock Text="Version:" Margin="1" VerticalAlignment="Center"/>
+                    <Image Margin="1" Source="{Binding CommonBuilder.VersionOk, Converter={StaticResource TriBoolToImageConverter}}" MaxWidth="20"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="3" Margin="10">
+                    <TextBlock Text="Build:" Margin="1" VerticalAlignment="Center"/>
+                    <Image Margin="1" Source="{Binding CommonBuilder.BuildOk, Converter={StaticResource TriBoolToImageConverter}}" MaxWidth="20"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.Column="4" Margin="10">
+                    <TextBlock Text="Upload:" Margin="1" VerticalAlignment="Center"/>
+                    <Image Margin="1" Source="{Binding CommonBuilder.UploadOk, Converter={StaticResource TriBoolToImageConverter}}" MaxWidth="20"/>
+                </StackPanel>
+            </Grid>
+        </sync:TabItemExt>
+    </sync:TabControlExt>
+</win:SfChromelessWindow>

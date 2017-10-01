@@ -50,9 +50,7 @@ namespace Tauron.Application.Ioc.BuildUp.Strategy.DafaultStrategys
                 InjectorContext.Container = container;
                 InjectorContext.Target = target;
 
-                ResolverFactory fac;
-
-                var start = InitializeMachine(out fac);
+                var start = InitializeMachine(out var fac);
 
                 InjectorContext.Machine = fac;
 

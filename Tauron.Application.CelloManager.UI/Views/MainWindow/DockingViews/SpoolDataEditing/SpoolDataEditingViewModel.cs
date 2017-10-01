@@ -3,7 +3,8 @@ using System.Linq;
 using JetBrains.Annotations;
 using Syncfusion.UI.Xaml.Grid;
 using Syncfusion.Windows.Tools.Controls;
-using Tauron.Application.CelloManager.Data.Manager;
+using Tauron.Application.CelloManager.Data;
+using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI.Helper;
@@ -15,12 +16,12 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
     [ExportViewModel(AppConststands.SpoolDataEditingView)]
     public sealed class SpoolDataEditingViewModel : DockingTabworkspace, ISpoolChangeNotifer
     {
-        private IDisposable _operation;
+        private IUnitOfWork _operation;
         private bool _isEdited;
 
         [NotNull]
         [Inject]
-        public ICelloRepository CelloRepository;
+        public IUnitOfWorkFactory UnitOfWorkFactory { get; set; }
 
         [Inject]
         public IEventAggregator EventAggregator;
@@ -41,7 +42,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         public void AddElement(AddNewRowInitiatingEventArgs args)
         {
             StartOperation();
-            CelloSpoolBase spool = CelloRepository.Add();
+            CelloSpoolBase spool = _operation.SpoolRepository.Add();
 
             var guiSpool = (GuiEditSpool) args.NewObject;
             guiSpool.Initialize(this, spool);
@@ -57,7 +58,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         {
             StartOperation();
             foreach (var spool in args.Items.Cast<GuiEditSpool>())
-                CelloRepository.Remove(spool.CelloSpoolBase);
+                _operation.SpoolRepository.Remove(spool.CelloSpoolBase);
 
             _isEdited = true;
             InvalidateRequerySuggested();
@@ -66,7 +67,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         [CommandTarget]
         public void Save()
         {
-            CelloRepository.Manager.SaveChanges = true;
+            _operation.Commit();
             _operation.Dispose();
             _operation = null;
             
@@ -83,8 +84,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         public void Cancel()
         {
             if(_operation == null) return;
-
-            CelloRepository.Manager.SaveChanges = false;
+            
             _operation.Dispose();
             _operation = null;
 
@@ -106,13 +106,14 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         {
             if (_operation != null) return;
 
-            _operation = CelloRepository.Manager.StartOperation();
+            _operation = UnitOfWorkFactory.CreateUnitOfWork();
         }
 
         public override void BuildCompled()
         {
-            foreach (var spool in CelloRepository.GetSpools())
-                Spools.Add(new GuiEditSpool(this, spool));
+            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
+                foreach (var spool in work.SpoolRepository.GetSpools())
+                    Spools.Add(new GuiEditSpool(this, spool));
         }
 
         private void Refill()
@@ -120,8 +121,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             using (Spools.BlockChangedMessages())
             {
                 Spools.Clear();
-                foreach (var spool in CelloRepository.GetSpools())
-                    Spools.Add(new GuiEditSpool(this, spool));
+                using (var work = UnitOfWorkFactory.CreateUnitOfWork())
+                    foreach (var spool in work.SpoolRepository.GetSpools())
+                        Spools.Add(new GuiEditSpool(this, spool));
             }
         }
     }

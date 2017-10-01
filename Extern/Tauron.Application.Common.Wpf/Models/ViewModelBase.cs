@@ -98,7 +98,7 @@ namespace Tauron.Application.Models
             return CommonApplication.Current.Container.Resolve<ViewModelBase>(name, false);
         }
 
-        internal void RegisterInheritedModel([NotNull] string name, [NotNull] ModelBase model)
+        protected internal void RegisterInheritedModel([NotNull] string name, [NotNull] ModelBase model)
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
 

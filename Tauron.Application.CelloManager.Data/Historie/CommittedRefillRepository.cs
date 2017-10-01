@@ -6,26 +6,31 @@ using Tauron.Application.Ioc;
 namespace Tauron.Application.CelloManager.Data.Historie
 {
     [Export(typeof(ICommittedRefillRepository))]
-    public sealed class CommittedRefillRepository : RepositoryBase, ICommittedRefillRepository
+    public sealed class CommittedRefillRepository : ICommittedRefillRepository
     {
+        private readonly CoreDatabase _database;
+
+        [Inject]
+        public CommittedRefillRepository(CoreDatabase database)
+        {
+            _database = database;
+        }
+
         public IQueryable<CommittedRefill> GetCommittedRefills()
         {
-            using(CoreManager.StartOperation())
-                return CoreManager.Database.CommittedRefills.Include(r => r.CommitedSpools);
+            return _database.CommittedRefills.Include(r => r.CommitedSpools);
         }
 
         public void Add(CommittedRefill data)
         {
-            using (CoreManager.StartOperation())
-                CoreManager.Database.CommittedRefills.Add(data);
+            _database.CommittedRefills.Add(data);
         }
 
         public void Delete(CommittedRefill entity)
         {
             if (entity == null) return;
 
-            using (CoreManager.StartOperation())
-                CoreManager.Database.CommittedRefills.Remove(entity);
+            _database.CommittedRefills.Remove(entity);
         }
     }
 }

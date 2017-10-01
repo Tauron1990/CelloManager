@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Tauron.Application.CelloManager.Data;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Data.Historie;
 using Tauron.Application.Ioc;
@@ -10,26 +11,33 @@ namespace Tauron.Application.CelloManager.Logic.Historie
     public sealed class CommittedRefillManager : ICommittedRefillManager
     {
         [Inject]
-        public ICommittedRefillRepository CommittedRefillRepository { private get; set; }
+        public IUnitOfWorkFactory UnitOfWorkFactory { private get; set; }
 
         [Inject]
         public IManagerEnviroment Enviroment { private get; set; }
 
 
-        public IEnumerable<CommittedRefill> CommitedRefills => CommittedRefillRepository.GetCommittedRefills().OrderBy(val => val.SentTime);
+        public IEnumerable<CommittedRefill> CommitedRefills
+        {
+            get
+            {
+                using (var work = UnitOfWorkFactory.CreateUnitOfWork())
+                    return work.CommittedRefillRepository.GetCommittedRefills().OrderBy(val => val.SentTime).ToArray();
+            }
+        }
 
         public void Purge()
         {
-            using (CommittedRefillRepository.Manager.StartOperation())
+            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
             {
                 var maxamount = Enviroment.Settings.MaximumSpoolHistorie;
-                var count = CommittedRefillRepository.GetCommittedRefills().Count();
+                var count = work.CommittedRefillRepository.GetCommittedRefills().Count();
 
                 if (count < maxamount) return;
 
-                foreach (var purge in CommittedRefillRepository.GetCommittedRefills().OrderBy(r => r.SentTime).Take(count - maxamount))
+                foreach (var purge in work.CommittedRefillRepository.GetCommittedRefills().OrderBy(r => r.SentTime).Take(count - maxamount))
                 {
-                    CommittedRefillRepository.Delete(purge);
+                    work.CommittedRefillRepository.Delete(purge);
                 }
             }
         }

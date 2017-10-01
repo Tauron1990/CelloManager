@@ -58,11 +58,12 @@
     <Compile Include="AppConststands.cs" />
     <Compile Include="Core\SpoolManager.ActionDispose.cs" />
     <Compile Include="Data\Core\CelloSpoolEntryAddEvent.cs" />
-    <Compile Include="Data\Core\IDatabaseManager.cs" />
-    <Compile Include="Data\Core\IRepositoryBase.cs" />
+    <Compile Include="Data\Core\IOptionsRepository.cs" />
+    <Compile Include="Data\IUnitOfWorkFactory.cs" />
     <Compile Include="Data\Historie\CommittedRefill.cs" />
     <Compile Include="Data\Historie\CommittedSpool.cs" />
-    <Compile Include="Data\Manager\ICelloRepository.cs" />
+    <Compile Include="Data\Core\IUnitOfWork.cs" />
+    <Compile Include="Data\Manager\ISpoolRepository.cs" />
     <Compile Include="Data\Core\IManagerEnviroment.cs" />
     <Compile Include="Data\Core\ISettings.cs" />
     <Compile Include="Logic\Manager\CelloSpoolBase.cs" />

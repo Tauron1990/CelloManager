@@ -6,11 +6,12 @@ namespace Tauron.Application.CelloManager.Data.Historie
     [PublicAPI]
     public sealed class CommittedSpool
     {
-        public CommittedSpool([NotNull] string name, int orderedCount, string type)
+        public CommittedSpool([NotNull] string name, int orderedCount, string type, int spoolId)
         {
             Name = name;
             OrderedCount = orderedCount;
             Type = type;
+            SpoolId = spoolId;
         }
 
         public CommittedSpool()
@@ -22,6 +23,7 @@ namespace Tauron.Application.CelloManager.Data.Historie
         public string Name { get; set; }
         public string Type { get; set; }
         public int OrderedCount { get; set; }
+        public int SpoolId { get; set; }
 
         public void BuildString(StringBuilder builder)
         {

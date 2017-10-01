@@ -16,7 +16,6 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
-    <EnhancerAssembly>$(SolutionDir)\packages\Telerik.DataAccess.Fluent.2016.2.822.1\tools\enhancer\enhancer.exe</EnhancerAssembly>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -69,14 +68,14 @@
     <Reference Include="Microsoft.EntityFrameworkCore.Relational, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.2.0.0\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Relational.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Relational.Design, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.Design.1.1.2\lib\net451\Microsoft.EntityFrameworkCore.Relational.Design.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Relational.Design, Version=1.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Relational.Design.1.1.3\lib\net451\Microsoft.EntityFrameworkCore.Relational.Design.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore.Sqlite, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.EntityFrameworkCore.Sqlite.Core.2.0.0\lib\netstandard2.0\Microsoft.EntityFrameworkCore.Sqlite.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.EntityFrameworkCore.Sqlite.Design, Version=1.1.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Sqlite.Design.1.1.2\lib\net451\Microsoft.EntityFrameworkCore.Sqlite.Design.dll</HintPath>
+    <Reference Include="Microsoft.EntityFrameworkCore.Sqlite.Design, Version=1.1.3.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.EntityFrameworkCore.Sqlite.Design.1.1.3\lib\net451\Microsoft.EntityFrameworkCore.Sqlite.Design.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Extensions.Caching.Abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Extensions.Caching.Abstractions.2.0.0\lib\netstandard2.0\Microsoft.Extensions.Caching.Abstractions.dll</HintPath>
@@ -177,9 +176,6 @@
     <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http, Version=4.1.1.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Net.Http.4.3.2\lib\net46\System.Net.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
     </Reference>
@@ -212,9 +208,6 @@
     <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
     </Reference>
-    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
-    </Reference>
     <Reference Include="System.Text.Encodings.Web, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Text.Encodings.Web.4.4.0\lib\netstandard2.0\System.Text.Encodings.Web.dll</HintPath>
     </Reference>
@@ -231,14 +224,15 @@
   <ItemGroup>
     <Compile Include="Core\CelloSpoolEntry.cs" />
     <Compile Include="Core\CoreDatabase.cs" />
-    <Compile Include="Core\DatabaseManager.cs" />
     <Compile Include="Core\ManagerEnviroment.cs" />
     <Compile Include="Core\OptionEntry.cs" />
-    <Compile Include="Core\RepositoryBase.cs" />
+    <Compile Include="Core\OptionsRepository.cs" />
+    <Compile Include="Core\UnitOfWork.cs" />
+    <Compile Include="Core\UnitOfWorkFactory.cs" />
     <Compile Include="DataModule.cs" />
     <Compile Include="Historie\CommittedRefillRepository.cs" />
     <Compile Include="Manager\CelloSpool.cs" />
-    <Compile Include="Manager\CelloRepository.cs" />
+    <Compile Include="Manager\SpoolRepository.cs" />
     <Compile Include="Migrations\20170805175327_Version1.cs" />
     <Compile Include="Migrations\20170805175327_Version1.designer.cs">
       <DependentUpon>20170805175327_Version1.cs</DependentUpon>
@@ -246,6 +240,10 @@
     <Compile Include="Migrations\20170917053817_Version2.cs" />
     <Compile Include="Migrations\20170917053817_Version2.designer.cs">
       <DependentUpon>20170917053817_Version2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20170925005807_Version3.cs" />
+    <Compile Include="Migrations\20170925005807_Version3.designer.cs">
+      <DependentUpon>20170925005807_Version3.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\CoreDatabaseModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

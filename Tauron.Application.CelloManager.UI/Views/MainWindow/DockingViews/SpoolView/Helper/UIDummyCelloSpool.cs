@@ -1,4 +1,5 @@
-﻿using Tauron.Application.CelloManager.Logic.Manager;
+﻿using Tauron.Application.CelloManager.Data.Core;
+using Tauron.Application.CelloManager.Logic.Manager;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helper
 {
@@ -18,11 +19,11 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helpe
         public override int Amount { get; set; }
         public override int Neededamount { get; set; }
         public override int Id { get; }
-
-        public override void UpdateSpool()
+        public override void UpdateSpool(IUnitOfWork work)
         {
             
         }
+
 
         public override string UniquieId => "Dummy";
     }

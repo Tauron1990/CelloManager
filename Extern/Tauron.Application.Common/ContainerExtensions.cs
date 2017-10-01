@@ -63,10 +63,10 @@ namespace Tauron
         ///     Weiter informationen stehen dann in der Inner Exceptionzur verfügung.
         /// </exception>
         [NotNull]
-        public static TType Resolve<TType>([NotNull] this IContainer con) where TType : class
+        public static TType Resolve<TType>([NotNull] this IContainer con, params BuildParameter[] parameters) where TType : class
         {
             if (con == null) throw new ArgumentNullException(nameof(con));
-            return (TType) con.Resolve(typeof(TType), null);
+            return (TType) con.Resolve(typeof(TType), null, parameters);
         }
 
         /// <summary>
