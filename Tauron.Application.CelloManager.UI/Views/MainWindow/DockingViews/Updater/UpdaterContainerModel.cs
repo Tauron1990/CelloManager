@@ -16,7 +16,6 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             CanClose = false;
             DesiredWidth = 600;
             CanAutoHide = true;
-            State = DockState.Dock;
         }
 
         [InjectModel(UIModule.OperationContextModelName)]

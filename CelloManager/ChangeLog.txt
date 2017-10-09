@@ -1,10 +1,10 @@
-﻿Version 0.4:
+﻿-Version 0.4-
 	Bugs:
-	Fix Bug while ResetSpools not Correctly Restting Spools
+		Fix Bug while ResetSpools not Correctly Restting Spools
 
-Version 0.3:
+-Version 0.3-
 	Futures:
-	GUI Rewrite
+		GUI Rewrite
 
-Version 0.2: 
+-Version 0.2- 
 	Initial Release

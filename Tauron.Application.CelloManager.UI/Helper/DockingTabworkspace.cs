@@ -25,8 +25,8 @@ namespace Tauron.Application.CelloManager.UI.Helper
             {
                 item = new DockItem
                 {
-                    DesiredMinWidthInDockedMode = DesiredWidth,
-                    DesiredMinWidthInFloatingMode = DesiredWidth,
+                    DesiredWidthInDockedMode = DesiredWidth,
+                    DesiredWidthInFloatingMode = DesiredWidth,
                     Content = ViewManager.CreateViewForModel(this) as FrameworkElement,
                     SideInDockedMode = SideInDockedMode,
                     State = State,

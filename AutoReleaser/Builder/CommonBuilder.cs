@@ -1,23 +1,32 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.IO.Compression;
+//using System.IO.Compression;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 using System.Windows.Threading;
 using AutoReleaser.Datastore;
 using AutoReleaser.SolutionLoader;
+using Ionic.Zip;
+using Ionic.Zlib;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Framework;
+using Mono.Cecil;
 using Mvvm;
+using NUnit.ConsoleRunner;
+using NUnit.Engine;
 using Octokit;
 using Octokit.Internal;
 using SharpCompress.Compressors.LZMA;
 using Application = System.Windows.Application;
 using CompressionMode = SharpCompress.Compressors.CompressionMode;
 using FileMode = System.IO.FileMode;
+using ILogger = Microsoft.Build.Framework.ILogger;
 using Project = Microsoft.Build.Evaluation.Project;
 
 namespace AutoReleaser.Builder
@@ -27,11 +36,13 @@ namespace AutoReleaser.Builder
         private class PersonalLogger : ILogger
         {
             private readonly Action<string> _newLineWriter;
+            private readonly Action<bool> _errorNotify;
             private IEventSource _eventSource;
 
-            public PersonalLogger(Action<string> newLineWriter)
+            public PersonalLogger(Action<string> newLineWriter, Action<bool> errorNotify)
             {
                 _newLineWriter = newLineWriter;
+                _errorNotify = errorNotify;
             }
 
             public void Initialize(IEventSource eventSource)
@@ -39,20 +50,25 @@ namespace AutoReleaser.Builder
                 _eventSource = eventSource;
                 _eventSource.BuildFinished += EventSourceOnBuildFinished;
                 _eventSource.BuildStarted += EventSourceOnBuildStarted;
-                _eventSource.ProjectFinished += EventSourceOnProjectFinished;
+                _eventSource.ProjectStarted += EventSourceOnProjectStarted;
                 _eventSource.ErrorRaised += EventSourceOnErrorRaised;
             }
 
-            private void EventSourceOnErrorRaised(object sender, BuildErrorEventArgs e) => _newLineWriter("\t" + FormatEventMessage("error", e.Subcategory, e.Message, e.Code, e.File, 
-                                                                                                        e.ProjectFile, e.LineNumber, e.EndLineNumber, e.ColumnNumber, e.EndColumnNumber, 
-                                                                                                        e.ThreadId));
+            private void EventSourceOnErrorRaised(object sender, BuildErrorEventArgs e)
+            {
+                _newLineWriter("\t" + FormatEventMessage("error", e.Subcategory, e.Message, e.Code, e.File,
+                                   e.ProjectFile, e.LineNumber, e.EndLineNumber, e.ColumnNumber, e.EndColumnNumber,
+                                   e.ThreadId) + Environment.NewLine);
+                _errorNotify(true);
+            }
 
-            private void EventSourceOnProjectFinished(object sender, ProjectFinishedEventArgs e)
+            private void EventSourceOnProjectStarted(object sender, ProjectStartedEventArgs e)
             {
                 _newLineWriter($"\tStart Project: {Path.GetFileName(e.ProjectFile)}... " + Environment.NewLine);
             }
             private void EventSourceOnBuildStarted(object sender, BuildStartedEventArgs e)
             {
+                _errorNotify(false);
                 _newLineWriter("Start Building..." + Environment.NewLine);
             }
             private void EventSourceOnBuildFinished(object sender, BuildFinishedEventArgs e)
@@ -64,7 +80,7 @@ namespace AutoReleaser.Builder
             {
                 _eventSource.BuildFinished -= EventSourceOnBuildFinished;
                 _eventSource.BuildStarted -= EventSourceOnBuildStarted;
-                _eventSource.ProjectFinished -= EventSourceOnProjectFinished;
+                _eventSource.ProjectStarted -= EventSourceOnProjectStarted;
                 _eventSource.ErrorRaised -= EventSourceOnErrorRaised;
                 _eventSource = null;
             }
@@ -115,8 +131,23 @@ namespace AutoReleaser.Builder
                 return stringBuilder2.ToString();
             }
         }
+        private class TestPersonalLogger : TextWriter
+        {
+            private readonly Action<string> _logger;
 
-        private static readonly string PAT = "6400bfe3a3f5e625faa73b43033910e4a30d4833";
+            public TestPersonalLogger(Action<string> logger)
+            {
+                _logger = logger;
+            }
+
+            public override Encoding Encoding { get; } = Encoding.UTF8;
+
+            public override void Write(char value) => _logger(value.ToString());
+
+            public override void Write(string value) => _logger(value);
+
+            public override void WriteLine(string value) => _logger(value + Environment.NewLine);
+        }
 
         private readonly Paragraph _console;
         private readonly Action _startProcess;
@@ -129,6 +160,7 @@ namespace AutoReleaser.Builder
         private string _tempPath;
         private ProjectCollection _projectCollection;
         private string _lastBuildPath;
+        private bool _buildFailed;
 
         private bool? _testOk;
         private bool? _versionOk;
@@ -192,13 +224,7 @@ namespace AutoReleaser.Builder
                 _startProcess();
             });
         }
-        private void CommonFinish()
-        {
-            if(_releaseItem != null)
-                Store.StoreInstance.PushReleaseItem(_releaseItem);
-
-            _dispatcher.Invoke(_stopProcess);
-        }
+        private void CommonFinish() => _dispatcher.Invoke(_stopProcess);
 
         public void Restart(ReleaseItem item)
         {
@@ -211,7 +237,8 @@ namespace AutoReleaser.Builder
         }
         public void Build(UpdateType type)
         {
-            _releaseItem = new ReleaseItem { UpdateType = type };
+            _releaseItem = new ReleaseItem(_options.SolutionPath) { UpdateType = type };
+            Store.StoreInstance.PushReleaseItem(_releaseItem);
             Task.Run(new Action(RunCommonBuild));
         }
 
@@ -225,12 +252,13 @@ namespace AutoReleaser.Builder
                 CreateProjectCollection();
                 try
                 {
-                    LoggerWriteNewLine("Begin Writing Setup...");
+                    LoggerWriteNewLine(Environment.NewLine + "Begin Writing Setup...");
                     LoggerWriteEmpty();
 
                     var setupProject = ConfigurateProject(_options.SetupProject, "SetupProject", out var unused);
 
-                    if (!setupProject.Build("Build"))
+                    setupProject.Build("Build");
+                    if (_buildFailed)
                     {
                         LoggerWriteNewLine("\t Setup Build Failed...");
                         BuildOk = false;
@@ -245,7 +273,7 @@ namespace AutoReleaser.Builder
                     string zipFile = Path.Combine(_tempPath, "file.zip");
 
                     LoggerWriteEmpty();
-                    LoggerWriteNewLine("Creating Zip...\t");
+                    LoggerWriteNewLine("Creating Zip...");
 
                     foreach (var file in Directory.EnumerateFiles(setupPath, "*.*", SearchOption.AllDirectories).ToArray())
                     {
@@ -260,10 +288,19 @@ namespace AutoReleaser.Builder
                                 break;
                         }
                     }
-                    ZipFile.CreateFromDirectory(setupPath, zipFile, CompressionLevel.NoCompression, false);
+                    //ZipFile.CreateFromDirectory(setupPath, zipFile, CompressionLevel.NoCompression, false);
+
+                    using (ZipFile file = new ZipFile(zipFile))
+                    {
+                        file.CompressionMethod = CompressionMethod.None;
+                        file.CompressionLevel = CompressionLevel.None;
+                        file.AddSelectedFiles("*.*", setupPath, string.Empty,true);
+                        file.Save();
+                    }
+
                     AppendLoggerWrite("Completed" + Environment.NewLine);
 
-                    LoggerWriteNewLine("Compressing...\t");
+                    LoggerWriteNewLine("Compressing...");
                     using (var sourceStream = new FileStream(zipFile, FileMode.Open))
                         using (var targetStream = new FileStream(compressionPath, FileMode.Create))
                             using (var compressstream = new LZipStream(targetStream, CompressionMode.Compress))
@@ -271,7 +308,7 @@ namespace AutoReleaser.Builder
                     AppendLoggerWrite("Completed" + Environment.NewLine);
                     LoggerWriteNewLine(Environment.NewLine);
 
-                    if (!bootStrapper.Build("Build"))
+                    if (!bootStrapper.Build("Build") && _buildFailed)
                     {
                         LoggerWriteNewLine("\t Bootstrapper Build Failed...");
                         BuildOk = false;
@@ -293,7 +330,8 @@ namespace AutoReleaser.Builder
                     }
 
                     LoggerWriteNewLine("\tGetting Release...  ");
-                    GitHubClient client = new GitHubClient(new ProductHeaderValue("Auto_Releaser", "1.0"), new InMemoryCredentialStore(new Credentials(PAT)));
+                    GitHubClient client = CreateClient();
+
                     var rep = client.Repository.Get(_options.GitHubName, _options.GitHubRepository).Result;
                     var release = client.Repository.Release.GetAll(rep.Id).Result.FirstOrDefault(r => r.TagName == "s1.0");
 
@@ -317,7 +355,7 @@ namespace AutoReleaser.Builder
 
                     ReleaseAsset uploadAsset;
                     using (var stream = new FileStream(exe, FileMode.Open))
-                        uploadAsset = client.Repository.Release.UploadAsset(release, new ReleaseAssetUpload(exe, "application/vnd.microsoft.portable-executable", stream, null)).Result;
+                        uploadAsset = client.Repository.Release.UploadAsset(release, new ReleaseAssetUpload(Path.GetFileName(exe), "application/vnd.microsoft.portable-executable", stream, TimeSpan.FromMinutes(30))).Result;
 
                     if (uploadAsset == null)
                     {
@@ -354,15 +392,228 @@ namespace AutoReleaser.Builder
         }
         private void RunCommonBuild()
         {
+            if(_releaseItem.Completed) return;
+
             CommonStart();
 
             try
             {
+                try
+                {
+                    PrepareTemp();
+                    CreateProjectCollection();
 
+                    try
+                    {
+                        LoggerWriteNewLine(Environment.NewLine + "Begin Writing App...");
+                        LoggerWriteEmpty();
+
+                        if (!_releaseItem.Test)
+                        {
+                            List<Tuple<string, string>> testPaths = new List<Tuple<string, string>>();
+                            foreach (var proj in from p in _options.Tests where p.Value select p.Key)
+                            {
+
+                                var project = ConfigurateProject(proj, Path.GetFileNameWithoutExtension(proj), out var unused);
+                                testPaths.Add(Tuple.Create(_lastBuildPath, project.GetProperty("AssemblyName").EvaluatedValue));
+                                if (project.Build("Build")) continue;
+                                if (!_buildFailed) continue;
+
+                                AppendLoggerWrite("\t Test Build Failed..." + Environment.NewLine);
+
+                                TestOk = false;
+                                VersionOk = false;
+                                BuildOk = false;
+                                UploadOk = false;
+                                return;
+                            }
+
+                            if (!RunTests(testPaths))
+                            {
+                                LoggerWriteEmpty();
+                                LoggerWriteNewLine(Environment.NewLine + "Writing App Failed...");
+
+                                return;
+                            }
+
+                            _releaseItem.Test = true;
+                            Store.StoreInstance.SaveContainer();
+                        }
+                        else
+                        {
+                            LoggerWriteNewLine("Test Skipped" + Environment.NewLine);
+                            TestOk = true;
+                        }
+
+                        if (!_releaseItem.Version)
+                        {
+                            LoggerWriteEmpty();
+                            LoggerWriteNewLine("Update version...");
+
+                            string[] project = _options.Application.Where(p => p.Value).Select(p => p.Key).ToArray();
+                            VersionUpdater.UpdateVersion(_releaseItem.FullPath, _releaseItem.UpdateType,
+                                new ProjectSortDescription {ProjectsAllowedForVersionModification = project, ProjectsToExclude = new string[0], ProjectsToForce = project.ToArray()});
+
+                            AppendLoggerWrite("Ok");
+                            VersionOk = true;
+
+                            _releaseItem.Version = true;
+                            Store.StoreInstance.SaveContainer();
+                        }
+                        else
+                        {
+                            LoggerWriteNewLine("Version Skipped" + Environment.NewLine);
+                            VersionOk = true;
+                        }
+
+                        LoggerWriteEmpty();
+                        LoggerWriteNewLine("Build Application...");
+
+                        const string path = "Application";
+
+                        var project1 = ConfigurateProject(_options.ApplicationProject, path, out var unused2);
+
+                        project1.Build("Build");
+                        if (_buildFailed)
+                        {
+                            LoggerWriteNewLine("\t Application Build Failed..." + Environment.NewLine);
+                            BuildOk = false;
+                            UploadOk = false;
+                            return;
+                        }
+                        BuildOk = true;
+
+                        LoggerWriteEmpty();
+                        LoggerWriteNewLine("Creating Zip...");
+
+                        foreach (var file in Directory.EnumerateFiles(_lastBuildPath, "*.*", SearchOption.AllDirectories).ToArray())
+                        {
+                            var ext = Path.GetExtension(file);
+
+                            switch (ext)
+                            {
+                                case ".xml":
+                                case ".nuspec":
+                                    File.Delete(file);
+                                    break;
+                            }
+                        }
+
+                        string zipFile = Path.Combine(_tempPath, "Release.zip");
+                        using (ZipFile file = new ZipFile(zipFile))
+                        {
+                            file.CompressionMethod = CompressionMethod.Deflate;
+                            file.CompressionLevel = CompressionLevel.Level9;
+                            file.AddSelectedFiles("*.*", _lastBuildPath, string.Empty, true);
+                            file.Save();
+                        }
+
+                        AppendLoggerWrite("Completed");
+
+                        LoggerWriteEmpty();
+                        LoggerWriteNewLine("Uploading Release...");
+
+                        var client = CreateClient();
+                      
+                        string exe = Directory.EnumerateFiles(_lastBuildPath, "*.exe").Single();
+                        var def = AssemblyDefinition.ReadAssembly(exe);
+
+                        string version = "v" + def.Name.Version;
+                        string description = GetDescription();
+
+                        var newRelease = new NewRelease(version) { Body = description, Name = version};
+                        var release = client.Repository.Release.Create(_options.GitHubName, _options.GitHubRepository, newRelease).Result;
+                        using (var stream = new FileStream(zipFile, FileMode.Open))
+                            client.Repository.Release.UploadAsset(release, new ReleaseAssetUpload("Release.zip", "application/zip", stream, TimeSpan.FromHours(2))).Wait();
+
+                        UploadOk = true;
+                        AppendLoggerWrite("Completed");
+
+                        LoggerWriteEmpty();
+                        LoggerWriteNewLine("Finished");
+                    }
+                    catch (Exception e)
+                    {
+                        Exception e2 = e;
+                        if (e is AggregateException e3)
+                            e2 = e3.InnerExceptions.First();
+
+                        LoggerWriteEmpty();
+                        LoggerWriteNewLine("Error on Build:");
+                        LoggerWriteNewLine("\t" + e2);
+
+                        if (TestOk == null)
+                            TestOk = false;
+                        if (VersionOk == null)
+                            VersionOk = false;
+                        if (BuildOk == null)
+                            BuildOk = false;
+                        UploadOk = false;
+                    }
+                }
+                finally
+                {
+                    DisposeCollection();
+                }
             }
             finally
             {
                 CommonFinish();
+            }
+        }
+
+        private bool RunTests(IEnumerable<Tuple<string, string>> locations)
+        {
+            LoggerWriteNewLine("Beginn Testing..." + Environment.NewLine);
+            LoggerWriteNewLine(Environment.NewLine);
+
+            var copions = new TestOptions(locations.Select(t => Path.Combine(t.Item1, t.Item2 + ".dll")));
+
+            var runner = new TestRunner(TestEngineActivator.CreateInstance(), copions, new ExtendedTextWrapper(new TestPersonalLogger(s => LoggerWriteNewLine("\t" + s))));
+            var erg = runner.Execute();
+            if (erg.Summary.ErrorCount != 0 || erg.Summary.UnexpectedError)
+            {
+                TestOk = false;
+                LoggerWriteNewLine(Environment.NewLine);
+                LoggerWriteNewLine("End Testing... Fail");
+
+                return false;
+            }
+
+            LoggerWriteNewLine(Environment.NewLine);
+            LoggerWriteNewLine("End Testing...");
+            TestOk = true;
+            return true;
+        }
+        private string GetDescription()
+        {
+            string filePath = Path.Combine(_lastBuildPath, "ChangeLog.txt");
+            if (!File.Exists(filePath)) return string.Empty;
+
+            try
+            {
+                StringBuilder realText = new StringBuilder();
+                string text = File.ReadAllText(filePath).Trim();
+                string[] segements = text.Split(new[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                bool isAdded = false;
+
+                foreach (var segemnt in segements)
+                {
+                    if (segemnt.StartsWith("Version"))
+                    {
+                        if (isAdded) break;
+                        continue;
+                    }
+
+                    realText.Append(segemnt.Trim());
+                    isAdded = true;
+                }
+
+                return realText.ToString();
+            }
+            catch (IOException)
+            {
+                return string.Empty;
             }
         }
 
@@ -380,12 +631,23 @@ namespace AutoReleaser.Builder
 
             return project;
         }
+        private GitHubClient CreateClient()
+        {
+            GitHubClient client = new GitHubClient(new ProductHeaderValue("Auto_Releaser", "1.0"), new InMemoryCredentialStore(new Credentials(_options.GitHubName, InputDialog.ShowDialog("Passwort"))));
+
+            var httpClient = client.Connection.GetType().GetField("_httpClient", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(client.Connection);
+            HttpClient htclient = (HttpClient)httpClient?.GetType().GetField("_http", BindingFlags.Instance | BindingFlags.NonPublic)?.GetValue(httpClient);
+            if (htclient != null) htclient.Timeout = TimeSpan.FromHours(1);
+            else throw new InvalidOperationException("HTTP Client Timeout not setable.");
+
+            return client;
+        }
 
         private void CreateProjectCollection()
         {
             _projectCollection = new ProjectCollection { IsBuildEnabled = true };
             
-            _projectCollection.RegisterLogger(new PersonalLogger(LoggerWriteNewLine));
+            _projectCollection.RegisterLogger(new PersonalLogger(LoggerWriteNewLine, b => _buildFailed = b));
             var logger = new Microsoft.Build.Logging.FileLogger { Verbosity = LoggerVerbosity.Normal };
 
             _projectCollection.RegisterLogger(logger);
@@ -405,7 +667,7 @@ namespace AutoReleaser.Builder
             var pi = projectInfo;
             return collection.LoadedProjects.First(p => p.FullPath == pi.FullName);
         }
-        private void SetOutputDirectory(Project project, string path)
+        private static void SetOutputDirectory(Project project, string path)
         {
             project.SetProperty("Configuration", "Release");
             project.SetProperty("Platform", "AnyCPU");
@@ -426,18 +688,18 @@ namespace AutoReleaser.Builder
         }
         private void AppendLoggerWrite(string message)
         {
-            const int BaseLenght = 60;
+            const int baseLenght = 120;
 
             _dispatcher.Invoke(() =>
             {
-                int effectivLenght = BaseLenght - (_currentRun.Text.Length + message.Length);
+                int effectivLenght = baseLenght - (_currentRun.Text.Length + message.Length);
                 _currentRun.Text += message.PadLeft(effectivLenght);
             });
         }
         private void LoggerWriteEmpty()
         {
             var temp = Environment.NewLine;
-            LoggerWriteNewLine(string.Concat(temp, temp, temp, temp));
+            LoggerWriteNewLine(string.Concat(temp, temp));
         }
     }
 }

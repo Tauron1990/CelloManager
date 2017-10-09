@@ -37,7 +37,8 @@ namespace AutoReleaser.Builder
     public enum UpdateType
     {
         Major,
-        Minor
+        Minor,
+        Build
     }
 
     public class ProjectSortDescription
@@ -77,6 +78,9 @@ namespace AutoReleaser.Builder
                     break;
                 case UpdateType.Minor:
                     newVersion = "*.+1.*.*";
+                    break;
+                case UpdateType.Build:
+                    newVersion = "*.*.+1.*";
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(updateType), updateType, null);

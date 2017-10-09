@@ -2,7 +2,6 @@
 using System.Linq;
 using JetBrains.Annotations;
 using Syncfusion.UI.Xaml.Grid;
-using Syncfusion.Windows.Tools.Controls;
 using Tauron.Application.CelloManager.Data;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Manager;
@@ -32,7 +31,6 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             CanClose = false;
             DesiredWidth = 750;
             CanAutoHide = true;
-            State = DockState.AutoHidden;
             CanDocument = true;
         }
 

@@ -9,8 +9,8 @@
         xmlns:win="clr-namespace:Syncfusion.Windows.Controls;assembly=Syncfusion.SfChromelessWindow.Wpf"
         xmlns:sfSkinManager="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
         x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.MainWindow"
-        mc:Ignorable="d" Loaded="MainWindow_OnLoaded" Title="Cello Manager"
-        d:DesignHeight="500" d:DesignWidth="700" hlp:DataContextServices.Activate="True" sfSkinManager:SfSkinManager.VisualStyle="Metro"
+        mc:Ignorable="d" Loaded="MainWindow_OnLoaded" Title="Cello Manager" sfSkinManager:SfSkinManager.VisualStyle="Metro"
+        d:DesignHeight="500" d:DesignWidth="700" hlp:DataContextServices.Activate="True" 
         Background="{x:Static SystemColors.ControlBrush}" WindowState="Maximized" Closing="MainWindow_OnClosing"
         hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.MainWindowName}"
         Icon="pack://siteoforigin:,,,/icon.ico">
@@ -19,7 +19,7 @@
                 FontSize="20" hlp:CommandBinder.Command="Refill:Refill"/>
         <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}" Loaded="DockingManager_OnLoaded"  MinimizeButtonEnabled="True" MaximizeButtonEnabled="True"
                              IsTDIDragDropEnabled="True" IsVS2013SidePanelEnable="True" IsVS2010DraggingEnabled="True"  Name="DockingManager" ContainerMode="TDI" SwitchMode="VistaFlip" 
-                             AutoHideAnimationMode="Fade">
+                             AutoHideAnimationMode="Fade" PersistState="False">
             <!--<TextBlock Text="Matt" sync:DockingManager.Header="Matt" sync:DockingManager.State="Document"/>
             <TextBlock Text="Soft" sync:DockingManager.Header="Soft" sync:DockingManager.State="Document" />
             <TextBlock Text="Protect" sync:DockingManager.Header="Protect" sync:DockingManager.State="Document" />

@@ -95,6 +95,21 @@ namespace AutoReleaser.Builder
             set => InputText.Text = value;
         }
 
+        public static string ShowDialog(string title)
+        {
+            return Application.Current.Dispatcher.Invoke(() =>
+            {
+                var diag = new InputDialog {AllowCancel = false, MainText = title};
+                diag.ShowDialog();
+                return diag.Result;
+            });
+        }
+
         #endregion
+
+        private void InputDialog_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            InputText.Focus();
+        }
     }
 }
