@@ -19,18 +19,22 @@ namespace AutoReleaser
 {
     public sealed class MainWindowViewModel : BindableBase
     {
+        private object _lock = new object();
+        private string _lastPath;
+
         private bool _isBusy;
         private bool _unLocked;
         private bool _isSelected;
+        private bool _loadingData;
 
         public MainWindowViewModel()
         {
             Options = Store.StoreInstance.GetOptions();
-            Options.PropertyChanged += Options_PropertyChanged;
 
             OpenFolderSolution = new DelegateCommand(OpenSolutionPath);
             RestartCommand = new DelegateCommand(Restart, CanRestart);
-            SetupCommand = new DelegateCommand(Setup, CanCommonBuild);
+            SetupCommand = new DelegateCommand(Setup);
+            BuildCommand = new DelegateCommand(Build, CanCommonBuild);
             MinorCommand = new DelegateCommand(Minor, CanCommonBuild);
             MajorCommand = new DelegateCommand(Major, CanCommonBuild);
 
@@ -40,9 +44,9 @@ namespace AutoReleaser
             foreach (var releaseItem in Store.StoreInstance.GetReleaseItems())
                 ReleaseItems.Add(releaseItem);
             CommonBuilder = new CommonBuilder(para, StartProcess, StopProcess, Options);
-
-            SetProjects();
         }
+
+        public void Install() => Options.PropertyChanged += Options_PropertyChanged;
 
         public Options Options { get; }
 
@@ -80,19 +84,43 @@ namespace AutoReleaser
             return diag.ShowDialog(Application.Current.MainWindow) == true ? diag.FileName : null;
         }
 
-        private void SetProjects()
+        public void SetProjects()
         {
-            var path = Options.SolutionPath;
-            CommonBuilder.SetSolutionBrowser(null);
-            Projects.Clear();
+            lock (_lock)
+            {
+                LoadingData = true;
 
-            if (!File.Exists(path)) return;
+                try
+                {
+                    using (Projects.BlockChangedMessages())
+                    {
+                        var path = Options.SolutionPath;
+                        if (path == _lastPath) return;
+                        _lastPath = path;
 
-            var reader = SlnFileReader.SlnFileReaderFactory.GetSlnFileReader(path, ConfigurationPersister.InstanceField.Configuration);
-            CommonBuilder.SetSolutionBrowser(reader);
+                        CommonBuilder.SetSolutionBrowser(null);
+                        Projects.Clear();
 
-            foreach (string name in reader.ProjectInfoList.ProjectInfos.Where(pi => pi.ProjectTypeInfo.ProjectType == ProjectType.CSharpProject).Select(pi => pi.ProjectName))
-                Projects.Add(new ProjectFile(name, Options));
+                        if (!File.Exists(path)) return;
+
+                        var reader = SlnFileReader.SlnFileReaderFactory.GetSlnFileReader(path, ConfigurationPersister.InstanceField.Configuration);
+                        CommonBuilder.SetSolutionBrowser(reader);
+
+                        foreach (string name in reader.ProjectInfoList.ProjectInfos.Where(pi => pi.ProjectTypeInfo.ProjectType == ProjectType.CSharpProject).Select(pi => pi.ProjectName))
+                            Projects.Add(new ProjectFile(name, Options));
+                    }
+                }
+                finally
+                {
+                    LoadingData = false;
+                }
+            }
+        }
+
+        public bool LoadingData
+        {
+            get => _loadingData;
+            set => SetProperty(ref _loadingData, value);
         }
 
         public bool IsBusy
@@ -129,6 +157,7 @@ namespace AutoReleaser
 
         public DelegateCommand RestartCommand { get; }
         public DelegateCommand SetupCommand { get; }
+        public DelegateCommand BuildCommand { get; }
         public DelegateCommand MinorCommand { get; }
         public DelegateCommand MajorCommand { get; }
 
@@ -138,6 +167,7 @@ namespace AutoReleaser
         }
         private bool CanRestart() => CommonBuilder.CanBuild() && ReleaseItems.Any(ri => !ri.Completed);
 
+        private void Build() => CommonBuilder.Build(UpdateType.Build);
         private void Minor() => CommonBuilder.Build(UpdateType.Minor);
         private void Major() => CommonBuilder.Build(UpdateType.Major);
         private void Setup() => CommonBuilder.Setup();

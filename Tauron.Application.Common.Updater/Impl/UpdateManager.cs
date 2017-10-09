@@ -1,16 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Windows;
+using CommandLine;
 using Tauron.Application.Common.Updater.Provider;
 using Tauron.Application.Common.Updater.Service;
-using Tauron.Application.Implement;
 
 namespace Tauron.Application.Common.Updater.Impl
 {
     public sealed class UpdateManager : IUpdateManager
     {
+        private class Options
+        {
+            [Option(StepCommand)]
+            public string Step { get; set; }
+
+            [Option(KillProcessCommand)]
+            public string KillProcess { get; set; }
+
+            [Option(TargetCommand)]
+            public string Target { get; set; }
+
+            [Option(BasePathCommand)]
+            public string BasePath { get; set; }
+
+            [Option(VersionCommand)]
+            public string Version { get; set; }
+        }
+
         private const string StepCommand = "Step";
         private const string Step2Parm = "Setup";
         private const string Step3Parm = "Completion";
@@ -31,28 +49,65 @@ namespace Tauron.Application.Common.Updater.Impl
 
         public InstallerStade Setup()
         {
-            HashSet<CommandLineProcessor.Command> commands = new HashSet<CommandLineProcessor.Command>(CommandLineProcessor.ParseCommandLine(DebuggerService.GetCommandLine(), DebuggerService.SkipFirst));
+            #region Old
 
-            var stepcommand = commands.FirstOrDefault(c => c != null && c.Name == StepCommand);
-            if (stepcommand == null) return InstallerStade.NoUpdate;
+            //HashSet<CommandLineProcessor.Command> commands = new HashSet<CommandLineProcessor.Command>(CommandLineProcessor.ParseCommandLine(DebuggerService.GetCommandLine(), DebuggerService.SkipFirst));
 
-            switch (stepcommand.Parms[0])
+            //var stepcommand = commands.FirstOrDefault(c => c != null && c.Name == StepCommand);
+            //if (stepcommand == null) return InstallerStade.NoUpdate;
+
+            //switch (stepcommand.Parms[0])
+            //{
+            //    case Step2Parm:
+            //        KillProcess(commands.First(c => c.Name == KillProcessCommand).Parms[0]);
+            //        string basePath = GetCommandValue(commands, BasePathCommand);
+            //        string target = GetCommandValue(commands, TargetCommand);
+            //        Version newVersion = Version.Parse(GetCommandValue(commands, VersionCommand));
+
+            //        ExecuteSetup(basePath, target, newVersion);
+            //        return InstallerStade.Shudown;
+            //    case Step3Parm:
+            //        KillProcess(commands.First(c => c.Name == KillProcessCommand).Parms[0]);
+            //        UpdaterService.Configuration.Provider.UpdaterFilesLocation.DeleteDirectory(true);
+            //        UpdaterService.Configuration.StartCleanUp?.Invoke();
+            //        return InstallerStade.Compled;
+            //    default:
+            //        return InstallerStade.NoUpdate;
+            //}
+
+            #endregion
+
+            try
             {
-                case Step2Parm:
-                    KillProcess(commands.First(c => c.Name == KillProcessCommand).Parms[0]);
-                    string basePath = GetCommandValue(commands, BasePathCommand);
-                    string target = GetCommandValue(commands, TargetCommand);
-                    Version newVersion = Version.Parse(GetCommandValue(commands, VersionCommand));
+                var commands = new Options();
+                string[] args = Environment.GetCommandLineArgs();
+                Parser.Default.ParseArguments(args, commands);
 
-                    ExecuteSetup(basePath, target, newVersion);
-                    return InstallerStade.Shudown;
-                case Step3Parm:
-                    KillProcess(commands.First(c => c.Name == KillProcessCommand).Parms[0]);
-                    UpdaterService.Configuration.Provider.UpdaterFilesLocation.DeleteDirectory(true);
-                    UpdaterService.Configuration.StartCleanUp?.Invoke();
-                    return InstallerStade.Compled;
-                default:
-                    return InstallerStade.NoUpdate;
+                if (string.IsNullOrWhiteSpace(commands.Step)) return InstallerStade.NoUpdate;
+
+                switch (commands.Step)
+                {
+                    case Step2Parm:
+                        KillProcess(commands.KillProcess);
+                        string basePath = commands.BasePath.Trim('"');
+                        string target = commands.Target.Trim('"');
+                        Version newVersion = Version.Parse(commands.Version);
+
+                        ExecuteSetup(basePath, target, newVersion);
+                        return InstallerStade.Shudown;
+                    case Step3Parm:
+                        KillProcess(commands.KillProcess);
+                        UpdaterService.Configuration.Provider.UpdaterFilesLocation.DeleteDirectory(true);
+                        UpdaterService.Configuration.StartCleanUp?.Invoke();
+                        return InstallerStade.Compled;
+                    default:
+                        return InstallerStade.NoUpdate;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString(), "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                throw;
             }
         }
 
@@ -77,7 +132,7 @@ namespace Tauron.Application.Common.Updater.Impl
             string targetFile = files.CombinePath(configuration.SetupFile);
             var processId = Process.GetCurrentProcess().Id;
 
-            string commandLine = $"-{KillProcessCommand} {processId} -{StepCommand} {Step2Parm} -{TargetCommand} \"{downloaded}\" -{BasePathCommand} \"{AppDomain.CurrentDomain.BaseDirectory}\" -{VersionCommand} {configuration.CurrentVersion}";
+            string commandLine = $"--{KillProcessCommand} {processId} --{StepCommand} {Step2Parm}  --{VersionCommand} {configuration.CurrentVersion} --{TargetCommand} \"{downloaded}\" --{BasePathCommand} \"{AppDomain.CurrentDomain.BaseDirectory}\"";
 
             if (DebuggerService.Debug)
                 DebuggerService.Result = commandLine;
@@ -114,10 +169,10 @@ namespace Tauron.Application.Common.Updater.Impl
 
         }
 
-        private string GetCommandValue(HashSet<CommandLineProcessor.Command> commands, string name)
-        {
-            return commands.First(c => c.Name == name).Parms[0];
-        }
+        //private string GetCommandValue(HashSet<CommandLineProcessor.Command> commands, string name)
+        //{
+        //    return commands.First(c => c.Name == name).Parms[0];
+        //}
 
         private void ExecuteSetup(string basePath, string filePath, Version oldVersion)
         {
@@ -126,7 +181,7 @@ namespace Tauron.Application.Common.Updater.Impl
             string targetFile = basePath.CombinePath(UpdaterService.Configuration.StartFile);
             var processId = Process.GetCurrentProcess().Id;
 
-            string commandLine = $"-{KillProcessCommand} {processId} -{StepCommand} {Step3Parm}";
+            string commandLine = $"--{KillProcessCommand} {processId} --{StepCommand} {Step3Parm}";
 
             if (DebuggerService.Debug)
                 DebuggerService.Result = commandLine;

@@ -11,7 +11,7 @@ using Tauron.Application.Models;
 namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow.SubWindows
 {
     [ExportViewModel(UpdaterConststands.UpdateView)]
-    public class AutoUpdaterViewModel : ViewModelBase
+    public sealed class AutoUpdaterViewModel : ViewModelBase
     {
         private bool _updateFound;
         private bool _upadeRunning;
@@ -137,12 +137,12 @@ namespace Tauron.Application.CelloManager.UI.Views.OptionsWindow.SubWindows
             RemoveHandler();
         }
 
-        protected virtual void OnLockUIEvent()
+        private void OnLockUIEvent()
         {
             LockUIEvent?.Invoke(this, EventArgs.Empty);
         }
 
-        protected virtual void OnShutdownEvent()
+        private void OnShutdownEvent()
         {
             ShutdownEvent?.Invoke(this, EventArgs.Empty);
         }

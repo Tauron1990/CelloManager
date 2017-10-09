@@ -51,14 +51,14 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow
 
         private void MainWindow_OnClosing(object sender, CancelEventArgs e)
         {
-            DockingManager.DeleteDockState();
+            //DockingManager.DeleteDockState();
             DockingManager.DeleteInternalIsolatedStorage();
 
             using (var stringWriter = new StringWriter())
             {
-                DockingManager.ResetState();
+                //DockingManager.ResetState();
                 DockingManager.SaveDockState(stringWriter);
-                Enviroment.Settings.DockingState = stringWriter.ToString();
+                Enviroment.Settings.DockingState = string.Empty;//stringWriter.ToString();
                 Enviroment.Save();
             }
         }
@@ -69,26 +69,26 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow
             if (string.IsNullOrWhiteSpace(text)) return;
             DockingManager.LoadDockState(new StringReader(text));
 
-            foreach (var child in DockingManager.Children)
-            {
-                var child2 = (ContentControl) child;
-                if (!(child2.Content is SpoolDataEditingView)) continue;
+            //foreach (var child in DockingManager.Children)
+            //{
+            //    var child2 = (ContentControl) child;
+            //    if (!(child2.Content is SpoolDataEditingView)) continue;
 
-                var temp = VisualTreeHelper.GetParent(child2);
-                var temp2 = temp as DockPanel;
-                if (temp2 == null)
-                {
-                    if(temp == null) continue;
-                    temp = VisualTreeHelper.GetParent(temp);
-                    temp2 = temp as DockPanel;
-                    if (temp2 == null)
-                    {
-                        if(temp == null) continue;
-                        temp2 = VisualTreeHelper.GetParent(temp) as DockPanel;
-                    }
-                }
-                temp2?.SetBinding(MinWidthProperty, new Binding(nameof(MinWidth)) {Source = child2.Content}).UpdateTarget();
-            }
+            //    var temp = VisualTreeHelper.GetParent(child2);
+            //    var temp2 = temp as DockPanel;
+            //    if (temp2 == null)
+            //    {
+            //        if (temp == null) continue;
+            //        temp = VisualTreeHelper.GetParent(temp);
+            //        temp2 = temp as DockPanel;
+            //        if (temp2 == null)
+            //        {
+            //            if (temp == null) continue;
+            //            temp2 = VisualTreeHelper.GetParent(temp) as DockPanel;
+            //        }
+            //    }
+            //    temp2?.SetBinding(MinWidthProperty, new Binding(nameof(MinWidth)) { Source = child2.Content }).UpdateTarget();
+            //}
         }
     }
 }

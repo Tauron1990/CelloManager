@@ -39,6 +39,8 @@ namespace Tauron.Application.CelloManager.Data.Core
             {
                 _database.OptionEntries.Add(new OptionEntry { key = pair.Key, Value = pair.Value });
             }
+
+            _database.SaveChanges();
         }
     }
 }

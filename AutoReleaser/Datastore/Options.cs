@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using LiteDB;
 
 namespace AutoReleaser.Datastore
 {
@@ -12,9 +11,10 @@ namespace AutoReleaser.Datastore
     {
         private string _gitHubName;
         private string _gitHubRepository;
-        private string _solutionPath;
+        private string _solutionPath = string.Empty;
         private string _setupProject;
         private string _setupBootstrapper;
+        private string _applicationProject;
 
         //[UsedImplicitly]
         //[BsonId]
@@ -85,6 +85,19 @@ namespace AutoReleaser.Datastore
             }
         }
 
+        public string ApplicationProject
+        {
+            get => _applicationProject;
+            set
+            {
+                if(_applicationProject == value) return;
+
+                _applicationProject = value;
+                Update();
+                OnPropertyChanged();
+            }
+        }
+
         [UsedImplicitly]
         public Dictionary<string, bool> Tests { get; set; } = new Dictionary<string, bool>();
 
@@ -96,7 +109,7 @@ namespace AutoReleaser.Datastore
 
         public void Update()
         {
-            Store.StoreInstance.UpdateOptions(this);
+            Store.StoreInstance.SaveContainer();
         }
 
         [NotifyPropertyChangedInvocator]

@@ -36,8 +36,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tauron.Application.Common.U
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UpdateUploader", "UpdateUploader", "{CDCE3138-8126-4895-A6B7-6BF1CB54AB53}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateUploader", "UpdateUploader\UpdateUploader.csproj", "{441C0B22-C91D-401C-9857-B9CF79EC3A98}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Setup", "Setup", "{1A0B4BF8-D48A-413B-89DA-040C60A71E9E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Setup", "Setup\Setup.csproj", "{FD68C5DE-4741-40CC-A741-C4A9B6149060}"
@@ -51,8 +49,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestHelpers", "TestHelpers\TestHelpers.csproj", "{BF5A7A11-C3C2-4F8B-A885-5BE834A011CB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tauron.Application.CelloManager.Logic.Tests", "Tauron.Application.CelloManager.Logic.Tests\Tauron.Application.CelloManager.Logic.Tests.csproj", "{B2C1EDD2-25BF-4419-84B6-7A3E3BD7E10C}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Old", "Old", "{699E889E-C735-4DA2-B685-F5544C936110}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoReleaser", "AutoReleaser\AutoReleaser.csproj", "{06323753-7417-45CA-9103-9FAAAE5A90D1}"
 EndProject
@@ -129,12 +125,6 @@ Global
 		{6E580435-365A-417D-8E25-AA427B375233}.Release Debug|Any CPU.Build.0 = Release|Any CPU
 		{6E580435-365A-417D-8E25-AA427B375233}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E580435-365A-417D-8E25-AA427B375233}.Release|Any CPU.Build.0 = Release|Any CPU
-		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release Debug|Any CPU.ActiveCfg = Release|Any CPU
-		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release Debug|Any CPU.Build.0 = Release|Any CPU
-		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{441C0B22-C91D-401C-9857-B9CF79EC3A98}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060}.Release Debug|Any CPU.ActiveCfg = Release|Any CPU
@@ -181,18 +171,16 @@ Global
 		{2CC827C8-5084-4334-8A68-0515DA46465E} = {49F661E2-BF60-4F98-9260-42A9A74299CA}
 		{A4106485-11DE-4735-8F30-039E167ECEB7} = {32E008CC-34A1-4EF7-91C2-8FC713B2556C}
 		{6E580435-365A-417D-8E25-AA427B375233} = {49F661E2-BF60-4F98-9260-42A9A74299CA}
-		{441C0B22-C91D-401C-9857-B9CF79EC3A98} = {699E889E-C735-4DA2-B685-F5544C936110}
 		{FD68C5DE-4741-40CC-A741-C4A9B6149060} = {1A0B4BF8-D48A-413B-89DA-040C60A71E9E}
 		{EF335F16-0EC7-40C4-B1F2-F6A460C6FAD3} = {1A0B4BF8-D48A-413B-89DA-040C60A71E9E}
 		{FD6F5E0A-6033-43C4-AE5F-82A88A1A049F} = {27797B0D-29AA-4A5C-91C2-A214D7793C05}
 		{BF5A7A11-C3C2-4F8B-A885-5BE834A011CB} = {27797B0D-29AA-4A5C-91C2-A214D7793C05}
 		{B2C1EDD2-25BF-4419-84B6-7A3E3BD7E10C} = {27797B0D-29AA-4A5C-91C2-A214D7793C05}
-		{699E889E-C735-4DA2-B685-F5544C936110} = {CDCE3138-8126-4895-A6B7-6BF1CB54AB53}
 		{06323753-7417-45CA-9103-9FAAAE5A90D1} = {CDCE3138-8126-4895-A6B7-6BF1CB54AB53}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.Logging.6.0.1304.0\lib\NET45
 		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Logging.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.ExceptionHandling.Logging.6.0.1304.0\lib\NET45
 	EndGlobalSection
 	GlobalSection(AutomaticVersions) = postSolution
 		UpdateAssemblyVersion.Release|Any CPU = True

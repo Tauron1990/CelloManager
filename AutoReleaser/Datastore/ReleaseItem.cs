@@ -3,14 +3,17 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using AutoReleaser.Builder;
 using JetBrains.Annotations;
-using LiteDB;
 
 namespace AutoReleaser.Datastore
 {
+    [Serializable]
     public sealed class ReleaseItem : INotifyPropertyChanged
     {
-        private bool _completed;
         private UpdateType _updateType;
+        private bool _test;
+        private bool _version;
+        private bool _build;
+        private bool _upload;
 
         [UsedImplicitly]
         public int Id { get; set; }
@@ -18,16 +21,54 @@ namespace AutoReleaser.Datastore
         [UsedImplicitly]
         public DateTime InitialTime { get; set; }
 
-        public bool Completed
+        public bool Completed => Test && Version && Build && Upload;
+
+        public bool Test
         {
-            get => _completed;
+            get => _test;
             set
             {
-                if(_completed == value) return;
+                if(_test == value) return;
 
-                _completed = value;
-                OnPropertyChanged();
+                _test = value;
                 Update();
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Version
+        {
+            get => _version;
+            set
+            {
+                if(_version == value) return;
+                _version = value;
+                Update();
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Build
+        {
+            get => _build;
+            set
+            {
+                if(_build == value) return;
+                _build = value;
+                Update();
+                OnPropertyChanged();
+            }
+        }
+
+        public bool Upload
+        {
+            get => _upload;
+            set
+            {
+                if(_upload == value) return;
+                _upload = value;
+                Update();
+                OnPropertyChanged();
             }
         }
 
@@ -45,12 +86,15 @@ namespace AutoReleaser.Datastore
             }
         }
 
-        public ReleaseItem()
+        public string FullPath { get; }
+
+        public ReleaseItem(string fullPath)
         {
+            FullPath = fullPath;
             InitialTime = DateTime.Now;
         }
 
-        [field:BsonIgnore]
+        [field:NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
@@ -61,7 +105,7 @@ namespace AutoReleaser.Datastore
 
         private void Update()
         {
-            Store.StoreInstance.UpdateReleaseItem(this);
+            Store.StoreInstance.SaveContainer();
         }
     }
 }
