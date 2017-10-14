@@ -16,6 +16,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         private readonly ISpoolManager _manager;
         private CelloSpoolBase _spool;
         private int _stepCount;
+        private bool _isUpdating;
 
         public UIViewSpool(CelloSpoolBase spool, ISpoolManager manager)
         {
@@ -91,10 +92,13 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
         public Action<IUnitOfWork> GetAmoutUpdaterAction()
         {
+            _isUpdating = true;
+
             return u =>
             {
                 _spool.UpdateSpool(u);
-                
+                _isUpdating = false;
+
                 OnPropertyChangedExplicit(nameof(AmountText));
             };
         }

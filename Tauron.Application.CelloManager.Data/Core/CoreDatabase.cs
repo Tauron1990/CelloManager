@@ -2,6 +2,7 @@
 using System.Configuration;
 using Microsoft.EntityFrameworkCore;
 using Tauron.Application.CelloManager.Data.Historie;
+using Tauron.Application.CelloManager.Data.Manager;
 
 namespace Tauron.Application.CelloManager.Data.Core
 {

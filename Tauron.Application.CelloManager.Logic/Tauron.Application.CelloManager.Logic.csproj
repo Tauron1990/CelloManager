@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="Historie\CommittedRefillManager.cs" />
     <Compile Include="LogicModule.cs" />
+    <Compile Include="Manager\CelloSpool.cs" />
     <Compile Include="Manager\SpoolManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -76,6 +77,9 @@
       <Project>{1491d8ef-7674-48d4-8dea-3d74b54e4006}</Project>
       <Name>Tauron.Application.CelloManager.Resources</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="RefillPrinter\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

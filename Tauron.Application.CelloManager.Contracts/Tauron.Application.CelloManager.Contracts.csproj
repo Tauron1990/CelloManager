@@ -59,10 +59,11 @@
     <Compile Include="Core\SpoolManager.ActionDispose.cs" />
     <Compile Include="Data\Core\CelloSpoolEntryAddEvent.cs" />
     <Compile Include="Data\Core\IOptionsRepository.cs" />
-    <Compile Include="Data\IUnitOfWorkFactory.cs" />
     <Compile Include="Data\Historie\CommittedRefill.cs" />
     <Compile Include="Data\Historie\CommittedSpool.cs" />
-    <Compile Include="Data\Core\IUnitOfWork.cs" />
+    <Compile Include="Data\IOperation.cs" />
+    <Compile Include="Data\IOperationManager.cs" />
+    <Compile Include="Data\Manager\CelloSpoolEntry.cs" />
     <Compile Include="Data\Manager\ISpoolRepository.cs" />
     <Compile Include="Data\Core\IManagerEnviroment.cs" />
     <Compile Include="Data\Core\ISettings.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="Logic\Manager\OrderSentEvent.cs" />
     <Compile Include="Logic\Manager\PrintOrderEvent.cs" />
     <Compile Include="Logic\Manager\PrintOrderEventArgs.cs" />
+    <Compile Include="Logic\RefillPrinter\IRefillPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\ResetDatabaseEvent.cs" />
   </ItemGroup>

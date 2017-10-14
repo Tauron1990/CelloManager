@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Tauron.Application.CelloManager.Data.Core;
-using Tauron.Application.CelloManager.Data.Core.Tests;
 using TestHelpers;
 
 // ReSharper disable once CheckNamespace
@@ -12,121 +11,109 @@ namespace Tauron.Application.CelloManager.Data.Historie.Tests
     [TestFixture, NonParallelizable]
     public class CommittedRefillRepositoryTests
     {
-        private static readonly object _block = new object();
-        private DataShuffler _dataShuffler;
-        private IUnitOfWorkFactory _unitOfWorkFactory;
+        private static readonly object Block = new object();
+        private readonly DataShuffler _dataShuffler = new DataShuffler();
+        private IOperationManager _operationManager;
 
         [OneTimeSetUp]
         public void Initialize()
         {
-            lock (_block)
+            lock (Block)
             {
                 InitializeHelper.Initialize();
-
-                _dataShuffler = new DataShuffler();
-
+                
                 CoreDatabase.OverrideConnection(DBHelper.DbConstring);
-                using (var db = new CoreDatabase())
+                using (CoreDatabase db = new CoreDatabase())
                     db.UpdateSchema();
 
-                _unitOfWorkFactory = UnitOfWorkTests.CreateFactory(typeof(CommittedRefillRepository));
-
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        work.CommittedRefillRepository.Add(CreateCommittedRefill());
-                    }
-
-                    work.Commit();
-                }
+                _operationManager = new OperationManager();
             }
         }
 
         [Test, Order(1)]
         public void GetCommittedRefillsTest()
         {
-            lock (_block)
+            lock (Block)
             {
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                _operationManager.Enter(o =>
                 {
-                    CommittedRefill[] data = work.CommittedRefillRepository.GetCommittedRefills().ToArray();
+                    CommittedRefill[] data = o.CommittedRefills.GetCommittedRefills().ToArray();
                     Assert.AreEqual(4, data.Length);
-                }
+                });
             }
         }
 
         [Test, Order(2)]
         public void AddTest()
         {
-            lock (_block)
+            lock (Block)
             {
-                int tempId;
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                int tempId = 0;
+                _operationManager.Enter(p =>
                 {
                     CommittedRefill refillToAdd = CreateCommittedRefill();
 
-                    work.CommittedRefillRepository.Add(refillToAdd);
-                    work.Commit();
+                    p.CommittedRefills.Add(refillToAdd);
+                    p.Commit();
                     tempId = refillToAdd.Id;
-                }
+                });
 
-                int tempLenght;
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                int tempLenght = 0;
+                _operationManager.Enter(p =>
                 {
-                    CommittedRefill[] data = work.CommittedRefillRepository.GetCommittedRefills().ToArray();
+                    CommittedRefill[] data = p.CommittedRefills.GetCommittedRefills().ToArray();
                     tempLenght = data.Length;
                     Assert.NotNull(data.FirstOrDefault(r => r.Id == tempId));
-                }
+                });
 
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                _operationManager.Enter(p =>
                 {
-                    work.CommittedRefillRepository.Add(CreateCommittedRefill());
-                }
+                    p.CommittedRefills.Add(CreateCommittedRefill());
+                });
 
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                _operationManager.Enter(p =>
                 {
-                    CommittedRefill[] data2 = work.CommittedRefillRepository.GetCommittedRefills().ToArray();
+                    CommittedRefill[] data2 = p.CommittedRefills.GetCommittedRefills().ToArray();
 
                     Assert.AreEqual(tempLenght, data2.Length);
-                }
+                });
             }
         }
 
         [Test, Order(3)]
         public void DeleteTest()
         {
-            lock (_block)
+            lock (Block)
             {
-                int count;
-                List<CommittedRefill> data;
+                int count = 0;
+                List<CommittedRefill> data = new List<CommittedRefill>();
 
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                _operationManager.Enter(p =>
                 {
-                    data = work.CommittedRefillRepository.GetCommittedRefills().ToList();
+                    data = p.CommittedRefills.GetCommittedRefills().ToList();
                     count = data.Count;
-                }
+                });
 
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                _operationManager.Enter(p =>
                 {
-                    work.CommittedRefillRepository.Delete(data[0]);
-                }
+                    p.CommittedRefills.Delete(data[0]);
+                });
 
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                _operationManager.Enter(p =>
                 {
-                    CommittedRefill[] data2 = work.CommittedRefillRepository.GetCommittedRefills().ToArray();
+                    CommittedRefill[] data2 = p.CommittedRefills.GetCommittedRefills().ToArray();
                     Assert.AreEqual(count, data2.Length);
 
-                    work.CommittedRefillRepository.Delete(data2[0]);
+                    p.CommittedRefills.Delete(data2[0]);
 
-                    work.Commit();
-                }
+                    p.Commit();
+                });
 
-                using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+                _operationManager.Enter(p =>
                 {
-                    var data2 = work.CommittedRefillRepository.GetCommittedRefills().ToArray();
+                    var data2 = p.CommittedRefills.GetCommittedRefills().ToArray();
                     Assert.AreNotEqual(count, data2.Length);
-                }
+                });
             }
         }
 

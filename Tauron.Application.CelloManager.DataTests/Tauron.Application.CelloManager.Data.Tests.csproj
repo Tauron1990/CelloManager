@@ -125,10 +125,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Core\ManagerEnviromentTests.cs" />
-    <Compile Include="Core\UnitOfWorkTests.cs" />
     <Compile Include="Historie\CommittedRefillRepositoryTests.cs" />
     <Compile Include="Manager\CelloRepositoryTests.cs" />
-    <Compile Include="Manager\CelloSpoolTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

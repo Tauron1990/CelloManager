@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Tauron.Application.CelloManager.Data.Core;
-using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.Ioc;
 
 namespace Tauron.Application.CelloManager.Data.Manager
@@ -17,35 +15,26 @@ namespace Tauron.Application.CelloManager.Data.Manager
             _database = database;
         }
 
-        public void UpdateEntry(CelloSpoolBase celloSpool)
-        {
-            var coreEntry = GetEntry(celloSpool.Id);
-
-            celloSpool.Name = coreEntry.Name;
-            celloSpool.Amount = coreEntry.Amount;
-            celloSpool.Neededamount = coreEntry.Neededamount;
-            celloSpool.Type = coreEntry.Type;
-        }
-
-        public CelloSpoolBase Add()
+        public CelloSpoolEntry Add()
         {
             var temp = new CelloSpoolEntry();
 
             _database.CelloSpools.Add(temp);
-            return new CelloSpool(temp, true);
+            return temp;
         }
 
-        public void Remove(CelloSpoolBase entry)
+        public void Remove(int id)
         {
-            _database.CelloSpools.Remove(GetEntry(entry.Id));
+            _database.CelloSpools.Remove(GetEntry(id));
         }
 
-        public IEnumerable<CelloSpoolBase> GetSpools()
+        public IQueryable<CelloSpoolEntry> GetSpools()
         {
-            return _database.CelloSpools.Select(spool => new CelloSpool(spool, false)).ToArray();
+            return _database.CelloSpools;
         }
+        
 
-        private CelloSpoolEntry GetEntry(int id)
+        public CelloSpoolEntry GetEntry(int id)
         {
             var temp = _database.CelloSpools.Local.FirstOrDefault(e => e.Id == id);
             return temp ?? _database.CelloSpools.Single(c => c.Id == id);

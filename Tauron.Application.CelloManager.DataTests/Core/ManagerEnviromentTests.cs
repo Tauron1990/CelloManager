@@ -12,7 +12,7 @@ namespace Tauron.Application.CelloManager.Data.Core.Tests
         [OneTimeSetUp]
         public void Initialize()
         {
-            _testSubject = new ManagerEnviroment { UnitOfWorkFactory = new UnitOfWorkFactoryMock { OptionsRepository = new OptionsRepositoryMock() } };
+            _testSubject = new ManagerEnviroment {OperationManager = new OperationManagerMock(new OperationMok(new OptionsRepositoryMock(), null, null))};
         }
 
         [Test, Order(1)]
