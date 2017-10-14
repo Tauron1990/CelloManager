@@ -34,6 +34,8 @@ namespace Tauron.Application.CelloManager.Logic.Manager
                 return;
 
             spool.Amount -= 1;
+
+            UpdateSpool(spool);
         }
 
         public void PrintOrder()
@@ -56,6 +58,8 @@ namespace Tauron.Application.CelloManager.Logic.Manager
         public void AddSpool(CelloSpoolBase spool, int value)
         {
             spool.Amount += value;
+
+            UpdateSpool(spool);
         }
 
         private void CommonOrder(Action<PrintOrderEventArgs> spectialAction)
@@ -74,6 +78,8 @@ namespace Tauron.Application.CelloManager.Logic.Manager
                 work.CommittedRefillRepository.Add(refill);
                 ResetSpools(refill, spools);
                 
+                work.SpoolRepository.ResetSpools();
+
                 work.Commit();
             }
 
@@ -97,6 +103,12 @@ namespace Tauron.Application.CelloManager.Logic.Manager
                 select new CommittedSpool(celloSpool.Name, diff, celloSpool.Type, celloSpool.Id);
 
             return new CommittedRefill {CommitedSpools = spools.ToList(), SentTime = DateTime.Now};
+        }
+
+        private void UpdateSpool(CelloSpoolBase spool)
+        {
+            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
+                spool.UpdateSpool(work);
         }
     }
 }

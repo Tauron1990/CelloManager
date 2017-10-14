@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JetBrains.Annotations;
-using Tauron.Application.CelloManager.Data.Core;
 
 namespace Tauron.Application.CelloManager.Logic.Manager
 {
@@ -14,11 +12,5 @@ namespace Tauron.Application.CelloManager.Logic.Manager
         void SpoolEmty([NotNull] CelloSpoolBase spool);
 
         void AddSpool(CelloSpoolBase spool, int value);
-
-        void PrintOrder();
-
-        bool IsRefillNeeded();
-
-        void UpdateSpools(IEnumerable<Action<IUnitOfWork>> updater);
     }
 }

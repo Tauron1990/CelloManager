@@ -15,7 +15,7 @@
         hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.MainWindowName}"
         Icon="pack://siteoforigin:,,,/icon.ico">
     <DockPanel LastChildFill="True">
-        <Button DockPanel.Dock="Bottom" Margin="5" HorizontalAlignment="Right" MinWidth="80" Content="{hlp:SimpleLocalize LabelMainWindowRefill}"
+        <Button DockPanel.Dock="Bottom" Margin="10" HorizontalAlignment="Right" MinWidth="80" Content="{hlp:SimpleLocalize LabelMainWindowRefill}"
                 FontSize="20" hlp:CommandBinder.Command="Refill:Refill"/>
         <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}" Loaded="DockingManager_OnLoaded"  MinimizeButtonEnabled="True" MaximizeButtonEnabled="True"
                              IsTDIDragDropEnabled="True" IsVS2013SidePanelEnable="True" IsVS2010DraggingEnabled="True"  Name="DockingManager" ContainerMode="TDI" SwitchMode="VistaFlip" 

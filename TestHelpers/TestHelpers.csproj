@@ -45,10 +45,10 @@
     <Compile Include="InitializeHelper.cs" />
     <Compile Include="Mocks\CommittedSpoolRepositoryMock.cs" />
     <Compile Include="Mocks\ManagerEnviromentMock.cs" />
+    <Compile Include="Mocks\OperationManagerMock.cs" />
     <Compile Include="Mocks\OptionsRepositoryMock.cs" />
     <Compile Include="Mocks\SettingsMock.cs" />
     <Compile Include="Mocks\SpoolRepositoryMock.cs" />
-    <Compile Include="Mocks\UnitOfWorkFactoryMock.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shuffler.cs" />
   </ItemGroup>

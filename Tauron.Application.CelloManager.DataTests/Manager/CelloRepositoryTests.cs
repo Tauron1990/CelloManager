@@ -13,7 +13,7 @@ namespace Tauron.Application.CelloManager.Data.Manager.Tests
     public class CelloRepositoryTests
     {
         private static DataShuffler _dataShuffler;
-        private IUnitOfWorkFactory _unitOfWorkFactory;
+        private IOperationManager _operationManager;
 
         [OneTimeSetUp]
         public void Initialize()
@@ -28,111 +28,95 @@ namespace Tauron.Application.CelloManager.Data.Manager.Tests
             using (CoreDatabase db = new CoreDatabase())
                 db.UpdateSchema();
 
-            _unitOfWorkFactory = UnitOfWorkTests.CreateFactory(typeof(SpoolRepository));
-        }
-
-        [Test, Order(1)]
-        public void UpdateEntryTest()
-        {
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
-            {
-                for (int i = 0; i < 4; i++)
-                {
-                    var temp = work.SpoolRepository.Add();
-                    Fill(temp);
-                    work.SpoolRepository.UpdateEntry(temp);
-                }
-                
-                work.Commit();
-            }
+            _operationManager = new OperationManager();
         }
 
         [Test, Order(2)]
         public void GetSpoolsTest()
         {
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                var num = work.SpoolRepository.GetSpools().Count();
+                var num = o.Spools.GetSpools().Count();
 
                 Assert.AreNotSame(0, num);
-            }
+            });
         }
 
         [Test, Order(0)]
         public void AddTest()
         {
-            int tempid;
+            int tempid = 0;
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                var celloSpool = work.SpoolRepository.Add();
+                var celloSpool = o.Spools.Add();
                 Fill(celloSpool);
-                work.Commit();
+                o.Commit();
 
-                tempid = work.SpoolRepository.GetSpools().First().Id;
-            }
+                tempid = o.Spools.GetSpools().First().Id;
+            });
 
-            int tempcount;
+            int tempcount = 0;
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                var rep = work.SpoolRepository;
+                var rep = o.Spools;
                 var data = rep.GetSpools().ToArray();
                 tempcount = data.Length;
 
                 Assert.NotNull(data.FirstOrDefault(r => r.Id == tempid));
-            }
+            });
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                var rep = work.SpoolRepository;
+                var rep = o.Spools;
                 rep.Add();
-            }
+            });
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                CelloSpoolBase[] data2 = work.SpoolRepository.GetSpools().ToArray();
+                CelloSpoolEntry[] data2 = o.Spools.GetSpools().ToArray();
 
                 Assert.AreEqual(tempcount, data2.Length);
-            }
+            });
         }
 
         [Test, Order(3)]
         public void RemoveTest()
         {
-            int count;
-            List<CelloSpoolBase> data;
+            int count = 0;
+            List<CelloSpoolEntry> data = new List<CelloSpoolEntry>();
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                data = work.SpoolRepository.GetSpools().ToList();
+                data = o.Spools.GetSpools().ToList();
                 count = data.Count;
-            }
+            });
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                work.SpoolRepository.Remove(data[0]);
-            }
+                o.Spools.Remove(data[0].Id);
+            });
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                var data2 = work.SpoolRepository.GetSpools().ToArray();
+                var data2 = o.Spools.GetSpools().ToArray();
                 Assert.AreEqual(count, data2.Length);
 
-                work.SpoolRepository.Remove(data[0]);
+                o.Spools.Remove(data[0].Id);
 
-                work.Commit();
-            }
+                o.Commit();
+            });
 
-            using (var work = _unitOfWorkFactory.CreateUnitOfWork())
+            _operationManager.Enter(o =>
             {
-                var data2 = work.SpoolRepository.GetSpools().ToArray();
+                var data2 = o.Spools.GetSpools().ToArray();
                 Assert.AreNotEqual(count, data2.Length);
-            }
+            });
         }
         
-        private static void Fill(CelloSpoolBase spool)
+        private static void Fill(CelloSpoolEntry spool)
         {
             spool.Neededamount = _dataShuffler.GetNumber();
             spool.Amount = _dataShuffler.GetNumber(spool.Neededamount);

@@ -11,5 +11,9 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         IEnumerable<CommittedRefill> CommitedRefills { get; }
 
         void Purge();
+        
+        void Refill();
+
+        bool IsRefillNeeded();
     }
 }

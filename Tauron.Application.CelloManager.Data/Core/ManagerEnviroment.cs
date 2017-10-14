@@ -59,23 +59,12 @@ namespace Tauron.Application.CelloManager.Data.Core
         public ISettings Settings { get; }
 
         [Inject]
-        public IUnitOfWorkFactory UnitOfWorkFactory { get; set; }
+        public IOperationManager OperationManager { get; set; }
 
-        public void Save()
-        {
-            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
-                work.OptionsRepository.Save(_cache);
-        }
+        public void Save() => OperationManager.Enter(p => p.Options.Save(_cache));
 
-        private static string GetDicPath()
-        {
-            return Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).CombinePath("Tauron\\CelloManager");
-        }
+        private static string GetDicPath() => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).CombinePath("Tauron\\CelloManager");
 
-        public void BuildCompled()
-        {
-            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
-                work.OptionsRepository.Fill(_cache);
-        }
+        public void BuildCompled() => OperationManager.Enter(p => p.Options.Fill(_cache));
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Tauron.Application.CelloManager.Data.Core
+namespace Tauron.Application.CelloManager.Data.Manager
 {
     public sealed class CelloSpoolEntry : IEquatable<CelloSpoolEntry>
     {

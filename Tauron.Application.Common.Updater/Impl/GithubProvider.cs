@@ -29,7 +29,7 @@ namespace Tauron.Application.Common.Updater.Impl
             string preperationPath = UpdaterFilesLocation.CombinePath("Step2");
 
             Downloader = new SimpleDownloader(UpdaterFilesLocation, setupFileName);
-            Preperator = new ZipPreperator(preperationPath);
+            Preperator = new PackagePreperator(preperationPath);
         }
 
         public IEnumerable<Release> GetReleases()

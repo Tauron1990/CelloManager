@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Data.Manager;
-using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.Ioc;
 
 namespace TestHelpers.Mocks
@@ -10,32 +9,7 @@ namespace TestHelpers.Mocks
     [Export(typeof(ISpoolRepository)), NotShared]
     public class SpoolRepositoryMock : ISpoolRepository
     {
-        private class SimpleSpool : CelloSpoolBase
-        {
-            public SimpleSpool(int id)
-            {
-                Id = id;
-            }
-
-            public override string UniquieId => BuildUinqueId(Name, Type);
-            public override string Name { get; set; }
-            public override string Type { get; set; }
-            public override int Amount { get; set; }
-            public override int Neededamount { get; set; }
-            public override int Id { get; }
-
-            public override void UpdateSpool(IUnitOfWork work)
-            {
-                
-            }
-
-            public override string ToString()
-            {
-                return Id.ToString();
-            }
-        }
-
-        private readonly List<CelloSpoolBase> _spoolBases;
+        private readonly List<CelloSpoolEntry> _spoolBases;
         private int _id;
 
         [Inject]
@@ -49,7 +23,7 @@ namespace TestHelpers.Mocks
         {
             _id = 0;
 
-            _spoolBases = new List<CelloSpoolBase>(toGenerate == -1 ? 0 : toGenerate);
+            _spoolBases = new List<CelloSpoolEntry>(toGenerate == -1 ? 0 : toGenerate);
 
             if(toGenerate == -1) return;
             DataShuffler shuffler = new DataShuffler();
@@ -58,8 +32,9 @@ namespace TestHelpers.Mocks
             {
                 _id++;
 
-                var spool = new SimpleSpool(_id)
+                var spool = new CelloSpoolEntry
                 {
+                    Id =  _id,
                     Neededamount = shuffler.GetNumberMin(3),
                     Name = shuffler.GetName(),
                     Type = shuffler.GetType()
@@ -71,27 +46,27 @@ namespace TestHelpers.Mocks
             }
         }
 
-        public void UpdateEntry(CelloSpoolBase celloSpool)
-        {
-            
-        }
-
-        public CelloSpoolBase Add()
+        public CelloSpoolEntry Add()
         {
             _id++;
-            var spool = new SimpleSpool(_id);
+            var spool = new CelloSpoolEntry { Id = _id };
             _spoolBases.Add(spool);
             return spool;
         }
 
-        public void Remove(CelloSpoolBase entry)
+        public void Remove(int entry)
         {
-            _spoolBases.Remove(entry);
+            _spoolBases.Remove(_spoolBases.First(s => s.Id == entry));
         }
 
-        public IEnumerable<CelloSpoolBase> GetSpools()
+        public IQueryable<CelloSpoolEntry> GetSpools()
         {
-            return _spoolBases;
+            return _spoolBases.AsQueryable();
+        }
+
+        public CelloSpoolEntry GetEntry(int entry)
+        {
+            return _spoolBases.First(s => s.Id == entry);
         }
     }
 }
