@@ -31,22 +31,27 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Key.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations, Version=11.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.11.0.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
-      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.5.0.0-beta11\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -56,34 +61,40 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConststands.cs" />
-    <Compile Include="Core\SpoolManager.ActionDispose.cs" />
-    <Compile Include="Data\Core\CelloSpoolEntryAddEvent.cs" />
-    <Compile Include="Data\Core\IOptionsRepository.cs" />
-    <Compile Include="Data\Historie\CommittedRefill.cs" />
-    <Compile Include="Data\Historie\CommittedSpool.cs" />
-    <Compile Include="Data\IOperation.cs" />
-    <Compile Include="Data\IOperationManager.cs" />
-    <Compile Include="Data\Manager\CelloSpoolEntry.cs" />
-    <Compile Include="Data\Manager\ISpoolRepository.cs" />
     <Compile Include="Data\Core\IManagerEnviroment.cs" />
+    <Compile Include="Data\Core\IOptionsRepository.cs" />
     <Compile Include="Data\Core\ISettings.cs" />
-    <Compile Include="Logic\Manager\CelloSpoolBase.cs" />
+    <Compile Include="Data\Historie\CommittedRefillEntity.cs" />
+    <Compile Include="Logic\Historie\CommittedSpool.cs" />
+    <Compile Include="Data\Manager\CelloSpoolEntity.cs" />
+    <Compile Include="Data\Manager\ISpoolRepository.cs" />
+    <Compile Include="Logic\Historie\CommittedRefill.cs" />
+    <Compile Include="Data\Historie\CommittedSpoolEntity.cs" />
+    <Compile Include="Logic\Historie\DTO\GetCommittedRefillFlag.cs" />
+    <Compile Include="Logic\Historie\DTO\IsRefillNeededResult.cs" />
+    <Compile Include="Logic\Historie\DTO\PurgeSettings.cs" />
+    <Compile Include="Logic\Manager\CelloSpool.cs" />
     <Compile Include="Data\Historie\ICommittedRefillRepository.cs" />
     <Compile Include="Logic\Historie\ICommittedRefillManager.cs" />
+    <Compile Include="Logic\Manager\DTO\AddAmountData.cs" />
+    <Compile Include="Logic\Manager\DTO\RemoveAmountData.cs" />
+    <Compile Include="Logic\Manager\DTO\RemoveAmountResult.cs" />
     <Compile Include="Logic\Manager\ISpoolManager.cs" />
-    <Compile Include="Logic\Manager\OrderSentEvent.cs" />
-    <Compile Include="Logic\Manager\PrintOrderEvent.cs" />
-    <Compile Include="Logic\Manager\PrintOrderEventArgs.cs" />
     <Compile Include="Logic\RefillPrinter\IRefillPrinter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UI\ResetDatabaseEvent.cs" />
+    <Compile Include="RuleNames.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="Key.pfx" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Extern\Tauron.Application.Common\Tauron.Application.Common.csproj">
+    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\MGI Project Manager\Extern\Tauron.Application.Common.BaseLayer\Tauron.Application.Common.BaseLayer.csproj">
+      <Project>{57f54875-27a4-4885-8d0d-47e4b37675cb}</Project>
+      <Name>Tauron.Application.Common.BaseLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\MGI Project Manager\Extern\Tauron.Application.Common\Tauron.Application.Common.csproj">
       <Project>{0d50ee98-a718-41b2-a1b6-57d23fdf5223}</Project>
       <Name>Tauron.Application.Common</Name>
     </ProjectReference>

@@ -18,6 +18,12 @@ namespace Tauron.Application.CelloManager.Data.Core
                 MaximumSpoolHistorie = 256;
             }
 
+            public bool Purge
+            {
+                get => bool.TryParse(GetValue("Purge"), out var result) && result;
+                set => _cache["Purge"] = value.ToString();
+            }
+
             public string DefaultPrinter
             {
                 get => GetValue("DefaultPrinter");
@@ -47,24 +53,26 @@ namespace Tauron.Application.CelloManager.Data.Core
             }
         }
 
+        [Inject]
+        public IOptionsRepository OptionsRepository { get; set; }
+
+        private readonly Dictionary<string, string> _cache = new Dictionary<string, string>();
+
         public ManagerEnviroment()
         {
             GetDicPath().CreateDirectoryIfNotExis();
             Settings = new SettingImpl(_cache);
         }
 
-        private readonly Dictionary<string, string> _cache = new Dictionary<string, string>();
-
-
         public ISettings Settings { get; }
 
-        [Inject]
-        public IOperationManager OperationManager { get; set; }
-
-        public void Save() => OperationManager.Enter(p => p.Options.Save(_cache));
+        public void Save()
+        {
+            OptionsRepository.Save(_cache);
+        }
 
         private static string GetDicPath() => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).CombinePath("Tauron\\CelloManager");
 
-        public void BuildCompled() => OperationManager.Enter(p => p.Options.Fill(_cache));
+        public void BuildCompled() => OptionsRepository.Fill(_cache);
     }
 }

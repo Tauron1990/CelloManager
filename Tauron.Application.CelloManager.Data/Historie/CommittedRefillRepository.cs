@@ -1,36 +1,19 @@
 ﻿using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Tauron.Application.CelloManager.Data.Core;
-using Tauron.Application.Ioc;
+using Tauron.Application.Common.BaseLayer.Data;
 
 namespace Tauron.Application.CelloManager.Data.Historie
 {
-    [Export(typeof(ICommittedRefillRepository))]
-    public sealed class CommittedRefillRepository : ICommittedRefillRepository
+    public sealed class CommittedRefillRepository : Repository<CommittedRefillEntity, int>, ICommittedRefillRepository
     {
-        private readonly CoreDatabase _database;
-
-        [Inject]
-        public CommittedRefillRepository(CoreDatabase database)
+        public IQueryable<CommittedRefillEntity> GetCommittedRefills(bool asNoTracking)
         {
-            _database = database;
+            return (asNoTracking ? QueryAsNoTracking() : Query()).Include(r => r.CommitedSpools);
         }
 
-        public IQueryable<CommittedRefill> GetCommittedRefills()
+        public CommittedRefillRepository(IDatabase database) 
+            : base(database)
         {
-            return _database.CommittedRefills.Include(r => r.CommitedSpools);
-        }
-
-        public void Add(CommittedRefill data)
-        {
-            _database.CommittedRefills.Add(data);
-        }
-
-        public void Delete(CommittedRefill entity)
-        {
-            if (entity == null) return;
-
-            _database.CommittedRefills.Remove(entity);
         }
     }
 }

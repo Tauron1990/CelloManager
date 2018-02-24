@@ -7,10 +7,16 @@ namespace Tauron.Application.CelloManager.Logic.Manager
     {
         [ItemNotNull]
         [NotNull]
-        IEnumerable<CelloSpoolBase> CelloSpools { get; }
+        IEnumerable<CelloSpool> CelloSpools { get; }
 
-        void SpoolEmty([NotNull] CelloSpoolBase spool);
+        bool SpoolEmpty([NotNull] CelloSpool spool, int amount);
 
-        void AddSpool(CelloSpoolBase spool, int value);
+        CelloSpool AddSpool(CelloSpool spool);
+
+        void AddSpoolAmount(CelloSpool spool, int amount);
+
+        void UpdateSpools(IEnumerable<CelloSpool> spools);
+
+        void RemoveSpool(CelloSpool spool);
     }
 }

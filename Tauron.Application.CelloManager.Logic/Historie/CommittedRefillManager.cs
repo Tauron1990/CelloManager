@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using Tauron.Application.CelloManager.Data;
 using Tauron.Application.CelloManager.Data.Core;
-using Tauron.Application.CelloManager.Data.Historie;
+using Tauron.Application.CelloManager.Logic.Historie.DTO;
+using Tauron.Application.Common.BaseLayer;
+using Tauron.Application.Common.BaseLayer.BusinessLayer;
 using Tauron.Application.Ioc;
 
 namespace Tauron.Application.CelloManager.Logic.Historie
@@ -11,35 +11,23 @@ namespace Tauron.Application.CelloManager.Logic.Historie
     public sealed class CommittedRefillManager : ICommittedRefillManager
     {
         [Inject]
-        public IUnitOfWorkFactory UnitOfWorkFactory { private get; set; }
-
-        [Inject]
         public IManagerEnviroment Enviroment { private get; set; }
 
+        [InjectRuleFactory]
+        public RuleFactory RuleFactory { private get; set; }
 
-        public IEnumerable<CommittedRefill> CommitedRefills
-        {
-            get
-            {
-                using (var work = UnitOfWorkFactory.CreateUnitOfWork())
-                    return work.CommittedRefillRepository.GetCommittedRefills().OrderBy(val => val.SentTime).ToArray();
-            }
-        }
+        public IEnumerable<CommittedRefill> CommitedRefills => RuleFactory.CreateIioBusinessRule<GetCommittedRefillFlag, IEnumerable<CommittedRefill>>(RuleNames.GetCommittedRefillRule)
+                                                                          .Action(new GetCommittedRefillFlag(true));
 
-        public void Purge()
-        {
-            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
-            {
-                var maxamount = Enviroment.Settings.MaximumSpoolHistorie;
-                var count = work.CommittedRefillRepository.GetCommittedRefills().Count();
+        public IEnumerable<CommittedRefill> PlacedOrders => RuleFactory.CreateIioBusinessRule<GetCommittedRefillFlag, IEnumerable<CommittedRefill>>(RuleNames.GetCommittedRefillRule)
+                                                                       .Action(new GetCommittedRefillFlag(false));
 
-                if (count < maxamount) return;
+        public void Purge() => RuleFactory.CreateIiBusinessRule<PurgeSettings>(RuleNames.PurgeRule).Action(new PurgeSettings(Enviroment.Settings.MaximumSpoolHistorie));
 
-                foreach (var purge in work.CommittedRefillRepository.GetCommittedRefills().OrderBy(r => r.SentTime).Take(count - maxamount))
-                {
-                    work.CommittedRefillRepository.Delete(purge);
-                }
-            }
-        }
+        public CommittedRefill PlaceOrder() => RuleFactory.CreateOBussinesRule<CommittedRefill>(RuleNames.PlaceOrderRule).Action();
+
+        public void CompledRefill(CommittedRefill refill) => RuleFactory.CreateIiBusinessRule<CommittedRefill>(RuleNames.CompledRefillRule).Action(refill);
+
+        public bool IsRefillNeeded() => RuleFactory.CreateOBussinesRule<IsRefillNeededResult>(RuleNames.IsRefillNeededRule).Action().Need;
     }
 }

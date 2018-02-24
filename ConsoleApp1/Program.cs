@@ -2,7 +2,6 @@
 
 using System.Collections.Generic;
 using Microsoft.Build.Evaluation;
-using net.r_eg.MvsSln;
 
 namespace ConsoleApp1
 {

@@ -1,9 +1,9 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Input;
-using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Resources;
+using Tauron.Application.CelloManager.UI.Models;
 using Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helper;
 using Tauron.Application.Commands;
 using Tauron.Application.Models;
@@ -14,26 +14,27 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
     public class UIViewSpool : ViewModelBase, IEquatable<UIViewSpool>
     {
         private readonly ISpoolManager _manager;
-        private CelloSpoolBase _spool;
+        private readonly SpoolModel _model;
+        private readonly CelloSpool _spool;
         private int _stepCount;
         private bool _isUpdating;
 
-        public UIViewSpool(CelloSpoolBase spool, ISpoolManager manager)
+        public UIViewSpool(CelloSpool spool, ISpoolManager manager, SpoolModel model)
         {
             _spool = spool;
             _manager = manager;
-            RegisterInheritedModel("CelloSpool", spool);
-            EditingInheritedModel = true;
+            _model = model;
 
-            _spool.PropertyChanged += SpoolOnPropertyChanged;
             StepCount = 1;
+            
+            _spool.PropertyChanged += SpoolOnPropertyChanged;
 
             AddCommand = new SimpleCommand(Add);
             RemoveCommand = new SimpleCommand(Remove);
         }
 
         public UIViewSpool()
-            : this(new UIDummyCelloSpool(), new UIDummySpoolManager())
+            : this(new CelloSpool("Test", "64", 100, 200, -1), new UIDummySpoolManager(), null)
         {
         }
 
@@ -41,6 +42,8 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         public string LastText => _spool.Name.Substring(2, _spool.Name.Length - 2);
 
         public string AmountText => _spool.Amount + " " + UIResources.CommonLabelOf + " " + _spool.Neededamount;
+
+        public CelloSpool Spool { get; }
 
         public int StepCount
         {
@@ -51,9 +54,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
                 OnPropertyChanged();
             }
         }
-
-        public string UniquieId => _spool.UniquieId;
-
+        
         public override string ToString()
         {
             return $"Name: {_spool.Name} + Type: {_spool.Type}";
@@ -70,8 +71,6 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
             if (propertyChangedEventArgs.PropertyName == nameof(_spool.Amount) || propertyChangedEventArgs.PropertyName == nameof(_spool.Neededamount))
                 OnPropertyChangedExplicit(nameof(AmountText));
-
-            _manager.UpdateSpools(new []{GetAmoutUpdaterAction()});
         }
 
         public ICommand AddCommand { get; private set; }
@@ -79,28 +78,17 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
         public void Add(object var)
         {
-            _manager.AddSpool(_spool, GetStepCount());
+            _manager.AddSpoolAmount(_spool, GetStepCount());
         }
         
         public void Remove(object var)
         {
             var count = GetStepCount();
 
-            for (var i = 0; i < count; i++)
-                _manager.SpoolEmty(_spool);
-        }
-
-        public Action<IUnitOfWork> GetAmoutUpdaterAction()
-        {
-            _isUpdating = true;
-
-            return u =>
+            if (_manager.SpoolEmpty(_spool, count))
             {
-                _spool.UpdateSpool(u);
-                _isUpdating = false;
-
-                OnPropertyChangedExplicit(nameof(AmountText));
-            };
+                _spool.Amount -= count;
+            }
         }
 
         private int GetStepCount()
@@ -111,6 +99,8 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
             return temp;
         }
+
+        public void Deattach() => _spool.PropertyChanged -= SpoolOnPropertyChanged;
 
         #region Equals
 
@@ -138,14 +128,14 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             return Equals(left, right);
         }
 
-        public static bool operator ==(CelloSpoolBase left, UIViewSpool right)
+        public static bool operator ==(CelloSpool left, UIViewSpool right)
         {
-            return Equals(left, right._spool);
+            return right != null && Equals(left, right._spool);
         }
 
-        public static bool operator !=(CelloSpoolBase left, UIViewSpool right)
+        public static bool operator !=(CelloSpool left, UIViewSpool right)
         {
-            return !Equals(left, right._spool);
+            return right != null && !Equals(left, right._spool);
         }
 
         public static bool operator !=(UIViewSpool left, UIViewSpool right)

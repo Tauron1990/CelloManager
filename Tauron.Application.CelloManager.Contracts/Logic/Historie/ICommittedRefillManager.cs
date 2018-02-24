@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using JetBrains.Annotations;
-using Tauron.Application.CelloManager.Data.Historie;
 
 namespace Tauron.Application.CelloManager.Logic.Historie
 {
@@ -10,9 +9,13 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         [NotNull]
         IEnumerable<CommittedRefill> CommitedRefills { get; }
 
+        IEnumerable<CommittedRefill> PlacedOrders { get; }
+
         void Purge();
         
-        void Refill();
+        CommittedRefill PlaceOrder();
+
+        void CompledRefill(CommittedRefill refill);
 
         bool IsRefillNeeded();
     }

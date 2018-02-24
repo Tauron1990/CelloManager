@@ -9,6 +9,7 @@ using Tauron.Application.CelloManager.Logic;
 using Tauron.Application.CelloManager.Properties;
 using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI;
+using Tauron.Application.Common.BaseLayer.BusinessLayer;
 using Tauron.Application.Common.Updater;
 using Tauron.Application.Common.Updater.UI;
 using Tauron.Application.Implement;
@@ -84,13 +85,12 @@ namespace Tauron.Application.CelloManager
             SimpleLocalize.Register(UILabels.ResourceManager, typeof(UpdaterService).Assembly);
 
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(
-                (ResourceDictionary) System.Windows.Application.LoadComponent(
-                    new Uri(
-                        "/PresentationFramework.Aero, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35;component/themes/Aero.NormalColor.xaml",
-                        UriKind.Relative)));
+                                                                                (ResourceDictionary)
+                                                                                System.Windows.Application.LoadComponent(new PackUriHelper()
+                                                                                                                             .GetUri("Theme.xaml", typeof(App).Assembly.FullName, false)));
         }
 
-        protected override string GetdefaultFileLocation()
+        public override string GetdefaultFileLocation()
         {
             return GetDicPath();
         }
@@ -112,6 +112,7 @@ namespace Tauron.Application.CelloManager
         protected override void Fill(IContainer container)
         {
             ExportResolver resolver = new ExportResolver();
+            resolver.AddAssembly(typeof(RuleFactory).Assembly);
             resolver.AddAssembly(typeof(App).Assembly);
             resolver.AddAssembly(typeof(WpfApplication).Assembly);
             resolver.AddAssembly(typeof(CommonApplication).Assembly);

@@ -58,7 +58,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow
             {
                 //DockingManager.ResetState();
                 DockingManager.SaveDockState(stringWriter);
-                Enviroment.Settings.DockingState = string.Empty;//stringWriter.ToString();
+                Enviroment.Settings.DockingState = stringWriter.ToString();
                 Enviroment.Save();
             }
         }

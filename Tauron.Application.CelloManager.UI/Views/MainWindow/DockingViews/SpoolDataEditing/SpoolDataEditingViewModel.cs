@@ -1,29 +1,22 @@
-﻿using System;
-using System.Linq;
-using JetBrains.Annotations;
+﻿using System.Linq;
 using Syncfusion.UI.Xaml.Grid;
-using Tauron.Application.CelloManager.Data;
-using Tauron.Application.CelloManager.Data.Core;
+using Syncfusion.Windows.Tools.Controls;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI.Helper;
-using Tauron.Application.Ioc;
+using Tauron.Application.CelloManager.UI.Models;
 using Tauron.Application.Models;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 {
     [ExportViewModel(AppConststands.SpoolDataEditingView)]
-    public sealed class SpoolDataEditingViewModel : DockingTabworkspace, ISpoolChangeNotifer
+    public sealed class SpoolDataEditingViewModel : DockingTabworkspace
     {
-        private IUnitOfWork _operation;
-        private bool _isEdited;
+        [InjectModel(UIModule.OperationContextModelName)]
+        public OperationContextModel OperationContextModel { get; set; }
 
-        [NotNull]
-        [Inject]
-        public IUnitOfWorkFactory UnitOfWorkFactory { get; set; }
-
-        [Inject]
-        public IEventAggregator EventAggregator;
+        [InjectModel(UIModule.SpoolModelName)]
+        public SpoolModel SpoolModel { get; set; }
 
         public SpoolDataEditingViewModel() 
             : base(UIResources.LabelOptionsLayout, "SpoolDataEditingView")
@@ -32,6 +25,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             DesiredWidth = 750;
             CanAutoHide = true;
             CanDocument = true;
+            State = DockState.AutoHidden;
         }
 
         public UISyncObservableCollection<GuiEditSpool> Spools { get; } = new UISyncObservableCollection<GuiEditSpool>();
@@ -39,90 +33,50 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         [EventTarget]
         public void AddElement(AddNewRowInitiatingEventArgs args)
         {
-            StartOperation();
-            CelloSpoolBase spool = _operation.SpoolRepository.Add();
+            var uiElement = (GuiEditSpool) args.NewObject;
+            var editSpool = new EditSpool(new CelloSpool());
 
-            var guiSpool = (GuiEditSpool) args.NewObject;
-            guiSpool.Initialize(this, spool);
-            //Spools.Add(guiSpool);
-
-            _isEdited = true;
-
-            InvalidateRequerySuggested();
+            uiElement.Initialize(editSpool);
+            SpoolModel.Add(editSpool);
         }
 
         [EventTarget]
         public void Remove(RecordDeletedEventArgs args)
         {
-            StartOperation();
             foreach (var spool in args.Items.Cast<GuiEditSpool>())
-                _operation.SpoolRepository.Remove(spool.CelloSpoolBase);
-
-            _isEdited = true;
-            InvalidateRequerySuggested();
+                SpoolModel.Remove(spool.EditSpool);
         }
 
         [CommandTarget]
-        public void Save()
+        public void Save() => Stop(true);
+
+        [CommandTarget]
+        public bool CanSave() => SpoolModel.IsInEditing;
+
+        [CommandTarget]
+        public void Cancel() => Stop(false);
+
+        [CommandTarget]
+        public bool CanCancel() => SpoolModel.IsInEditing;
+
+        [CommandTarget]
+        public void BeginEditData()
         {
-            _operation.Commit();
-            _operation.Dispose();
-            _operation = null;
-            
-            EventAggregator.GetEvent<ResetDatabaseEvent, EventArgs>().Publish(EventArgs.Empty);
+            OperationContextModel.IsOperationRunning = true;
+            SpoolModel.EnterEditMode();
+
+            foreach (var editSpool in SpoolModel.EditorSpools)
+                Spools.Add(new GuiEditSpool(editSpool));
         }
 
         [CommandTarget]
-        public bool CanSave()
+        public bool CanBeginEditData() => !SpoolModel.IsInEditing;
+
+        private void Stop(bool flag)
         {
-            return _operation != null && _isEdited;
-        }
-
-        [CommandTarget]
-        public void Cancel()
-        {
-            if(_operation == null) return;
-            
-            _operation.Dispose();
-            _operation = null;
-
-            Refill();
-        }
-
-        [CommandTarget]
-        public bool CanCancel()
-        {
-            return _isEdited;
-        }
-
-        public void SpoolValueChanged(CelloSpoolBase spool)
-        {
-            _isEdited = true;
-        }
-
-        private void StartOperation()
-        {
-            if (_operation != null) return;
-
-            _operation = UnitOfWorkFactory.CreateUnitOfWork();
-        }
-
-        public override void BuildCompled()
-        {
-            using (var work = UnitOfWorkFactory.CreateUnitOfWork())
-                foreach (var spool in work.SpoolRepository.GetSpools())
-                    Spools.Add(new GuiEditSpool(this, spool));
-        }
-
-        private void Refill()
-        {
-            using (Spools.BlockChangedMessages())
-            {
-                Spools.Clear();
-                using (var work = UnitOfWorkFactory.CreateUnitOfWork())
-                    foreach (var spool in work.SpoolRepository.GetSpools())
-                        Spools.Add(new GuiEditSpool(this, spool));
-            }
+            SpoolModel.ExitEditMode(flag);
+            Spools.Clear();
+            OperationContextModel.IsOperationRunning = false;
         }
     }
 }
