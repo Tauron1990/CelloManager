@@ -49,39 +49,11 @@ namespace Tauron.Application.Common.Updater.Impl
 
         public InstallerStade Setup()
         {
-            #region Old
-
-            //HashSet<CommandLineProcessor.Command> commands = new HashSet<CommandLineProcessor.Command>(CommandLineProcessor.ParseCommandLine(DebuggerService.GetCommandLine(), DebuggerService.SkipFirst));
-
-            //var stepcommand = commands.FirstOrDefault(c => c != null && c.Name == StepCommand);
-            //if (stepcommand == null) return InstallerStade.NoUpdate;
-
-            //switch (stepcommand.Parms[0])
-            //{
-            //    case Step2Parm:
-            //        KillProcess(commands.First(c => c.Name == KillProcessCommand).Parms[0]);
-            //        string basePath = GetCommandValue(commands, BasePathCommand);
-            //        string target = GetCommandValue(commands, TargetCommand);
-            //        Version newVersion = Version.Parse(GetCommandValue(commands, VersionCommand));
-
-            //        ExecuteSetup(basePath, target, newVersion);
-            //        return InstallerStade.Shudown;
-            //    case Step3Parm:
-            //        KillProcess(commands.First(c => c.Name == KillProcessCommand).Parms[0]);
-            //        UpdaterService.Configuration.Provider.UpdaterFilesLocation.DeleteDirectory(true);
-            //        UpdaterService.Configuration.StartCleanUp?.Invoke();
-            //        return InstallerStade.Compled;
-            //    default:
-            //        return InstallerStade.NoUpdate;
-            //}
-
-            #endregion
-
             try
             {
-                var commands = new Options();
                 string[] args = Environment.GetCommandLineArgs();
-                Parser.Default.ParseArguments(args, commands);
+                var parsed = Parser.Default.ParseArguments<Options>(args) as Parsed<Options>;
+                var commands = parsed?.Value ?? new Options();
 
                 if (string.IsNullOrWhiteSpace(commands.Step)) return InstallerStade.NoUpdate;
 

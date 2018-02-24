@@ -1,11 +1,11 @@
-﻿<UserControl
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
-    xmlns:sync="http://schemas.syncfusion.com/wpf"
-    x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SpoolDataEditingView" 
-             mc:Ignorable="d" MinWidth="700"
+             xmlns:sync="http://schemas.syncfusion.com/wpf"
+             xmlns:helper="clr-namespace:Tauron.Application.CelloManager.UI.Helper"
+             x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SpoolDataEditingView" 
+             mc:Ignorable="d" MinWidth="700" hlp:DataContextServices.Activate="True"
              d:DesignHeight="300" d:DesignWidth="800">
     <Grid>
         <Grid.Resources>
@@ -70,22 +70,41 @@
             <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <sync:SfDataGrid Name="DataGrid" Grid.Row="0" Grid.ColumnSpan="3" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Row" ItemsSource="{Binding Spools}" 
-                         AllowGrouping="True"  AllowResizingColumns="True" AllowDraggingColumns="True" AllowSorting="False" AllowTriStateSorting="True" ShowRowHeader="True"
-                         ShowGroupDropArea="True" GroupDropAreaText="{hlp:SimpleLocalize SpoolGridGroupingBoxLabel}" AllowEditing="True" NavigationMode="Cell" EditTrigger="OnDoubleTap"
-                         EditorSelectionBehavior="SelectAll" GridValidationMode="InView" LiveDataUpdateMode="AllowDataShaping" AddNewRowPosition="Top" AllowDeleting="True"
-                         hlp:EventBinder.Events="AddNewRowInitiating:AddElement:RecordDeleted:Remove" NewItemPlaceholderPosition="AtBeginning" Loaded="Grid_OnLoaded">
-            <sync:SfDataGrid.Columns>
-                <sync:GridNumericColumn MappingName="Id" HeaderText="Id" AllowSorting="True" AllowEditing="False" NumberDecimalDigits="0" MaximumWidth="30"/>
-                <sync:GridTextColumn MappingName="Name" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutName}" AllowSorting="True" UseBindingValue="True"/>
-                <sync:GridTextColumn MappingName="Type" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutType}" AllowSorting="True" UseBindingValue="True"/>
-                <sync:GridNumericColumn MappingName="Amount" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutAmount}" NumberDecimalDigits="0" ParsingMode="Int" AllowScrollingOnCircle="True" 
-                                        UseBindingValue="True"/>
-                <sync:GridNumericColumn MappingName="Neededamount" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutNeedAmount}" NumberDecimalDigits="0" ParsingMode="Int" 
-                                        AllowScrollingOnCircle="True" AllowNullValue="False" UseBindingValue="True"/>
-            </sync:SfDataGrid.Columns>
-        </sync:SfDataGrid>
+        <Border Grid.Row="0" Grid.ColumnSpan="3" BorderThickness="3" BorderBrush="{Binding SpoolModel.IsInEditing, Converter={helper:BorderEditConverter}}">
+            <sync:SfDataGrid Name="DataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Row"
+                             ItemsSource="{Binding Spools}"
+                             AllowGrouping="True" AllowResizingColumns="True" AllowDraggingColumns="True"
+                             AllowSorting="False" AllowTriStateSorting="True" ShowRowHeader="True"
+                             ShowGroupDropArea="True"
+                             GroupDropAreaText="{hlp:SimpleLocalize SpoolGridGroupingBoxLabel}" AllowEditing="True"
+                             NavigationMode="Cell" EditTrigger="OnDoubleTap"
+                             EditorSelectionBehavior="SelectAll" GridValidationMode="InView" AddNewRowPosition="Top"
+                             AllowDeleting="True"
+                             hlp:EventBinder.Events="AddNewRowInitiating:AddElement:RecordDeleted:Remove"
+                             NewItemPlaceholderPosition="AtBeginning" Loaded="Grid_OnLoaded"
+                             IsEnabled="{Binding SpoolModel.IsInEditing}" LiveDataUpdateMode="AllowDataShaping">
+                <sync:SfDataGrid.Columns>
+                    <sync:GridNumericColumn MappingName="Id" HeaderText="Id" AllowSorting="True" AllowEditing="False"
+                                            NumberDecimalDigits="0" MaximumWidth="30" />
+                    <sync:GridTextColumn MappingName="Name" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutName}"
+                                         AllowSorting="True" UseBindingValue="True" />
+                    <sync:GridTextColumn MappingName="Type" HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutType}"
+                                         AllowSorting="True" UseBindingValue="True" />
+                    <sync:GridNumericColumn MappingName="Amount"
+                                            HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutAmount}"
+                                            NumberDecimalDigits="0" ParsingMode="Int" AllowScrollingOnCircle="True"
+                                            UseBindingValue="True" />
+                    <sync:GridNumericColumn MappingName="Neededamount"
+                                            HeaderText="{hlp:SimpleLocalize LabelOptionsLayoutNeedAmount}"
+                                            NumberDecimalDigits="0" ParsingMode="Int"
+                                            AllowScrollingOnCircle="True" AllowNullValue="False" UseBindingValue="True" />
+                </sync:SfDataGrid.Columns>
+            </sync:SfDataGrid></Border>
         <Button Grid.Row="1" Grid.Column="2" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCommit}" hlp:CommandBinder.Command="SaveData:Save"/>
         <Button Grid.Row="1" Grid.Column="1" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCancel}" hlp:CommandBinder.Command="CancelData:Cancel"/>
+        <Button Grid.Row="1" Grid.Column="0" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsBeginEdit}" hlp:CommandBinder.Command="BeginEditData:BeginEditData"
+                HorizontalAlignment="Left"/>
+
     </Grid>
 </UserControl>
+ 

@@ -61,6 +61,15 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Already finished ähnelt.
+        /// </summary>
+        public static string CommonCompledLabel {
+            get {
+                return ResourceManager.GetString("CommonCompledLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die of ähnelt.
         /// </summary>
         public static string CommonLabelOf {
@@ -84,6 +93,15 @@ namespace Tauron.Application.CelloManager.Resources {
         public static string ComonLabelAdd {
             get {
                 return ResourceManager.GetString("ComonLabelAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The name can not be empty! ähnelt.
+        /// </summary>
+        public static string LabelErrorNonEmptyString {
+            get {
+                return ResourceManager.GetString("LabelErrorNonEmptyString", resourceCulture);
             }
         }
         
@@ -120,6 +138,15 @@ namespace Tauron.Application.CelloManager.Resources {
         public static string LabelOptionsAutoUpdate {
             get {
                 return ResourceManager.GetString("LabelOptionsAutoUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Start Edit ähnelt.
+        /// </summary>
+        public static string LabelOptionsBeginEdit {
+            get {
+                return ResourceManager.GetString("LabelOptionsBeginEdit", resourceCulture);
             }
         }
         
@@ -201,6 +228,51 @@ namespace Tauron.Application.CelloManager.Resources {
         public static string LabelOptionsLayoutType {
             get {
                 return ResourceManager.GetString("LabelOptionsLayoutType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Ordered Count ähnelt.
+        /// </summary>
+        public static string OderViewOrderedCount {
+            get {
+                return ResourceManager.GetString("OderViewOrderedCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Commit ähnelt.
+        /// </summary>
+        public static string OrderCompledWindowCommitLabel {
+            get {
+                return ResourceManager.GetString("OrderCompledWindowCommitLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The order will not be completed. Proceed anyway. ähnelt.
+        /// </summary>
+        public static string OrderCompledWindowNotCheckedMessage {
+            get {
+                return ResourceManager.GetString("OrderCompledWindowNotCheckedMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Id: ähnelt.
+        /// </summary>
+        public static string OrderViewIdLabel {
+            get {
+                return ResourceManager.GetString("OrderViewIdLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Orders ähnelt.
+        /// </summary>
+        public static string OrderViewTitle {
+            get {
+                return ResourceManager.GetString("OrderViewTitle", resourceCulture);
             }
         }
         

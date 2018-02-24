@@ -1,8 +1,5 @@
-﻿using Tauron.Application.CelloManager.Logic.Manager;
-using Tauron.Application.CelloManager.Resources;
-using Tauron.Application.CelloManager.UI.PrintOrder;
+﻿using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI.Views.MainWindow;
-using Tauron.Application.Ioc;
 
 namespace Tauron.Application.CelloManager.UI
 {
@@ -10,22 +7,10 @@ namespace Tauron.Application.CelloManager.UI
     public sealed class UIModule : IModule
     {
         public const string OperationContextModelName = "OperationContext";
-
-        [Inject]
-        public IEventAggregator EventAggregator { private get; set; }
-
+        public const string SpoolModelName = "SpoolModel";
+        
         public int Order { get; } = 0;
 
-        public void Initialize(CommonApplication application)
-        {
-            SimpleLocalize.Register(UIResources.ResourceManager, typeof(MainWindow).Assembly);
-
-            EventAggregator.GetEvent<PrintOrderEvent, PrintOrderEventArgs>().Subscribe(PrintOrder);
-        }
-
-        private void PrintOrder(PrintOrderEventArgs obj)
-        {
-            obj.Ok = PrintHelper.PrintOrder(obj.Refill);
-        }
+        public void Initialize(CommonApplication application) => SimpleLocalize.Register(UIResources.ResourceManager, typeof(MainWindow).Assembly);
     }
 }

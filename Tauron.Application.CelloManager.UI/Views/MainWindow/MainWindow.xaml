@@ -11,12 +11,10 @@
         x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.MainWindow"
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded" Title="Cello Manager" sfSkinManager:SfSkinManager.VisualStyle="Metro"
         d:DesignHeight="500" d:DesignWidth="700" hlp:DataContextServices.Activate="True" 
-        Background="{x:Static SystemColors.ControlBrush}" WindowState="Maximized" Closing="MainWindow_OnClosing"
+        Background="{StaticResource BackgroundBrush}" WindowState="Maximized" Closing="MainWindow_OnClosing"
         hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.MainWindowName}"
         Icon="pack://siteoforigin:,,,/icon.ico">
-    <DockPanel LastChildFill="True">
-        <Button DockPanel.Dock="Bottom" Margin="10" HorizontalAlignment="Right" MinWidth="80" Content="{hlp:SimpleLocalize LabelMainWindowRefill}"
-                FontSize="20" hlp:CommandBinder.Command="Refill:Refill"/>
+
         <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}" Loaded="DockingManager_OnLoaded"  MinimizeButtonEnabled="True" MaximizeButtonEnabled="True"
                              IsTDIDragDropEnabled="True" IsVS2013SidePanelEnable="True" IsVS2010DraggingEnabled="True"  Name="DockingManager" ContainerMode="TDI" SwitchMode="VistaFlip" 
                              AutoHideAnimationMode="Fade" PersistState="False">
@@ -26,5 +24,4 @@
             <TextBlock Text="Daten" sync:DockingManager.Header="Daten" sync:DockingManager.CanDocument="True" />
             <TextBlock Text="Update" sync:DockingManager.Header="Update" />-->
         </sync:DockingManager>
-    </DockPanel>
 </win:SfChromelessWindow>

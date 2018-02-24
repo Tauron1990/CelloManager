@@ -174,4 +174,28 @@
   <data name="SpoolGridViewAddNewRowLabel" xml:space="preserve">
     <value>Add New Spool</value>
   </data>
+  <data name="CommonCompledLabel" xml:space="preserve">
+    <value>Already finished</value>
+  </data>
+  <data name="LabelErrorNonEmptyString" xml:space="preserve">
+    <value>The name can not be empty!</value>
+  </data>
+  <data name="LabelOptionsBeginEdit" xml:space="preserve">
+    <value>Start Edit</value>
+  </data>
+  <data name="OrderViewIdLabel" xml:space="preserve">
+    <value>Id:</value>
+  </data>
+  <data name="OderViewOrderedCount" xml:space="preserve">
+    <value>Ordered Count</value>
+  </data>
+  <data name="OrderViewTitle" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="OrderCompledWindowNotCheckedMessage" xml:space="preserve">
+    <value>The order will not be completed. Proceed anyway.</value>
+  </data>
+  <data name="OrderCompledWindowCommitLabel" xml:space="preserve">
+    <value>Commit</value>
+  </data>
 </root>

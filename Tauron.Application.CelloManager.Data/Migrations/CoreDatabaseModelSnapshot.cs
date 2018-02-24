@@ -17,9 +17,62 @@ namespace Tauron.Application.CelloManager.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
+                .HasAnnotation("ChangeDetector.SkipDetectChanges", "true")
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
-            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Core.CelloSpoolEntry", b =>
+            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Core.OptionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Value");
+
+                    b.Property<string>("key");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("OptionEntries");
+                });
+
+            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Historie.CommittedRefillEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("CompledTime");
+
+                    b.Property<bool>("IsCompleted");
+
+                    b.Property<DateTime>("SentTime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("CommittedRefills");
+                });
+
+            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Historie.CommittedSpoolEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int?>("CommittedRefillEntityId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("OrderedCount");
+
+                    b.Property<int>("SpoolId");
+
+                    b.Property<string>("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommittedRefillEntityId");
+
+                    b.ToTable("CommittedSpoolEntity");
+                });
+
+            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Manager.CelloSpoolEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -39,59 +92,11 @@ namespace Tauron.Application.CelloManager.Data.Migrations
                     b.ToTable("CelloSpools");
                 });
 
-            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Core.OptionEntry", b =>
+            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Historie.CommittedSpoolEntity", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<string>("Value");
-
-                    b.Property<string>("key");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("OptionEntries");
-                });
-
-            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Historie.CommittedRefill", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("SentTime");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("CommittedRefills");
-                });
-
-            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Historie.CommittedSpool", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int?>("CommittedRefillId");
-
-                    b.Property<string>("Name");
-
-                    b.Property<int>("OrderedCount");
-
-                    b.Property<int>("SpoolId");
-
-                    b.Property<string>("Type");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CommittedRefillId");
-
-                    b.ToTable("CommittedSpool");
-                });
-
-            modelBuilder.Entity("Tauron.Application.CelloManager.Data.Historie.CommittedSpool", b =>
-                {
-                    b.HasOne("Tauron.Application.CelloManager.Data.Historie.CommittedRefill")
+                    b.HasOne("Tauron.Application.CelloManager.Data.Historie.CommittedRefillEntity")
                         .WithMany("CommitedSpools")
-                        .HasForeignKey("CommittedRefillId");
+                        .HasForeignKey("CommittedRefillEntityId");
                 });
 #pragma warning restore 612, 618
         }

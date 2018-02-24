@@ -1,24 +1,18 @@
 ﻿using System;
-using System.Collections;
 using System.ComponentModel;
-using System.Linq;
 using Tauron.Application.CelloManager.Logic.Manager;
+using Tauron.Application.CelloManager.Resources;
+using Tauron.Application.CelloManager.UI.Models;
 using Tauron.Application.Models;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 {
-    public interface ISpoolChangeNotifer
-    {
-        void SpoolValueChanged(CelloSpoolBase spool);
-    }
 
-    public class GuiEditSpool : ObservableObject, INotifyDataErrorInfo
+    public class GuiEditSpool : ModelBase
     {
-        private ISpoolChangeNotifer _model;
-
-        public GuiEditSpool(ISpoolChangeNotifer model, CelloSpoolBase spool)
+        public GuiEditSpool(EditSpool spool)
         {
-            Initialize(model, spool);
+            Initialize(spool);
         }
 
         public GuiEditSpool()
@@ -26,78 +20,78 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             
         }
 
-        public void Initialize(ISpoolChangeNotifer model, CelloSpoolBase spool)
+        public void Initialize(EditSpool spool)
         {
-            _model = model;
-            CelloSpoolBase = spool;
-            CelloSpoolBase.PropertyChanged += (sender, args) =>
-            {
-                switch (args.PropertyName)
-                {
-                    case nameof(Id):
-                        OnPropertyChangedExplicit(nameof(Id));
-                        break;
-                    case nameof(Name):
-                    case nameof(Type):
-                    case nameof(Amount):
-                    case nameof(Neededamount):
-                        SpoolChanged();
-                        if(args.PropertyName == nameof(Type))
-                            OnPropertyChangedExplicit(nameof(Type));
-                        break;
-                }
-            };
-            CelloSpoolBase.ErrorsChanged += (sender, args) => ErrorsChanged?.Invoke(this, args);
+            spool.UIViewSpool = this;
+            CelloSpool = spool.Spool;
+            EditSpool = spool;
+
+            SetEmptyStringErrors(Name, nameof(Name));
+            SetEmptyStringErrors(Type, nameof(Type));
+            SetNegativeNumberErrors(Amount, nameof(Amount));
+            SetNegativeNumberErrors(Neededamount, nameof(Neededamount));
         }
 
         public int Id
         {
-            get => CelloSpoolBase?.Id ?? 0;
+            get => CelloSpool?.Id ?? 0;
             set => throw new InvalidOperationException();
         }
 
 
         public string Name
         {
-            get => CelloSpoolBase?.Name;
-            set => CelloSpoolBase.Name = value;
+            get => CelloSpool?.Name;
+            set => CelloSpool.Name = value;
         }
 
         public string Type
         {
-            get => CelloSpoolBase?.Type;
-            set => CelloSpoolBase.Type = value;
+            get => CelloSpool?.Type;
+            set => CelloSpool.Type = value;
         }
 
         public int Amount
         {
-            get => CelloSpoolBase?.Amount ?? 0;
-            set => CelloSpoolBase.Amount = value;
+            get => CelloSpool?.Amount ?? 0;
+            set => CelloSpool.Amount = value;
         }
 
         public int Neededamount
         {
-            get => CelloSpoolBase?.Neededamount ?? 0;
-            set => CelloSpoolBase.Neededamount = value;
+            get => CelloSpool?.Neededamount ?? 0;
+            set => CelloSpool.Neededamount = value;
         }
 
-        public CelloSpoolBase CelloSpoolBase { get; private set; }
+        public CelloSpool CelloSpool { get; private set; }
 
-        public IEnumerable GetErrors(string propertyName)
+        public EditSpool EditSpool { get; private set; }
+
+        public override void OnPropertyChanged(PropertyChangedEventArgs eventArgs)
         {
-            foreach (var error in CelloSpoolBase?.GetErrors(propertyName)?.OfType<PropertyIssue>() ?? Enumerable.Empty<PropertyIssue>())
+            switch (eventArgs.PropertyName)
             {
-                yield return error.Message;
+                case nameof(Name):
+                    SetEmptyStringErrors(Name, eventArgs.PropertyName);
+                    break;
+                case nameof(Type):
+                    SetEmptyStringErrors(Type, eventArgs.PropertyName);
+                    break;
+                case nameof(Amount):
+                    SetNegativeNumberErrors(Amount, eventArgs.PropertyName);
+                    break;
+                case nameof(Neededamount):
+                    SetNegativeNumberErrors(Neededamount, eventArgs.PropertyName);
+                    break;
             }
+
+            base.OnPropertyChanged(eventArgs);
         }
 
-        public bool HasErrors => CelloSpoolBase?.HasErrors == true;
+        private void SetEmptyStringErrors(string text, string name) => 
+            SetIssues(name, string.IsNullOrWhiteSpace(text) ? new[] {new PropertyIssue(name, text, UIResources.LabelErrorNonEmptyString)} : Array.Empty<PropertyIssue>());
 
-        public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged;
-
-        private void SpoolChanged()
-        {
-            _model.SpoolValueChanged(CelloSpoolBase);
-        }
+        private void SetNegativeNumberErrors(int number, string name) => 
+            SetIssues(name, number < 0 ? new[] {new PropertyIssue(name, number, UIResources.LabelErrorNonEmptyString)} : Array.Empty<PropertyIssue>());
     }
 }
