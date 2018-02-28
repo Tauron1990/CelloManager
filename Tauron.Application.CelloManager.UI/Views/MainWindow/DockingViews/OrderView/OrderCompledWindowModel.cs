@@ -3,6 +3,7 @@ using System.Linq;
 using JetBrains.Annotations;
 using Tauron.Application.CelloManager.Logic.Historie;
 using Tauron.Application.CelloManager.Resources;
+using Tauron.Application.Ioc;
 using Tauron.Application.Models;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.OrderView
@@ -14,6 +15,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
         private bool _checkAll;
         private bool _blockSwitch;
 
+        [Inject]
         public OrderCompledWindowModel([NotNull]CommittedRefill refill)
         {
             _refill = refill ?? throw new ArgumentNullException(nameof(refill));
@@ -82,7 +84,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
         [CommandTarget]
         public void Commit()
         {
-            if (Spools.All(s => !s.IsChecked))
+            if (Spools.Any(o => !o.IsChecked))
             {
                 var erg = Dialogs.ShowMessageBox(Window, UIResources.OrderCompledWindowNotCheckedMessage, "Warning", MsgBoxButton.YesNo, MsgBoxImage.Warning, null);
                 if (erg == MsgBoxResult.No)

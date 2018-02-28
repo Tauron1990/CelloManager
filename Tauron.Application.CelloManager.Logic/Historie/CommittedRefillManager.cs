@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Historie.DTO;
+using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.Common.BaseLayer;
 using Tauron.Application.Common.BaseLayer.BusinessLayer;
 using Tauron.Application.Ioc;
@@ -28,6 +30,8 @@ namespace Tauron.Application.CelloManager.Logic.Historie
 
         public void CompledRefill(CommittedRefill refill) => RuleFactory.CreateIiBusinessRule<CommittedRefill>(RuleNames.CompledRefillRule).Action(refill);
 
-        public bool IsRefillNeeded() => RuleFactory.CreateOBussinesRule<IsRefillNeededResult>(RuleNames.IsRefillNeededRule).Action().Need;
+        public bool IsRefillNeeded(IEnumerable<CelloSpool> spools, IEnumerable<CommittedRefill> refills)
+            => RuleFactory.CreateIioBusinessRule<IsRefillNeededInput ,IsRefillNeededResult>(RuleNames.IsRefillNeededRule).Action(new IsRefillNeededInput(spools?.ToArray(), refills?.ToArray()))
+                          .Need;
     }
 }

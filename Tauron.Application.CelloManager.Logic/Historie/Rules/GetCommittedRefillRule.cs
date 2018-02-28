@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Tauron.Application.CelloManager.Data.Historie;
 using Tauron.Application.CelloManager.Logic.Historie.DTO;
 using Tauron.Application.Common.BaseLayer;
@@ -14,11 +13,8 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
         {
             using (RepositoryFactory.Enter())
             {
-                foreach (var refillEntity in RepositoryFactory.GetRepository<ICommittedRefillRepository>()
-                                                      .GetCommittedRefills(true).Where(e => e.IsCompleted == flag.GetCompleted))
-                {
+                foreach (var refillEntity in RepositoryFactory.GetRepository<ICommittedRefillRepository>().GetCommittedRefills(flag.GetCompleted))
                     yield return refillEntity.CreateCommittedRefill();
-                }
             }
         }
     }

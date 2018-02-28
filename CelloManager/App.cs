@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 using JetBrains.Annotations;
 using Tauron.Application.CelloManager.Data;
 using Tauron.Application.CelloManager.Logic;
@@ -10,8 +11,6 @@ using Tauron.Application.CelloManager.Properties;
 using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI;
 using Tauron.Application.Common.BaseLayer.BusinessLayer;
-using Tauron.Application.Common.Updater;
-using Tauron.Application.Common.Updater.UI;
 using Tauron.Application.Implement;
 using Tauron.Application.Implementation;
 using Tauron.Application.Ioc;
@@ -76,13 +75,14 @@ namespace Tauron.Application.CelloManager
         protected override void LoadCommands()
         {
             base.LoadCommands();
+            CommandBinder.Register(ApplicationCommands.Close);
             CommandBinder.AutoRegister = true;
         }
 
         protected override void LoadResources()
         {
             SimpleLocalize.Register(UIResources.ResourceManager, typeof(UIModule).Assembly);
-            SimpleLocalize.Register(UILabels.ResourceManager, typeof(UpdaterService).Assembly);
+            //SimpleLocalize.Register(UILabels.ResourceManager, typeof(UpdaterService).Assembly);
 
             System.Windows.Application.Current.Resources.MergedDictionaries.Add(
                                                                                 (ResourceDictionary)
@@ -117,7 +117,7 @@ namespace Tauron.Application.CelloManager
             resolver.AddAssembly(typeof(WpfApplication).Assembly);
             resolver.AddAssembly(typeof(CommonApplication).Assembly);
             resolver.AddAssembly(typeof(DialogFactory).Assembly);
-            resolver.AddAssembly(typeof(UpdaterService).Assembly);
+            //resolver.AddAssembly(typeof(UpdaterService).Assembly);
 
             resolver.AddAssembly(typeof(AppConststands).Assembly);
             resolver.AddAssembly(typeof(DataModule).Assembly);

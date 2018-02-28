@@ -6,9 +6,9 @@ using Tauron.Application.Common.BaseLayer.Core;
 namespace Tauron.Application.CelloManager.Logic.Manager.Rules
 {
     [ExportRule(RuleNames.AddAmountRule)]
-    public sealed class AddAmountRule : IBusinessRuleBase<AddAmountData>
+    public sealed class AddAmountRule : IOBusinessRuleBase<AddAmountData, AddAmountResult>
     {
-        public override void ActionImpl(AddAmountData input)
+        public override AddAmountResult ActionImpl(AddAmountData input)
         {
             using (var db = RepositoryFactory.Enter())
             {
@@ -16,9 +16,13 @@ namespace Tauron.Application.CelloManager.Logic.Manager.Rules
 
                 var ent = repo.Find(input.CelloSpool.Id);
                 
+                if(ent == null) return new AddAmountResult(false);
+
                 ent.Amount += input.Amount;
 
                 db.SaveChanges();
+
+                return new AddAmountResult(true);
             }
         }
     }

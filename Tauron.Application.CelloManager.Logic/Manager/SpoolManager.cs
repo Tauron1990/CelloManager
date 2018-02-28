@@ -17,9 +17,11 @@ namespace Tauron.Application.CelloManager.Logic.Manager
         public bool SpoolEmpty(CelloSpool spool, int amount) =>
             RuleFactory.CreateIioBusinessRule<RemoveAmountData, RemoveAmountResult>(RuleNames.SpoolEmptyRule).Action(new RemoveAmountData(spool, amount)).Ok;
 
-        public CelloSpool AddSpool(CelloSpool spool) => RuleFactory.CreateIioBusinessRule<CelloSpool, CelloSpool>(RuleNames.AddSpoolRule).Action(spool);
+        public IEnumerable<CelloSpool> AddSpool(IEnumerable<CelloSpool> spool) => RuleFactory.CreateIioBusinessRule<IEnumerable<CelloSpool>, IEnumerable<CelloSpool>>(RuleNames.AddSpoolRule)
+                                                                                             .Action(spool);
 
-        public void AddSpoolAmount(CelloSpool spool, int amount) => RuleFactory.CreateIiBusinessRule<AddAmountData>(RuleNames.AddAmountRule).Action(new AddAmountData(spool, amount));
+        public bool AddSpoolAmount(CelloSpool spool, int amount) => RuleFactory.CreateIioBusinessRule<AddAmountData, AddAmountResult>(RuleNames.AddAmountRule)
+                                                                               .Action(new AddAmountData(spool, amount)).Result;
 
         public void UpdateSpools(IEnumerable<CelloSpool> spools) => RuleFactory.CreateIiBusinessRule<IEnumerable<CelloSpool>>(RuleNames.UpdateSpoolsRules).Action(spools);
 

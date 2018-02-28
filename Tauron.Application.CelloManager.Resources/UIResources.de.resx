@@ -198,4 +198,73 @@
   <data name="OrderCompledWindowCommitLabel" xml:space="preserve">
     <value>Bestätigen</value>
   </data>
+  <data name="MainWindowMenuViewLabel" xml:space="preserve">
+    <value>Ansicht</value>
+  </data>
+  <data name="MainWindowMenuEditorLabel" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="MainWindowMenuOrdersLabel" xml:space="preserve">
+    <value>Bestellungen</value>
+  </data>
+  <data name="OrderCompledWindowCheckAllLabel" xml:space="preserve">
+    <value>Alle Auswählen</value>
+  </data>
+  <data name="EmailerMessageBody" xml:space="preserve">
+    <value>Folien Bestellung im Anhang.</value>
+  </data>
+  <data name="EmailerMessageSubject" xml:space="preserve">
+    <value>Folien Bestellung</value>
+  </data>
+  <data name="MainWindowFileMenuLabel" xml:space="preserve">
+    <value>Datei</value>
+  </data>
+  <data name="MainWindowMenuSettingsLabel" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="DnsValidationMessage" xml:space="preserve">
+    <value>Die Angegebene Adresse ist Falsch.</value>
+  </data>
+  <data name="TargetEmailValidation" xml:space="preserve">
+    <value>Die Angegebene E-mail Adresse ist Falsch.</value>
+  </data>
+  <data name="ThresholdValidation" xml:space="preserve">
+    <value>Das Minimum muss Positive sein.</value>
+  </data>
+  <data name="MaximumSpoolHistorieValidation" xml:space="preserve">
+    <value>Bestell Historie muss Positive sein.</value>
+  </data>
+  <data name="OptionsWindowDNSLabel" xml:space="preserve">
+    <value>DNS:</value>
+  </data>
+  <data name="OptionsWindowMailTo" xml:space="preserve">
+    <value>Email An:</value>
+  </data>
+  <data name="RefillPrinterTypePrint" xml:space="preserve">
+    <value>Drucken</value>
+  </data>
+  <data name="RefillPrinterTypeEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="OptionsWindowPrinterType" xml:space="preserve">
+    <value>Bestellungs Modus:</value>
+  </data>
+  <data name="OptionsWindowDefaultPrinter" xml:space="preserve">
+    <value>Standard Drucker:</value>
+  </data>
+  <data name="OptionsWindowPurge" xml:space="preserve">
+    <value>Säubern:</value>
+  </data>
+  <data name="OptionsWindowMaximumSpoolHistorie" xml:space="preserve">
+    <value>Maximum Alter Bestellungen:</value>
+  </data>
+  <data name="OptionsWindowThreshold" xml:space="preserve">
+    <value>Mindestbestellmenge:</value>
+  </data>
+  <data name="OptionsWindowSaveButton" xml:space="preserve">
+    <value>Speichern</value>
+  </data>
+  <data name="OptionsWindowCancel" xml:space="preserve">
+    <value>Abbrechen</value>
+  </data>
 </root>

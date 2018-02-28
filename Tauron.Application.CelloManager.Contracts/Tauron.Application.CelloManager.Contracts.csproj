@@ -71,16 +71,20 @@
     <Compile Include="Logic\Historie\CommittedRefill.cs" />
     <Compile Include="Data\Historie\CommittedSpoolEntity.cs" />
     <Compile Include="Logic\Historie\DTO\GetCommittedRefillFlag.cs" />
+    <Compile Include="Logic\Historie\DTO\IsRefillNeededInput.cs" />
     <Compile Include="Logic\Historie\DTO\IsRefillNeededResult.cs" />
     <Compile Include="Logic\Historie\DTO\PurgeSettings.cs" />
+    <Compile Include="Logic\ISettingsModel.cs" />
     <Compile Include="Logic\Manager\CelloSpool.cs" />
     <Compile Include="Data\Historie\ICommittedRefillRepository.cs" />
     <Compile Include="Logic\Historie\ICommittedRefillManager.cs" />
     <Compile Include="Logic\Manager\DTO\AddAmountData.cs" />
+    <Compile Include="Logic\Manager\DTO\AddAmountResult.cs" />
     <Compile Include="Logic\Manager\DTO\RemoveAmountData.cs" />
     <Compile Include="Logic\Manager\DTO\RemoveAmountResult.cs" />
     <Compile Include="Logic\Manager\ISpoolManager.cs" />
     <Compile Include="Logic\RefillPrinter\IRefillPrinter.cs" />
+    <Compile Include="Logic\RefillPrinter\RefillPrinterType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RuleNames.cs" />
   </ItemGroup>

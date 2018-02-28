@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
 using JetBrains.Annotations;
 using Tauron.Application.CelloManager.Properties;
-using Tauron.Application.Common.Updater;
-using Tauron.Application.Common.Updater.Provider;
-using Tauron.Application.Common.Updater.Service;
 using Tauron.Application.Implement;
 
 namespace Tauron.Application.CelloManager
@@ -25,20 +20,20 @@ namespace Tauron.Application.CelloManager
             if (SecurityHelper.IsEnvironmentPermissionGranted())
                 applicationIdentifier += Environment.UserName;
 
-            UpdaterService.SetGithubProvider("Tauron1990", "CelloManager", Tuple.Create("Cello_Manager", string.Empty), VersionExtractor);
-            var configuration = UpdaterService.Configuration;
-            configuration.CurrentVersion = Assembly.GetEntryAssembly().GetName().Version;
-            configuration.FileSelector += FileSelector;
-            configuration.SetupFile = "CelloManager.exe";
-            configuration.StartFile = "CelloManager.exe";
+            //UpdaterService.SetGithubProvider("Tauron1990", "CelloManager", Tuple.Create("Cello_Manager", string.Empty), VersionExtractor);
+            //var configuration = UpdaterService.Configuration;
+            //configuration.CurrentVersion = Assembly.GetEntryAssembly().GetName().Version;
+            //configuration.FileSelector += FileSelector;
+            //configuration.SetupFile = "CelloManager.exe";
+            //configuration.StartFile = "CelloManager.exe";
 
-            var stade = UpdaterService.UpdateManager.Setup();
+            //var stade = UpdaterService.UpdateManager.Setup();
 
-            switch (stade)
-            {
-                case InstallerStade.Shudown:
-                    return;
-            }
+            //switch (stade)
+            //{
+            //    case InstallerStade.Shudown:
+            //        return;
+            //}
 
             try
             {
@@ -70,18 +65,18 @@ namespace Tauron.Application.CelloManager
             }
         }
 
-        private static ReleaseFile FileSelector(Release release)
-        {
-            return release.Files.First(file => file.Name == "Release.zip");
-        }
-        private static Version VersionExtractor(string s)
-        {
-            s = s.Trim('v');
+        //private static ReleaseFile FileSelector(Release release)
+        //{
+        //    return release.Files.First(file => file.Name == "Release.zip");
+        //}
+        //private static Version VersionExtractor(string s)
+        //{
+        //    s = s.Trim('v');
 
-            if (Version.TryParse(s, out var version)) return version;
+        //    if (Version.TryParse(s, out var version)) return version;
 
-            return null;
-        }
+        //    return null;
+        //}
 
 
         private static void SignalFirstInstance([NotNull] string channelName, [NotNull] string applicationIdentifier)

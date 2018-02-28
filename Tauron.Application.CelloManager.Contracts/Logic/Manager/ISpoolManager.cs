@@ -11,9 +11,9 @@ namespace Tauron.Application.CelloManager.Logic.Manager
 
         bool SpoolEmpty([NotNull] CelloSpool spool, int amount);
 
-        CelloSpool AddSpool(CelloSpool spool);
+        IEnumerable<CelloSpool> AddSpool(IEnumerable<CelloSpool> spool);
 
-        void AddSpoolAmount(CelloSpool spool, int amount);
+        bool AddSpoolAmount(CelloSpool spool, int amount);
 
         void UpdateSpools(IEnumerable<CelloSpool> spools);
 

@@ -26,20 +26,23 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
             window.ShowDialogAsync(MainWindow).ContinueWith(t =>
                                                             {
                                                                 if (window.Result != null && (bool) window.Result)
-                                                                    SpoolModel.OrderCompled(SelectedRefill);
+                                                                    SpoolModel.RefillCompled(SelectedRefill);
                                                             });
         }
 
         public CommittedRefill SelectedRefill { get; set; }
 
-        public OrderViewModel() : base(UIResources.OrderViewTitle)
+        public OrderViewModel() : base(UIResources.OrderViewTitle, AppConststands.OrderView)
         {
             SideInDockedMode = DockSide.Bottom;
             State = DockState.AutoHidden;
+            DesiredHeight = 300;
+            CanClose = true;
+            CanDocument = true;
+            CanAutoHide = true;
         }
 
         private bool _refillInProgress;
-
         
         [CommandTarget]
         public bool CanRefill()

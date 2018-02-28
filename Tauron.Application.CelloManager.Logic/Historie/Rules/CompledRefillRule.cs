@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 using Tauron.Application.CelloManager.Data.Historie;
 using Tauron.Application.CelloManager.Data.Manager;
 using Tauron.Application.Common.BaseLayer;
@@ -17,8 +16,8 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
             {
                 var spoolRepo = RepositoryFactory.GetRepository<ISpoolRepository>();
                 var comRepo = RepositoryFactory.GetRepository<ICommittedRefillRepository>();
-                
-                var commitedRefill = comRepo.Query().Include(e => e.CommitedSpools).First(e => e.Id == input.Id);
+
+                var commitedRefill = comRepo.GetCommittedRefill(input.Id);
                 commitedRefill.IsCompleted = true;
                 commitedRefill.CompledTime = DateTime.Now;
                 
@@ -29,7 +28,7 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
                     if (refillSpool.OrderedCount != entity.Spool.OrderedCount)
                         entity.Spool.OrderedCount = refillSpool.OrderedCount;
 
-                    entity.Ent.Amount -= entity.Count;
+                    entity.Ent.Amount += entity.Count;
                 }
 
                 db.SaveChanges();

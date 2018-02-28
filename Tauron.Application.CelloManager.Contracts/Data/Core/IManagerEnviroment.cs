@@ -8,5 +8,7 @@ namespace Tauron.Application.CelloManager.Data.Core
         ISettings Settings { get; }
 
         void Save();
+
+        void Reload();
     }
 }

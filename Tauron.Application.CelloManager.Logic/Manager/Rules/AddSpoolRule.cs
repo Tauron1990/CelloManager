@@ -1,24 +1,33 @@
-﻿using Tauron.Application.CelloManager.Data.Manager;
+﻿using System.Collections.Generic;
+using Tauron.Application.CelloManager.Data.Manager;
 using Tauron.Application.Common.BaseLayer;
 using Tauron.Application.Common.BaseLayer.Core;
 
 namespace Tauron.Application.CelloManager.Logic.Manager.Rules
 {
     [ExportRule(RuleNames.AddSpoolRule)]
-    public sealed class AddSpoolRule : IOBusinessRuleBase<CelloSpool, CelloSpool>
+    public sealed class AddSpoolRule : IOBusinessRuleBase<IEnumerable<CelloSpool>, IEnumerable<CelloSpool>>
     {
-        public override CelloSpool ActionImpl(CelloSpool input)
+        public override IEnumerable<CelloSpool> ActionImpl(IEnumerable<CelloSpool> input)
         {
-            var ent = input.CreateEntity();
+            List<CelloSpool> spools = new List<CelloSpool>();
+
             using (var db = RepositoryFactory.Enter())
             {
-                var repo = RepositoryFactory.GetRepository<ISpoolRepository>();
+                foreach (var inputSpool in input)
+                {
+                    var ent = inputSpool.CreateEntity();
 
-                repo.Add(ent);
+                    var repo = RepositoryFactory.GetRepository<ISpoolRepository>();
+
+                    repo.Add(ent);
+                    spools.Add(ent.CreateCelloSpool());
+                }
+
                 db.SaveChanges();
             }
 
-            return ent.CreateCelloSpool();
+            return spools;
         }
     }
 }
