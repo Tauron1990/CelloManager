@@ -198,4 +198,73 @@
   <data name="OrderCompledWindowCommitLabel" xml:space="preserve">
     <value>Commit</value>
   </data>
+  <data name="MainWindowMenuViewLabel" xml:space="preserve">
+    <value>View</value>
+  </data>
+  <data name="MainWindowMenuEditorLabel" xml:space="preserve">
+    <value>Editor</value>
+  </data>
+  <data name="MainWindowMenuOrdersLabel" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="OrderCompledWindowCheckAllLabel" xml:space="preserve">
+    <value>Check All</value>
+  </data>
+  <data name="EmailerMessageBody" xml:space="preserve">
+    <value>Spool Order in Atttached File</value>
+  </data>
+  <data name="EmailerMessageSubject" xml:space="preserve">
+    <value>Spool Order</value>
+  </data>
+  <data name="MainWindowFileMenuLabel" xml:space="preserve">
+    <value>File</value>
+  </data>
+  <data name="MainWindowMenuSettingsLabel" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="DnsValidationMessage" xml:space="preserve">
+    <value>The given address is wrong.</value>
+  </data>
+  <data name="TargetEmailValidation" xml:space="preserve">
+    <value>The given e-mail address is wrong.</value>
+  </data>
+  <data name="ThresholdValidation" xml:space="preserve">
+    <value>Thershold Must be Positive</value>
+  </data>
+  <data name="MaximumSpoolHistorieValidation" xml:space="preserve">
+    <value>Maximum Spool Historie must be a Positive Number.</value>
+  </data>
+  <data name="OptionsWindowDNSLabel" xml:space="preserve">
+    <value>DNS:</value>
+  </data>
+  <data name="OptionsWindowMailTo" xml:space="preserve">
+    <value>Mail To:</value>
+  </data>
+  <data name="RefillPrinterTypePrint" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="RefillPrinterTypeEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
+  <data name="OptionsWindowPrinterType" xml:space="preserve">
+    <value>Order Send Mode:</value>
+  </data>
+  <data name="OptionsWindowDefaultPrinter" xml:space="preserve">
+    <value>Default Printer:</value>
+  </data>
+  <data name="OptionsWindowPurge" xml:space="preserve">
+    <value>Purge:</value>
+  </data>
+  <data name="OptionsWindowMaximumSpoolHistorie" xml:space="preserve">
+    <value>Old Order Maximum</value>
+  </data>
+  <data name="OptionsWindowThreshold" xml:space="preserve">
+    <value>Minmum Order Count:</value>
+  </data>
+  <data name="OptionsWindowSaveButton" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="OptionsWindowCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
 </root>

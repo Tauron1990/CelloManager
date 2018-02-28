@@ -11,13 +11,14 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
     public class GuiEditSpool : ModelBase
     {
         public GuiEditSpool(EditSpool spool)
+            : this()
         {
             Initialize(spool);
         }
 
         public GuiEditSpool()
         {
-            
+            ConvertPropertyIssuesToString = true;
         }
 
         public void Initialize(EditSpool spool)
@@ -42,25 +43,25 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         public string Name
         {
             get => CelloSpool?.Name;
-            set => CelloSpool.Name = value;
+            set { CelloSpool.Name = value; OnPropertyChanged();}
         }
 
         public string Type
         {
             get => CelloSpool?.Type;
-            set => CelloSpool.Type = value;
+            set { CelloSpool.Type = value; OnPropertyChanged();}
         }
 
         public int Amount
         {
             get => CelloSpool?.Amount ?? 0;
-            set => CelloSpool.Amount = value;
+            set { CelloSpool.Amount = value; OnPropertyChanged();}
         }
 
         public int Neededamount
         {
             get => CelloSpool?.Neededamount ?? 0;
-            set => CelloSpool.Neededamount = value;
+            set { CelloSpool.Neededamount = value; OnPropertyChanged();}
         }
 
         public CelloSpool CelloSpool { get; private set; }

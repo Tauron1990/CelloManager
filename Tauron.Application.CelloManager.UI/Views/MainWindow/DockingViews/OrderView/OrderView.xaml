@@ -19,7 +19,7 @@
                         <TextBlock Text="{Binding Id}" Margin="5" />
                         <Line Margin="0,5" Stroke="Black" StrokeThickness="2" X1="10" Y1="2" Y2="2"
                               VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding SentTime, StringFormat=d}" Margin="5" TextAlignment="Center" />
+                        <TextBlock Text="{Binding SentTime, StringFormat=dd.MM.yyyy}" Margin="5" TextAlignment="Center" />
                         <Line Margin="0,5" Stroke="Black" StrokeThickness="2" X1="10" Y1="2" Y2="2"
                               VerticalAlignment="Center" />
                         <TextBlock Text="{Binding Count}" Margin="5" />

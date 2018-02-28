@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using Syncfusion.Windows.Tools.Controls;
+using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Historie;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Logic.RefillPrinter;
@@ -50,10 +51,13 @@ namespace Tauron.Application.CelloManager.UI.Models
                 {
                     Factory.Update(newView);
 
-                    var item = newView.GetDockItem();
-                    _dictionary[newView] = item;
+                    UiSynchronize.Synchronize.Invoke(() =>
+                                                     {
+                                                         var item = newView.GetDockItem();
+                                                         _dictionary[newView] = item;
 
-                    _viewWorkspace.Add(item);
+                                                         _viewWorkspace.Add(item);
+                                                     });
                 }
 
             }
@@ -71,9 +75,7 @@ namespace Tauron.Application.CelloManager.UI.Models
         }
 
         private SpoolViewManager _spoolViewManager;
-
-        private bool _valueChanged;
-
+        
         private bool? _baseValue;
         private bool  _isInEditing;
 
@@ -85,6 +87,9 @@ namespace Tauron.Application.CelloManager.UI.Models
 
         [Inject]
         public ISpoolManager SpoolManager { get; set; }
+
+        [Inject]
+        public IManagerEnviroment ManagerEnviroment { get; set; }
 
         public UISyncObservableCollection<DockItem> Views { get; } = new UISyncObservableCollection<DockItem>();
 
@@ -111,18 +116,18 @@ namespace Tauron.Application.CelloManager.UI.Models
 
         public bool IsRefillNeeded()
         {
-            if (_valueChanged) return true;
+            if (_baseValue != null) return CommittedRefillManager.IsRefillNeeded(Spools, Orders);
 
-            if (_baseValue == null)
-                _baseValue = CommittedRefillManager.IsRefillNeeded();
-
+            _baseValue = CommittedRefillManager.IsRefillNeeded(null, null);
             return _baseValue == true;
+
         }
 
         public void PlaceOrder()
         {
             var order = CommittedRefillManager.PlaceOrder();
             RefillPrinter.Print(order);
+            Orders.Add(order);
         }
 
         public void PrintOrder(CommittedRefill refill) => RefillPrinter.Print(refill);
@@ -132,16 +137,11 @@ namespace Tauron.Application.CelloManager.UI.Models
             CommittedRefillManager.CompledRefill(refill);
             Orders.Remove(refill);
 
-            foreach (var entry in refill.CommitedSpools.Select(s => new { CS = s.OrderedCount, VS = Spools.Single(ss => ss.Id == s.SpoolId) }))
-            {
-                entry.VS.Amount -= entry.CS;
-            }
+            foreach (var entry in refill.CommitedSpools.Select(s => new {CS = s.OrderedCount, VS = Spools.Single(ss => ss.Id == s.SpoolId)}))
+                entry.VS.Amount += entry.CS;
 
-            _valueChanged = false;
             _baseValue    = null;
         }
-
-        public void ValueChanged() => _valueChanged = true;
 
         #endregion
 
@@ -174,10 +174,7 @@ namespace Tauron.Application.CelloManager.UI.Models
                     foreach (var group in EditorSpools.Where(e => !e.IsDeleted).GroupBy(s => s.IsNew))
                     {
                         if (group.Key)
-                        {
-                            foreach (var editSpool in group)
-                                Spools.Add(SpoolManager.AddSpool(editSpool.Spool));
-                        }
+                            Spools.AddRange(SpoolManager.AddSpool(group.Select(e => e.Spool)));
                         else
                             SpoolManager.UpdateSpools(group.Select(e => e.Spool));
                     }
@@ -203,7 +200,5 @@ namespace Tauron.Application.CelloManager.UI.Models
         }
 
         #endregion
-
-        public void OrderCompled(CommittedRefill selectedRefill) => CommittedRefillManager.CompledRefill(selectedRefill);
     }
 }

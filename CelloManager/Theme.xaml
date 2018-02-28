@@ -7,36 +7,36 @@
 
 </ResourceDictionary.MergedDictionaries>
 
-<LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FFECECEC" Offset="0" /><GradientStop Color="#FFECECEC" Offset="1" /></LinearGradientBrush>
-    <SolidColorBrush x:Key="BorderBrush" Color="#FFC8C8C8" />
-	<SolidColorBrush x:Key="ForegroundBrush" Color="#FF333333" />
-	<SolidColorBrush x:Key="GlyphBrush" Color="#FF686969" />
-<LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FFFFFFFF" Offset="0" /><GradientStop Color="#FFFFFFFF" Offset="1" /></LinearGradientBrush>
-    <SolidColorBrush x:Key="HeaderBorderBrush" Color="#FFC8C8C8" />
-	<SolidColorBrush x:Key="HeaderForegroundBrush" Color="#FF282827" />
-	<SolidColorBrush x:Key="HeaderGlyphBrush" Color="#FF686969" />
-<LinearGradientBrush x:Key="HoverBackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FFD1EAF5" Offset="0" /><GradientStop Color="#FFD1EAF5" Offset="1" /></LinearGradientBrush>
-    <SolidColorBrush x:Key="HoverBorderBrush" Color="#FF179BD7" />
-	<SolidColorBrush x:Key="HoverForegroundBrush" Color="#FF282827" />
-	<SolidColorBrush x:Key="HoverGlyphBrush" Color="#FF282827" />
-<LinearGradientBrush x:Key="ActiveBackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FF179BD7" Offset="0" /><GradientStop Color="#FF179BD7" Offset="1" /></LinearGradientBrush>
-    <SolidColorBrush x:Key="ActiveBorderBrush" Color="#FFC8C8C8" />
+<LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FFEEEEF2" Offset="0" /><GradientStop Color="#FFEEEEF2" Offset="1" /></LinearGradientBrush>
+    <SolidColorBrush x:Key="BorderBrush" Color="#FFCCCEDB" />
+	<SolidColorBrush x:Key="ForegroundBrush" Color="#FF404040" />
+	<SolidColorBrush x:Key="GlyphBrush" Color="#FF404040" />
+<LinearGradientBrush x:Key="HeaderBackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FFEEEEF2" Offset="0" /><GradientStop Color="#FFEEEEF2" Offset="1" /></LinearGradientBrush>
+    <SolidColorBrush x:Key="HeaderBorderBrush" Color="#FFCCCEDB" />
+	<SolidColorBrush x:Key="HeaderForegroundBrush" Color="#FF404040" />
+	<SolidColorBrush x:Key="HeaderGlyphBrush" Color="#FF404040" />
+<LinearGradientBrush x:Key="HoverBackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FF7FBCE5" Offset="0" /><GradientStop Color="#FF7FBCE5" Offset="1" /></LinearGradientBrush>
+    <SolidColorBrush x:Key="HoverBorderBrush" Color="#FF7FBCE5" />
+	<SolidColorBrush x:Key="HoverForegroundBrush" Color="#FF404040" />
+	<SolidColorBrush x:Key="HoverGlyphBrush" Color="#FF404040" />
+<LinearGradientBrush x:Key="ActiveBackgroundBrush" StartPoint="0,0" EndPoint="1,1" ><GradientStop Color="#FF007ACC" Offset="0" /><GradientStop Color="#FF007ACC" Offset="1" /></LinearGradientBrush>
+    <SolidColorBrush x:Key="ActiveBorderBrush" Color="#FF007ACC" />
 	<SolidColorBrush x:Key="ActiveForegroundBrush" Color="#FFFFFFFF" />
 	<SolidColorBrush x:Key="ActiveGlyphBrush" Color="#FFFFFFFF" />
-	<SolidColorBrush x:Key="ContentBackgroundBrush" Color="#FFFFFFFF" />
-	<SolidColorBrush x:Key="ContentBorderBrush" Color="#FFC8C8C8" />
-	<SolidColorBrush x:Key="ContentForegroundBrush" Color="#FF333333" />
-	<SolidColorBrush x:Key="ContentSelectionBrush" Color="#FFADADAD" />
-	<SolidColorBrush x:Key="SelectionInActiveBrush" Color="#FFA2D7EF" />
+	<SolidColorBrush x:Key="ContentBackgroundBrush" Color="#FFF5F5F5" />
+	<SolidColorBrush x:Key="ContentBorderBrush" Color="#FFCCCEDB" />
+	<SolidColorBrush x:Key="ContentForegroundBrush" Color="#FF1E1E1E" />
+	<SolidColorBrush x:Key="ContentSelectionBrush" Color="#FFA5A5A5" />
+	<SolidColorBrush x:Key="SelectionInActiveBrush" Color="#FF99C9EA" />
 	<SolidColorBrush x:Key="ErrorBrush" Color="#FFFF0000" />
-	<SolidColorBrush x:Key="ActiveLightBackground" Color="#FFA2D7EF" />
-	<SolidColorBrush x:Key="ActiveDarkBackground" Color="#FF0C4E6C" />
-	<SolidColorBrush x:Key="ContentAlternativeBackground" Color="#FFD8D8D8" />
-	<SolidColorBrush x:Key="TickColor" Color="#FF333333" />
+	<SolidColorBrush x:Key="ActiveLightBackground" Color="#FF99C9EA" />
+	<SolidColorBrush x:Key="ActiveDarkBackground" Color="#FF003D66" />
+	<SolidColorBrush x:Key="ContentAlternativeBackground" Color="#FFDCDCDC" />
+	<SolidColorBrush x:Key="TickColor" Color="#FFBCBCBC" />
 	<SolidColorBrush x:Key="RangeColor1" Color="#FF61A301" />	
 	<SolidColorBrush x:Key="RangeColor2" Color="#FFF2E606" />	
 	<SolidColorBrush x:Key="RangeColor3" Color="#FFFF0000" />
-	<SolidColorBrush x:Key="LightBackgroundBrush" Color="#FFD9D9D9" />
+	<SolidColorBrush x:Key="LightBackgroundBrush" Color="#FFDDDDE5" />
 
     <!-- RadioButton -->
 
@@ -725,7 +725,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <Popup x:Name="PART_Popup" AllowsTransparency="true" Grid.ColumnSpan="2" IsOpen="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}}" PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}" Placement="Bottom">
-                <Microsoft_Windows_Aero:SystemDropShadowChrome x:Name="Shdw" Color="#FFADADAD" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=Placement}">
+                <Microsoft_Windows_Aero:SystemDropShadowChrome x:Name="Shdw" Color="#FFA5A5A5" MaxHeight="{TemplateBinding MaxDropDownHeight}" MinWidth="{Binding ActualWidth, ElementName=Placement}">
                     <Border x:Name="DropDownBorder" BorderBrush="{StaticResource ContentBorderBrush}" BorderThickness="1" Background="{StaticResource ContentBackgroundBrush}">
                         <ScrollViewer x:Name="DropDownScrollViewer">
                             <Grid >
@@ -761,7 +761,7 @@
             </Trigger>
             <Trigger Property="HasDropShadow" SourceName="PART_Popup" Value="true">
                 <Setter Property="Margin" TargetName="Shdw" Value="0,0,5,5"/>
-                <Setter Property="Color" TargetName="Shdw" Value="#FFADADAD"/>
+                <Setter Property="Color" TargetName="Shdw" Value="#FFA5A5A5"/>
             </Trigger>
             <Trigger Property="ScrollViewer.CanContentScroll" SourceName="DropDownScrollViewer" Value="false">
                 <Setter Property="Canvas.Top" TargetName="OpaqueRect" Value="{Binding VerticalOffset, ElementName=DropDownScrollViewer}"/>
@@ -1603,7 +1603,7 @@
                    Focusable="false"
                    PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                     <Microsoft_Windows_Aero:SystemDropShadowChrome Name="Shdw"
-                                              Color="#FFADADAD">
+                                              Color="#FFA5A5A5">
                                         <ContentControl Name="SubMenuBorder"
                                     Template="{StaticResource {ComponentResourceKey TypeInTargetAssembly={x:Type FrameworkElement}, ResourceId=SubmenuContent}}"
                                     IsTabStop="false">
@@ -1649,7 +1649,7 @@
                         Value="0,0,5,5"/>
                                     <Setter TargetName="Shdw"
                         Property="Color"
-                        Value="#FFADADAD"/>
+                        Value="#FFA5A5A5"/>
                                 </Trigger>
                                 <Trigger Property="IsHighlighted"
                      Value="true">
@@ -1851,7 +1851,7 @@
                    Focusable="false"
                    PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                     <Microsoft_Windows_Aero:SystemDropShadowChrome Name="Shdw"
-                                              Color="#FFADADAD">
+                                              Color="#FFA5A5A5">
                                         <ContentControl Name="SubMenuBorder"
                                     Template="{StaticResource {ComponentResourceKey TypeInTargetAssembly={x:Type FrameworkElement}, ResourceId=SubmenuContent}}"
                                     IsTabStop="false">
@@ -1897,7 +1897,7 @@
                         Value="0,0,5,5"/>
                                     <Setter TargetName="Shdw"
                         Property="Color"
-                        Value="#FFADADAD"/>
+                        Value="#FFA5A5A5"/>
                                 </Trigger>
                                 <Trigger Property="IsHighlighted"
                      Value="true">
@@ -2101,7 +2101,7 @@
                    Focusable="false"
                    PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                     <Microsoft_Windows_Aero:SystemDropShadowChrome Name="Shdw"
-                                              Color="#FFADADAD">
+                                              Color="#FFA5A5A5">
                                         <ContentControl Name="SubMenuBorder"
                                     Template="{StaticResource {ComponentResourceKey TypeInTargetAssembly={x:Type FrameworkElement}, ResourceId=SubmenuContent}}"
                                     IsTabStop="false">
@@ -2147,7 +2147,7 @@
                         Value="0,0,5,5"/>
                                     <Setter TargetName="Shdw"
                         Property="Color"
-                        Value="#FFADADAD"/>
+                        Value="#FFA5A5A5"/>
                                 </Trigger>
                                 <Trigger Property="IsHighlighted"
                      Value="true">
@@ -2351,7 +2351,7 @@
                    Focusable="false"
                    PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}">
                                     <Microsoft_Windows_Aero:SystemDropShadowChrome Name="Shdw"
-                                              Color="#FFADADAD">
+                                              Color="#FFA5A5A5">
                                         <ContentControl Name="SubMenuBorder"
                                     Template="{StaticResource {ComponentResourceKey TypeInTargetAssembly={x:Type FrameworkElement}, ResourceId=SubmenuContent}}"
                                     IsTabStop="false">
@@ -2397,7 +2397,7 @@
                         Value="0,0,5,5"/>
                                     <Setter TargetName="Shdw"
                         Property="Color"
-                        Value="#FFADADAD"/>
+                        Value="#FFA5A5A5"/>
                                 </Trigger>
                                 <Trigger Property="IsHighlighted"
                      Value="true">
@@ -2512,7 +2512,7 @@
                                     Value="0,0,5,5"/>
                             <Setter TargetName="Shdw"
                                     Property="Color"
-                                    Value="#FFADADAD"/>
+                                    Value="#FFA5A5A5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -2574,7 +2574,7 @@
                                     Value="0,0,5,5"/>
                             <Setter TargetName="Shdw"
                                     Property="Color"
-                                    Value="#FFADADAD"/>
+                                    Value="#FFA5A5A5"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -6592,7 +6592,7 @@
                                Focusable="false"
                                PopupAnimation="{DynamicResource {x:Static SystemParameters.ComboBoxPopupAnimationKey}}">
                             <Microsoft_Windows_Aero:SystemDropShadowChrome Name="Shdw"
-                                                          Color="#FFADADAD" 
+                                                          Color="#FFA5A5A5" 
                                                           MinWidth="{TemplateBinding ActualWidth}"
                                                           MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                 <Border x:Name="DropDownBorder"
@@ -6660,7 +6660,7 @@
                                     Value="true"/>
                             <Setter TargetName="Shdw"
                                     Property="Color"
-                                    Value="#FFADADAD"/>
+                                    Value="#FFA5A5A5"/>
                         </Trigger>
                         <Trigger Property="HasItems"
                                  Value="false">
@@ -7198,7 +7198,7 @@
                                                PopupAnimation="{DynamicResource {x:Static SystemParameters.MenuPopupAnimationKey}}"
                                                AllowsTransparency="true">
                                                         <Microsoft_Windows_Aero:SystemDropShadowChrome Name="Shdw"
-                                                                          Color="#FFADADAD">
+                                                                          Color="#FFA5A5A5">
                                                             <Border Background="{StaticResource ContentBackgroundBrush}"
                                                         BorderBrush="{StaticResource ContentBorderBrush}"
                                                         BorderThickness="1"
@@ -7276,7 +7276,7 @@
                                                      Value="true"/>
                                                         <Setter TargetName="Shdw"
                                                      Property="Color"
-                                                     Value="#FFADADAD"/>
+                                                     Value="#FFA5A5A5"/>
                                                     </Trigger>
                                                     <Trigger Property="IsEnabled"
                                                  Value="false">
@@ -7557,7 +7557,7 @@
                                     Value="true"/>
                                 <Setter TargetName="Shdw"
                                     Property="Color"
-                                    Value="#FFADADAD"/>
+                                    Value="#FFA5A5A5"/>
                             </Trigger>
                             <Trigger Property="Orientation"
                                  Value="Vertical">

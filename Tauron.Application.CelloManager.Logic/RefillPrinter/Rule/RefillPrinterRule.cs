@@ -14,7 +14,21 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
 
         public override void ActionImpl(CommittedRefill input)
         {
-            PrintHelper.PrintOrder(input, ManagerEnviroment.Settings.DefaultPrinter);
+            var settings = ManagerEnviroment.Settings;
+            var document = DocumentHelper.BuildFlowDocument(input);
+            bool ok = false;
+
+            if (settings.PrinterType == RefillPrinterType.Email)
+                ok = MailHelper.MailOrder(document, settings.TargetEmail, settings.Dns);
+            if(ok)
+                return;
+
+
+            PrintHelper.PrintOrder(document, ManagerEnviroment.Settings.DefaultPrinter, s =>
+                                                                                     {
+                                                                                         ManagerEnviroment.Settings.DefaultPrinter = s;
+                                                                                         ManagerEnviroment.Save();
+                                                                                     });
         }
     }
 }

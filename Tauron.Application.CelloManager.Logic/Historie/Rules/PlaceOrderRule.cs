@@ -1,17 +1,24 @@
 ﻿using System;
 using System.Linq;
+using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Data.Historie;
 using Tauron.Application.CelloManager.Data.Manager;
 using Tauron.Application.Common.BaseLayer;
 using Tauron.Application.Common.BaseLayer.Core;
+using Tauron.Application.Ioc;
 
 namespace Tauron.Application.CelloManager.Logic.Historie.Rules
 {
     [ExportRule(RuleNames.PlaceOrderRule)]
     public sealed class PlaceOrderRule : OBuissinesRuleBase<CommittedRefill>
     {
+        [Inject]
+        public IManagerEnviroment ManagerEnviroment { get; set; }
+
         public override CommittedRefill ActionImpl()
         {
+            var threshold = ManagerEnviroment.Settings.Threshold;
+
             using (var db = RepositoryFactory.Enter())
             {
                 var spoolRepo = RepositoryFactory.GetRepository<ISpoolRepository>();
@@ -19,7 +26,7 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
 
                 CommittedRefillEntity ent = new CommittedRefillEntity {SentTime = DateTime.Now};
 
-                foreach (var celloSpoolEntity in spoolRepo.QueryAsNoTracking().Where(e => e.Amount < e.Neededamount))
+                foreach (var celloSpoolEntity in spoolRepo.QueryAsNoTracking().Where(e => e.Amount + threshold < e.Neededamount))
                     ent.CommitedSpools.Add(celloSpoolEntity.ConvertCommit());
 
                 if (ent.CommitedSpools.Count == 0) return null;

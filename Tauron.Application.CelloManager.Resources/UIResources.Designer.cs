@@ -97,6 +97,33 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The given address is wrong. ähnelt.
+        /// </summary>
+        public static string DnsValidationMessage {
+            get {
+                return ResourceManager.GetString("DnsValidationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Spool Order in Atttached File ähnelt.
+        /// </summary>
+        public static string EmailerMessageBody {
+            get {
+                return ResourceManager.GetString("EmailerMessageBody", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Spool Order ähnelt.
+        /// </summary>
+        public static string EmailerMessageSubject {
+            get {
+                return ResourceManager.GetString("EmailerMessageSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die The name can not be empty! ähnelt.
         /// </summary>
         public static string LabelErrorNonEmptyString {
@@ -232,11 +259,155 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die File ähnelt.
+        /// </summary>
+        public static string MainWindowFileMenuLabel {
+            get {
+                return ResourceManager.GetString("MainWindowFileMenuLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Editor ähnelt.
+        /// </summary>
+        public static string MainWindowMenuEditorLabel {
+            get {
+                return ResourceManager.GetString("MainWindowMenuEditorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Orders ähnelt.
+        /// </summary>
+        public static string MainWindowMenuOrdersLabel {
+            get {
+                return ResourceManager.GetString("MainWindowMenuOrdersLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Settings ähnelt.
+        /// </summary>
+        public static string MainWindowMenuSettingsLabel {
+            get {
+                return ResourceManager.GetString("MainWindowMenuSettingsLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die View ähnelt.
+        /// </summary>
+        public static string MainWindowMenuViewLabel {
+            get {
+                return ResourceManager.GetString("MainWindowMenuViewLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Maximum Spool Historie must be a Positive Number. ähnelt.
+        /// </summary>
+        public static string MaximumSpoolHistorieValidation {
+            get {
+                return ResourceManager.GetString("MaximumSpoolHistorieValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Ordered Count ähnelt.
         /// </summary>
         public static string OderViewOrderedCount {
             get {
                 return ResourceManager.GetString("OderViewOrderedCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
+        /// </summary>
+        public static string OptionsWindowCancel {
+            get {
+                return ResourceManager.GetString("OptionsWindowCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Default Printer: ähnelt.
+        /// </summary>
+        public static string OptionsWindowDefaultPrinter {
+            get {
+                return ResourceManager.GetString("OptionsWindowDefaultPrinter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die DNS: ähnelt.
+        /// </summary>
+        public static string OptionsWindowDNSLabel {
+            get {
+                return ResourceManager.GetString("OptionsWindowDNSLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Mail To: ähnelt.
+        /// </summary>
+        public static string OptionsWindowMailTo {
+            get {
+                return ResourceManager.GetString("OptionsWindowMailTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Old Order Maximum ähnelt.
+        /// </summary>
+        public static string OptionsWindowMaximumSpoolHistorie {
+            get {
+                return ResourceManager.GetString("OptionsWindowMaximumSpoolHistorie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Order Send Mode: ähnelt.
+        /// </summary>
+        public static string OptionsWindowPrinterType {
+            get {
+                return ResourceManager.GetString("OptionsWindowPrinterType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Purge: ähnelt.
+        /// </summary>
+        public static string OptionsWindowPurge {
+            get {
+                return ResourceManager.GetString("OptionsWindowPurge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Save ähnelt.
+        /// </summary>
+        public static string OptionsWindowSaveButton {
+            get {
+                return ResourceManager.GetString("OptionsWindowSaveButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Minmum Order Count: ähnelt.
+        /// </summary>
+        public static string OptionsWindowThreshold {
+            get {
+                return ResourceManager.GetString("OptionsWindowThreshold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Check All ähnelt.
+        /// </summary>
+        public static string OrderCompledWindowCheckAllLabel {
+            get {
+                return ResourceManager.GetString("OrderCompledWindowCheckAllLabel", resourceCulture);
             }
         }
         
@@ -286,6 +457,24 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Email ähnelt.
+        /// </summary>
+        public static string RefillPrinterTypeEmail {
+            get {
+                return ResourceManager.GetString("RefillPrinterTypeEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Print ähnelt.
+        /// </summary>
+        public static string RefillPrinterTypePrint {
+            get {
+                return ResourceManager.GetString("RefillPrinterTypePrint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Drag and drop the columns here ähnelt.
         /// </summary>
         public static string SpoolGridGroupingBoxLabel {
@@ -300,6 +489,24 @@ namespace Tauron.Application.CelloManager.Resources {
         public static string SpoolGridViewAddNewRowLabel {
             get {
                 return ResourceManager.GetString("SpoolGridViewAddNewRowLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The given e-mail address is wrong. ähnelt.
+        /// </summary>
+        public static string TargetEmailValidation {
+            get {
+                return ResourceManager.GetString("TargetEmailValidation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Thershold Must be Positive ähnelt.
+        /// </summary>
+        public static string ThresholdValidation {
+            get {
+                return ResourceManager.GetString("ThresholdValidation", resourceCulture);
             }
         }
     }

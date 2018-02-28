@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Tauron.Application.CelloManager.Logic.RefillPrinter;
 using Tauron.Application.Ioc;
 
 namespace Tauron.Application.CelloManager.Data.Core
@@ -18,10 +19,34 @@ namespace Tauron.Application.CelloManager.Data.Core
                 MaximumSpoolHistorie = 256;
             }
 
+            public string Dns
+            {
+                get => GetValue("DNS", "8.8.8.8");
+                set => _cache["DNS"] = value;
+            }
+
+            public string TargetEmail
+            {
+                get => GetValue("TargetEmail");
+                set => _cache["TargetEmail"] = value;
+            }
+
+            public RefillPrinterType PrinterType
+            {
+                get => GetValue("PrinterType").TryParseEnum(RefillPrinterType.Print);
+                set => _cache["PrinterType"] = value.ToString();
+            }
+
             public bool Purge
             {
                 get => bool.TryParse(GetValue("Purge"), out var result) && result;
                 set => _cache["Purge"] = value.ToString();
+            }
+
+            public int Threshold 
+            {
+                get => int.TryParse(GetValue("Threshold"), out var valueResult) ? valueResult : 2;
+                set => _cache["Threshold"] = value.ToString();
             }
 
             public string DefaultPrinter
@@ -47,14 +72,14 @@ namespace Tauron.Application.CelloManager.Data.Core
                 set => _cache["SpoolDataGridState"] = value;
             }
 
-            private string GetValue(string key)
+            private string GetValue(string key, string defaultValue = null)
             {
-                return _cache.TryGetValue(key, out var value) ? value : String.Empty;
+                return _cache.TryGetValue(key, out var value) ? value : defaultValue ?? String.Empty;
             }
         }
 
         [Inject]
-        public IOptionsRepository OptionsRepository { get; set; }
+        public IOptionsRepository OptionsRepository { private get; set; }
 
         private readonly Dictionary<string, string> _cache = new Dictionary<string, string>();
 
@@ -71,8 +96,13 @@ namespace Tauron.Application.CelloManager.Data.Core
             OptionsRepository.Save(_cache);
         }
 
+        public void Reload()
+        {
+            OptionsRepository.Fill(_cache);
+        }
+
         private static string GetDicPath() => Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData).CombinePath("Tauron\\CelloManager");
 
-        public void BuildCompled() => OptionsRepository.Fill(_cache);
+        public void BuildCompled() => Reload();
     }
 }

@@ -9,5 +9,7 @@
 
         public const string OrderView = "OrderView";
         public const string OrderCompledWindow = "OrderCompledWindow";
+
+        public const string OptionsWindow = "OptionsWindow";
     }
 }

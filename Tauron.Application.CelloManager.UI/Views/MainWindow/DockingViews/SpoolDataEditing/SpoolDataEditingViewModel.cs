@@ -19,9 +19,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         public SpoolModel SpoolModel { get; set; }
 
         public SpoolDataEditingViewModel() 
-            : base(UIResources.LabelOptionsLayout, "SpoolDataEditingView")
+            : base(UIResources.LabelOptionsLayout, AppConststands.SpoolDataEditingView)
         {
-            CanClose = false;
+            CanClose = true;
             DesiredWidth = 750;
             CanAutoHide = true;
             CanDocument = true;

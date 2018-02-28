@@ -14,14 +14,14 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Helpe
             return false;
         }
 
-        public CelloSpool AddSpool(CelloSpool spool)
+        public IEnumerable<CelloSpool> AddSpool(IEnumerable<CelloSpool> spool)
         {
             return spool;
         }
 
-        public void AddSpoolAmount(CelloSpool spool, int amount)
+        public bool AddSpoolAmount(CelloSpool spool, int amount)
         {
-
+            return false;
         }
 
         public void UpdateSpools(IEnumerable<CelloSpool> spools)

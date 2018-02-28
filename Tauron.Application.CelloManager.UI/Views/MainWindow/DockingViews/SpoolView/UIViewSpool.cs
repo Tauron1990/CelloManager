@@ -78,7 +78,10 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
         public void Add(object var)
         {
-            _manager.AddSpoolAmount(_spool, GetStepCount());
+            var count = GetStepCount();
+
+            if (_manager.AddSpoolAmount(_spool, count))
+                _spool.Amount += count;
         }
         
         public void Remove(object var)
@@ -86,9 +89,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             var count = GetStepCount();
 
             if (_manager.SpoolEmpty(_spool, count))
-            {
                 _spool.Amount -= count;
-            }
+
+            InvalidateRequerySuggested();
         }
 
         private int GetStepCount()

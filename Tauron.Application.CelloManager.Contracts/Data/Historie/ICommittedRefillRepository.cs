@@ -1,13 +1,12 @@
-﻿using System.Linq;
-using JetBrains.Annotations;
+﻿using System.Collections.Generic;
 using Tauron.Application.Common.BaseLayer.Data;
 
 namespace Tauron.Application.CelloManager.Data.Historie
 {
     public interface ICommittedRefillRepository : IRepository<CommittedRefillEntity, int>
     {
-        [ItemNotNull]
-        [NotNull]
-        IQueryable<CommittedRefillEntity> GetCommittedRefills(bool noTracking);
+        CommittedRefillEntity GetCommittedRefill(int id);
+
+        IEnumerable<CommittedRefillEntity> GetCommittedRefills(bool compled);
     }
 }
