@@ -1,32 +1,75 @@
 ﻿<UserControl x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.OrderView.OrderView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
              xmlns:local="clr-namespace:Tauron.Application.CelloManager.Logic.Historie;assembly=Tauron.Application.CelloManager.Contracts"
+             xmlns:sync="http://schemas.syncfusion.com/wpf"
+             xmlns:contracts="clr-namespace:Tauron.Application.CelloManager.Logic.Historie;assembly=Tauron.Application.CelloManager.Contracts"
+             xmlns:conv="clr-namespace:Tauron.Application.CelloManager.UI.Helper"
              mc:Ignorable="d" hlp:DataContextServices.Activate="True"
-             d:DesignHeight="300" d:DesignWidth="500">
+             d:DesignHeight="300" d:DesignWidth="700">
     <DockPanel LastChildFill="True">
-        <Button DockPanel.Dock="Bottom" Margin="10,10,30,10" HorizontalAlignment="Right" MinWidth="80" Content="{hlp:SimpleLocalize LabelMainWindowRefill}"
-                FontSize="20" hlp:CommandBinder.Command="Refill:Refill"/>
-        <ListBox ItemsSource="{Binding SpoolModel.Orders}" hlp:EventBinder.Events="MouseDoubleClick:ListClick"
-                 SelectionMode="Single" SelectedItem="{Binding SelectedRefill}">
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="local:CommittedRefill">
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
-                        <TextBlock Text="{hlp:SimpleLocalize OrderViewIdLabel}" Margin="5" />
-                        <TextBlock Text="{Binding Id}" Margin="5" />
-                        <Line Margin="0,5" Stroke="Black" StrokeThickness="2" X1="10" Y1="2" Y2="2"
-                              VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding SentTime, StringFormat=dd.MM.yyyy}" Margin="5" TextAlignment="Center" />
-                        <Line Margin="0,5" Stroke="Black" StrokeThickness="2" X1="10" Y1="2" Y2="2"
-                              VerticalAlignment="Center" />
-                        <TextBlock Text="{Binding Count}" Margin="5" />
-                        <TextBlock Text="{hlp:SimpleLocalize OderViewOrderedCount}" Margin="5" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Margin="30,10" HorizontalAlignment="Right">
+            <Button Margin="10" MinWidth="80" Content="{hlp:SimpleLocalize OrderViewPrintOrder}" FontSize="20"
+                    hlp:CommandBinder.Command="Print:Print" />
+            <Button Margin="10" MinWidth="80" Content="{hlp:SimpleLocalize LabelMainWindowRefill}" FontSize="20"
+                    hlp:CommandBinder.Command="Refill:Refill" />
+        </StackPanel>
+        <TabControl SelectedIndex="0">
+            <TabItem Header="{hlp:SimpleLocalize OrderViewOrdersTabHeader}">
+                <ListBox ItemsSource="{Binding SpoolModel.Orders}" hlp:EventBinder.Events="MouseDoubleClick:ListClick"
+                         SelectionMode="Single" SelectedItem="{Binding SelectedRefill}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="local:CommittedRefill">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch">
+                                <TextBlock Text="{hlp:SimpleLocalize OrderViewIdLabel}" Margin="5" FontSize="20"/>
+                                <TextBlock Text="{Binding Id}" Margin="5" />
+                                <Line Margin="0,5" Stroke="Black" StrokeThickness="2" X1="10" Y1="2" Y2="2"
+                                      VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding SentTime, StringFormat=dd.MM.yyyy}" Margin="5" FontSize="20"
+                                           TextAlignment="Center" />
+                                <Line Margin="0,5" Stroke="Black" StrokeThickness="2" X1="10" Y1="2" Y2="2"
+                                      VerticalAlignment="Center" />
+                                <TextBlock Text="{Binding Count}" Margin="5" FontSize="20"/>
+                                <TextBlock Text="{hlp:SimpleLocalize OderViewOrderedCount}" Margin="5" FontSize="20"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </TabItem>
+            <TabItem Header="{hlp:SimpleLocalize OrderViewCompledOrdersTabHeader}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <sync:TreeViewAdv ItemsSource="{Binding CommittedRefills}">
+                        <sync:TreeViewAdv.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type contracts:CommittedRefill}"
+                                                      ItemsSource="{Binding CommitedSpools}">
+
+                                <TextBlock Text="{Binding Converter={conv:CommittedRefillFormatter}}" FontSize="20" />
+                            </HierarchicalDataTemplate>
+                            <DataTemplate DataType="{x:Type contracts:CommittedSpool}">
+                                <TextBlock Text="{Binding Converter={conv:CommittedSpoolFormatter}}" FontSize="20"/>
+                            </DataTemplate>
+                        </sync:TreeViewAdv.Resources>
+                    </sync:TreeViewAdv>
+                    <sync:SfDataPager Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"
+                                      UseOnDemandPaging="True" PageSize="20" PageCount="{Binding PageCount}"
+                                      OnDemandLoading="DaterPager_OnOnDemandLoading"
+                                      PagedSource="{Binding PagedSource, Mode=OneWayToSource}">
+                    </sync:SfDataPager>
+                    <Button Grid.Column="1" Grid.Row="1" Margin="5" Content="{Binding OrderViewReloadLabel}"
+                            hlp:CommandBinder.Command="Reload:Reload" />
+                </Grid>
+            </TabItem>
+        </TabControl>
     </DockPanel>
 </UserControl>

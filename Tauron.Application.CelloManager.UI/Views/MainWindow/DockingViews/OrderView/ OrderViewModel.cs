@@ -1,8 +1,16 @@
-﻿using Syncfusion.Windows.Tools.Controls;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.Linq;
+using Syncfusion.Data;
+using Syncfusion.UI.Xaml.Controls.DataPager;
+using Syncfusion.UI.Xaml.TreeGrid;
+using Syncfusion.Windows.Tools.Controls;
 using Tauron.Application.CelloManager.Logic.Historie;
 using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI.Helper;
 using Tauron.Application.CelloManager.UI.Models;
+using Tauron.Application.Ioc;
 using Tauron.Application.Models;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.OrderView
@@ -15,6 +23,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
 
         [InjectModel(UIModule.SpoolModelName)]
         public SpoolModel SpoolModel { get; set; }
+
+        [Inject]
+        public ICommittedRefillManager CommittedRefillManager { get; set; }
 
         [EventTarget(Synchronize = true)]
         public void ListClick()
@@ -43,7 +54,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
         }
 
         private bool _refillInProgress;
-        
+        private int _pageCount;
+        private PagedCollectionView _pagedSource;
+
         [CommandTarget]
         public bool CanRefill()
         {
@@ -59,6 +72,56 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
             _refillInProgress = false;
 
             InvalidateRequerySuggested();
+        }
+
+        [CommandTarget]
+        public void Print() => SpoolModel.PrintOrder(SelectedRefill);
+
+        [CommandTarget]
+        public bool CanPrint() => SelectedRefill == null;
+
+        public int PageCount
+        {
+            get => _pageCount;
+            set => SetProperty(ref _pageCount, value);
+        }
+
+        [CommandTarget]
+        public void Reload() => PageCount = CommittedRefillManager.GetPageCount();
+
+        public PagedCollectionView PagedSource
+        {
+            get => _pagedSource;
+            set
+            {
+                if(_pagedSource != null)
+                    _pagedSource.CollectionChanged -= PagedSourceOnCollectionChanged;
+                _pagedSource = value;
+                if(_pagedSource != null)
+                    _pagedSource.CollectionChanged += PagedSourceOnCollectionChanged;
+
+            }
+        }
+
+        public UISyncObservableCollection<CommittedRefill> CommittedRefills { get; } = new UISyncObservableCollection<CommittedRefill>();
+
+        private void PagedSourceOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
+        {
+            var temp = PagedSource.Cast<RecordEntry>().Select(e => (CommittedRefill)e.Data);
+
+            using (CommittedRefills.BlockChangedMessages())
+            {
+                CommittedRefills.Clear();
+                CommittedRefills.AddRange(temp);
+            }
+        }
+
+        public void OnDemandLoading(SfDataPager sender, OnDemandLoadingEventArgs e) => sender.LoadDynamicItems(e.StartIndex, CommittedRefillManager.GetPage(e.StartIndex));
+
+        public override void BuildCompled()
+        {
+            Reload();
+            base.BuildCompled();
         }
     }
 }

@@ -430,11 +430,74 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Compled Orders ähnelt.
+        /// </summary>
+        public static string OrderViewCompledOrdersTabHeader {
+            get {
+                return ResourceManager.GetString("OrderViewCompledOrdersTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Id: ähnelt.
         /// </summary>
         public static string OrderViewIdLabel {
             get {
                 return ResourceManager.GetString("OrderViewIdLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Orders ähnelt.
+        /// </summary>
+        public static string OrderViewOrdersTabHeader {
+            get {
+                return ResourceManager.GetString("OrderViewOrdersTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Print ähnelt.
+        /// </summary>
+        public static string OrderViewPrintOrder {
+            get {
+                return ResourceManager.GetString("OrderViewPrintOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Compled Time: ähnelt.
+        /// </summary>
+        public static string OrderViewRefillCompledLabel {
+            get {
+                return ResourceManager.GetString("OrderViewRefillCompledLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Count: ähnelt.
+        /// </summary>
+        public static string OrderViewRefillCountLabel {
+            get {
+                return ResourceManager.GetString("OrderViewRefillCountLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Send Time: ähnelt.
+        /// </summary>
+        public static string OrderViewRefillSendLabel {
+            get {
+                return ResourceManager.GetString("OrderViewRefillSendLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Reload ähnelt.
+        /// </summary>
+        public static string OrderViewReloadLabel {
+            get {
+                return ResourceManager.GetString("OrderViewReloadLabel", resourceCulture);
             }
         }
         
@@ -471,6 +534,24 @@ namespace Tauron.Application.CelloManager.Resources {
         public static string RefillPrinterTypePrint {
             get {
                 return ResourceManager.GetString("RefillPrinterTypePrint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die No Print ähnelt.
+        /// </summary>
+        public static string RefillPritnerNoPrintCaption {
+            get {
+                return ResourceManager.GetString("RefillPritnerNoPrintCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die No Order Was Printed ähnelt.
+        /// </summary>
+        public static string RefillPritnerNoPrintText {
+            get {
+                return ResourceManager.GetString("RefillPritnerNoPrintText", resourceCulture);
             }
         }
         

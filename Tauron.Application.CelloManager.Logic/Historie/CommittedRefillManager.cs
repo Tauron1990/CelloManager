@@ -33,5 +33,12 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         public bool IsRefillNeeded(IEnumerable<CelloSpool> spools, IEnumerable<CommittedRefill> refills)
             => RuleFactory.CreateIioBusinessRule<IsRefillNeededInput ,IsRefillNeededResult>(RuleNames.IsRefillNeededRule).Action(new IsRefillNeededInput(spools?.ToArray(), refills?.ToArray()))
                           .Need;
+
+
+
+        public int GetPageCount() => RuleFactory.CreateOBussinesRule<GetPageCountResult>(RuleNames.GetPageCount).Action().Count;
+
+        public IEnumerable<CommittedRefill> GetPage(int pageCount) 
+            => RuleFactory.CreateIioBusinessRule<GetPageItemsData, GetPageItemsResult>(RuleNames.GetPageItems).Action(new GetPageItemsData(pageCount)).CommittedRefill;
     }
 }

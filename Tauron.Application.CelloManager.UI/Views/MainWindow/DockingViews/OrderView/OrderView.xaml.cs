@@ -1,4 +1,6 @@
-﻿using Tauron.Application.Views;
+﻿using Syncfusion.UI.Xaml.Controls.DataPager;
+using Syncfusion.UI.Xaml.TreeGrid;
+using Tauron.Application.Views;
 
 namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.OrderView
 {
@@ -11,6 +13,11 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
         public OrderView()
         {
             InitializeComponent();
+        }
+
+        private void DaterPager_OnOnDemandLoading(object sender, OnDemandLoadingEventArgs e)
+        {
+            ((OrderViewModel)DataContext).OnDemandLoading((SfDataPager)sender, e);
         }
     }
 }

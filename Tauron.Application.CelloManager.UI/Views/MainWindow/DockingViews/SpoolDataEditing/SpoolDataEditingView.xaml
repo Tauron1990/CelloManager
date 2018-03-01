@@ -1,10 +1,11 @@
 ﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
              xmlns:sync="http://schemas.syncfusion.com/wpf"
              xmlns:helper="clr-namespace:Tauron.Application.CelloManager.UI.Helper"
-             x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SpoolDataEditingView" 
+             x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.SpoolDataEditingView"
              mc:Ignorable="d" MinWidth="700" hlp:DataContextServices.Activate="True"
              d:DesignHeight="300" d:DesignWidth="800">
     <Grid>
@@ -23,7 +24,9 @@
                                         <VisualState x:Name="Normal" />
                                         <VisualState x:Name="Edit">
                                             <Storyboard>
-                                                <ObjectAnimationUsingKeyFrames Storyboard.TargetName="PART_AddNewRowTextBorder" Storyboard.TargetProperty="(UIElement.Visibility)">
+                                                <ObjectAnimationUsingKeyFrames
+                                                    Storyboard.TargetName="PART_AddNewRowTextBorder"
+                                                    Storyboard.TargetProperty="(UIElement.Visibility)">
                                                     <DiscreteObjectKeyFrame KeyTime="0">
                                                         <DiscreteObjectKeyFrame.Value>
                                                             <Visibility>Collapsed</Visibility>
@@ -37,23 +40,40 @@
                                         <VisualState x:Name="NormalRow" />
                                         <VisualState x:Name="FooterRow">
                                             <Storyboard BeginTime="0">
-                                                <ThicknessAnimationUsingKeyFrames BeginTime="0" Duration="1" Storyboard.TargetName="PART_AddNewRowBorder" Storyboard.TargetProperty="BorderThickness">
+                                                <ThicknessAnimationUsingKeyFrames BeginTime="0" Duration="1"
+                                                                                  Storyboard.TargetName="PART_AddNewRowBorder"
+                                                                                  Storyboard.TargetProperty="BorderThickness">
                                                     <EasingThicknessKeyFrame KeyTime="0" Value="0, 1, 0, 0" />
                                                 </ThicknessAnimationUsingKeyFrames>
-                                                <ThicknessAnimationUsingKeyFrames BeginTime="0" Duration="1" Storyboard.TargetName="PART_AddNewRowBorder" Storyboard.TargetProperty="Margin">
+                                                <ThicknessAnimationUsingKeyFrames BeginTime="0" Duration="1"
+                                                                                  Storyboard.TargetName="PART_AddNewRowBorder"
+                                                                                  Storyboard.TargetProperty="Margin">
                                                     <EasingThicknessKeyFrame KeyTime="0" Value="0, -1, 0, 0" />
                                                 </ThicknessAnimationUsingKeyFrames>
                                             </Storyboard>
                                         </VisualState>
                                     </VisualStateGroup>
                                 </VisualStateManager.VisualStateGroups>
-                                <Rectangle Name="PART_CurrentFocusRow" Margin="2,2,0,2" HorizontalAlignment="Right" Stroke="{DynamicResource ActiveBorderBrush}" StrokeDashArray="2,2" StrokeThickness="1" Visibility="{TemplateBinding sync:VirtualizingCellsControl.CurrentFocusRowVisibility}" />
-                                <Border Background="{TemplateBinding sync:VirtualizingCellsControl.RowSelectionBrush}" Clip="{TemplateBinding sync:VirtualizingCellsControl.SelectionBorderClipRect}" Visibility="{TemplateBinding sync:VirtualizingCellsControl.SelectionBorderVisiblity}" />
-                                <Border Name="PART_AddNewRowBorder" Background="{TemplateBinding Control.Background}" BorderBrush="{TemplateBinding Control.BorderBrush}" BorderThickness="{TemplateBinding Control.BorderThickness}">
+                                <Rectangle Name="PART_CurrentFocusRow" Margin="2,2,0,2" HorizontalAlignment="Right"
+                                           Stroke="{DynamicResource ActiveBorderBrush}" StrokeDashArray="2,2"
+                                           StrokeThickness="1"
+                                           Visibility="{TemplateBinding sync:VirtualizingCellsControl.CurrentFocusRowVisibility}" />
+                                <Border Background="{TemplateBinding sync:VirtualizingCellsControl.RowSelectionBrush}"
+                                        Clip="{TemplateBinding sync:VirtualizingCellsControl.SelectionBorderClipRect}"
+                                        Visibility="{TemplateBinding sync:VirtualizingCellsControl.SelectionBorderVisiblity}" />
+                                <Border Name="PART_AddNewRowBorder" Background="{TemplateBinding Control.Background}"
+                                        BorderBrush="{TemplateBinding Control.BorderBrush}"
+                                        BorderThickness="{TemplateBinding Control.BorderThickness}">
                                     <ContentPresenter />
                                 </Border>
-                                <Border Name="PART_AddNewRowTextBorder" Background="{DynamicResource ContentAlternativeBackground}" BorderBrush="#00FFFFFF" BorderThickness="0,0,1,1" Clip="{TemplateBinding sync:AddNewRowControl.TextBorderClip}" IsHitTestVisible="False">
-                                    <ContentPresenter Margin="{TemplateBinding sync:AddNewRowControl.TextMargin}" HorizontalAlignment="Left" VerticalAlignment="Center" Content="{hlp:SimpleLocalize SpoolGridViewAddNewRowLabel}" />
+                                <Border Name="PART_AddNewRowTextBorder"
+                                        Background="{DynamicResource ContentAlternativeBackground}"
+                                        BorderBrush="#00FFFFFF" BorderThickness="0,0,1,1"
+                                        Clip="{TemplateBinding sync:AddNewRowControl.TextBorderClip}"
+                                        IsHitTestVisible="False">
+                                    <ContentPresenter Margin="{TemplateBinding sync:AddNewRowControl.TextMargin}"
+                                                      HorizontalAlignment="Left" VerticalAlignment="Center"
+                                                      Content="{hlp:SimpleLocalize SpoolGridViewAddNewRowLabel}" />
                                 </Border>
                             </Grid>
                         </ControlTemplate>
@@ -62,15 +82,16 @@
             </Style>
         </Grid.Resources>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition/>
-            <ColumnDefinition Width="Auto" MinWidth="70"/>
-            <ColumnDefinition Width="Auto" MinWidth="70"/>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" MinWidth="70" />
+            <ColumnDefinition Width="Auto" MinWidth="70" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <Border Grid.Row="0" Grid.ColumnSpan="3" BorderThickness="3" BorderBrush="{Binding SpoolModel.IsInEditing, Converter={helper:BorderEditConverter}}">
+        <Border Grid.Row="0" Grid.ColumnSpan="3" BorderThickness="3"
+                BorderBrush="{Binding SpoolModel.IsInEditing, Converter={helper:BorderEditConverter}}">
             <sync:SfDataGrid Name="DataGrid" AutoGenerateColumns="False" SelectionMode="Single" SelectionUnit="Row"
                              ItemsSource="{Binding Spools}"
                              AllowGrouping="True" AllowResizingColumns="True" AllowDraggingColumns="True"
@@ -99,12 +120,18 @@
                                             NumberDecimalDigits="0" ParsingMode="Int"
                                             AllowScrollingOnCircle="True" AllowNullValue="False" UseBindingValue="True" />
                 </sync:SfDataGrid.Columns>
-            </sync:SfDataGrid></Border>
-        <Button Grid.Row="1" Grid.Column="2" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCommit}" hlp:CommandBinder.Command="SaveData:Save"/>
-        <Button Grid.Row="1" Grid.Column="1" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCancel}" hlp:CommandBinder.Command="CancelData:Cancel"/>
-        <Button Grid.Row="1" Grid.Column="0" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsBeginEdit}" hlp:CommandBinder.Command="BeginEditData:BeginEditData"
-                HorizontalAlignment="Left"/>
+            </sync:SfDataGrid>
+        </Border>
+        <Button Grid.Row="1" Grid.Column="2" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCommit}"
+                hlp:CommandBinder.Command="SaveData:Save" />
+        <Button Grid.Row="1" Grid.Column="1" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsCancel}"
+                hlp:CommandBinder.Command="CancelData:Cancel" />
+        <Button Grid.Row="1" Grid.Column="0" Margin="5" Content="{hlp:SimpleLocalize LabelOptionsBeginEdit}"
+                hlp:CommandBinder.Command="BeginEditData:BeginEditData"
+                HorizontalAlignment="Left" />
 
     </Grid>
 </UserControl>
+ 
+
  

@@ -6,6 +6,7 @@ using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Logic.Historie;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Logic.RefillPrinter;
+using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews;
 using Tauron.Application.Ioc;
 using Tauron.Application.Models;
@@ -80,6 +81,9 @@ namespace Tauron.Application.CelloManager.UI.Models
         private bool  _isInEditing;
 
         [Inject]
+        public IDialogFactory DialogFactory { get; set; }
+
+        [Inject]
         public IRefillPrinter RefillPrinter { get; set; }
 
         [Inject]
@@ -126,7 +130,9 @@ namespace Tauron.Application.CelloManager.UI.Models
         public void PlaceOrder()
         {
             var order = CommittedRefillManager.PlaceOrder();
-            RefillPrinter.Print(order);
+            if (!RefillPrinter.Print(order))
+                DialogFactory.ShowMessageBox(CommonApplication.Current.MainWindow, UIResources.RefillPritnerNoPrintText, UIResources.RefillPritnerNoPrintCaption,
+                                             MsgBoxButton.Ok, MsgBoxImage.Warning, null);
             Orders.Add(order);
         }
 

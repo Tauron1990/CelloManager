@@ -19,5 +19,9 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         void CompledRefill(CommittedRefill refill);
 
         bool IsRefillNeeded(IEnumerable<CelloSpool> spools, IEnumerable<CommittedRefill> orders);
+
+        int GetPageCount();
+
+        IEnumerable<CommittedRefill> GetPage(int pageCount);
     }
 }

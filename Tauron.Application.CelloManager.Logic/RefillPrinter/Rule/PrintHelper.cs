@@ -7,7 +7,7 @@ using System.Windows.Documents;
 
 namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
 {
-    public class PrintHelper
+    public static class PrintHelper
     {
         
         public static bool PrintOrder(FlowDocument flowDocument, string name, Action<string> selectPrinter)
@@ -44,6 +44,8 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
                                                          selectPrinter(pd.PrintQueue.Name);
                                                  }
                                                  else temp = true;
+
+                                                 if (!temp) return;
 
                                                  flowDocument.PageHeight  = pd.PrintableAreaHeight;
                                                  flowDocument.PageWidth   = pd.PrintableAreaWidth;

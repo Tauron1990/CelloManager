@@ -71,6 +71,9 @@
     <Compile Include="Logic\Historie\CommittedRefill.cs" />
     <Compile Include="Data\Historie\CommittedSpoolEntity.cs" />
     <Compile Include="Logic\Historie\DTO\GetCommittedRefillFlag.cs" />
+    <Compile Include="Logic\Historie\DTO\GetPageCountResult.cs" />
+    <Compile Include="Logic\Historie\DTO\GetPageItemsData.cs" />
+    <Compile Include="Logic\Historie\DTO\GetPageItemsResult.cs" />
     <Compile Include="Logic\Historie\DTO\IsRefillNeededInput.cs" />
     <Compile Include="Logic\Historie\DTO\IsRefillNeededResult.cs" />
     <Compile Include="Logic\Historie\DTO\PurgeSettings.cs" />
@@ -83,6 +86,7 @@
     <Compile Include="Logic\Manager\DTO\RemoveAmountData.cs" />
     <Compile Include="Logic\Manager\DTO\RemoveAmountResult.cs" />
     <Compile Include="Logic\Manager\ISpoolManager.cs" />
+    <Compile Include="Logic\RefillPrinter\DTO\RefillPrinterResult.cs" />
     <Compile Include="Logic\RefillPrinter\IRefillPrinter.cs" />
     <Compile Include="Logic\RefillPrinter\RefillPrinterType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

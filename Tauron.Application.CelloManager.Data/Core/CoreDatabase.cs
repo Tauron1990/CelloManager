@@ -42,6 +42,7 @@ namespace Tauron.Application.CelloManager.Data.Core
 
         public void UpdateSchema()
         {
+            ConnectionString.Remove(0, 12).CreateDirectoryIfNotExis();
             Database.Migrate();
             SaveChanges();
         }

@@ -136,6 +136,8 @@
     <Compile Include="Historie\Extension.cs" />
     <Compile Include="Historie\Rules\CompledRefillRule.cs" />
     <Compile Include="Historie\Rules\GetCommittedRefillRule.cs" />
+    <Compile Include="Historie\Rules\GetPageCountRule.cs" />
+    <Compile Include="Historie\Rules\GetPageItemsRule.cs" />
     <Compile Include="Historie\Rules\IsRefillNeededRule.cs" />
     <Compile Include="Historie\Rules\PlaceOrderRule.cs" />
     <Compile Include="Historie\Rules\PurgeRule.cs" />

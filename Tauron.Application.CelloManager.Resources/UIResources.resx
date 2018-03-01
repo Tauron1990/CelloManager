@@ -267,4 +267,31 @@
   <data name="OptionsWindowCancel" xml:space="preserve">
     <value>Cancel</value>
   </data>
+  <data name="RefillPritnerNoPrintText" xml:space="preserve">
+    <value>No Order Was Printed</value>
+  </data>
+  <data name="RefillPritnerNoPrintCaption" xml:space="preserve">
+    <value>No Print</value>
+  </data>
+  <data name="OrderViewPrintOrder" xml:space="preserve">
+    <value>Print</value>
+  </data>
+  <data name="OrderViewOrdersTabHeader" xml:space="preserve">
+    <value>Orders</value>
+  </data>
+  <data name="OrderViewCompledOrdersTabHeader" xml:space="preserve">
+    <value>Compled Orders</value>
+  </data>
+  <data name="OrderViewReloadLabel" xml:space="preserve">
+    <value>Reload</value>
+  </data>
+  <data name="OrderViewRefillSendLabel" xml:space="preserve">
+    <value>Send Time:</value>
+  </data>
+  <data name="OrderViewRefillCompledLabel" xml:space="preserve">
+    <value>Compled Time:</value>
+  </data>
+  <data name="OrderViewRefillCountLabel" xml:space="preserve">
+    <value>Count:</value>
+  </data>
 </root>
