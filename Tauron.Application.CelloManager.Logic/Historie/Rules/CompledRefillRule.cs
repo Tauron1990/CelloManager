@@ -20,9 +20,10 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
                 var commitedRefill = comRepo.GetCommittedRefill(input.Id);
                 commitedRefill.IsCompleted = true;
                 commitedRefill.CompledTime = DateTime.Now;
-                
 
-                foreach (var entity in commitedRefill.CommitedSpools.Select(e => new {Ent = spoolRepo.Find(e.SpoolId), Count = e.OrderedCount, Spool = e}))
+
+                foreach (var entity in commitedRefill.CommitedSpools.Where(cse => !input.CommitedSpools.Single(cs => cs.Name == cse.Name && cs.Type == cse.Type).Skip)
+                    .Select(e => new {Ent = spoolRepo.Find(e.SpoolId), Count = e.OrderedCount, Spool = e}))
                 {
                     var refillSpool = input.CommitedSpools.First(c => entity.Spool.SpoolId == c.SpoolId);
                     if (refillSpool.OrderedCount != entity.Spool.OrderedCount)

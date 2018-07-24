@@ -15,7 +15,13 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
             {
                 var repo = RepositoryFactory.GetRepository<ICommittedRefillRepository>();
 
-                int count = repo.Query().Count() / 20 + 1;
+                int reposCount = repo.QueryAsNoTracking().Count();
+                int count;
+
+                if (reposCount != 0)
+                    count = reposCount / 20 + 1;
+                else
+                    count = 0;
 
                 return new GetPageCountResult(count);
             }

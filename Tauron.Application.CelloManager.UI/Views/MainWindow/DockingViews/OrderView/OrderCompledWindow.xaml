@@ -9,13 +9,13 @@
              xmlns:Const="clr-namespace:Tauron.Application.CelloManager;assembly=Tauron.Application.CelloManager.Contracts"
              hlp:DataContextServices.Activate="True" hlp:CompositionServices.ImportViewModel="{x:Static Const:AppConststands.OrderCompledWindow}" hlp:ControlHelper.MarkWindow="Window"
              mc:Ignorable="d" Width="300" Height="600" d:DataContext="{d:DesignInstance local:OrderCompledWindowModel, IsDesignTimeCreatable=True}" Title="Cello Manager"
-             Background="{StaticResource BackgroundBrush}" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" WindowStyle="ToolWindow" 
-             Icon="/Tauron.Application.CelloManager.UI;component/icon.ico">
+             WindowStartupLocation="CenterOwner" ShowInTaskbar="False" WindowStyle="ToolWindow" 
+             Icon="/Tauron.Application.CelloManager.UI;component/icon.ico" Background="#FFE8E8E8">
     <DockPanel LastChildFill="True">
         <Button Content="{hlp:SimpleLocalize OrderCompledWindowCommitLabel}" DockPanel.Dock="Bottom" Margin="5,5,20,5" Padding="5" HorizontalAlignment="Right"
                 hlp:CommandBinder.Command="Commit:Commit" IsDefault="True"/>
         <CheckBox DockPanel.Dock="Bottom" Content="{hlp:SimpleLocalize OrderCompledWindowCheckAllLabel}" Margin="5,5,20,5" HorizontalAlignment="Right" IsChecked="{Binding CheckAll}"/>
-        <ListBox ItemsSource="{Binding Spools}" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch">
+        <ListBox ItemsSource="{Binding Spools}" DockPanel.Dock="Top" HorizontalContentAlignment="Stretch" Background="#FFEEEEEE" BorderBrush="Black">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="local:OrderedSpool">
                     <Grid>

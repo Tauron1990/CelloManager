@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using Syncfusion.Windows.Tools.Controls;
@@ -109,13 +110,13 @@ namespace Tauron.Application.CelloManager.UI.Models
 
         public override void BuildCompled()
         {
-            foreach (var order in CommittedRefillManager.PlacedOrders)
-                Orders.Add(order);
+                foreach (var order in CommittedRefillManager.PlacedOrders)
+                    Orders.Add(order);
 
-            Spools.AddRange(SpoolManager.CelloSpools);
+                Spools.AddRange(SpoolManager.CelloSpools);
 
-            _spoolViewManager = new SpoolViewManager(Views, SpoolManager, this);
-            _spoolViewManager.Initialize(Spools);
+                _spoolViewManager = new SpoolViewManager(Views, SpoolManager, this);
+                _spoolViewManager.Initialize(Spools);
         }
 
         public bool IsRefillNeeded()
@@ -130,6 +131,9 @@ namespace Tauron.Application.CelloManager.UI.Models
         public void PlaceOrder()
         {
             var order = CommittedRefillManager.PlaceOrder();
+
+            if(order == null) return;
+
             if (!RefillPrinter.Print(order))
                 DialogFactory.ShowMessageBox(CommonApplication.Current.MainWindow, UIResources.RefillPritnerNoPrintText, UIResources.RefillPritnerNoPrintCaption,
                                              MsgBoxButton.Ok, MsgBoxImage.Warning, null);
@@ -143,7 +147,7 @@ namespace Tauron.Application.CelloManager.UI.Models
             CommittedRefillManager.CompledRefill(refill);
             Orders.Remove(refill);
 
-            foreach (var entry in refill.CommitedSpools.Select(s => new {CS = s.OrderedCount, VS = Spools.Single(ss => ss.Id == s.SpoolId)}))
+            foreach (var entry in refill.CommitedSpools.Where(cs => !cs.Skip).Select(s => new {CS = s.OrderedCount, VS = Spools.Single(ss => ss.Id == s.SpoolId)}))
                 entry.VS.Amount += entry.CS;
 
             _baseValue    = null;

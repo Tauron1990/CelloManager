@@ -13,6 +13,7 @@ namespace Tauron.Application.CelloManager.Logic.Historie
             SpoolId      = spoolId;
         }
 
+        public bool Skip { get; set; }
         public string Name         { get; }
         public string Type         { get; }
         public int    OrderedCount { get; set; }

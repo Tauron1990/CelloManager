@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using JetBrains.Annotations;
+using Syncfusion.Licensing;
 using Tauron.Application.CelloManager.Data;
 using Tauron.Application.CelloManager.Logic;
 using Tauron.Application.CelloManager.Properties;
@@ -23,6 +24,7 @@ namespace Tauron.Application.CelloManager
         public App()
             : base(true)
         {
+            SyncfusionLicenseProvider.RegisterLicense("OTg2NUAzMTM2MmUzMjJlMzBJSVNzUDVuTU82QVhhbXZLOVNFclYwd0dJWm80QXdjQTRSL0FGY0FNOHhRPQ==");
         }
 
         public bool SignalExternalCommandLineArgs(IList<string> args)

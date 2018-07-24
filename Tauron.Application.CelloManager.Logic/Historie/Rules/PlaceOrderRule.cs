@@ -23,11 +23,21 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
             {
                 var spoolRepo = RepositoryFactory.GetRepository<ISpoolRepository>();
                 var comRepo = RepositoryFactory.GetRepository<ICommittedRefillRepository>();
+                var orders = comRepo.GetCommittedRefills(false).ToArray();
 
                 CommittedRefillEntity ent = new CommittedRefillEntity {SentTime = DateTime.Now};
 
-                foreach (var celloSpoolEntity in spoolRepo.QueryAsNoTracking().Where(e => e.Amount + threshold < e.Neededamount))
-                    ent.CommitedSpools.Add(celloSpoolEntity.ConvertCommit());
+                foreach (var celloSpoolEntity in spoolRepo.QueryAsNoTracking()
+                    .Select(s => new
+                    {
+                        Spool = s,
+                        OrderedSpools = orders.SelectMany(c => c.CommitedSpools)
+                            .Where(cs => cs.SpoolId == s.Id)
+                    })
+                    .Where(at => at.Spool.Neededamount > at.Spool.Amount + at.OrderedSpools.Sum(cs => cs.OrderedCount) + threshold))
+                {
+                    ent.CommitedSpools.Add(celloSpoolEntity.Spool.ConvertCommit());
+                }
 
                 if (ent.CommitedSpools.Count == 0) return null;
 

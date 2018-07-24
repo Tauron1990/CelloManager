@@ -31,13 +31,16 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
 
         public static FlowDocument BuildFlowDocument(CommittedRefill refill)
         {
-            var document = new FlowDocument();
+            return System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                var document = new FlowDocument();
 
-            BuildHeader(document, refill);
-            BuildTable(document, refill);
-            BuildFooter(document, refill);
+                BuildHeader(document, refill);
+                BuildTable(document, refill);
+                BuildFooter(document, refill);
 
-            return document;
+                return document;
+            });
         }
 
         public static void BuildFooter(FlowDocument document, CommittedRefill refill)

@@ -95,6 +95,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
                 }
             }
 
+            foreach (var orderedSpool in Spools.Where(oS => !oS.IsChecked))
+                orderedSpool.Spool.Skip = true;
+
             Result = true;
             Window.DialogResult = true;
         }

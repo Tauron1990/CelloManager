@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Linq;
 using Syncfusion.Data;
 using Syncfusion.UI.Xaml.Controls.DataPager;
-using Syncfusion.UI.Xaml.TreeGrid;
 using Syncfusion.Windows.Tools.Controls;
 using Tauron.Application.CelloManager.Logic.Historie;
 using Tauron.Application.CelloManager.Resources;
@@ -35,10 +32,10 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
             var window = ViewManager.CreateWindow(AppConststands.OrderCompledWindow, SelectedRefill);
 
             window.ShowDialogAsync(MainWindow).ContinueWith(t =>
-                                                            {
-                                                                if (window.Result != null && (bool) window.Result)
-                                                                    SpoolModel.RefillCompled(SelectedRefill);
-                                                            });
+            {
+                if (window.Result != null && (bool) window.Result)
+                    SpoolModel.RefillCompled(SelectedRefill);
+            });
         }
 
         public CommittedRefill SelectedRefill { get; set; }
@@ -78,7 +75,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
         public void Print() => SpoolModel.PrintOrder(SelectedRefill);
 
         [CommandTarget]
-        public bool CanPrint() => SelectedRefill == null;
+        public bool CanPrint() => SelectedRefill != null;
 
         public int PageCount
         {
@@ -94,10 +91,10 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
             get => _pagedSource;
             set
             {
-                if(_pagedSource != null)
+                if (_pagedSource != null)
                     _pagedSource.CollectionChanged -= PagedSourceOnCollectionChanged;
                 _pagedSource = value;
-                if(_pagedSource != null)
+                if (_pagedSource != null)
                     _pagedSource.CollectionChanged += PagedSourceOnCollectionChanged;
 
             }
@@ -107,7 +104,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
 
         private void PagedSourceOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs notifyCollectionChangedEventArgs)
         {
-            var temp = PagedSource.Cast<RecordEntry>().Select(e => (CommittedRefill)e.Data);
+            var temp = PagedSource.Cast<RecordEntry>().Select(e => (CommittedRefill) e.Data);
 
             using (CommittedRefills.BlockChangedMessages())
             {
@@ -116,7 +113,15 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
             }
         }
 
-        public void OnDemandLoading(SfDataPager sender, OnDemandLoadingEventArgs e) => sender.LoadDynamicItems(e.StartIndex, CommittedRefillManager.GetPage(e.StartIndex));
+        public void OnDemandLoading(SfDataPager sender, OnDemandLoadingEventArgs e)
+        {
+            var page = CommittedRefillManager.GetPage(e.StartIndex);
+
+            var committedRefills = page as CommittedRefill[] ?? page.ToArray();
+            if (!committedRefills.Any()) return;
+
+            sender.LoadDynamicItems(e.StartIndex, committedRefills);
+        }
 
         public override void BuildCompled()
         {

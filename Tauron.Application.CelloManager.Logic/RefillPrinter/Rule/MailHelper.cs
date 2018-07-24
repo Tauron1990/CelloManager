@@ -57,7 +57,7 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
                               Subject  = UIResources.EmailerMessageSubject
                           };
 
-                msg.From.Add(new MailboxAddress("Cello Manager", "Cello@Manager.de"));
+                msg.From.Add(new MailboxAddress("Cello Manager", "cello@blueprint.de"));
                 msg.To.Add(InternetAddress.Parse(ParserOptions.Default, email));
                 byte[] pdfDocument = ConvertToPdf(doc);
 
@@ -102,8 +102,6 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
             {
                 using (var smclient = new SmtpClient())
                 {
-                    // For demo-purposes, accept all SSL certificates (in case the server supports STARTTLS)
-                    smclient.ServerCertificateValidationCallback = (s, c, h, e) => true;
                     smclient.Connect(server, 25, false);
 
                     // Note: only needed if the SMTP server requires authentication

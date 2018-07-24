@@ -30,7 +30,7 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
                 {
                     dbacess = RepositoryFactory.Enter();
                     spools  = RepositoryFactory.GetRepository<ISpoolRepository>().QueryAsNoTracking().Select(e => e.CreateCelloSpool());
-                    refills = RepositoryFactory.GetRepository<ICommittedRefillRepository>().GetCommittedRefills(false).Select(e => e.CreateCommittedRefill());
+                    refills = RepositoryFactory.GetRepository<ICommittedRefillRepository>().GetCommittedRefills(false).Select(e => e.CreateCommittedRefill()).ToArray();
                 }
 
 
@@ -52,7 +52,7 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
                                           OrderedSpools = refills.SelectMany(c => c.CommitedSpools)
                                                                  .Where(cs => cs.SpoolId == s.Id)
                                       })
-                         .Any(at => at.Spool.Neededamount >= at.Spool.Amount + at.OrderedSpools.Sum(cs => cs.OrderedCount) + threshold);
+                         .Any(at => at.Spool.Neededamount > at.Spool.Amount + at.OrderedSpools.Sum(cs => cs.OrderedCount) + threshold);
         }
     }
 }

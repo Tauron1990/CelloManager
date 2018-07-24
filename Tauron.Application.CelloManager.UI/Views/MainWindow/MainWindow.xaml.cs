@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
 using Syncfusion.Windows.Tools.Controls;
 using Tauron.Application.CelloManager.Data.Core;
-using Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews;
 using Tauron.Application.Ioc;
 using Tauron.Application.Views;
 

@@ -25,7 +25,7 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
                                                      {
                                                          var server = new LocalPrintServer();
                                                          var              queue  = server.GetPrintQueues().FirstOrDefault(q => q.Name == name);
-                                                         if (queue != null)
+                                                         if (queue != null && !queue.IsOffline)
                                                          {
                                                              pd.PrintQueue            = queue;
                                                              pd.PrintTicket.CopyCount = 1;

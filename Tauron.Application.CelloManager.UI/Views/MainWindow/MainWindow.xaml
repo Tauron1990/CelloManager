@@ -11,7 +11,7 @@
         x:Class="Tauron.Application.CelloManager.UI.Views.MainWindow.MainWindow"
         mc:Ignorable="d" Loaded="MainWindow_OnLoaded" Title="Cello Manager" sfSkinManager:SfSkinManager.VisualStyle="Metro"
         d:DesignHeight="500" d:DesignWidth="700" hlp:DataContextServices.Activate="True" 
-        Background="{StaticResource BackgroundBrush}" WindowState="Maximized" Closing="MainWindow_OnClosing"
+        WindowState="Maximized" Closing="MainWindow_OnClosing" Background="LightGray"
         hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.MainWindowName}"
         Icon="/Tauron.Application.CelloManager.UI;component/icon.ico">
 
@@ -27,7 +27,7 @@
                 <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuOrdersLabel}" IsCheckable="True" IsChecked="{Binding OrdersVisible}"/>
             </MenuItem>
         </Menu>
-        <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}"
+        <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}" Margin="10"
                              Loaded="DockingManager_OnLoaded" MinimizeButtonEnabled="True" MaximizeButtonEnabled="True"
                              IsTDIDragDropEnabled="True" IsVS2013SidePanelEnable="True" IsVS2010DraggingEnabled="True"
                              Name="DockingManager" SwitchMode="VistaFlip" AutoHideAnimationMode="Fade" PersistState="False">

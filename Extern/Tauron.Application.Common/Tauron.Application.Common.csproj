@@ -320,9 +320,7 @@
   <ItemGroup>
     <None Include="CommonKey.snk" />
     <None Include="packages.config" />
-    <None Include="Tauron.Application.Common.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Tauron.Application.Common.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Resources.de.resx" />

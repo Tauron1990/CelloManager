@@ -269,9 +269,7 @@
   <ItemGroup>
     <None Include="CommonKey.snk" />
     <None Include="packages.config" />
-    <None Include="Tauron.Application.Common.Wpf.nuspec">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="Tauron.Application.Common.Wpf.nuspec" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="Implementation\Controls\SplashScreen.xaml">

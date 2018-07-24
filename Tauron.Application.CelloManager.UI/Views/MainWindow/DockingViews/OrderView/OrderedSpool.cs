@@ -5,25 +5,25 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
 {
     public class OrderedSpool : ObservableObject
     {
-        private readonly CommittedSpool _spool;
+        public CommittedSpool Spool { get; }
         private readonly Action _chnagedHandler;
         private bool _isChecked;
 
         public OrderedSpool(CommittedSpool spool, Action chnagedHandler)
         {
-            _spool = spool;
+            Spool = spool;
             _chnagedHandler = chnagedHandler;
-            Label  = $"{_spool.Name} - {_spool.Type}:";
+            Label  = $"{Spool.Name} - {Spool.Type}:";
         }
 
         public string Label { get; }
 
         public int OrderedCount
         {
-            get => _spool.OrderedCount;
+            get => Spool.OrderedCount;
             set
             {
-                _spool.OrderedCount = value;
+                Spool.OrderedCount = value;
                 OnPropertyChanged();
             }
         }
