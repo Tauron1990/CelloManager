@@ -29,13 +29,15 @@ namespace Tauron.Application.Composition
             set => _container = value;
         }
 
+        public static BuildParameter[] BuildParameters { get; set; }
+
         #endregion
 
         #region Static Fields
 
         public static readonly DependencyProperty ImportViewModelProperty =
             DependencyProperty.RegisterAttached("ImportViewModel", typeof(string), typeof(CompositionServices),
-                new PropertyMetadata(default(string), ImportViewModelPropertyChanged));
+                                                new PropertyMetadata(default(string), ImportViewModelPropertyChanged));
 
         public static void SetImportViewModel([NotNull] DependencyObject element, [CanBeNull] string value)
         {
@@ -49,14 +51,14 @@ namespace Tauron.Application.Composition
         }
 
         public static readonly DependencyProperty ImportProperty = DependencyProperty.RegisterAttached(
-            "Import",
-            typeof(Type),
-            typeof(
-                CompositionServices
-            ),
-            new PropertyMetadata
-            (null,
-                ImportPropertyChanged));
+                                                                                                       "Import",
+                                                                                                       typeof(Type),
+                                                                                                       typeof(
+                                                                                                               CompositionServices
+                                                                                                           ),
+                                                                                                       new PropertyMetadata
+                                                                                                           (null,
+                                                                                                            ImportPropertyChanged));
 
         private static IContainer _container;
 
@@ -106,11 +108,11 @@ namespace Tauron.Application.Composition
             try
             {
                 var adapters = Container.ResolveAll<IViewAggregatorAdapter>(null);
-                var adapter = adapters.FirstOrDefault(a => a.CanAdapt(d));
+                var adapter  = adapters.FirstOrDefault(a => a.CanAdapt(d));
 
                 if (adapter == null)
                 {
-                    var obj = new FrameworkObject(d);
+                    var obj   = new FrameworkObject(d);
                     var views = Container.ResolveAll((Type) e.NewValue, null);
                     obj.DataContext = views.FirstOrDefault();
                     return;
@@ -133,8 +135,8 @@ namespace Tauron.Application.Composition
             }
         }
 
-        private static void ImportViewModelPropertyChanged([NotNull] DependencyObject d,
-            DependencyPropertyChangedEventArgs e)
+        private static void ImportViewModelPropertyChanged([NotNull] DependencyObject         d,
+                                                           DependencyPropertyChangedEventArgs e)
         {
             if (DesignerProperties.GetIsInDesignMode(d))
                 return;
@@ -146,7 +148,7 @@ namespace Tauron.Application.Composition
             // ReSharper disable once ObjectCreationAsStatement
             new FrameworkObject(d, false)
             {
-                DataContext = Container.Resolve(typeof(ViewModelBase), name, true, null)
+                DataContext = Container.Resolve(typeof(ViewModelBase), name, true, BuildParameters)
             };
         }
 

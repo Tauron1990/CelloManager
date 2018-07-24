@@ -98,16 +98,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\MGI Project Manager\Extern\Tauron.Application.Common.BaseLayer\Tauron.Application.Common.BaseLayer.csproj">
+    <ProjectReference Include="..\Extern\Tauron.Application.Common.BaseLayer\Tauron.Application.Common.BaseLayer.csproj">
       <Project>{57f54875-27a4-4885-8d0d-47e4b37675cb}</Project>
       <Name>Tauron.Application.Common.BaseLayer</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\MGI Project Manager\Extern\Tauron.Application.Common\Tauron.Application.Common.csproj">
+    <ProjectReference Include="..\Extern\Tauron.Application.Common\Tauron.Application.Common.csproj">
       <Project>{0d50ee98-a718-41b2-a1b6-57d23fdf5223}</Project>
       <Name>Tauron.Application.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

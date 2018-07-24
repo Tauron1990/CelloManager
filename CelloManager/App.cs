@@ -84,10 +84,10 @@ namespace Tauron.Application.CelloManager
             SimpleLocalize.Register(UIResources.ResourceManager, typeof(UIModule).Assembly);
             //SimpleLocalize.Register(UILabels.ResourceManager, typeof(UpdaterService).Assembly);
 
-            System.Windows.Application.Current.Resources.MergedDictionaries.Add(
-                                                                                (ResourceDictionary)
-                                                                                System.Windows.Application.LoadComponent(new PackUriHelper()
-                                                                                                                             .GetUri("Theme.xaml", typeof(App).Assembly.FullName, false)));
+            //System.Windows.Application.Current.Resources.MergedDictionaries.Add(
+            //                                                                    (ResourceDictionary)
+            //                                                                    System.Windows.Application.LoadComponent(new PackUriHelper()
+            //                                                                                                                 .GetUri("Theme.xaml", typeof(App).Assembly.FullName, false)));
         }
 
         public override string GetdefaultFileLocation()

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
 using JetBrains.Annotations;
@@ -12,20 +13,21 @@ using Tauron.Application.Views;
 
 namespace Tauron.Application.Models
 {
+    [PublicAPI]
     public abstract class ViewModelBase : ModelBase, IShowInformation
     {
         [PublicAPI]
         protected class LinkedProperty : IDisposable
         {
-            private readonly string _custom;
-            private ObservableObject _host;
-            private string _name;
-            private INotifyPropertyChanged _target;
+            private readonly string                 _custom;
+            private          ObservableObject       _host;
+            private          string                 _name;
+            private          INotifyPropertyChanged _target;
 
             public LinkedProperty(ObservableObject host, string name, INotifyPropertyChanged target, string custom)
             {
-                _host = host;
-                _name = name;
+                _host   = host;
+                _name   = name;
                 _target = target;
                 _custom = custom;
 
@@ -50,15 +52,28 @@ namespace Tauron.Application.Models
 
                 _target.PropertyChanged -= PropertyChangedMethod;
 
-                _host = null;
-                _name = null;
+                _host   = null;
+                _name   = null;
                 _target = null;
             }
         }
 
+        private static bool? _isInDesignMode;
+
         protected ViewModelBase()
         {
             ModelList = new Dictionary<string, ModelBase>();
+        }
+
+        public static bool IsInDesignMode
+        {
+            get
+            {
+                if (_isInDesignMode.HasValue) return _isInDesignMode.Value;
+                var dependencyPropertyDescriptor = DependencyPropertyDescriptor.FromProperty(DesignerProperties.IsInDesignModeProperty, typeof(FrameworkElement));
+                _isInDesignMode = (bool) dependencyPropertyDescriptor.Metadata.DefaultValue;
+                return _isInDesignMode.Value;
+            }
         }
 
         [NotNull]
@@ -68,9 +83,9 @@ namespace Tauron.Application.Models
         [Inject]
         public ViewManager ViewManager { get; protected set; }
 
+        private static IDialogFactory _dialogs;
         [NotNull]
-        [Inject]
-        public IDialogFactory Dialogs { get; protected set; }
+        public static IDialogFactory Dialogs => _dialogs ?? (_dialogs = CommonApplication.Current.Container.Resolve<IDialogFactory>());
 
         [NotNull]
         public System.Windows.Application CurrentApplication => System.Windows.Application.Current;
@@ -79,7 +94,7 @@ namespace Tauron.Application.Models
         public Dispatcher SystemDispatcher => CurrentApplication.Dispatcher;
 
         [CanBeNull]
-        public IWindow MainWindow => CommonApplication.Current.MainWindow;
+        public static IWindow MainWindow => CommonApplication.Current.MainWindow;
 
         [NotNull]
         public IUISynchronize Synchronize => UiSynchronize.Synchronize;
@@ -89,6 +104,10 @@ namespace Tauron.Application.Models
         protected override bool HasErrorOverride => ModelList.Values.Any(m => m.HasErrors);
 
         public virtual void OnShow(IWindow window)
+        {
+        }
+
+        public virtual void AfterShow(IWindow window)
         {
         }
 
@@ -103,12 +122,13 @@ namespace Tauron.Application.Models
             if (model == null) throw new ArgumentNullException(nameof(model));
 
             model.PropertyChanged += ModelOnPropertyChanged;
+
             ModelList.Add(name, model);
         }
 
-        private void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
+        protected virtual void ModelOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
-            OnPropertyChanged(propertyChangedEventArgs);
+            OnPropertyChanged(this, propertyChangedEventArgs);
         }
 
         [NotNull]
@@ -139,16 +159,19 @@ namespace Tauron.Application.Models
             return new LinkedProperty(this, PropertyHelper.ExtractPropertyName(name), target, customName);
         }
 
-        protected override IEnumerable<ObservableProperty> CustomObservableProperties()
+        protected override IEnumerable<ObservablePropertyDescriptor> CustomObservableProperties()
         {
-            return ModelList.Values.SelectMany(m => GetProperties(m.GetType()));
+            return ModelList.Values.SelectMany(m => m.GetPropertyDescriptors());
         }
 
         public override void BeginEdit()
         {
             if (EditingInheritedModel)
                 foreach (var value in ModelList.Values)
+                {
                     value.BeginEdit();
+                }
+
             base.BeginEdit();
         }
 
@@ -156,7 +179,10 @@ namespace Tauron.Application.Models
         {
             if (EditingInheritedModel)
                 foreach (var value in ModelList.Values)
+                {
                     value.EndEdit();
+                }
+
             base.EndEdit();
         }
 
@@ -164,7 +190,10 @@ namespace Tauron.Application.Models
         {
             if (EditingInheritedModel)
                 foreach (var value in ModelList.Values)
+                {
                     value.CancelEdit();
+                }
+
             base.CancelEdit();
         }
 
@@ -178,7 +207,7 @@ namespace Tauron.Application.Models
         protected void InvalidateRequerySuggested()
         {
             CommonApplication.Scheduler.QueueTask(
-                new UserTask(() => CurrentDispatcher.BeginInvoke(CommandManager.InvalidateRequerySuggested), false));
+                                                  new UserTask(() => CurrentDispatcher.BeginInvoke(CommandManager.InvalidateRequerySuggested), false));
         }
 
         protected override void OnErrorsChanged(string propertyName)

@@ -7,7 +7,7 @@
         xmlns:skin="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
         xmlns:setup="clr-namespace:Tauron.Application.CelloManager.Setup"
         x:Class="Tauron.Application.CelloManager.Setup.MainWindow" WindowStartupLocation="CenterScreen" WindowStyle="None"
-        mc:Ignorable="d" skin:SfSkinManager.VisualStyle="VisualStudio2013" MouseLeftButtonDown="MainWindow_OnMouseLeftButtonDown"
+        mc:Ignorable="d" skin:SfSkinManager.VisualStyle="Metro" MouseLeftButtonDown="MainWindow_OnMouseLeftButtonDown"
         Title="Cello Manager Installer" Height="400" Width="300" Background="#D5DAE8" ResizeMode="NoResize" Icon="icon.ico">
     <Window.DataContext>
         <setup:MainWindowViewModel/>

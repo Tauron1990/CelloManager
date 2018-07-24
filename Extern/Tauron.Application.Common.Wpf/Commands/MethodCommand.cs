@@ -2,6 +2,7 @@
 
 using System;
 using System.Reflection;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 #endregion
@@ -15,7 +16,7 @@ namespace Tauron.Application.Commands
         internal EventData([NotNull] object sender, [NotNull] EventArgs eventArgs)
         {
             if (sender == null) throw new ArgumentNullException(nameof(sender));
-            Sender = sender;
+            Sender    = sender;
             EventArgs = eventArgs;
         }
 
@@ -71,11 +72,12 @@ namespace Tauron.Application.Commands
         /// <param name="context">
         ///     The context.
         /// </param>
+        /// <param name="sync"></param>
         public MethodCommand([NotNull] MethodInfo method, [NotNull] WeakReference context)
         {
             if (method == null) throw new ArgumentNullException(nameof(method));
             if (context == null) throw new ArgumentNullException(nameof(context));
-            _method = method;
+            _method  = method;
             _context = context;
 
             _methodType = (MethodType) method.GetParameters().Length;
@@ -104,22 +106,29 @@ namespace Tauron.Application.Commands
         /// </param>
         public override void Execute(object parameter)
         {
+            object[] args;
+
             var temp = (EventData) parameter;
             switch (_methodType)
             {
                 case MethodType.Zero:
-                    _method.Invoke(Context, new object[0]);
+                    args = new object[0];
                     break;
                 case MethodType.One:
-                    _method.Invoke(Context, new object[] {temp});
+                    args = new object[] {temp};
                     break;
                 case MethodType.Two:
-                    _method.Invoke(Context, new[] {temp.Sender, temp.EventArgs});
+                    args = new[] {temp?.Sender, temp?.EventArgs};
                     break;
                 case MethodType.EventArgs:
-                    _method.Invoke(Context, new object[] {temp.EventArgs});
+                    args = new object[] {temp?.EventArgs};
+                    break;
+                default:
+                    args = new object[0];
                     break;
             }
+
+            _method.Invoke(Context, args);
         }
 
         #endregion

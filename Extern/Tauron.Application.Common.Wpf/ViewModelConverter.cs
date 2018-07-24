@@ -27,7 +27,7 @@ namespace Tauron.Application
     public class ViewModelConverter : IValueConverter
     {
         private readonly Dictionary<string, object> _cache;
-        private readonly bool _enableCaching;
+        private readonly bool                       _enableCaching;
 
         public ViewModelConverter(bool enableCaching)
         {
@@ -40,8 +40,7 @@ namespace Tauron.Application
         [CanBeNull]
         public object Convert([NotNull] object value, [NotNull] Type targetType, [NotNull] object parameter, [NotNull] CultureInfo culture)
         {
-            var model = value as ViewModelBase;
-            if (model == null) return value;
+            if (!(value is ViewModelBase model)) return value;
 
             var manager = ViewManager.Manager;
 
@@ -50,11 +49,10 @@ namespace Tauron.Application
             var name = manager.GetName(model);
             if (string.IsNullOrEmpty(name)) return value;
 
-            object view;
-            if (_cache.TryGetValue(name, out view))
+            if (_cache.TryGetValue(name, out var view))
                 return view;
 
-            view = manager.CreateViewForModel(model);
+            view         = manager.CreateViewForModel(model);
             _cache[name] = view;
             return view;
         }

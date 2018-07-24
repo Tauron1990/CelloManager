@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -30,23 +31,13 @@ namespace Tauron.Application
                 {
                     #region Constructors and Destructors
 
-                    /// <summary>
-                    ///     Initializes a new instance of the <see cref="ParameterMapper" /> class.
-                    ///     Initialisiert eine neue Instanz der <see cref="ParameterMapper" /> Klasse.
-                    /// </summary>
-                    /// <param name="method">
-                    ///     The method.
-                    /// </param>
-                    /// <param name="firstArg">
-                    ///     The first arg.
-                    /// </param>
                     public ParameterMapper([NotNull] MethodInfo method, [NotNull] object firstArg)
                     {
                         if (method == null) throw new ArgumentNullException(nameof(method));
-                        if (firstArg == null) throw new ArgumentNullException(nameof(firstArg));
                         _method = method;
-                        _firstArg = firstArg;
+                        _firstArg = firstArg ?? throw new ArgumentNullException(nameof(firstArg));
                         _isParameter = method.GetParameters().Length == 1;
+                        _isAsync = method.ReturnType.IsAssignableFrom(typeof(Task));
                     }
 
                     #endregion
@@ -59,7 +50,11 @@ namespace Tauron.Application
 
                     private readonly MethodInfo _method;
 
-                    private readonly Func<object, object[], RoutedEventArgs> _parmeterMapper;
+                    private readonly bool _isAsync;
+
+#pragma warning disable 169
+                    //private readonly Func<object, object[], RoutedEventArgs> _parmeterMapper;
+#pragma warning restore 169
 
                     #endregion
 
@@ -80,7 +75,7 @@ namespace Tauron.Application
                         if (e == null) throw new ArgumentNullException(nameof(e));
                         var args = _isParameter ? new[] {e.Parameter} : new object[0];
 
-                        e.CanExecute = _method.Invoke<bool>(_firstArg, args);
+                        e.CanExecute = _isAsync ? _method.Invoke<Task<bool>>(_firstArg, args).Result : _method.Invoke<bool>(_firstArg, args);
                     }
 
                     /// <summary>
@@ -96,8 +91,11 @@ namespace Tauron.Application
                     {
                         if (sender == null) throw new ArgumentNullException(nameof(sender));
                         if (e == null) throw new ArgumentNullException(nameof(e));
-                        if (_isParameter) _method.Invoke(_firstArg, e.Parameter);
-                        else _method.Invoke(_firstArg, null);
+
+                        if (_isParameter)
+                            _method.Invoke(_firstArg, e.Parameter);
+                        else
+                            _method.Invoke(_firstArg, null);
                     }
 
                     #endregion
@@ -123,10 +121,8 @@ namespace Tauron.Application
                     /// </param>
                     public TaskFactory([NotNull] Delegate del, [NotNull] TaskScheduler scheduler, bool sync)
                     {
-                        if (del == null) throw new ArgumentNullException(nameof(del));
-                        if (scheduler == null) throw new ArgumentNullException(nameof(scheduler));
-                        _del = del;
-                        _scheduler = scheduler;
+                        _del = del ?? throw new ArgumentNullException(nameof(del));
+                        _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
                         _sync = sync;
                     }
 
@@ -203,10 +199,8 @@ namespace Tauron.Application
                 /// </param>
                 public CommandFactory([NotNull] WeakReference target, [NotNull] string name)
                 {
-                    if (target == null) throw new ArgumentNullException(nameof(target));
-                    if (name == null) throw new ArgumentNullException(nameof(name));
-                    Target = target;
-                    Name = name;
+                    Target = target ?? throw new ArgumentNullException(nameof(target));
+                    Name = name ?? throw new ArgumentNullException(nameof(name));
                 }
 
                 #endregion
@@ -277,8 +271,7 @@ namespace Tauron.Application
 
                     LastCommand = command;
 
-                    bool ok;
-                    var pair = FindCommandPair(targetType, out ok);
+                    var pair = FindCommandPair(targetType, out var ok);
 
                     var temp = command as RoutedCommand;
                     var binding = SetCommandBinding(targetObject, temp);
@@ -288,9 +281,12 @@ namespace Tauron.Application
 
                     ExecutedRoutedEventHandler del = null;
                     if (pair.Item1 != null)
+                    {
                         del =
                             Delegate.CreateDelegate(typeof(ExecutedRoutedEventHandler), target, pair.Item1, false)
                                 .As<ExecutedRoutedEventHandler>() ?? new ParameterMapper(pair.Item1, target).Execute;
+
+                    }
 
                     CanExecuteRoutedEventHandler del2 = null;
                     if (pair.Item2 != null)
@@ -387,7 +383,7 @@ namespace Tauron.Application
                         if (attr == null) continue;
 
                         var name = attr.ProvideMemberName(m);
-                        if (mainAttr.CanExecuteMember != null)
+                        if (mainAttr?.CanExecuteMember != null)
                         {
                             if (mainAttr.CanExecuteMember != name) continue;
                         }
@@ -405,22 +401,22 @@ namespace Tauron.Application
                     return Tuple.Create(main.Method, second);
                 }
 
-                [CanBeNull]
-                private ICommand FindCommandToDelegate([NotNull] IReflect targetType, [NotNull] object target)
-                {
-                    var mem =
-                    (from member in
-                        targetType.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                        let attr = member.GetCustomAttribute<CommandTargetAttribute>()
-                        where attr != null && attr.ProvideMemberName(member) == Name
-                        select member).FirstOrDefault();
+                //[CanBeNull]
+                //private ICommand FindCommandToDelegate([NotNull] IReflect targetType, [NotNull] object target)
+                //{
+                //    var mem =
+                //    (from member in
+                //        targetType.GetMembers(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                //        let attr = member.GetCustomAttribute<CommandTargetAttribute>()
+                //        where attr != null && attr.ProvideMemberName(member) == Name
+                //        select member).FirstOrDefault();
 
-                    if (mem != null) return mem.GetInvokeMember<ICommand>(target, null);
+                //    if (mem != null) return mem.GetInvokeMember<ICommand>(target, null);
 
-                    CommonWpfConstans.LogCommon(false, "CommandBinde: No Possible Command Found: {0}", Name);
+                //    CommonWpfConstans.LogCommon(false, "CommandBinde: No Possible Command Found: {0}", Name);
 
-                    return null;
-                }
+                //    return null;
+                //}
 
                 #endregion
             }
@@ -466,12 +462,9 @@ namespace Tauron.Application
                 public PropertySearcher([NotNull] WeakReference<DependencyObject> target, [NotNull] string customName,
                     [NotNull] ICommand command)
                 {
-                    if (target == null) throw new ArgumentNullException(nameof(target));
-                    if (customName == null) throw new ArgumentNullException(nameof(customName));
-                    if (command == null) throw new ArgumentNullException(nameof(command));
-                    Target = target;
-                    CustomName = customName;
-                    Command = command;
+                    Target = target ?? throw new ArgumentNullException(nameof(target));
+                    CustomName = customName ?? throw new ArgumentNullException(nameof(customName));
+                    Command = command ?? throw new ArgumentNullException(nameof(command));
 
                     _changedFlags = PropertyFlags.All;
                 }
@@ -577,13 +570,6 @@ namespace Tauron.Application
 
             #region Constructors and Destructors
 
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="CommandLinker" /> class.
-            ///     Initialisiert eine neue Instanz der <see cref="CommandLinker" /> Klasse.
-            /// </summary>
-            /// <param name="element">
-            ///     The element.
-            /// </param>
             public CommandLinker([NotNull] DependencyObject element)
                 : base(element, false)
             {
@@ -621,7 +607,7 @@ namespace Tauron.Application
                 var commandTarget = CommandTarget;
                 if (dataContext == null || target == null || commandTarget == null)
                 {
-                    CommonWpfConstans.LogCommon(false, "CommandBinder: No Binding: {0}", commandTarget);
+                    CommonWpfConstans.LogCommon(false, "CommandBinder: No Binding: {0}", commandTarget ?? string.Empty);
 
                     return;
                 }
@@ -649,7 +635,7 @@ namespace Tauron.Application
 
                 if (_searcher == null)
                 {
-                    _searcher = new PropertySearcher(Source, customProperty, targetCommand);
+                    _searcher = new PropertySearcher(Source ?? throw new InvalidOperationException(), customProperty, targetCommand);
                 }
                 else
                 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Tauron.Application.Composition;
 using Tauron.Application.Ioc;
 using Tauron.Application.Models;
 
@@ -41,17 +42,27 @@ namespace Tauron.Application.Views.Core
 
         public override IWindow CreateWindowImpl(string name, object[] parameters)
         {
-            BuildParameter[] buildParameters = null;
-            if (parameters != null)
+            try
             {
-                buildParameters = new BuildParameter[parameters.Length];
-                for (var i = 0; i < parameters.Length; i++)
-                    buildParameters[i] = new SimpleBuildPrameter(parameters[i]);
+                BuildParameter[] buildParameters = null;
+                if (parameters != null)
+                {
+                    buildParameters = new BuildParameter[parameters.Length];
+                    for (var i = 0; i < parameters.Length; i++)
+                    {
+                        buildParameters[i] = new SimpleBuildPrameter(parameters[i]);
+                    }
+                }
+
+                CompositionServices.BuildParameters = buildParameters;
+                var window = Windows.First(win => win.Metadata.Name == name).ResolveRaw(true, buildParameters);
+
+                return CastToWindow(window, name);
             }
-
-            var window = Windows.First(win => win.Metadata.Name == name).ResolveRaw(true, buildParameters);
-
-            return CastToWindow(window, name);
+            finally
+            {
+                CompositionServices.BuildParameters = null;
+            }
         }
 
         public override Type GetViewType(string name)
@@ -61,7 +72,7 @@ namespace Tauron.Application.Views.Core
 
         protected virtual IWindow CastToWindow(object objWindow, string name)
         {
-            Window window = (Window) objWindow;
+            var window = (Window) objWindow;
 
             UiSynchronize.Synchronize.Invoke(() => window.Name = name);
 

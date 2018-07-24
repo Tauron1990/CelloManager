@@ -53,10 +53,6 @@
     <Compile Include="Shuffler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Extern\Tauron.Application.Common\Tauron.Application.Common.csproj">
-      <Project>{0D50EE98-A718-41B2-A1B6-57D23FDF5223}</Project>
-      <Name>Tauron.Application.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tauron.Application.CelloManager.Contracts\Tauron.Application.CelloManager.Contracts.csproj">
       <Project>{5c9c712a-ecbd-4ddc-991f-04356edb0929}</Project>
       <Name>Tauron.Application.CelloManager.Contracts</Name>

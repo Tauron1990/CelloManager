@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using Castle.DynamicProxy;
 using JetBrains.Annotations;
@@ -10,6 +11,7 @@ using Tauron.Application.Models;
 
 namespace Tauron.Application
 {
+    [Serializable]
     public class PropertyModelExtension : IContainerExtension
     {
         private class PropertyImportInterceptor : IImportInterceptor
@@ -50,8 +52,8 @@ namespace Tauron.Application
 
                 var targetImports =
                     imports.Where(meta => meta.Metadata.ContainsKey(EnablePropertyInheritanceMetadataName))
-                        .Where(m => (bool) m.Metadata[EnablePropertyInheritanceMetadataName])
-                        .ToArray();
+                           .Where(m => (bool) m.Metadata[EnablePropertyInheritanceMetadataName])
+                           .ToArray();
 
                 if (targetImports.Length == 0) return GenericGenerator;
 

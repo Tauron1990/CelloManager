@@ -79,14 +79,6 @@
     <None Include="TestAnwendung.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\MGI Project Manager\Extern\Tauron.Application.Common.BaseLayer\Tauron.Application.Common.BaseLayer.csproj">
-      <Project>{57f54875-27a4-4885-8d0d-47e4b37675cb}</Project>
-      <Name>Tauron.Application.Common.BaseLayer</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\..\..\Visual Studio 2017\Projects\MGI Project Manager\Extern\Tauron.Application.Common\Tauron.Application.Common.csproj">
-      <Project>{0d50ee98-a718-41b2-a1b6-57d23fdf5223}</Project>
-      <Name>Tauron.Application.Common</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Tauron.Application.CelloManager.Contracts\Tauron.Application.CelloManager.Contracts.csproj">
       <Project>{5c9c712a-ecbd-4ddc-991f-04356edb0929}</Project>
       <Name>Tauron.Application.CelloManager.Contracts</Name>

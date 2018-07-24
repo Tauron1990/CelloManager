@@ -172,6 +172,7 @@
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NLog.5.0.0-beta11\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -220,6 +221,18 @@
       <DependentUpon>InputDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PrgressDialog.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Tauron.Application.Common.Wpf\Tauron.Application.Common.Wpf.csproj">
+      <Project>{03f1490a-9173-4e75-9d6e-fbe5a37aa649}</Project>
+      <Name>Tauron.Application.Common.Wpf</Name>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\Tauron.Application.Common\Tauron.Application.Common.csproj">
+      <Project>{0d50ee98-a718-41b2-a1b6-57d23fdf5223}</Project>
+      <Name>Tauron.Application.Common</Name>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Page Include="Help\View\HelpView.xaml">
