@@ -15,7 +15,7 @@ namespace Tauron.Application.CelloManager.Logic.Manager.Rules
                 var repo = RepositoryFactory.GetRepository<ISpoolRepository>();
 
                 var entity = repo.Find(input.CelloSpool.Id);
-                if( entity == null || entity.Amount <= input.Amount) return new RemoveAmountResult(false);
+                if( entity == null || entity.Amount < input.Amount) return new RemoveAmountResult(false);
 
                 entity.Amount -= input.Amount;
 

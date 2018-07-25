@@ -12,6 +12,7 @@ namespace AutoReleaser
     {
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
+            SyncfusionLicenseProvider.RegisterLicense("OTg2NUAzMTM2MmUzMjJlMzBJSVNzUDVuTU82QVhhbXZLOVNFclYwd0dJWm80QXdjQTRSL0FGY0FNOHhRPQ==");
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.AssemblyResolve += LoadFromSameFolder;
         }

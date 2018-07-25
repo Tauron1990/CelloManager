@@ -1,5 +1,6 @@
 ﻿
 using System;
+using Tauron.Application.CelloManager.Data.Manager;
 
 namespace Tauron.Application.CelloManager.Logic.Manager
 {
@@ -77,6 +78,19 @@ namespace Tauron.Application.CelloManager.Logic.Manager
         public static bool operator !=(CelloSpool left, CelloSpool right)
         {
             return !Equals(left, right);
+        }
+
+        public CelloSpoolEntity CreateEntity()
+        {
+            return new CelloSpoolEntity
+            {
+                Id = Id,
+                Amount = Amount,
+                Name = Name,
+                Neededamount = Neededamount,
+                Timestamp = DateTime.MinValue,
+                Type = Type
+            };
         }
     }
 }

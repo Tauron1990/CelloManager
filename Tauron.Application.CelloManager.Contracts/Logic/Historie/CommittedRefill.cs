@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tauron.Application.CelloManager.Data.Historie;
 
 namespace Tauron.Application.CelloManager.Logic.Historie
 {
@@ -29,6 +30,20 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         public int Count
         {
             get { return CommitedSpools.Sum(s => s.OrderedCount); }
+        }
+
+        public CommittedRefillEntity CreateEntity()
+        {
+            var ent = new CommittedRefillEntity
+            {
+                SentTime = SentTime,
+                CompledTime = CompledTime,
+                Id = Id
+            };
+
+            CommitedSpools.Select(cs => cs.CreateEntity()).Foreach(cse => ent.CommitedSpools.Add(cse));
+
+            return ent;
         }
     }
 }

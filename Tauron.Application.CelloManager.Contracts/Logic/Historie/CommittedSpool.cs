@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Tauron.Application.CelloManager.Data.Historie;
 
 namespace Tauron.Application.CelloManager.Logic.Historie
 {
@@ -18,5 +19,17 @@ namespace Tauron.Application.CelloManager.Logic.Historie
         public string Type         { get; }
         public int    OrderedCount { get; set; }
         public int    SpoolId      { get; }
+
+        public CommittedSpoolEntity CreateEntity()
+        {
+            return new CommittedSpoolEntity
+            {
+                Id = 0,
+                Name = Name,
+                OrderedCount = OrderedCount,
+                SpoolId = SpoolId,
+                Type = Type
+            };
+        }
     }
 }

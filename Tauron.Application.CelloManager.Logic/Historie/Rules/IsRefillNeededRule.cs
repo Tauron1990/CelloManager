@@ -4,8 +4,8 @@ using System.Linq;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Data.Historie;
 using Tauron.Application.CelloManager.Data.Manager;
+using Tauron.Application.CelloManager.Logic.Core;
 using Tauron.Application.CelloManager.Logic.Historie.DTO;
-using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.Common.BaseLayer;
 using Tauron.Application.Common.BaseLayer.Core;
 using Tauron.Application.Ioc;
@@ -20,8 +20,8 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
 
         public override IsRefillNeededResult ActionImpl(IsRefillNeededInput input)
         {
-            IEnumerable<CelloSpool> spools = input.Spools;
-            IEnumerable<CommittedRefill> refills = input.Refills;
+            IQueryable<CelloSpoolEntity> spools = input.Spools?.Select(cs => cs.CreateEntity()).AsQueryable();
+            IEnumerable<CommittedRefillEntity> refills = input.Refills?.Select(cr => cr.CreateEntity()).ToArray();
             IDisposable dbacess = null;
 
             try
@@ -29,30 +29,17 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
                 if (spools == null || refills == null)
                 {
                     dbacess = RepositoryFactory.Enter();
-                    spools  = RepositoryFactory.GetRepository<ISpoolRepository>().QueryAsNoTracking().Select(e => e.CreateCelloSpool());
-                    refills = RepositoryFactory.GetRepository<ICommittedRefillRepository>().GetCommittedRefills(false).Select(e => e.CreateCommittedRefill()).ToArray();
+                    spools  = RepositoryFactory.GetRepository<ISpoolRepository>().QueryAsNoTracking();
+                    refills = RepositoryFactory.GetRepository<ICommittedRefillRepository>().GetCommittedRefills(false).ToArray();
                 }
 
 
-                return new IsRefillNeededResult(IsRefillNeeded(spools, refills));
+                return new IsRefillNeededResult(spools.FilterForOrder(refills, ManagerEnviroment.Settings.Threshold).Any());
             }
             finally
             {
                 dbacess?.Dispose();
             }
-        }
-
-        private bool IsRefillNeeded(IEnumerable<CelloSpool> spools, IEnumerable<CommittedRefill> refills)
-        {
-            var threshold = ManagerEnviroment.Settings.Threshold;
-
-            return spools.Select(s => new
-                                      {
-                                          Spool = s, 
-                                          OrderedSpools = refills.SelectMany(c => c.CommitedSpools)
-                                                                 .Where(cs => cs.SpoolId == s.Id)
-                                      })
-                         .Any(at => at.Spool.Neededamount > at.Spool.Amount + at.OrderedSpools.Sum(cs => cs.OrderedCount) + threshold);
         }
     }
 }

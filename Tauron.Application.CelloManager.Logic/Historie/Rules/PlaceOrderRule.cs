@@ -3,6 +3,7 @@ using System.Linq;
 using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Data.Historie;
 using Tauron.Application.CelloManager.Data.Manager;
+using Tauron.Application.CelloManager.Logic.Core;
 using Tauron.Application.Common.BaseLayer;
 using Tauron.Application.Common.BaseLayer.Core;
 using Tauron.Application.Ioc;
@@ -27,17 +28,8 @@ namespace Tauron.Application.CelloManager.Logic.Historie.Rules
 
                 CommittedRefillEntity ent = new CommittedRefillEntity {SentTime = DateTime.Now};
 
-                foreach (var celloSpoolEntity in spoolRepo.QueryAsNoTracking()
-                    .Select(s => new
-                    {
-                        Spool = s,
-                        OrderedSpools = orders.SelectMany(c => c.CommitedSpools)
-                            .Where(cs => cs.SpoolId == s.Id)
-                    })
-                    .Where(at => at.Spool.Neededamount > at.Spool.Amount + at.OrderedSpools.Sum(cs => cs.OrderedCount) + threshold))
-                {
-                    ent.CommitedSpools.Add(celloSpoolEntity.Spool.ConvertCommit());
-                }
+                foreach (var celloSpoolEntity in spoolRepo.QueryAsNoTracking().FilterForOrder(orders, threshold))
+                    ent.CommitedSpools.Add(celloSpoolEntity.ConvertCommit());
 
                 if (ent.CommitedSpools.Count == 0) return null;
 

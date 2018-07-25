@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Windows.Documents;
 using DnsClient;
 using JetBrains.Annotations;
@@ -102,19 +105,24 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
             {
                 using (var smclient = new SmtpClient())
                 {
+                    smclient.ServerCertificateValidationCallback += ServerCertificateValidationCallback;
                     smclient.Connect(server, 25, false);
 
-                    // Note: only needed if the SMTP server requires authentication
                     //mclient.Authenticate("joey", "password");
                     smclient.Send(message);
                     smclient.Disconnect(true);
                     return true;
                 }
             }
-            catch
+            catch(Exception e)
             {
+                CommonApplication.Current.Container.Resolve<IDialogFactory>()
+                    .ShowMessageBox(CommonApplication.Current.MainWindow, e.Message, "Error", MsgBoxButton.Ok, MsgBoxImage.Warning, null);
+
                 return false;
             }
         }
+
+        private static bool ServerCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors) => !sslpolicyerrors.HasFlag(SslPolicyErrors.RemoteCertificateChainErrors);
     }
 }
