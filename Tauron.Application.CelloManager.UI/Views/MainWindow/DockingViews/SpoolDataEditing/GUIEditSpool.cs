@@ -36,10 +36,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         public int Id
         {
             get => CelloSpool?.Id ?? 0;
-            set => throw new InvalidOperationException();
+            set { }
         }
-
-
+    
         public string Name
         {
             get => CelloSpool?.Name;

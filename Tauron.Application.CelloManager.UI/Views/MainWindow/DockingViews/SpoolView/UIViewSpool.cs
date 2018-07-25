@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel;
+using System.Text;
 using System.Windows.Input;
 using Tauron.Application.CelloManager.Logic.Manager;
 using Tauron.Application.CelloManager.Resources;
@@ -25,6 +26,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             _manager = manager;
             _model = model;
 
+            SetName();
             StepCount = 1;
             
             _spool.PropertyChanged += SpoolOnPropertyChanged;
@@ -38,9 +40,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         {
         }
 
-        public string FirstTwo => _spool.Name.Substring(0, 2);
-        public string LastText => _spool.Name.Substring(2, _spool.Name.Length - 2);
-
+        public string FirstTwo { get; private set; }
+        public string LastText { get; private set; }
+    
         public string AmountText => _spool.Amount + " " + UIResources.CommonLabelOf + " " + _spool.Neededamount;
 
         public CelloSpool Spool { get; }
@@ -63,14 +65,19 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         private void SpoolOnPropertyChanged(object sender, PropertyChangedEventArgs propertyChangedEventArgs)
         {
             OnPropertyChanged(propertyChangedEventArgs);
-            if (propertyChangedEventArgs.PropertyName == nameof(_spool.Name))
+            switch (propertyChangedEventArgs.PropertyName)
             {
-                OnPropertyChangedExplicit(nameof(FirstTwo));
-                OnPropertyChangedExplicit(nameof(LastText));
-            }
+                case nameof(_spool.Name):
+                    SetName();
 
-            if (propertyChangedEventArgs.PropertyName == nameof(_spool.Amount) || propertyChangedEventArgs.PropertyName == nameof(_spool.Neededamount))
-                OnPropertyChangedExplicit(nameof(AmountText));
+                    OnPropertyChangedExplicit(nameof(FirstTwo));
+                    OnPropertyChangedExplicit(nameof(LastText));
+                    break;
+                case nameof(_spool.Amount):
+                case nameof(_spool.Neededamount):
+                    OnPropertyChangedExplicit(nameof(AmountText));
+                    break;
+            }
         }
 
         public ICommand AddCommand { get; private set; }
@@ -101,6 +108,28 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             StepCount = 1;
 
             return temp;
+        }
+
+        private void SetName()
+        {
+            var first = new StringBuilder();
+            var rest = new StringBuilder();
+
+            bool setFirst = true;
+
+            foreach (var nc in _spool.Name)
+            {
+                if (setFirst && char.IsDigit(nc))
+                    first.Append(nc);
+                else
+                {
+                    setFirst = false;
+                    rest.Append(nc);
+                }
+            }
+
+            FirstTwo = first.ToString();
+            LastText = rest.ToString();
         }
 
         public void Deattach() => _spool.PropertyChanged -= SpoolOnPropertyChanged;

@@ -57,22 +57,29 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews.Order
         [CommandTarget]
         public bool CanRefill()
         {
-            if (OperationContext.IsOperationRunning) return false;
+            if (OperationContext.IsEditingOperationRunning) return false;
             return _refillInProgress || SpoolModel.IsRefillNeeded();
         }
 
         [CommandTarget]
         public void Refill()
         {
+            OperationContext.IsOperationRunning = true;
             _refillInProgress = true;
             SpoolModel.PlaceOrder();
             _refillInProgress = false;
+            OperationContext.IsOperationRunning = false;
 
             InvalidateRequerySuggested();
         }
 
         [CommandTarget]
-        public void Print() => SpoolModel.PrintOrder(SelectedRefill);
+        public void Print()
+        {
+            OperationContext.IsOperationRunning = true;
+            SpoolModel.PrintOrder(SelectedRefill);
+            OperationContext.IsOperationRunning = false;
+        }
 
         [CommandTarget]
         public bool CanPrint() => SelectedRefill != null;

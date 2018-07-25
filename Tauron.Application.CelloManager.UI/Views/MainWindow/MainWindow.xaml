@@ -15,27 +15,34 @@
         hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.MainWindowName}"
         Icon="/Tauron.Application.CelloManager.UI;component/icon.ico">
 
-    <DockPanel LastChildFill="True">
-        <Menu IsMainMenu="True" DockPanel.Dock="Top">
-            <MenuItem Header="{hlp:SimpleLocalize MainWindowFileMenuLabel}">
-                <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuSettingsLabel}" hlp:CommandBinder.Command="Settings:Settings"/>
-                <Separator/>
-                <MenuItem  hlp:CommandBinder.Command="Close:Close" InputGestureText="Alt-F4"/>
-            </MenuItem>
-            <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuViewLabel}">
-                <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuEditorLabel}" IsCheckable="True" IsChecked="{Binding EditorVisible}"/>
-                <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuOrdersLabel}" IsCheckable="True" IsChecked="{Binding OrdersVisible}"/>
-            </MenuItem>
-        </Menu>
-        <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}" Margin="10"
-                             Loaded="DockingManager_OnLoaded" MinimizeButtonEnabled="True" MaximizeButtonEnabled="True"
-                             IsTDIDragDropEnabled="True" IsVS2013SidePanelEnable="True" IsVS2010DraggingEnabled="True"
-                             Name="DockingManager" SwitchMode="VistaFlip" AutoHideAnimationMode="Fade" PersistState="False">
-            <!--<TextBlock Text="Matt" sync:DockingManager.Header="Matt" sync:DockingManager.State="Document"/>
+    <sync:SfBusyIndicator IsBusy="{Binding OperationContextModel.IsOperationRunning}">
+        <DockPanel LastChildFill="True">
+            <Menu IsMainMenu="True" DockPanel.Dock="Top">
+                <MenuItem Header="{hlp:SimpleLocalize MainWindowFileMenuLabel}">
+                    <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuSettingsLabel}"
+                              hlp:CommandBinder.Command="Settings:Settings" />
+                    <Separator />
+                    <MenuItem hlp:CommandBinder.Command="Close:Close" InputGestureText="Alt-F4" />
+                </MenuItem>
+                <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuViewLabel}">
+                    <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuEditorLabel}" IsCheckable="True"
+                              IsChecked="{Binding EditorVisible}" />
+                    <MenuItem Header="{hlp:SimpleLocalize MainWindowMenuOrdersLabel}" IsCheckable="True"
+                              IsChecked="{Binding OrdersVisible}" />
+                </MenuItem>
+            </Menu>
+            <sync:DockingManager DockFill="True" UseDocumentContainer="True" ItemsSource="{Binding Tabs}" Margin="10"
+                                 Loaded="DockingManager_OnLoaded" MinimizeButtonEnabled="True"
+                                 MaximizeButtonEnabled="True"
+                                 IsTDIDragDropEnabled="True" IsVS2013SidePanelEnable="True"
+                                 IsVS2010DraggingEnabled="True"
+                                 Name="DockingManager" SwitchMode="VistaFlip" AutoHideAnimationMode="Fade"
+                                 PersistState="False">
+                <!--<TextBlock Text="Matt" sync:DockingManager.Header="Matt" sync:DockingManager.State="Document"/>
             <TextBlock Text="Soft" sync:DockingManager.Header="Soft" sync:DockingManager.State="Document" />
             <TextBlock Text="Protect" sync:DockingManager.Header="Protect" sync:DockingManager.State="Document" />
             <TextBlock Text="Daten" sync:DockingManager.Header="Daten" sync:DockingManager.CanDocument="True" />
             <TextBlock Text="Update" sync:DockingManager.Header="Update" />-->
-        </sync:DockingManager>
-    </DockPanel>
+            </sync:DockingManager>
+        </DockPanel></sync:SfBusyIndicator>
 </win:SfChromelessWindow>

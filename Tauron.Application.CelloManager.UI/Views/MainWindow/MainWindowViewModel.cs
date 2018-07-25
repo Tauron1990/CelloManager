@@ -16,6 +16,9 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow
         [InjectModel(UIModule.SpoolModelName)]
         public SpoolModel SpoolModel { get; set; }
 
+        [InjectModel(UIModule.OperationContextModelName)]
+        public OperationContextModel OperationContextModel { get; set; }
+
         public UISyncObservableCollection<DockItem> Tabs => SpoolModel.Views;
 
 

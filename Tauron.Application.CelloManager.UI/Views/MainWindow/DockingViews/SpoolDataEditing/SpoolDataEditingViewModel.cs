@@ -62,7 +62,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
         [CommandTarget]
         public void BeginEditData()
         {
-            OperationContextModel.IsOperationRunning = true;
+            OperationContextModel.IsEditingOperationRunning = true;
             SpoolModel.EnterEditMode();
 
             foreach (var editSpool in SpoolModel.EditorSpools)
@@ -74,8 +74,10 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
 
         private void Stop(bool flag)
         {
+            OperationContextModel.IsOperationRunning = true;
             SpoolModel.ExitEditMode(flag);
             Spools.Clear();
+            OperationContextModel.IsEditingOperationRunning = false;
             OperationContextModel.IsOperationRunning = false;
         }
     }

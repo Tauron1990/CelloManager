@@ -29,7 +29,7 @@ namespace Tauron.Application.CelloManager.UI.Views.MainWindow.DockingViews
             Type = type;
             Spools = new UISyncObservableCollection<UIViewSpool>();
 
-            Spools.AddRange(spools.OrderByDescending(b => b.Name).Select(s => new UIViewSpool(s, manager, _model)));
+            Spools.AddRange(spools.OrderByDescending(b => int.Parse(new string(b.Name.Where(char.IsDigit).ToArray()))).Select(s => new UIViewSpool(s, manager, _model)));
         }
 
         public string Type { get; private set; }
