@@ -294,4 +294,22 @@
   <data name="OrderViewRefillCountLabel" xml:space="preserve">
     <value>Count:</value>
   </data>
+  <data name="OptionsOptionTabHeader" xml:space="preserve">
+    <value>General</value>
+  </data>
+  <data name="OptionsEmailHeader" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="OptionsWindowComplexEmailLabel" xml:space="preserve">
+    <value>Server Mode:</value>
+  </data>
+  <data name="OptionsWindowPortLabel" xml:space="preserve">
+    <value>Server Port:</value>
+  </data>
+  <data name="OptionsWindowUserNameLabel" xml:space="preserve">
+    <value>User Name:</value>
+  </data>
+  <data name="OptionsWindowPasswordLabel" xml:space="preserve">
+    <value>Password:</value>
+  </data>
 </root>

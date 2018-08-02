@@ -10,46 +10,99 @@
              xmlns:controls="clr-namespace:Syncfusion.Windows.Controls;assembly=Syncfusion.SfChromelessWindow.Wpf"
              xmlns:sfSkinManager="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
              mc:Ignorable="d" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" Title="Cello Manager" hlp:DataContextServices.Activate="True"
-             Height="400" Width="400" hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.OptionsWindow}"
+             Height="400" Width="400" hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.OptionsWindow}" d:DataContext="{d:DesignInstance local:OptionsWindowViewModel, IsDesignTimeCreatable=true}"
              sfSkinManager:SfSkinManager.VisualStyle="Metro" Icon="/Tauron.Application.CelloManager.UI;component/icon.ico">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="Auto"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{hlp:SimpleLocalize OptionsWindowDNSLabel}" Margin="5"/>
-        <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Settings.Dns, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, Delay=500}" Margin="5"/>
-        <TextBlock Grid.Column="0" Grid.Row="1" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowMailTo}"/>
-        <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5" Text="{Binding Settings.TargetEmail, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, Delay=500}"/>
-        <TextBlock Grid.Column="0" Grid.Row="2" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowPrinterType}"/>
-        <ComboBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="5"  DisplayMemberPath="Value" SelectedValuePath="Key" ItemsSource="{Binding Settings.PrinterTypeCaptions}"
-                  SelectedValue="{Binding Settings.PrinterType, ValidatesOnNotifyDataErrors=True}"/>
-        <TextBlock Grid.Column="0" Grid.Row="3" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowDefaultPrinter}"/>
-        <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Margin="5" Text="{Binding Settings.DefaultPrinter, UpdateSourceTrigger=PropertyChanged, Delay=500, ValidatesOnNotifyDataErrors=True}"/>
-        <TextBlock Grid.Column="0" Grid.Row="4" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowPurge}"/>
-        <CheckBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="6" HorizontalAlignment="Center" IsChecked="{Binding Settings.Purge, ValidatesOnNotifyDataErrors=True}"/>
-        <TextBlock Grid.Column="0" Grid.Row="5" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowMaximumSpoolHistorie}"/>
-        <sync:IntegerTextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="5" Margin="5" IsEnabled="{Binding Settings.Purge}"
-                             Value="{Binding Settings.MaximumSpoolHistorie, ValidatesOnNotifyDataErrors=True, Delay=500, UpdateSourceTrigger=PropertyChanged}"/>
-        <TextBlock Grid.Column="0" Grid.Row="6" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowThreshold}"/>
-        <sync:IntegerTextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="6" Margin="5"
-                             Value="{Binding Settings.Threshold, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, Delay=500}"/>
-        <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" Margin="5" Text="{Binding ErrorText}"/>
-        <Button Grid.Column="2" Grid.Row="9" Margin="5" Content="{hlp:SimpleLocalize OptionsWindowSaveButton}" hlp:CommandBinder.Command="Save:Save" IsDefault="True"/>
-        <Button Grid.Column="1" Grid.Row="9" Margin="5" HorizontalAlignment="Right" Content="{hlp:SimpleLocalize OptionsWindowCancel}" hlp:CommandBinder.Command="Cancel:Cancel" IsCancel="True"/>
+        <sync:TabControlExt Grid.Column="0" Grid.ColumnSpan="3">
+            <sync:TabItemExt Header="{hlp:SimpleLocalize OptionsOptionTabHeader}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{hlp:SimpleLocalize OptionsWindowDNSLabel}" Margin="5" />
+                    <TextBox Grid.Column="1" Grid.Row="0" Grid.ColumnSpan="2"
+                             Text="{Binding Settings.Dns, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, Delay=500}"
+                             Margin="5" />
+                    <TextBlock Grid.Column="0" Grid.Row="1" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowMailTo}" />
+                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1" Margin="5"
+                             Text="{Binding Settings.TargetEmail, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
+                    <TextBlock Grid.Column="0" Grid.Row="2" Margin="5"
+                               Text="{hlp:SimpleLocalize OptionsWindowPrinterType}" />
+                    <ComboBox Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Margin="5" DisplayMemberPath="Value"
+                              SelectedValuePath="Key" ItemsSource="{Binding Settings.PrinterTypeCaptions}"
+                              SelectedValue="{Binding Settings.PrinterType, ValidatesOnNotifyDataErrors=True}" />
+                    <TextBlock Grid.Column="0" Grid.Row="3" Margin="5"
+                               Text="{hlp:SimpleLocalize OptionsWindowDefaultPrinter}" />
+                    <TextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="3" Margin="5"
+                             Text="{Binding Settings.DefaultPrinter, UpdateSourceTrigger=PropertyChanged, Delay=500, ValidatesOnNotifyDataErrors=True}" />
+                    <TextBlock Grid.Column="0" Grid.Row="4" Margin="5" Text="{hlp:SimpleLocalize OptionsWindowPurge}" />
+                    <CheckBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="4" Margin="6" HorizontalAlignment="Center"
+                              IsChecked="{Binding Settings.Purge, ValidatesOnNotifyDataErrors=True}" />
+                    <TextBlock Grid.Column="0" Grid.Row="5" Margin="5"
+                               Text="{hlp:SimpleLocalize OptionsWindowMaximumSpoolHistorie}" />
+                    <sync:IntegerTextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="5" Margin="5"
+                                         IsEnabled="{Binding Settings.Purge}"
+                                         Value="{Binding Settings.MaximumSpoolHistorie, ValidatesOnNotifyDataErrors=True, Delay=500, UpdateSourceTrigger=PropertyChanged}" />
+                    <TextBlock Grid.Column="0" Grid.Row="6" Margin="5"
+                               Text="{hlp:SimpleLocalize OptionsWindowThreshold}" />
+                    <sync:IntegerTextBox Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="6" Margin="5"
+                                         Value="{Binding Settings.Threshold, ValidatesOnNotifyDataErrors=True, UpdateSourceTrigger=PropertyChanged, Delay=500}" />
+                    <TextBlock Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="7" Margin="5" Text="{Binding ErrorText}" />
+                </Grid>
+            </sync:TabItemExt>
+            <sync:TabItemExt Header="OptionsEmailHeader">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Margin="3" Grid.Row="0" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowComplexEmailLabel}"/>
+                    <CheckBox Margin="3" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" IsChecked="{Binding Settings.EmailServerMode}"/>
+                    <TextBlock Margin="3" Grid.Row="1" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowPortLabel}"/>
+                    <sync:IntegerTextBox Margin="3" Grid.Row="1" Grid.Column="1" Value="{Binding Settings.EmailPort, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsNull="False" 
+                                         IsNegative="False" MinValue="0" MaxValue="9999" HorizontalContentAlignment="Right"/>
+                    <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowUserNameLabel}"/>
+                    <TextBox Margin="3" Grid.Row="2" Grid.Column="1" Text="{Binding Settings.UserName, Delay=1000, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Margin="3" Grid.Row="3" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowPasswordLabel}"/>
+                    <TextBox Margin="3" Grid.Row="3" Grid.Column="1" Text="{Binding Settings.Password, Delay=1000, UpdateSourceTrigger=PropertyChanged}"/>
+                </Grid>
+            </sync:TabItemExt>
+        </sync:TabControlExt>
+        <Button Grid.Column="2" Grid.Row="1" Margin="5"
+                Content="{hlp:SimpleLocalize OptionsWindowSaveButton}"
+                hlp:CommandBinder.Command="Save:Save" IsDefault="True" />
+        <Button Grid.Column="1" Grid.Row="1" Margin="5" HorizontalAlignment="Right"
+                Content="{hlp:SimpleLocalize OptionsWindowCancel}"
+                hlp:CommandBinder.Command="Cancel:Cancel"
+                IsCancel="True" />
     </Grid>
 </controls:SfChromelessWindow>
 

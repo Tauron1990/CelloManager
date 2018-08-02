@@ -322,11 +322,38 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die E-mail ähnelt.
+        /// </summary>
+        public static string OptionsEmailHeader {
+            get {
+                return ResourceManager.GetString("OptionsEmailHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die General ähnelt.
+        /// </summary>
+        public static string OptionsOptionTabHeader {
+            get {
+                return ResourceManager.GetString("OptionsOptionTabHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Cancel ähnelt.
         /// </summary>
         public static string OptionsWindowCancel {
             get {
                 return ResourceManager.GetString("OptionsWindowCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Server Mode: ähnelt.
+        /// </summary>
+        public static string OptionsWindowComplexEmailLabel {
+            get {
+                return ResourceManager.GetString("OptionsWindowComplexEmailLabel", resourceCulture);
             }
         }
         
@@ -367,6 +394,24 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Password: ähnelt.
+        /// </summary>
+        public static string OptionsWindowPasswordLabel {
+            get {
+                return ResourceManager.GetString("OptionsWindowPasswordLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Server Port: ähnelt.
+        /// </summary>
+        public static string OptionsWindowPortLabel {
+            get {
+                return ResourceManager.GetString("OptionsWindowPortLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Order Send Mode: ähnelt.
         /// </summary>
         public static string OptionsWindowPrinterType {
@@ -399,6 +444,15 @@ namespace Tauron.Application.CelloManager.Resources {
         public static string OptionsWindowThreshold {
             get {
                 return ResourceManager.GetString("OptionsWindowThreshold", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die User Name: ähnelt.
+        /// </summary>
+        public static string OptionsWindowUserNameLabel {
+            get {
+                return ResourceManager.GetString("OptionsWindowUserNameLabel", resourceCulture);
             }
         }
         

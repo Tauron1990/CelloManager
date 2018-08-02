@@ -71,6 +71,7 @@
     <Compile Include="Logic\Historie\DTO\IsRefillNeededInput.cs" />
     <Compile Include="Logic\Historie\DTO\IsRefillNeededResult.cs" />
     <Compile Include="Logic\Historie\DTO\PurgeSettings.cs" />
+    <Compile Include="Logic\IPasswordHasher.cs" />
     <Compile Include="Logic\ISettingsModel.cs" />
     <Compile Include="Logic\Manager\CelloSpool.cs" />
     <Compile Include="Data\Historie\ICommittedRefillRepository.cs" />
@@ -102,7 +103,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations">
-      <Version>11.1.0</Version>
+      <Version>2018.2.1</Version>
     </PackageReference>
     <PackageReference Include="NLog">
       <Version>5.0.0-beta11</Version>

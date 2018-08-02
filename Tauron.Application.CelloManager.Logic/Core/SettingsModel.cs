@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using MimeKit;
 using Tauron.Application.CelloManager.Data.Core;
-using Tauron.Application.CelloManager.Logic.Core.Fakes;
 using Tauron.Application.CelloManager.Logic.RefillPrinter;
 using Tauron.Application.CelloManager.Resources;
 using Tauron.Application.Ioc;
@@ -84,6 +83,9 @@ namespace Tauron.Application.CelloManager.Logic.Core
             get => _purge;
             set => SetProperty(ref _purge, value);
         }
+
+        public bool EmailServerMode { get; set; }
+
         public static readonly ObservableProperty ThresholdProperty = RegisterProperty("Threshold", typeof(SettingsModel), typeof(int), new ObservablePropertyMetadata()
                                                                                              .SetValidationRules(new ModelRule(ValidateNumber)
                                                                                                                  {

@@ -11,21 +11,17 @@ namespace Tauron.Application.CelloManager.Logic
         bool CanSave();
         void Cancel();
         string ErrorText { get; }
-        [UsedImplicitly]
         string Dns { get; set; }
-        [UsedImplicitly]
         string TargetEmail { get; set; }
-        [UsedImplicitly]
         RefillPrinterType PrinterType { get; set; }
-        [UsedImplicitly]
         Dictionary<RefillPrinterType, string> PrinterTypeCaptions { get; }
-        [UsedImplicitly]
         bool Purge { get; set; }
-        [UsedImplicitly]
+        bool EmailServerMode { get; set; }
         int Threshold { get; set; }
-        [UsedImplicitly]
         string DefaultPrinter { get; set; }
-        [UsedImplicitly]
         int MaximumSpoolHistorie { get; set; }
+        long? EmailPort { get; set; }
+        string UserName { get; set; }
+        string Password { get; set; }
     }
 }
