@@ -8,6 +8,7 @@ using DnsClient;
 using JetBrains.Annotations;
 using Syncfusion.Pdf;
 using Syncfusion.XPS;
+using Tauron.Application.CelloManager.Data.Core;
 using Tauron.Application.CelloManager.Resources;
 
 namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
@@ -126,7 +127,7 @@ namespace Tauron.Application.CelloManager.Logic.RefillPrinter.Rule
     [PublicAPI]
     public class MailHelper
     {
-        public static bool MailOrder(FlowDocument document, string email, string dns)
+        public static bool MailOrder(FlowDocument document, string email, string dns, ISettings settings)
         {
             if (string.IsNullOrWhiteSpace(email)) return false;
 

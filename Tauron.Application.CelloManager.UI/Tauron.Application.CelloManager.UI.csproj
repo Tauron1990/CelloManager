@@ -67,6 +67,7 @@
     <Compile Include="Helper\CommittedSpoolFormatter.cs" />
     <Compile Include="Helper\DockingTabworkspace.cs" />
     <Compile Include="Helper\DockItemConverter.cs" />
+    <Compile Include="Helper\PasswordHashConverter.cs" />
     <Compile Include="Models\EditSpool.cs" />
     <Compile Include="Models\OperationContextModel.cs" />
     <Compile Include="Models\SpoolModel.cs" />

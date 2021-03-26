@@ -9,6 +9,7 @@
              xmlns:hlp="http://schemas.Tauron-Hobby-Studio.org/xaml/presentation"
              xmlns:controls="clr-namespace:Syncfusion.Windows.Controls;assembly=Syncfusion.SfChromelessWindow.Wpf"
              xmlns:sfSkinManager="clr-namespace:Syncfusion.SfSkinManager;assembly=Syncfusion.SfSkinManager.WPF"
+             xmlns:helper="clr-namespace:Tauron.Application.CelloManager.UI.Helper"
              mc:Ignorable="d" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow" Title="Cello Manager" hlp:DataContextServices.Activate="True"
              Height="400" Width="400" hlp:CompositionServices.ImportViewModel="{x:Static contracts:AppConststands.OptionsWindow}" d:DataContext="{d:DesignInstance local:OptionsWindowViewModel, IsDesignTimeCreatable=true}"
              sfSkinManager:SfSkinManager.VisualStyle="Metro" Icon="/Tauron.Application.CelloManager.UI;component/icon.ico">
@@ -82,6 +83,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <TextBlock Margin="3" Grid.Row="0" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowComplexEmailLabel}"/>
@@ -92,7 +96,13 @@
                     <TextBlock Margin="3" Grid.Row="2" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowUserNameLabel}"/>
                     <TextBox Margin="3" Grid.Row="2" Grid.Column="1" Text="{Binding Settings.UserName, Delay=1000, UpdateSourceTrigger=PropertyChanged}"/>
                     <TextBlock Margin="3" Grid.Row="3" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowPasswordLabel}"/>
-                    <TextBox Margin="3" Grid.Row="3" Grid.Column="1" Text="{Binding Settings.Password, Delay=1000, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBox Margin="3" Grid.Row="3" Grid.Column="1" Text="{Binding Settings.Password, Delay=1000, UpdateSourceTrigger=PropertyChanged, Converter={helper:PasswordHashConverter}}"/>
+                    <TextBlock Margin="3" Grid.Row="4" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowServerName}"/>
+                    <TextBox Margin="3" Grid.Row="4" Grid.Column="1" Text="{Binding Settings.Server, Delay=1000, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Margin="3" Grid.Row="5" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowDomainMode}"/>
+                    <CheckBox Margin="3" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" IsChecked="{Binding Settings.DomainMode}"/>
+                    <TextBlock Margin="3" Grid.Row="6" Grid.Column="0" Text="{hlp:SimpleLocalize OptionsWindowDomain}"/>
+                    <TextBox Margin="3" Grid.Row="6" Grid.Column="1" Text="{Binding Settings.Domain, Delay=1000, UpdateSourceTrigger=PropertyChanged}"/>
                 </Grid>
             </sync:TabItemExt>
         </sync:TabControlExt>

@@ -312,4 +312,13 @@
   <data name="OptionsWindowPasswordLabel" xml:space="preserve">
     <value>Passwort:</value>
   </data>
+  <data name="OptionsWindowServerName" xml:space="preserve">
+    <value>Server:</value>
+  </data>
+  <data name="OptionsWindowDomainMode" xml:space="preserve">
+    <value>Domain Setzen:</value>
+  </data>
+  <data name="OptionsWindowDomain" xml:space="preserve">
+    <value>Domain:</value>
+  </data>
 </root>

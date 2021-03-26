@@ -23,5 +23,12 @@ namespace Tauron.Application.CelloManager.Data.Core
         string DockingState { get; set; }
 
         string SpoolDataGridState { get; set; }
+
+        long EmailPort { get; set; }
+        string UserName { get; set; }
+        string Password { get; set; }
+        string Server { get; set; }
+        bool DomainMode { get; set; }
+        string Domain { get; set; }
     }
 }

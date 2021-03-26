@@ -36,6 +36,12 @@ namespace Tauron.Application.CelloManager.Logic.Core
             Settings.Purge = Purge;
             Settings.TargetEmail = TargetEmail;
             Settings.Threshold = Threshold;
+            Settings.EmailPort = EmailPort ?? 25;
+            Settings.UserName = UserName;
+            Settings.Password = Password;
+            Settings.Server = Server;
+            Settings.DomainMode = DomainMode;
+            Settings.Domain = Domain;
 
             ManagerEnviroment.Save();
         }
@@ -78,6 +84,13 @@ namespace Tauron.Application.CelloManager.Logic.Core
 
 
         private bool _purge;
+        private long? _emailPort;
+        private string _userName;
+        private string _password;
+        private string _server;
+        private bool _domainMode;
+        private string _domain;
+
         public bool Purge
         {
             get => _purge;
@@ -109,6 +122,42 @@ namespace Tauron.Application.CelloManager.Logic.Core
             set => SetValue(MaximumSpoolHistorieProperty, value);
         }
 
+        public long? EmailPort
+        {
+            get => _emailPort;
+            set => SetProperty(ref _emailPort, value);
+        }
+
+        public string UserName
+        {
+            get => _userName;
+            set => SetProperty(ref _userName, value);
+        }
+
+        public string Password
+        {
+            get => _password;
+            set => SetProperty(ref _password, value);
+        }
+
+        public string Server
+        {
+            get => _server;
+            set => SetProperty(ref _server, value);
+        }
+
+        public bool DomainMode
+        {
+            get => _domainMode;
+            set => SetProperty(ref _domainMode, value);
+        }
+
+        public string Domain
+        {
+            get => _domain;
+            set => SetProperty(ref _domain, value);
+        }
+
         public override void BuildCompled()
         {
             Settings = ManagerEnviroment.Settings;
@@ -120,6 +169,13 @@ namespace Tauron.Application.CelloManager.Logic.Core
             Threshold = Settings.Threshold;
             DefaultPrinter = Settings.DefaultPrinter;
             MaximumSpoolHistorie = Settings.MaximumSpoolHistorie;
+
+            EmailPort = Settings.EmailPort;
+            UserName = Settings.UserName;
+            Password = Settings.Password;
+            Server = Settings.Server;
+            DomainMode = Settings.DomainMode;
+            Domain = Settings.Domain;
 
             base.BuildCompled();
         }

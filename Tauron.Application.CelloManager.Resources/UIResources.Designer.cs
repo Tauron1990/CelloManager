@@ -376,6 +376,24 @@ namespace Tauron.Application.CelloManager.Resources {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Domain: ähnelt.
+        /// </summary>
+        public static string OptionsWindowDomain {
+            get {
+                return ResourceManager.GetString("OptionsWindowDomain", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Set Domain: ähnelt.
+        /// </summary>
+        public static string OptionsWindowDomainMode {
+            get {
+                return ResourceManager.GetString("OptionsWindowDomainMode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die Mail To: ähnelt.
         /// </summary>
         public static string OptionsWindowMailTo {
@@ -435,6 +453,15 @@ namespace Tauron.Application.CelloManager.Resources {
         public static string OptionsWindowSaveButton {
             get {
                 return ResourceManager.GetString("OptionsWindowSaveButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die Server: ähnelt.
+        /// </summary>
+        public static string OptionsWindowServerName {
+            get {
+                return ResourceManager.GetString("OptionsWindowServerName", resourceCulture);
             }
         }
         

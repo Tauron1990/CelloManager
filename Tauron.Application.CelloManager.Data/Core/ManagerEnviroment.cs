@@ -72,6 +72,42 @@ namespace Tauron.Application.CelloManager.Data.Core
                 set => _cache["SpoolDataGridState"] = value;
             }
 
+            public long EmailPort
+            {
+                get => long.TryParse(GetValue("EmailPort", "25"), out var valueResult) ? valueResult : 25;
+                set => _cache["EmailPort"] = value.ToString();
+            }
+
+            public string UserName
+            {
+                get => GetValue("UserName");
+                set => _cache["UserName"] = value;
+            }
+
+            public string Password
+            {
+                get => GetValue("Password");
+                set => _cache["Password"] = value;
+            }
+
+            public string Server
+            {
+                get => GetValue("Server");
+                set => _cache["Server"] = value;
+            }
+
+            public bool DomainMode
+            {
+                get => bool.TryParse("DomainMode", out var vaResult) ? vaResult : false;
+                set => _cache["DomainMode"] = value.ToString();
+            }
+
+            public string Domain
+            {
+                get => GetValue("Domain");
+                set => _cache["Domain"] = value;
+            }
+
             private string GetValue(string key, string defaultValue = null)
             {
                 return _cache.TryGetValue(key, out var value) ? value : defaultValue ?? String.Empty;
