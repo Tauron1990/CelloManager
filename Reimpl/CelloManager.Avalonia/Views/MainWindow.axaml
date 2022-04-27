@@ -1,0 +1,35 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:CelloManager.Avalonia.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="CelloManager.Avalonia.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico" WindowState="Maximized"
+        Title="Cello Manager">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Grid RowDefinitions="Auto, *">
+        <Menu>
+            <MenuItem Header="Bestellung" Name="StartOrder"/>
+            <MenuItem Header="Bestellungen" Name="DisplayOrders"/>
+            <MenuItem Header="Beabeiten" Name="EditSpools"/>
+        </Menu>
+        <TabControl Grid.Row="1" Name="MainContentTabs">
+            <TabControl.ItemTemplate>
+                <DataTemplate DataType="vm:TabViewModel">
+                    
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+            <TabControl.ContentTemplate>
+                <DataTemplate DataType="vm:TabViewModel">
+                    <ContentControl Content="{Binding Content}"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+
+</Window>
