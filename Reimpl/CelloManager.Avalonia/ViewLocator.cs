@@ -2,6 +2,8 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using CelloManager.Avalonia.ViewModels;
+using CelloManager.Avalonia.ViewModels.SpoolDisplay;
+using CelloManager.Avalonia.Views.SpoolDisplay;
 
 namespace CelloManager.Avalonia
 {
@@ -9,6 +11,12 @@ namespace CelloManager.Avalonia
     {
         public IControl Build(object data)
         {
+            switch (data)
+            {
+                case SpoolDisplayViewModel spoolDisplayViewModel:
+                    return new SpoolDisplayView { ViewModel = spoolDisplayViewModel };
+            }
+            
             var name = data.GetType().FullName!.Replace("ViewModel", "View");
             var type = Type.GetType(name);
 

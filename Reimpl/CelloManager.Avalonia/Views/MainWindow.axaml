@@ -17,11 +17,15 @@
             <MenuItem Header="Bestellung" Name="StartOrder"/>
             <MenuItem Header="Bestellungen" Name="DisplayOrders"/>
             <MenuItem Header="Beabeiten" Name="EditSpools"/>
+            <MenuItem IsEnabled="False" Name="ErrorDisplay"/>
         </Menu>
         <TabControl Grid.Row="1" Name="MainContentTabs">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="vm:TabViewModel">
-                    
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Title}" Margin="2"/>
+                        <Button IsVisible="{Binding CanClose}" Command="{Binding Close}" Margin="2">X</Button>
+                    </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>

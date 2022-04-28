@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Linq;
 using DynamicData;
 using ReactiveUI;
 
@@ -7,21 +8,13 @@ namespace CelloManager.Avalonia.ViewModels;
 
 public sealed class TabViewModel : ViewModelBase, IDisposable
 {
-    private bool _canClose;
-    private string _title = string.Empty;
+    private readonly  ObservableAsPropertyHelper<bool> _canClose;
+    private readonly ObservableAsPropertyHelper<string> _title;
     private ViewModelBase? _content;
 
-    public bool CanClose
-    {
-        get => _canClose;
-        set => this.RaiseAndSetIfChanged(ref _canClose, value);
-    }
+    public bool CanClose => _canClose.Value;
 
-    public string Title
-    {
-        get => _title;
-        set => this.RaiseAndSetIfChanged(ref _title, value);
-    }
+    public string Title => _title.Value;
 
     public ViewModelBase? Content
     {
@@ -31,15 +24,41 @@ public sealed class TabViewModel : ViewModelBase, IDisposable
 
     public ReactiveCommand<Unit, Unit> Close { get; }
 
-    public TabViewModel(Action close) => Close = ReactiveCommand.Create(close);
+    private TabViewModel(Action close, IObservable<string> titleProvider, IObservable<bool> canClose)
+    {
+        _canClose = canClose.ObserveOn(RxApp.MainThreadScheduler).ToProperty(this, model => model.CanClose);
+        Close = ReactiveCommand.Create(close, canClose);
+        _title = titleProvider.ObserveOn(RxApp.MainThreadScheduler).ToProperty(this, model => model.Title);
+    }
 
-    public void Dispose() => Close.Dispose();
+    public void Dispose()
+    {
+        Close.Dispose();
+        _title.Dispose();
+    }
 
     public static TabViewModel Create(ViewModelBase viewModelBase, ISourceList<ViewModelBase> tabs)
     {
-        
+        var title = viewModelBase switch
+        {
+           ITabInfoProvider provider => provider.WhenAny(tp => tp.Title, change => change.Value), 
+            _ => Observable.Return("Unbekannt")
+        };
+
+        var canclose = viewModelBase switch
+        {
+            ITabInfoProvider provider => provider.WhenAny(tp => tp.CanClose, change => change.Value),
+            _ => Observable.Return(false)
+        };
+
+        return new TabViewModel(() => tabs.Remove(viewModelBase), title, canclose) {Content = viewModelBase};
     }
 }
 
-public interface 
+public interface ITabInfoProvider : IReactiveObject
+{
+    public string Title { get; }
+    
+    public bool CanClose { get; }
+}
 

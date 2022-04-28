@@ -2,8 +2,6 @@
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using DynamicData.Alias;
 using System.Threading.Tasks;
 using Akavache;
 using DynamicData;
@@ -12,13 +10,14 @@ namespace CelloManager.Avalonia.Core.Data;
 
 public sealed class SpoolRepository : IDisposable
 {
+    private readonly ErrorDispatcher _errorDispatcher;
     private readonly SourceCache<SpoolData, string> _spools = new(sd => sd.Id);
     private readonly SourceCache<PendingOrder, string> _orders = new(po => po.Id);
     private readonly IBlobCache _blobCache = BlobCache.UserAccount;
-    private readonly Subject<Exception> _errors = new();
+    private readonly CompositeDisposable _subscriptions = new();
 
-    private CompositeDisposable _subscriptions = new();
-    
+    public SpoolRepository(ErrorDispatcher errorDispatcher) => _errorDispatcher = errorDispatcher;
+
     public async Task Init()
     {
         var spools = await _blobCache.GetAllObjects<SpoolData>();
@@ -68,19 +67,20 @@ public sealed class SpoolRepository : IDisposable
             .Subscribe().DisposeWith(_subscriptions);
     }
     
-    private void ReportError(IObservable<Unit> toReport) => toReport.Subscribe(_ => { }, e => _errors.OnNext(e));
-
-    public IObservable<Exception> Errors => _errors.AsObservable();
+    private void ReportError(IObservable<Unit> toReport) => toReport.Subscribe(_ => { }, e => _errorDispatcher.Send(e));
 
     public IObservable<IChangeSet<SpoolData, string>> Spools => _spools.Connect();
 
     public IObservable<IChangeSet<PendingOrder, string>> Orders => _orders.Connect();
 
-    public void UpdateSpool(SpoolData data) => _spools.AddOrUpdate(data);
+    public Unit UpdateSpool(SpoolData data)
+    {
+        _spools.AddOrUpdate(data);
+        return Unit.Default;
+    }
 
     public void Dispose()
     {
-        _errors.Dispose();
         _subscriptions.Dispose();
         _spools.Dispose();
         _orders.Dispose();

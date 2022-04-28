@@ -23,7 +23,7 @@ namespace CelloManager.Avalonia
             {
                 desktop.MainWindow = new MainWindow
                 {
-                    DataContext = ServiceProvider.GetService<MainWindowViewModel>(),
+                    ViewModel = ServiceProvider.GetService<MainWindowViewModel>(),
                 };
             }
 
