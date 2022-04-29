@@ -17,7 +17,7 @@ namespace CelloManager.Avalonia
         {
             Akavache.Registrations.Start("CelloManager");
             await App.ServiceProvider.GetService<SpoolRepository>().Init();
-            
+
             try
             {
                 BuildAvaloniaApp()

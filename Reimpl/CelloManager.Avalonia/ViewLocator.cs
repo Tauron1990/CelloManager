@@ -15,6 +15,8 @@ namespace CelloManager.Avalonia
             {
                 case SpoolDisplayViewModel spoolDisplayViewModel:
                     return new SpoolDisplayView { ViewModel = spoolDisplayViewModel };
+                case SpoolGroupViewModel groupViewModel:
+                    return new SpoolGroupView { ViewModel = groupViewModel };
             }
             
             var name = data.GetType().FullName!.Replace("ViewModel", "View");

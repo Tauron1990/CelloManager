@@ -37,7 +37,7 @@ public sealed class TabViewModel : ViewModelBase, IDisposable
         _title.Dispose();
     }
 
-    public static TabViewModel Create(ViewModelBase viewModelBase, ISourceList<ViewModelBase> tabs)
+    public static TabViewModel Create(ViewModelBase viewModelBase, ISourceList<ViewModelBase>? tabs)
     {
         var title = viewModelBase switch
         {
@@ -47,11 +47,11 @@ public sealed class TabViewModel : ViewModelBase, IDisposable
 
         var canclose = viewModelBase switch
         {
-            ITabInfoProvider provider => provider.WhenAny(tp => tp.CanClose, change => change.Value),
+            ITabInfoProvider provider when tabs is not null => provider.WhenAny(tp => tp.CanClose, change => change.Value),
             _ => Observable.Return(false)
         };
 
-        return new TabViewModel(() => tabs.Remove(viewModelBase), title, canclose) {Content = viewModelBase};
+        return new TabViewModel(() => tabs?.Remove(viewModelBase), title, canclose) {Content = viewModelBase};
     }
 }
 

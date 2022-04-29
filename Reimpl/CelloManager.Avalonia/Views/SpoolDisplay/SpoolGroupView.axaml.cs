@@ -7,9 +7,9 @@ using ReactiveUI;
 
 namespace CelloManager.Avalonia.Views.SpoolDisplay;
 
-public partial class SpoolDisplayView : ReactiveUserControl<SpoolDisplayViewModel>
+public partial class SpoolGroupView : ReactiveUserControl<SpoolGroupViewModel>
 {
-    public SpoolDisplayView()
+    public SpoolGroupView()
     {
         InitializeComponent();
 
@@ -18,6 +18,6 @@ public partial class SpoolDisplayView : ReactiveUserControl<SpoolDisplayViewMode
 
     private IEnumerable<IDisposable> Init()
     {
-        yield return this.OneWayBind(ViewModel, m => m.Groups, v => v.CategoryDisplay.Items);
+        yield return this.OneWayBind(ViewModel, m => m.Spools, v => v.SpoolList.Items);
     }
 }

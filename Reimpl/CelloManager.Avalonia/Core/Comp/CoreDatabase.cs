@@ -1,26 +1,29 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
+using CelloManager.Avalonia.Core.Comp.OldData;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Tauron.Application.CelloManager.Data.Historie;
-using Tauron.Application.CelloManager.Data.Manager;
 
-namespace Tauron.Application.CelloManager.Data.Core
+namespace CelloManager.Avalonia.Core.Comp
 {
     public sealed class CoreDatabase : DbContext
     {
-        private static string ConnectionString = Create();
+        private static readonly string ConnectionString = Create();
 
         private static string Create()
         {
+            var path = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+                "Tauron\\CelloManager",
+                "App.db"
+            );
+
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            
             var builder = new SqliteConnectionStringBuilder
             {
-                DataSource = Path.Combine(
-                    Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                    "Tauron\\CelloManager",
-                    "App.db"
-                    )
+                DataSource = path
             };
 
             return builder.ConnectionString;
@@ -35,9 +38,9 @@ namespace Tauron.Application.CelloManager.Data.Core
         }
         #endif
 
-        public DbSet<CommittedRefillEntity> CommittedRefills { get; set; }
-        public DbSet<CelloSpoolEntity> CelloSpools { get; set; }
-        public DbSet<OptionEntity> OptionEntries { get; set; }
+        public DbSet<CommittedRefillEntity> CommittedRefills { get; set; } = null!;
+        public DbSet<CelloSpoolEntity> CelloSpools { get; set; } = null!;
+        public DbSet<OptionEntity> OptionEntries { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlite(ConnectionString);
 
@@ -45,13 +48,6 @@ namespace Tauron.Application.CelloManager.Data.Core
         {
             modelBuilder.HasChangeTrackingStrategy(ChangeTrackingStrategy.ChangingAndChangedNotifications);
             base.OnModelCreating(modelBuilder);
-        }
-
-        public void UpdateSchema()
-        {
-            ConnectionString.Remove(0, 12).CreateDirectoryIfNotExis();
-            Database.Migrate();
-            SaveChanges();
         }
     }
 }

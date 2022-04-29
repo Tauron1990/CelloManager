@@ -3,23 +3,27 @@
         xmlns:vm="using:CelloManager.Avalonia.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="CelloManager.Avalonia.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico" WindowState="Maximized"
         Title="Cello Manager">
 
-    <Design.DataContext>
+    <!--<Design.DataContext>
         <vm:MainWindowViewModel/>
-    </Design.DataContext>
-
+    </Design.DataContext>-->
+    
     <Grid RowDefinitions="Auto, *">
+        <styles:ColorZone Mode="PrimaryMid">
         <Menu>
-            <MenuItem Header="Bestellung" Name="StartOrder"/>
+            <MenuItem Header="Bestellen" Name="StartOrder"/>
             <MenuItem Header="Bestellungen" Name="DisplayOrders"/>
             <MenuItem Header="Beabeiten" Name="EditSpools"/>
+            <MenuItem Header="Importieren" Name="ImportOld"/>
             <MenuItem IsEnabled="False" Name="ErrorDisplay"/>
         </Menu>
-        <TabControl Grid.Row="1" Name="MainContentTabs">
+            </styles:ColorZone>
+        <TabControl Grid.Row="1" Name="MainContentTabs" TabStripPlacement="Left">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="vm:TabViewModel">
                     <StackPanel Orientation="Horizontal">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
+using JetBrains.Annotations;
 using ReactiveUI;
 
 namespace CelloManager.Avalonia.ViewModels
@@ -24,6 +26,7 @@ namespace CelloManager.Avalonia.ViewModels
         public int CurrentTab
         {
             get => _currentTab;
+            [UsedImplicitly]
             set => this.RaiseAndSetIfChanged(ref _currentTab, value);
         }
 
@@ -33,8 +36,24 @@ namespace CelloManager.Avalonia.ViewModels
         
         public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
 
+        public ReactiveCommand<Unit, Unit> Edit { get; }
+        
+        public ReactiveCommand<Unit, Unit> Import { get; }
+        
+        public ReactiveCommand<Unit, Unit> Order { get; }
+        
+        public ReactiveCommand<Unit, Unit> Orders { get; }
+
+
         public MainWindowViewModel(ErrorDispatcher errors)
         {
+            var currentTans = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
+            
+            Edit = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            Import = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            Order = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            Orders = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            
             _errorFull = errors.Errors
                 .Select(e => e.ToString())
                 .ObserveOn(RxApp.MainThreadScheduler)
@@ -46,7 +65,7 @@ namespace CelloManager.Avalonia.ViewModels
                 .ObserveOn(RxApp.MainThreadScheduler)
                 .ToProperty(this, m => m.ErrorSimple)
                 .DisposeWith(_subscriptions);
-            
+
             _tabs.Connect()
                 .Select(t => TabViewModel.Create(t, _tabs))
                 .DisposeMany()
@@ -60,14 +79,24 @@ namespace CelloManager.Avalonia.ViewModels
                 .OnItemAdded(m => CurrentTab = Tabs.IndexOf(m))
                 .Subscribe()
                 .DisposeWith(_subscriptions);
-            
+
+            _tabs.Connect()
+                .OnItemRemoved(m =>
+                {
+                    if (m is IDisposable disposable)
+                        disposable.Dispose();
+                })
+                .Subscribe()
+                .DisposeWith(_subscriptions);
+
             _tabs.Add(_modelScope.GetService<SpoolDisplayViewModel>());
         }
-        
+
         public ValueTask DisposeAsync()
         {
             _subscriptions.Dispose();
             _tabs.Clear();
+            _tabs.Dispose();
             GC.SuppressFinalize(this);
             return _modelScope.DisposeAsync();
         }

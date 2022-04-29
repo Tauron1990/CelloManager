@@ -1,0 +1,44 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:spoolDisplay="clr-namespace:CelloManager.Avalonia.ViewModels.SpoolDisplay"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CelloManager.Avalonia.Views.SpoolDisplay.SpoolGroupView">
+    <ItemsControl Name="SpoolList">
+        <ItemsControl.ItemsPanel>
+            <ItemsPanelTemplate>
+                <UniformGrid/>
+            </ItemsPanelTemplate>
+        </ItemsControl.ItemsPanel>
+        <ItemsControl.ItemTemplate>
+            <DataTemplate DataType="spoolDisplay:SpoolViewModel">
+                <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
+                    <styles:Card Margin="5" Padding="5">
+                        <Grid RowDefinitions="Auto, Auto, Auto">
+                            <Grid ColumnDefinitions="Auto, Auto" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding LargeName}" FontSize="35" Grid.Column="0"/>
+                                <TextBlock Text="{Binding SmallName}" FontSize="25" Grid.Column="1"/>
+                            </Grid>
+                            <Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, Auto" HorizontalAlignment="Center">
+                                <TextBlock Text="{Binding Amount}" FontSize="15" Margin="0,0,5,0"/>
+                                <TextBlock Text="von" IsVisible="{Binding NeedAmountSet}" FontSize="13" Grid.Column="1"/>
+                                <TextBlock Text="{Binding NeedAmount}" IsVisible="{Binding NeedAmountSet}" FontSize="15" Grid.Column="2" Margin="5,0,0,0"/>
+                            </Grid>
+                            <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
+                                <styles:FloatingButton Command="{Binding Increment}" Classes="Mini" Margin="3">
+                                    <avalonia:MaterialIcon Kind="Increment" Width="20" Height="20"/>
+                                </styles:FloatingButton>
+                                <styles:FloatingButton Grid.Column="1" Command="{Binding Decrement}" Classes="Mini" Margin="3">
+                                    <avalonia:MaterialIcon Kind="Decrement" Width="20" Height="20"/>
+                                </styles:FloatingButton>
+                            </Grid>
+                        </Grid>
+                    </styles:Card>
+                </Grid>
+            </DataTemplate>
+        </ItemsControl.ItemTemplate>
+    </ItemsControl>
+</UserControl>
