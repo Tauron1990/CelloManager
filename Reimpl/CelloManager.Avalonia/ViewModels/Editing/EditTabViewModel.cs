@@ -14,7 +14,7 @@ namespace CelloManager.Avalonia.ViewModels.Editing;
 
 public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivatableViewModel
 {
-    private readonly BehaviorSubject<ViewModelBase?> _currentEditorModelSubject = new(null);
+    private readonly SerialDisposableSubject<ViewModelBase?> _currentEditorModelSubject = new(null);
     private readonly ObservableAsPropertyHelper<ViewModelBase?> _currentEditorModel; 
     private object? _currentSelected;
     
