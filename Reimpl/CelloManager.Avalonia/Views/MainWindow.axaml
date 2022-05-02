@@ -14,21 +14,28 @@
     </Design.DataContext>-->
     
     <Grid RowDefinitions="Auto, *">
-        <styles:ColorZone Mode="PrimaryMid">
-        <Menu>
-            <MenuItem Header="Bestellen" Name="StartOrder"/>
-            <MenuItem Header="Bestellungen" Name="DisplayOrders"/>
-            <MenuItem Header="Beabeiten" Name="EditSpools"/>
-            <MenuItem Header="Importieren" Name="ImportOld"/>
-            <MenuItem IsEnabled="False" Name="ErrorDisplay"/>
-        </Menu>
-            </styles:ColorZone>
+        <styles:ColorZone Mode="PrimaryMid" Padding="10">
+            <StackPanel Orientation="Horizontal">
+                <Button Name="StartOrder">Bestellen</Button>
+                <Button Name="DisplayOrders">Bestellungen</Button>
+                <Button Name="EditSpools">Beabeiten</Button>
+                <Button Name="ImportOld">Importieren</Button>
+                <Button IsEnabled="False" Name="ErrorDisplay"></Button>
+            </StackPanel>
+            <!--<Menu>
+                <MenuItem Header="Bestellen" Name="StartOrder"/>
+                <MenuItem Header="Bestellungen" Name="DisplayOrders"/>
+                <MenuItem Header="Beabeiten" Name="EditSpools"/>
+                <MenuItem Header="Importieren" Name="ImportOld"/>
+                <MenuItem IsEnabled="False" Name="ErrorDisplay"/>
+            </Menu>-->
+        </styles:ColorZone>
         <TabControl Grid.Row="1" Name="MainContentTabs" TabStripPlacement="Left">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="vm:TabViewModel">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Title}" Margin="2"/>
-                        <Button IsVisible="{Binding CanClose}" Command="{Binding Close}" Margin="2">X</Button>
+                        <Button Classes="Outline" Padding="1" IsVisible="{Binding CanClose}" Command="{Binding Close}" Margin="2">X</Button>
                     </StackPanel>
                 </DataTemplate>
             </TabControl.ItemTemplate>

@@ -25,7 +25,6 @@ public sealed class SpoolRepository : IDisposable
         
         _spools.Edit(e =>
         {
-            e.AddOrUpdate(SpoolData.New("92cm", "Test", 10));
             foreach (var spoolData in spools) e.AddOrUpdate(spoolData);
         });
         
@@ -34,9 +33,9 @@ public sealed class SpoolRepository : IDisposable
             foreach (var order in orders) e.AddOrUpdate(order);
         });
 
-        //StartVacoumTimer();
-        //CreateOrderSavePipeLine();
-        //CreateSpoolSavePipeLine();
+        StartVacoumTimer();
+        CreateOrderSavePipeLine();
+        CreateSpoolSavePipeLine();
     }
 
     private void StartVacoumTimer()

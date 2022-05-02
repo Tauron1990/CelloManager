@@ -1,9 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using CelloManager.Avalonia.Core.Data;
+using CelloManager.Avalonia.Core.DebugHelper;
+using CelloManager.Avalonia.ViewModels.Editing;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using DynamicData;
 using DynamicData.Alias;
@@ -21,37 +26,36 @@ namespace CelloManager.Avalonia.ViewModels
         private readonly ObservableAsPropertyHelper<string> _errorSimple;
         private readonly ObservableAsPropertyHelper<string> _errorFull;
 
-        private int _currentTab;
-
-        public int CurrentTab
-        {
-            get => _currentTab;
-            [UsedImplicitly]
-            set => this.RaiseAndSetIfChanged(ref _currentTab, value);
-        }
-
         public string ErrorSimple => _errorSimple.Value;
 
         public string ErrorFull => _errorFull.Value;
         
         public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
 
-        public ReactiveCommand<Unit, Unit> Edit { get; }
+        public ICommand Edit { get; }
         
-        public ReactiveCommand<Unit, Unit> Import { get; }
+        public ICommand Import { get; }
         
-        public ReactiveCommand<Unit, Unit> Order { get; }
+        public ICommand Order { get; }
         
-        public ReactiveCommand<Unit, Unit> Orders { get; }
+        public ICommand Orders { get; }
 
 
         public MainWindowViewModel(ErrorDispatcher errors)
         {
-            var currentTans = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
+            var currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
+
+            Edit = ReactiveCommand.Create
+                (
+                    () => _tabs.Add(_modelScope.GetService<EditTabViewModel>()),
+                    ContainsViewModel<EditTabViewModel>(currentTabs)
+                )
+                .DisposeWith(_subscriptions);
             
-            Edit = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
             Import = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            
             Order = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            
             Orders = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
             
             _errorFull = errors.Errors
@@ -74,23 +78,11 @@ namespace CelloManager.Avalonia.ViewModels
                 .Subscribe()
                 .DisposeWith(_subscriptions);
 
-            Tabs.AsObservableChangeSet()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .OnItemAdded(m => CurrentTab = Tabs.IndexOf(m))
-                .Subscribe()
-                .DisposeWith(_subscriptions);
-
-            _tabs.Connect()
-                .OnItemRemoved(m =>
-                {
-                    if (m is IDisposable disposable)
-                        disposable.Dispose();
-                })
-                .Subscribe()
-                .DisposeWith(_subscriptions);
-
             _tabs.Add(_modelScope.GetService<SpoolDisplayViewModel>());
         }
+
+        private IObservable<bool> ContainsViewModel<TModel>(IObservable<IReadOnlyCollection<ViewModelBase>> query)
+            => query.Select(l => l.All(vm => vm.GetType() != typeof(TModel))).ObserveOn(RxApp.MainThreadScheduler);
 
         public ValueTask DisposeAsync()
         {

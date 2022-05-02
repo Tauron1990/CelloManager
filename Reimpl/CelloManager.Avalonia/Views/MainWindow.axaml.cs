@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.ReactiveUI;
 using CelloManager.Avalonia.ViewModels;
+using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
 namespace CelloManager.Avalonia.Views
@@ -20,11 +21,10 @@ namespace CelloManager.Avalonia.Views
             IEnumerable<IDisposable> Init()
             {
                 if(ViewModel is null) yield break;
-                
-                yield return this.Bind(ViewModel, m => m.CurrentTab, w => w.MainContentTabs.SelectedIndex);
 
+                
                 yield return this.OneWayBind(ViewModel, m => m.Tabs, v => v.MainContentTabs.Items);
-                yield return this.OneWayBind(ViewModel, m => m.ErrorSimple, v => v.ErrorDisplay.Header);
+                yield return this.OneWayBind(ViewModel, m => m.ErrorSimple, v => v.ErrorDisplay.Content);
                 yield return ErrorDisplay.Bind(
                     ToolTip.TipProperty,
                     ViewModel.WhenAny(m => m.ErrorFull, c => c.Value).Select(e => new BindingValue<object?>(e)));

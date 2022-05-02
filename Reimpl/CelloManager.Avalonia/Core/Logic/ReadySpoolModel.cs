@@ -28,6 +28,13 @@ public sealed class ReadySpoolModel
         _spools = spools;
     }
 
+    public IObservable<Unit> UpdateSpool(Func<SpoolData, SpoolData?> data)
+        => Observable.Return((_data, _spools, NewData:data(_data)))
+            .ObserveOn(Scheduler.Default)
+            .Synchronize(_lock)
+            .Where(t => t._data != t.NewData && t.NewData is not null)
+            .Select(d => d._spools.UpdateSpool(d.NewData!));
+
     public IObservable<Unit> RunDecrement()
         => Observable.Return((Amount, _data, _spools))
             .ObserveOn(Scheduler.Default)

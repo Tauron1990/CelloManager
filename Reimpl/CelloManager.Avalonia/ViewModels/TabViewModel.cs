@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using DynamicData;
 using ReactiveUI;
 
@@ -35,6 +36,7 @@ public sealed class TabViewModel : ViewModelBase, IDisposable
     {
         Close.Dispose();
         _title.Dispose();
+        _canClose.Dispose();
     }
 
     public static TabViewModel Create(ViewModelBase viewModelBase, ISourceList<ViewModelBase>? tabs)
@@ -51,7 +53,7 @@ public sealed class TabViewModel : ViewModelBase, IDisposable
             _ => Observable.Return(false)
         };
 
-        return new TabViewModel(() => tabs?.Remove(viewModelBase), title, canclose) {Content = viewModelBase};
+        return new TabViewModel(() => Task.Run(() => tabs?.Remove(viewModelBase)), title, canclose) {Content = viewModelBase};
     }
 }
 

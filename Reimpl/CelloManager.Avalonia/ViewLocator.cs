@@ -2,7 +2,9 @@ using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using CelloManager.Avalonia.ViewModels;
+using CelloManager.Avalonia.ViewModels.Editing;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
+using CelloManager.Avalonia.Views.Editing;
 using CelloManager.Avalonia.Views.SpoolDisplay;
 
 namespace CelloManager.Avalonia
@@ -17,6 +19,8 @@ namespace CelloManager.Avalonia
                     return new SpoolDisplayView { ViewModel = spoolDisplayViewModel };
                 case SpoolGroupViewModel groupViewModel:
                     return new SpoolGroupView { ViewModel = groupViewModel };
+                case EditTabViewModel editTabViewModel:
+                    return new EditTabView { ViewModel = editTabViewModel };
             }
             
             var name = data.GetType().FullName!.Replace("ViewModel", "View");
