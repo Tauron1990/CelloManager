@@ -8,7 +8,7 @@
              x:Class="CelloManager.Avalonia.Views.Editing.EditTabView">
     <Grid RowDefinitions="Auto, *" ColumnDefinitions="Auto, *">
         <Button Name="NewSpool" Margin="5" Grid.Row="0" Grid.Column="0">Neue Rolle</Button>
-        <TreeView Name="SpoolTreeView" Grid.Row="1" Grid.Column="0" Margin="2">
+        <TreeView Name="SpoolTreeView" Grid.Row="1" Grid.Column="0" Margin="2" MinWidth="50">
             <TreeView.DataTemplates>
                 <TreeDataTemplate DataType="editing:EditorSpoolGroup" ItemsSource="{Binding Spools}">
                     <TextBlock Text="{Binding CategoryName}"/>
@@ -18,7 +18,7 @@
                 </DataTemplate>
             </TreeView.DataTemplates>
         </TreeView>
-        <ContentControl Name="EditorField" Grid.Row="0" Grid.Column="1" Margin="2">
+        <ContentControl Name="EditorField" Grid.Row="1" Grid.Column="1" Margin="2">
             Editor
         </ContentControl>
     </Grid>

@@ -1,8 +1,8 @@
-﻿using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Markup.Xaml;
+﻿using System;
+using System.Collections.Generic;
 using Avalonia.ReactiveUI;
 using CelloManager.Avalonia.ViewModels.Editing;
+using ReactiveUI;
 
 namespace CelloManager.Avalonia.Views.Editing;
 
@@ -11,5 +11,19 @@ public partial class EditTabView : ReactiveUserControl<EditTabViewModel>
     public EditTabView()
     {
         InitializeComponent();
+        
+        this.WhenActivated(Init);
+    }
+
+    private IEnumerable<IDisposable> Init()
+    {
+        if(ViewModel is null) yield break;
+        
+        yield return this.BindCommand(ViewModel, m => m.NewSpool, v => v.NewSpool);
+
+        yield return this.Bind(ViewModel, m => m.CurrentSelected, v => v.SpoolTreeView.SelectedItem);
+        yield return this.OneWayBind(ViewModel, m => m.SpoolGroups, v => v.SpoolTreeView.Items);
+
+        yield return this.OneWayBind(ViewModel, m => m.CurrentEditorModel, v => v.EditorField.Content);
     }
 }

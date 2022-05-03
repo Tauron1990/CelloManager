@@ -29,15 +29,6 @@ namespace CelloManager.Avalonia.Core.Comp
             return builder.ConnectionString;
         }
 
-        #if DEBUG
-        // ReSharper disable once UnusedMember.Global
-        public static void OverrideConnection(string path)
-        {
-            string conn = ConfigurationManager.ConnectionStrings["MainDatabase"]?.ConnectionString;
-            ConnectionString = string.IsNullOrWhiteSpace(conn) ? path : string.Format(conn, path);
-        }
-        #endif
-
         public DbSet<CommittedRefillEntity> CommittedRefills { get; set; } = null!;
         public DbSet<CelloSpoolEntity> CelloSpools { get; set; } = null!;
         public DbSet<OptionEntity> OptionEntries { get; set; } = null!;

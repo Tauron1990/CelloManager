@@ -3,26 +3,29 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Linq;
-using System.Reactive.Subjects;
 using CelloManager.Avalonia.Core.Logic;
 using DynamicData;
 using DynamicData.Alias;
-using JetBrains.Annotations;
 using ReactiveUI;
 
 namespace CelloManager.Avalonia.ViewModels.Editing;
 
-public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivatableViewModel
+public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivatableViewModel, IDisposable
 {
     private readonly SerialDisposableSubject<ViewModelBase?> _currentEditorModelSubject = new(null);
     private readonly ObservableAsPropertyHelper<ViewModelBase?> _currentEditorModel; 
     private object? _currentSelected;
-    
+    private ReadOnlyObservableCollection<EditorSpoolGroup>? _spoolGroups;
+
     public string Title => "Beabeiten";
     
     public bool CanClose => true;
 
-    public ReadOnlyObservableCollection<EditorSpoolGroup>? SpoolGroups { get; private set; }
+    public ReadOnlyObservableCollection<EditorSpoolGroup>? SpoolGroups
+    {
+        get => _spoolGroups;
+        private set => this.RaiseAndSetIfChanged(ref _spoolGroups, value);
+    }
 
     public ReactiveCommand<Unit, Unit> NewSpool { get; }
 
@@ -38,7 +41,10 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
     {
         this.WhenActivated(Init);
         
-        NewSpool =  ReactiveCommand.Create(() => _currentEditorModelSubject.OnNext(new TODONewSpoolEditorViewModel(spoolManager)));
+        NewSpool =  ReactiveCommand.Create(() => _currentEditorModelSubject.OnNext(new NewSpoolEditorViewModel(spoolManager)));
+        _currentEditorModel = _currentEditorModelSubject
+            .ObserveOn(RxApp.MainThreadScheduler)
+            .ToProperty(this, m => m.CurrentEditorModel);
         
         IEnumerable<IDisposable> Init()
         {
@@ -47,14 +53,32 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
             yield return spoolManager.CurrentSpools
                 .Select(s => new EditorSpoolGroup(s.Key, s.Cache))
                 .DisposeMany()
+                .ObserveOn(RxApp.MainThreadScheduler)
                 .Bind(out var groups)
                 .Subscribe();
 
             SpoolGroups = groups;
+
+            yield return this.WhenAny(m => m.CurrentSelected, c => c.Value)
+                .Select(o => o switch
+                {
+                    EditorSpoolGroup group => TODOSpoolGroupViewModel.Create(group.Spools, spoolManager),
+                    ReadySpoolModel spoolModel => TODOModifySpoolEditorViewModel.Create(spoolModel, spoolManager),
+                    _ => null
+                })
+                .Subscribe(_currentEditorModelSubject);
         }
     }
 
     ViewModelActivator IActivatableViewModel.Activator { get; } = new();
+
+    public void Dispose()
+    {
+        ((IDisposable)_currentEditorModelSubject).Dispose();
+        _currentEditorModel.Dispose();
+        NewSpool.Dispose();
+        ((IActivatableViewModel)this).Activator.Dispose();
+    }
 }
 
 public sealed class EditorSpoolGroup : ViewModelBase, IDisposable

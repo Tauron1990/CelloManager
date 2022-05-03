@@ -4,7 +4,10 @@ namespace CelloManager.Avalonia.ViewModels.Editing;
 
 public class TODOModifySpoolEditorViewModel : ViewModelBase
 {
-    public TODOModifySpoolEditorViewModel(SpoolManager manager)
+    public static ViewModelBase Create(ReadySpoolModel model, SpoolManager manager)
+        => new TODOModifySpoolEditorViewModel(model, manager);
+    
+    public TODOModifySpoolEditorViewModel(ReadySpoolModel model, SpoolManager manager)
     {
         
     }

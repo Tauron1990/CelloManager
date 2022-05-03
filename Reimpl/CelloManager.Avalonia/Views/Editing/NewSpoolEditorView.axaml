@@ -1,0 +1,27 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CelloManager.Avalonia.Views.Editing.NewSpoolEditorView">
+    <Grid RowDefinitions="Auto, Auto, Auto, Auto, *" ColumnDefinitions="*, Auto">
+        <Popup Name="CategoryPopup" IsLightDismissEnabled="False" PlacementTarget="{Binding ElementName=CategoryTextBox}" PlacementMode="Bottom">
+            <styles:ColorZone Mode="PrimaryLight" Padding="10" MinWidth="100">
+                <ListBox Name="PopupCategoryList" SelectionMode="Single">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}"/>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </styles:ColorZone>
+        </Popup>
+        <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Name" Name="NameTextBox"/>
+        <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Kategorie" Name="CategoryTextBox"/>
+        <TextBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Menge" Name="AmountTextBox"/>
+        <TextBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="5" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Benötigete Menge" Name="NeedAmountTextBox"/>
+        <Button Grid.Row="4" Grid.Column="1" Margin="5" VerticalAlignment="Top" Name="SaveButton">Speichern</Button>
+    </Grid>
+</UserControl>

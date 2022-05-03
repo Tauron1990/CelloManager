@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
@@ -47,7 +50,9 @@ public sealed class SpoolRepository : IDisposable
     
     private void CreateSpoolSavePipeLine()
     {
-        var data = _spools.Connect().SkipInitial();
+        var data = _spools.Connect();
+            if(_spools.Count != 0)
+                data = data.SkipInitial();
 
         data
             .OnItemRemoved(r => ReportError(_blobCache.Invalidate(r.Id)))
@@ -58,7 +63,9 @@ public sealed class SpoolRepository : IDisposable
 
     private void CreateOrderSavePipeLine()
     {
-        var data = _orders.Connect().SkipInitial();
+        var data = _orders.Connect();
+            if(_orders.Count != 0)
+                data = data.SkipInitial();
 
         data
             .OnItemRemoved(r => ReportError(_blobCache.Invalidate(r.Id)))
@@ -69,9 +76,9 @@ public sealed class SpoolRepository : IDisposable
     
     private void ReportError(IObservable<Unit> toReport) => toReport.Subscribe(_ => { }, e => _errorDispatcher.Send(e));
 
-    public IObservable<IChangeSet<SpoolData, string>> Spools => _spools.Connect();
+    public IObservable<IChangeSet<SpoolData, string>> Spools => _spools.Connect().ObserveOn(Scheduler.Default);
 
-    public IObservable<IChangeSet<PendingOrder, string>> Orders => _orders.Connect();
+    public IObservable<IChangeSet<PendingOrder, string>> Orders => _orders.Connect().ObserveOn(Scheduler.Default);
 
     public Unit UpdateSpool(SpoolData data)
     {
@@ -79,6 +86,15 @@ public sealed class SpoolRepository : IDisposable
         return Unit.Default;
     }
 
+    public bool ValidateName([NotNullWhen(true)]string? name, [NotNullWhen(true)]string? category)
+    {
+        if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(category))
+            return false;
+        
+        var id = SpoolData.CreateId(name, category);
+        return !_spools.Keys.Contains(id);
+    }
+    
     public void Dispose()
     {
         _subscriptions.Dispose();

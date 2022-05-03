@@ -19,8 +19,8 @@
                     <styles:Card Margin="5" Padding="5">
                         <Grid RowDefinitions="Auto, Auto, Auto">
                             <Grid ColumnDefinitions="Auto, Auto" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding LargeName}" FontSize="35" Grid.Column="0"/>
-                                <TextBlock Text="{Binding SmallName}" FontSize="25" Grid.Column="1"/>
+                                <TextBlock Text="{Binding LargeName}" FontSize="35" Grid.Column="0" VerticalAlignment="Bottom"/>
+                                <TextBlock Text="{Binding SmallName}" FontSize="25" Grid.Column="1" VerticalAlignment="Bottom"/>
                             </Grid>
                             <Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, Auto" HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding Amount}" FontSize="15" Margin="0,0,5,0"/>
