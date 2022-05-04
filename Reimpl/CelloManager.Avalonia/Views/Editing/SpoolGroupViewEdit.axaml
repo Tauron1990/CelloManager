@@ -1,0 +1,15 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CelloManager.Avalonia.Views.Editing.EditSpoolGroupView">
+    <DataGrid AutoGenerateColumns="False" Name="SpoolDataGrid">
+        <DataGrid.Columns>
+            <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
+            <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" IsReadOnly="True"/>
+            <DataGridTextColumn Header="Menge" Binding="{Binding Amount}" IsReadOnly="True"/>
+            <DataGridTextColumn Header="Benötigte Menge" Binding="{Binding NeedAmount}" IsReadOnly="True"/>
+        </DataGrid.Columns>
+    </DataGrid>
+</UserControl>

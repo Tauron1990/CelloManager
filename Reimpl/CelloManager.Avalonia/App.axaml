@@ -11,6 +11,7 @@
         <themes:BundledTheme BaseTheme="Light" PrimaryColor="DeepPurple" SecondaryColor="Amber"/>
     </Application.Resources>
     <Application.Styles>
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Default.xaml"/>
         <StyleInclude Source="avares://Material.Avalonia/Material.Avalonia.Templates.xaml" />
         <StyleInclude Source="avares://Material.Icons.Avalonia/App.xaml"></StyleInclude>
     </Application.Styles>

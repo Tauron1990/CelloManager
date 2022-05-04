@@ -96,6 +96,9 @@ public sealed class SpoolRepository : IDisposable
         var id = SpoolData.CreateId(name, category);
         return !_spools.Keys.Contains(id);
     }
+
+    public void AddOrder(PendingOrder order)
+        => _orders.AddOrUpdate(order);
     
     public void Dispose()
     {
@@ -103,4 +106,6 @@ public sealed class SpoolRepository : IDisposable
         _spools.Dispose();
         _orders.Dispose();
     }
+
+    public void Delete(SpoolData data) => _spools.Remove(data);
 }

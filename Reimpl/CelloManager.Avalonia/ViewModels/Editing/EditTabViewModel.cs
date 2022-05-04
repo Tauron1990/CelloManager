@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive;
+using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using CelloManager.Avalonia.Core.Logic;
 using DynamicData;
@@ -62,11 +63,13 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
             yield return this.WhenAny(m => m.CurrentSelected, c => c.Value)
                 .Select(o => o switch
                 {
-                    EditorSpoolGroup group => TODOSpoolGroupViewModel.Create(group.Spools, spoolManager),
+                    EditorSpoolGroup group => EditSpoolGroupViewModel.Create(group.Spools, spoolManager, model => CurrentSelected = model),
                     ReadySpoolModel spoolModel => ModifySpoolEditorViewModel.Create(spoolModel, spoolManager),
                     _ => null
                 })
                 .Subscribe(_currentEditorModelSubject);
+            
+            yield return Disposable.Create(this, self => self._currentEditorModelSubject.OnNext(null));
         }
     }
 
@@ -92,7 +95,7 @@ public sealed class EditorSpoolGroup : ViewModelBase, IDisposable
     public EditorSpoolGroup(string categoryName, IObservableCache<ReadySpoolModel, string> spools)
     {
         CategoryName = categoryName;
-        _subscription = spools.Connect().Bind(out var list).Subscribe();
+        _subscription = spools.Connect().ObserveOn(RxApp.MainThreadScheduler).Bind(out var list).Subscribe();
         Spools = list;
     }
 

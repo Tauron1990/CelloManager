@@ -6,6 +6,7 @@ using CelloManager.Avalonia.ViewModels.Editing;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using CelloManager.Avalonia.Views.Editing;
 using CelloManager.Avalonia.Views.SpoolDisplay;
+using SpoolGroupViewModel = CelloManager.Avalonia.ViewModels.SpoolDisplay.SpoolGroupViewModel;
 
 namespace CelloManager.Avalonia
 {
@@ -20,6 +21,7 @@ namespace CelloManager.Avalonia
                 EditTabViewModel editTabViewModel => new EditTabView { ViewModel = editTabViewModel },
                 NewSpoolEditorViewModel newSpoolEditorViewModel => new NewSpoolEditorView { ViewModel = newSpoolEditorViewModel },
                 ModifySpoolEditorViewModel modifySpoolEditorViewModel => new SpoolEditorView { ViewModel = modifySpoolEditorViewModel },
+                EditSpoolGroupViewModel editSpoolGroupView => new EditSpoolGroupView { ViewModel = editSpoolGroupView },
                 _ => TryFindByConvertion()
             };
 

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using CelloManager.Avalonia.Core.Data;
 using CelloManager.Avalonia.Core.DebugHelper;
+using CelloManager.Avalonia.Core.Logic;
 using CelloManager.Avalonia.ViewModels.Editing;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using DynamicData;
@@ -44,7 +45,8 @@ namespace CelloManager.Avalonia.ViewModels
         public MainWindowViewModel(ErrorDispatcher errors)
         {
             var currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
-
+            var orderManager = _modelScope.GetService<OrderManager>();
+            
             Edit = ReactiveCommand.Create
                 (
                     () => _tabs.Add(_modelScope.GetService<EditTabViewModel>()),
@@ -54,7 +56,10 @@ namespace CelloManager.Avalonia.ViewModels
             
             Import = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
             
-            Order = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            Order = ReactiveCommand.Create(
+                    orderManager.PlaceOrder,
+                    orderManager.CanOrder.ObserveOn(RxApp.MainThreadScheduler))
+                .DisposeWith(_subscriptions);
             
             Orders = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
             

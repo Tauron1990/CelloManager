@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using CelloManager.Avalonia.Core.Data;
@@ -8,6 +9,8 @@ using DynamicData.Alias;
 namespace CelloManager.Avalonia.Core.Logic;
 
 public sealed record ValidateNameRequest(string? Name, string? Category);
+
+public sealed record OldValidateNameRequest(ReadySpoolModel Old, string? Name, string? Category);
 
 public sealed class SpoolManager
 {
@@ -26,9 +29,8 @@ public sealed class SpoolManager
         KnowenCategorys = CurrentSpools.Select(g => g.Key);
     }
 
-    public IObservable<bool> ValidateName(IObservable<ValidateNameRequest> requests)
-    {
-        return requests
+    public IObservable<bool> ValidateName(IObservable<ValidateNameRequest> requests) =>
+        requests
             .CombineLatest(
                 _repository.Spools
                     .QueryWhenChanged()
@@ -36,7 +38,24 @@ public sealed class SpoolManager
                     .StartWith(Unit.Default),
                 (r, _) => r)
             .Select(r => _repository.ValidateName(r.Name, r.Category));
-    }
+
+    public IObservable<bool> ValidateModifyName(IObservable<OldValidateNameRequest> requests) =>
+        requests
+            .CombineLatest(
+                _repository.Spools
+                    .QueryWhenChanged()
+                    .Select(_ => Unit.Default)
+                    .StartWith(Unit.Default),
+                (r, _) => r)
+            .Select(r =>
+            {
+                var id = SpoolData.CreateId(r.Name ?? string.Empty, r.Category ?? string.Empty);
+                return id == r.Old.Data.Id || _repository.ValidateName(r.Name, r.Category);
+            });
+
+    public IObservable<bool> CanDelete(ReadySpoolModel model)
+        => _repository.Spools.QueryWhenChanged().Select(l => l.Keys.Contains(model.Data.Id));
+    
 
     public void CreateSpool(string? name, string? category, int amount, int needAmount)
     {
@@ -54,6 +73,21 @@ public sealed class SpoolManager
 
     public void UpdateSpool(ReadySpoolModel old, string? name, string? category, int amount, int needAmount)
     {
+        if (needAmount <= 0)
+            needAmount = -1;
         
+        var id = SpoolData.CreateId(name ?? string.Empty, category ?? string.Empty);
+
+        if (id == old.Data.Id) 
+            _repository.UpdateSpool(old.Data with { Amount = amount, NeedAmount = needAmount });
+        else if(_repository.ValidateName(name, category))
+            _repository.Edit(u =>
+            {
+                u.Remove(old.Data);
+                u.AddOrUpdate(SpoolData.New(name, category, amount) with { NeedAmount = needAmount });
+            });
     }
+
+    public void Delete(ReadySpoolModel model)
+        => _repository.Delete(model.Data);
 }

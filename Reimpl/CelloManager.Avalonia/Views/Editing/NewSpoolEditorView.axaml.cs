@@ -52,12 +52,6 @@ public partial class NewSpoolEditorView : ReactiveUserControl<NewSpoolEditorView
         yield return Disposable.Create(this, el => el.CategoryTextBox.RemoveHandler(TextInputEvent, el.CategoryTextBox_OnTextInput));
     }
 
-    // private void CategoryTextBox_OnLostFocus(object? sender, RoutedEventArgs e)
-    // {
-    //     Observable.Timer(DateTimeOffset.Now + TimeSpan.FromSeconds(1)).Take(1).ObserveOn(RxApp.MainThreadScheduler)
-    //         .Subscribe(_ => CategoryPopup.IsOpen = false);
-    // }
-
     private void CategoryTextBox_OnTextInput(object? sender, TextInputEventArgs e)
     {
         if (ViewModel?.KnowenCategorys.Count != 0) CategoryPopup.IsOpen = true;
