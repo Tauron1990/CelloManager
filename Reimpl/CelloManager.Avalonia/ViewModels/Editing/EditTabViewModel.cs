@@ -63,7 +63,7 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
                 .Select(o => o switch
                 {
                     EditorSpoolGroup group => TODOSpoolGroupViewModel.Create(group.Spools, spoolManager),
-                    ReadySpoolModel spoolModel => TODOModifySpoolEditorViewModel.Create(spoolModel, spoolManager),
+                    ReadySpoolModel spoolModel => ModifySpoolEditorViewModel.Create(spoolModel, spoolManager),
                     _ => null
                 })
                 .Subscribe(_currentEditorModelSubject);

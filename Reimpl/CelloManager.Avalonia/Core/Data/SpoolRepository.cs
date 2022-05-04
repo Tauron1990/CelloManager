@@ -86,6 +86,8 @@ public sealed class SpoolRepository : IDisposable
         return Unit.Default;
     }
 
+    public void Edit(Action<ISourceUpdater<SpoolData, string>> editor) => _spools.Edit(editor);
+
     public bool ValidateName([NotNullWhen(true)]string? name, [NotNullWhen(true)]string? category)
     {
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(category))

@@ -51,4 +51,9 @@ public sealed class SpoolManager
 
         _repository.UpdateSpool(data);
     }
+
+    public void UpdateSpool(ReadySpoolModel old, string? name, string? category, int amount, int needAmount)
+    {
+        
+    }
 }

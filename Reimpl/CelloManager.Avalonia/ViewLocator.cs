@@ -19,6 +19,7 @@ namespace CelloManager.Avalonia
                 SpoolGroupViewModel groupViewModel => new SpoolGroupView { ViewModel = groupViewModel },
                 EditTabViewModel editTabViewModel => new EditTabView { ViewModel = editTabViewModel },
                 NewSpoolEditorViewModel newSpoolEditorViewModel => new NewSpoolEditorView { ViewModel = newSpoolEditorViewModel },
+                ModifySpoolEditorViewModel modifySpoolEditorViewModel => new SpoolEditorView { ViewModel = modifySpoolEditorViewModel },
                 _ => TryFindByConvertion()
             };
 
