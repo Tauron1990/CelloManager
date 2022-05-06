@@ -10,6 +10,7 @@ using CelloManager.Avalonia.Core.Data;
 using CelloManager.Avalonia.Core.DebugHelper;
 using CelloManager.Avalonia.Core.Logic;
 using CelloManager.Avalonia.ViewModels.Editing;
+using CelloManager.Avalonia.ViewModels.Orders;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using DynamicData;
 using DynamicData.Alias;
@@ -33,13 +34,13 @@ namespace CelloManager.Avalonia.ViewModels
         
         public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
 
-        public ICommand Edit { get; }
+        public ReactiveCommand<Unit, Unit> Edit { get; }
         
-        public ICommand Import { get; }
+        public ReactiveCommand<Unit, Unit> Import { get; }
         
-        public ICommand Order { get; }
+        public ReactiveCommand<Unit, Unit> Order { get; }
         
-        public ICommand Orders { get; }
+        public ReactiveCommand<Unit, Unit> Orders { get; }
 
 
         public MainWindowViewModel(ErrorDispatcher errors)
@@ -54,15 +55,20 @@ namespace CelloManager.Avalonia.ViewModels
                 )
                 .DisposeWith(_subscriptions);
             
-            Import = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
-            
-            Order = ReactiveCommand.Create(
-                    orderManager.PlaceOrder,
-                    orderManager.CanOrder.ObserveOn(RxApp.MainThreadScheduler))
+            Orders = ReactiveCommand.Create(
+                    () => _tabs.Add(_modelScope.GetService<OrderDisplayViewModel>()),
+                    ContainsViewModel<OrderDisplayViewModel>(currentTabs))
                 .DisposeWith(_subscriptions);
             
-            Orders = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            Import = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
             
+            Order = ReactiveCommand.CreateFromObservable(
+                    () => Observable.Return(orderManager.PlaceOrder())
+                        .Where(isPlaced => isPlaced)
+                        .SelectMany(_ => Orders.Execute()),
+                    orderManager.CanOrder.ObserveOn(RxApp.MainThreadScheduler))
+                .DisposeWith(_subscriptions);
+
             _errorFull = errors.Errors
                 .Select(e => e.ToString())
                 .ObserveOn(RxApp.MainThreadScheduler)

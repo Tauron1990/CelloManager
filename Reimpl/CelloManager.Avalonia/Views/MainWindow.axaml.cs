@@ -5,6 +5,7 @@ using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.ReactiveUI;
 using CelloManager.Avalonia.ViewModels;
+using CelloManager.Avalonia.Views.Controls;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
@@ -12,10 +13,14 @@ namespace CelloManager.Avalonia.Views
 {
     public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {
+        private readonly AutoSelectTabControl _autoSelectTabControl = new();
+        
         public MainWindow()
         {
             InitializeComponent();
 
+            _autoSelectTabControl.Init(MainContentTabs);
+            
             this.WhenActivated(Init);
             
             IEnumerable<IDisposable> Init()

@@ -108,4 +108,6 @@ public sealed class SpoolRepository : IDisposable
     }
 
     public void Delete(SpoolData data) => _spools.Remove(data);
+
+    public void Delete(PendingOrder order) => _orders.Remove(order);
 }

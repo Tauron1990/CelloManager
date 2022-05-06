@@ -1,0 +1,27 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:data="clr-namespace:CelloManager.Avalonia.Core.Data"
+             xmlns:orders="clr-namespace:CelloManager.Avalonia.ViewModels.Orders"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="CelloManager.Avalonia.Views.Orders.OrderDisplayView">
+    <Grid>
+        <TreeView HorizontalAlignment="Center" Name="OrdersControl">
+            <TreeView.DataTemplates>
+                <DataTemplate DataType="data:OrderedSpool">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="{Binding SpoolId}" Margin="1, 1, 10, 1" FontSize="20"/>
+                        <TextBlock Text="{Binding Amount}" FontSize="20" Margin="1"/>
+                    </StackPanel>
+                </DataTemplate>
+                <TreeDataTemplate DataType="orders:PendingOrderViewModel" ItemsSource="{Binding Spools}">
+                    <StackPanel Orientation="Horizontal" Margin="5">
+                        <TextBlock Text="{Binding OrderTime}" Margin="1,1,10,1" FontSize="20" HorizontalAlignment="Center"/>
+                        <Button Classes="Flat" Command="{Binding Commit}" Padding="1" Margin="1">Geliefert</Button>
+                    </StackPanel>
+                </TreeDataTemplate>
+            </TreeView.DataTemplates>
+        </TreeView>
+    </Grid>
+</UserControl>
