@@ -3,9 +3,11 @@ using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using CelloManager.Avalonia.ViewModels;
 using CelloManager.Avalonia.ViewModels.Editing;
+using CelloManager.Avalonia.ViewModels.Importing;
 using CelloManager.Avalonia.ViewModels.Orders;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using CelloManager.Avalonia.Views.Editing;
+using CelloManager.Avalonia.Views.Importing;
 using CelloManager.Avalonia.Views.Orders;
 using CelloManager.Avalonia.Views.SpoolDisplay;
 using SpoolGroupViewModel = CelloManager.Avalonia.ViewModels.SpoolDisplay.SpoolGroupViewModel;
@@ -25,6 +27,7 @@ namespace CelloManager.Avalonia
                 ModifySpoolEditorViewModel modifySpoolEditorViewModel => new SpoolEditorView { ViewModel = modifySpoolEditorViewModel },
                 EditSpoolGroupViewModel editSpoolGroupView => new EditSpoolGroupView { ViewModel = editSpoolGroupView },
                 OrderDisplayViewModel orderDisplayViewModel => new OrderDisplayView { ViewModel = orderDisplayViewModel },
+                ImportViewModel importViewModel => new ImportView { ViewModel = importViewModel },
                 _ => TryFindByConvertion()
             };
 

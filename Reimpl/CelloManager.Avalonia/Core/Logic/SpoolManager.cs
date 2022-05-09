@@ -53,6 +53,9 @@ public sealed class SpoolManager
                 return id == r.Old.Data.Id || _repository.ValidateName(r.Name, r.Category);
             });
 
+    public bool Exist(string name, string category)
+        => _repository.LookUp(name, category).HasValue;
+    
     public IObservable<bool> CanDelete(ReadySpoolModel model)
         => _repository.Spools.QueryWhenChanged().Select(l => l.Keys.Contains(model.Data.Id));
     
@@ -86,6 +89,11 @@ public sealed class SpoolManager
                 u.Remove(old.Data);
                 u.AddOrUpdate(SpoolData.New(name, category, amount) with { NeedAmount = needAmount });
             });
+    }
+    
+    public void UpdateSpool(string name, string category, int amount, int needAmount)
+    {
+        CurrentSpools.
     }
 
     public void Delete(ReadySpoolModel model)

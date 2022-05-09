@@ -1,13 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using CelloManager.Avalonia.Core.Data;
 using DynamicData;
-using DynamicData.Aggregation;
-using DynamicData.Alias;
 
 namespace CelloManager.Avalonia.Core.Logic;
 
@@ -31,14 +29,22 @@ public class OrderManager : IDisposable
         _spools = repository.Spools.AsObservableCache().DisposeWith(_disposer);
         Orders = repository.Orders;
 
-        CanOrder = repository.Spools.QueryWhenChanged()
-            .CombineLatest(repository.Orders.QueryWhenChanged())
-            .SelectMany(l => l.First.Items.Select(sd => (Data:sd, Orders:l.Second)))
-            .Where(s => s.Data.NeedAmount > 0)
-            .Select(s => s.Data with { Amount = s.Data.Amount + s.Orders.Items.SelectMany(o => o.Spools).Where(po => po.SpoolId == s.Data.Id).Sum(po => po.Amount) })
-            .Where(s => s.Amount < s.NeedAmount)
-            .Count()
-            .Select(c => c > 0);
+        CanOrder = repository.Spools.QueryWhenChanged().Select(q => q.Items).StartWith(Array.Empty<SpoolData>())
+            .CombineLatest
+            (
+                repository.Orders.QueryWhenChanged().Select(q => q.Items.ToImmutableList()).StartWith(ImmutableList<PendingOrder>.Empty)
+            )
+            .Select(ValidateCanOrder);
+    }
+
+    private bool ValidateCanOrder((IEnumerable<SpoolData>, ImmutableList<PendingOrder>) arg)
+    {
+        var (data, orders) = arg;
+
+        return data.Select(spoolData => orders.SelectMany(o => o.Spools)
+                .Where(os => os.SpoolId == spoolData.Id)
+                .Aggregate(spoolData, (spool, order) => spool with { Amount = spool.Amount + order.Amount }))
+            .Any(actualData => actualData.NeedAmount > actualData.Amount);
     }
 
     public bool PlaceOrder()

@@ -4,7 +4,6 @@ using System.Reactive.Linq;
 using CelloManager.Avalonia.Core.Logic;
 using DynamicData;
 using DynamicData.Alias;
-using DynamicData.Binding;
 using ReactiveUI;
 
 namespace CelloManager.Avalonia.ViewModels.SpoolDisplay;

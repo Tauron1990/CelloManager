@@ -1,16 +1,17 @@
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using CelloManager.Avalonia.Core.Data;
 using CelloManager.Avalonia.ViewModels;
 using CelloManager.Avalonia.Views;
-using Splat;
 
 namespace CelloManager.Avalonia
 {
     public partial class App : Application
     {
         internal static readonly AppServiceProvider ServiceProvider = new();
+
+        internal static Window MainWindow = null!;
         
         public override void Initialize()
         {
@@ -25,6 +26,7 @@ namespace CelloManager.Avalonia
                 {
                     ViewModel = ServiceProvider.GetService<MainWindowViewModel>(),
                 };
+                MainWindow = desktop.MainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();

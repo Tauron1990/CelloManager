@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Text;
 using JetBrains.Annotations;
 
 namespace CelloManager.Avalonia.Core.Comp.OldData

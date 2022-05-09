@@ -59,11 +59,11 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable
         NeedAmount = model.NeedAmount;
         NeedAmountSet = model.NeedAmountSet;
 
-        Increment = ReactiveCommand.CreateFromObservable(
+        Increment = ReactiveCommand.Create(
             model.RunIncrement,
             Observable.Return(model.Amount != int.MaxValue));
 
-        Decrement = ReactiveCommand.CreateFromObservable(
+        Decrement = ReactiveCommand.Create(
             model.RunDecrement,
             Observable.Return(model.Amount > 0));
         

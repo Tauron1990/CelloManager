@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Reactive.Disposables;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using CelloManager.Avalonia.ViewModels.Editing;
 using ReactiveUI;

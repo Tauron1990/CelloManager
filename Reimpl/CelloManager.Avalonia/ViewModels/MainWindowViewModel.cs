@@ -5,17 +5,15 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using System.Windows.Input;
 using CelloManager.Avalonia.Core.Data;
-using CelloManager.Avalonia.Core.DebugHelper;
 using CelloManager.Avalonia.Core.Logic;
 using CelloManager.Avalonia.ViewModels.Editing;
+using CelloManager.Avalonia.ViewModels.Importing;
 using CelloManager.Avalonia.ViewModels.Orders;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
-using JetBrains.Annotations;
 using ReactiveUI;
 
 namespace CelloManager.Avalonia.ViewModels
@@ -60,7 +58,9 @@ namespace CelloManager.Avalonia.ViewModels
                     ContainsViewModel<OrderDisplayViewModel>(currentTabs))
                 .DisposeWith(_subscriptions);
             
-            Import = ReactiveCommand.Create(() => { }).DisposeWith(_subscriptions);
+            Import = ReactiveCommand.Create(
+                () => _tabs.Add(_modelScope.GetService<ImportViewModel>()),
+                ContainsViewModel<ImportViewModel>(currentTabs)).DisposeWith(_subscriptions);
             
             Order = ReactiveCommand.CreateFromObservable(
                     () => Observable.Return(orderManager.PlaceOrder())

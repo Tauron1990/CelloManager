@@ -6,7 +6,6 @@ using Avalonia.Data;
 using Avalonia.ReactiveUI;
 using CelloManager.Avalonia.ViewModels;
 using CelloManager.Avalonia.Views.Controls;
-using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
 namespace CelloManager.Avalonia.Views

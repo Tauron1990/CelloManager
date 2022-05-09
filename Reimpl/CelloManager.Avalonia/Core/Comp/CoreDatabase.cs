@@ -8,11 +8,9 @@ namespace CelloManager.Avalonia.Core.Comp
 {
     public sealed class CoreDatabase : DbContext
     {
-        private static readonly string ConnectionString = Create();
-
-        private static string Create()
+        public static string Create(string? basePath)
         {
-            var path = Path.Combine(
+            var path = basePath ?? Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                 "Tauron\\CelloManager",
                 "App.db"
@@ -32,8 +30,6 @@ namespace CelloManager.Avalonia.Core.Comp
         public DbSet<CommittedRefillEntity> CommittedRefills { get; set; } = null!;
         public DbSet<CelloSpoolEntity> CelloSpools { get; set; } = null!;
         public DbSet<OptionEntity> OptionEntries { get; set; } = null!;
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlite(ConnectionString);
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

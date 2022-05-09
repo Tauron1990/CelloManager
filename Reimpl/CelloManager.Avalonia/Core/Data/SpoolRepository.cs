@@ -8,6 +8,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Akavache;
 using DynamicData;
+using DynamicData.Kernel;
 
 namespace CelloManager.Avalonia.Core.Data;
 
@@ -79,6 +80,9 @@ public sealed class SpoolRepository : IDisposable
     public IObservable<IChangeSet<SpoolData, string>> Spools => _spools.Connect().ObserveOn(Scheduler.Default);
 
     public IObservable<IChangeSet<PendingOrder, string>> Orders => _orders.Connect().ObserveOn(Scheduler.Default);
+
+    public Optional<SpoolData> LookUp(string name, string category)
+        => _spools.Lookup(SpoolData.CreateId(name, category));
 
     public Unit UpdateSpool(SpoolData data)
     {

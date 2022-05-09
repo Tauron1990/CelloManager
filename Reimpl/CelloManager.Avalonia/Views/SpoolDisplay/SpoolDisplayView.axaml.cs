@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using CelloManager.Avalonia.ViewModels.SpoolDisplay;
 using ReactiveUI;
