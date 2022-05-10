@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.ReactiveUI;
 using CelloManager.Avalonia.Core.Data;
+using CelloManager.Avalonia.Core.Movere;
 
 namespace CelloManager.Avalonia
 {

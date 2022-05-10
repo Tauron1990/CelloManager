@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Threading.Tasks;
 using CelloManager.Avalonia.Core.Logic;
 using DynamicData;
 using DynamicData.Alias;
@@ -21,11 +22,12 @@ public sealed class SpoolGroupViewModel : ViewModelBase, ITabInfoProvider, IDisp
 
     public IObservableCollection<SpoolViewModel> Spools { get; } = new ObservableCollectionExtended<SpoolViewModel>();
 
-    public SpoolGroupViewModel(string category, IObservableCache<ReadySpoolModel, string> spools)
+    public SpoolGroupViewModel(string category, IConnectableCache<ReadySpoolModel, string> spools)
     {
         Title = category;
 
         _subscription = spools.Connect()
+            .Sort(ReadySpoolSorter.NameSorter)
             .Select(m => new SpoolViewModel(m))
             .DisposeMany()
             .ObserveOn(RxApp.MainThreadScheduler)
@@ -39,6 +41,8 @@ public sealed class SpoolGroupViewModel : ViewModelBase, ITabInfoProvider, IDisp
 
 public sealed class SpoolViewModel : ViewModelBase, IDisposable
 {
+    public ReadySpoolModel Model { get; }
+    
     public string LargeName { get; }
     
     public string SmallName { get; }
@@ -55,6 +59,7 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable
 
     public SpoolViewModel(ReadySpoolModel model)
     {
+        Model = model;
         Amount = model.Amount;
         NeedAmount = model.NeedAmount;
         NeedAmountSet = model.NeedAmountSet;

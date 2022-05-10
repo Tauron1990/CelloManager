@@ -16,6 +16,6 @@ public partial class OrderDisplayView : ReactiveUserControl<OrderDisplayViewMode
 
     private IEnumerable<IDisposable> Init()
     {
-        yield return this.OneWayBind(ViewModel, m => m.Orders, v => v.OrdersControl.Items);
+        yield break;
     }
 }

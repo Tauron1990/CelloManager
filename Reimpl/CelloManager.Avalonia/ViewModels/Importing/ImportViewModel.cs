@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Reactive;
+using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Avalonia.Controls;
-using CelloManager.Avalonia.Core.Comp;
 using CelloManager.Avalonia.Core.Logic;
-using Microsoft.EntityFrameworkCore;
 using ReactiveUI;
 
 namespace CelloManager.Avalonia.ViewModels.Importing;
@@ -14,50 +13,48 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
     private readonly SpoolManager _manager;
     
     private readonly ObservableAsPropertyHelper<bool> _canClose;
+    private readonly ObservableAsPropertyHelper<bool> _isRunning;
+    private readonly ObservableAsPropertyHelper<string?> _error;
+
     public string Title => "Importieren";
 
     public bool CanClose => _canClose.Value;
 
-    public ReactiveCommand<string?, Unit> Import { get; set; }
+    public bool IsRunning => _isRunning.Value;
+
+    public string? Error => _error.Value;
+    
+    public ReactiveCommand<string?, Exception?> Import { get; set; }
     
     public ImportViewModel(SpoolManager manager)
     {
         _manager = manager;
-        Import = ReactiveCommand.CreateFromObservable<string?, Unit>(ExecuteImport);
+        Import = ReactiveCommand.CreateFromObservable<string?, Exception?>(ExecuteImport);
+
+        _error = Import.Select(e => e?.Message).ToProperty(this, m => m.Error, scheduler: RxApp.MainThreadScheduler);
         _canClose = Import.IsExecuting.Select(e => !e).ToProperty(this, m => m.CanClose, scheduler: RxApp.MainThreadScheduler);
+        _isRunning = Import.IsExecuting.ToProperty(this, m => m.IsRunning, scheduler: RxApp.MainThreadScheduler);
     }
 
-    private IObservable<Unit> ExecuteImport(string? path) 
+    private IObservable<Exception?> ExecuteImport(string? path)
         => Observable.Return(path)
             .SelectMany(async p =>
             {
                 if (!string.IsNullOrWhiteSpace(p))
-                    return p;
+                    return new[] { p };
 
-                var browser = new OpenFolderDialog { Directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
+                var browser = new OpenFileDialog { Directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
                 return await browser.ShowAsync(App.MainWindow);
             })
+            .SelectMany(l => l ?? Array.Empty<string>())
             .Where(p => !string.IsNullOrWhiteSpace(p))
-            .SelectMany(async p =>
-            {
-                await using var context = new CoreDatabase();
-                context.Database.SetConnectionString(p);
-
-                return await context.CelloSpools.ToArrayAsync();
-            })
-            .Select(spools =>
-            {
-                foreach (var spool in spools)
-                {
-                    if(_manager.Exist(spool.Name, spool.Type))
-                        _manager.UpdateSpool();
-                }
-                
-                return Unit.Default;
-            });
+            .ObserveOn(Scheduler.Default)
+            .SelectMany(_manager.ImportSpools!);
 
     public void Dispose()
     {
+        _error.Dispose();
+        _isRunning.Dispose();
         _canClose.Dispose();
         Import.Dispose();
     }

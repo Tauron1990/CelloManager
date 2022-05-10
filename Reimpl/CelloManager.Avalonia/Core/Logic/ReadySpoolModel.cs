@@ -28,6 +28,9 @@ public sealed class ReadySpoolModel
         _spools = spools;
     }
 
+    public static implicit operator SpoolData(ReadySpoolModel model)
+        => model.Data;
+    
     // public IObservable<Unit> UpdateSpool(Func<SpoolData, SpoolData?> data)
     //     => Observable.Return((Data, _spools, NewData:data(Data)))
     //         .ObserveOn(Scheduler.Default)
