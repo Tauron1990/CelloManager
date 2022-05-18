@@ -6,7 +6,5 @@
              xmlns:orders="clr-namespace:CelloManager.Avalonia.ViewModels.Orders"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CelloManager.Avalonia.Views.Orders.OrderDisplayView">
-    <Grid>
-
-    </Grid>
+    <ContentControl Name="OrdersDiplayer"/>
 </UserControl>

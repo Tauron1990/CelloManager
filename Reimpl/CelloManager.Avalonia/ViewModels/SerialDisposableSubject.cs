@@ -9,10 +9,15 @@ public sealed class SerialDisposableSubject<TData> : IDisposable, IObservable<TD
     private readonly SerialDisposable _disposer = new();
     private readonly BehaviorSubject<TData> _dataHolder;
 
-    public SerialDisposableSubject(TData initial) => _dataHolder = new BehaviorSubject<TData>(initial);
+    public SerialDisposableSubject(TData initial)
+    {
+        if (initial is IDisposable disposable)
+            _disposer.Disposable = disposable;
+        _dataHolder = new BehaviorSubject<TData>(initial);
+    }
 
 
-    void IDisposable.Dispose()
+    public void Dispose()
     {
         _disposer.Dispose();
         _dataHolder.Dispose();
