@@ -6,16 +6,17 @@ using ReactiveUI;
 
 namespace CelloManager.Avalonia.Views.Orders;
 
-public partial class OrderDisplayView : ReactiveUserControl<OrderDisplayViewModel>
+public partial class OrderDisplayListView : ReactiveUserControl<OrderDisplayListViewModel>
 {
-    public OrderDisplayView()
+    public OrderDisplayListView()
     {
         InitializeComponent();
+
         this.WhenActivated(Init);
     }
 
     private IEnumerable<IDisposable> Init()
     {
-        yield return this.OneWayBind(ViewModel, m => m.CurrentContent, v => v.OrdersDiplayer.Content);
+        yield return this.OneWayBind(ViewModel, m => m.Orders, v => v.OrdersDisplay.Items);
     }
 }

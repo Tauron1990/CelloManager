@@ -28,6 +28,7 @@ namespace CelloManager.Avalonia
                 EditSpoolGroupViewModel editSpoolGroupView => new EditSpoolGroupView { ViewModel = editSpoolGroupView },
                 OrderDisplayViewModel orderDisplayViewModel => new OrderDisplayView { ViewModel = orderDisplayViewModel },
                 ImportViewModel importViewModel => new ImportView { ViewModel = importViewModel },
+                OrderDisplayListViewModel orderDisplayListViewModel => new OrderDisplayListView { ViewModel = orderDisplayListViewModel },
                 _ => TryFindByConvertion()
             };
 

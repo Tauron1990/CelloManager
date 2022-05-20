@@ -11,8 +11,7 @@ public sealed class SerialDisposableSubject<TData> : IDisposable, IObservable<TD
 
     public SerialDisposableSubject(TData initial)
     {
-        if (initial is IDisposable disposable)
-            _disposer.Disposable = disposable;
+        _disposer.Disposable = initial as IDisposable;
         _dataHolder = new BehaviorSubject<TData>(initial);
     }
 
@@ -32,9 +31,6 @@ public sealed class SerialDisposableSubject<TData> : IDisposable, IObservable<TD
     public void OnNext(TData value)
     {
         _dataHolder.OnNext(value);
-        if (value is IDisposable disposable)
-            _disposer.Disposable = disposable;
-        else
-            _disposer.Disposable = Disposable.Empty;
+        _disposer.Disposable = value as IDisposable;
     }
 }
