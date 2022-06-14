@@ -1,0 +1,9 @@
+﻿{
+  "GlobalBaseTime": "1.1.2000",
+  
+  "MainTimeLineName": "Hauptlinie",
+  "MainTimeLineTimeShift": 4670,
+  
+  "BrokenTimeLineName": "Zeit des Verfalls",
+  "BrokenTimeLineShift": 1670
+}
