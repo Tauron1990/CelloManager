@@ -7,6 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reimplementation", "Reimple
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Avalonia", "Reimpl\CelloManager.Avalonia\CelloManager.Avalonia.csproj", "{7EC19921-64DB-494A-B815-F8CBEDF238E5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game", "Game", "{48D53D23-7C93-461C-BEF3-CEE606B1D53E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaiseOfNewWorld", "Game\RaiseOfNewWorld\RaiseOfNewWorld.csproj", "{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,12 +24,19 @@ Global
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
+		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484} = {48D53D23-7C93-461C-BEF3-CEE606B1D53E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}

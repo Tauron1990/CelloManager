@@ -20,21 +20,21 @@
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="akavache" Version="8.1.1" />
-        <PackageReference Include="Avalonia" Version="0.10.13" />
-        <PackageReference Include="Avalonia.Desktop" Version="0.10.13" />
+        <PackageReference Include="Avalonia" Version="0.10.15" />
+        <PackageReference Include="Avalonia.Desktop" Version="0.10.15" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
-        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.13" />
-        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.13" />
-        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.13.3" />
+        <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.15" />
+        <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.15" />
+        <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.14" />
         <PackageReference Include="AvaloniaUI.PrintToPDF" Version="0.3.0" />
-        <PackageReference Include="Jab" Version="0.6.4" />
+        <PackageReference Include="Jab" Version="0.8.1" />
         <PackageReference Include="jp2masa.Avalonia.Flexbox" Version="0.2.0" />
         <PackageReference Include="jp2masa.Avalonia.PropertyGenerator.CSharp" Version="0.10.0-beta3">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Material.Avalonia" Version="2.5.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.4" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.5" />
         <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.1.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
