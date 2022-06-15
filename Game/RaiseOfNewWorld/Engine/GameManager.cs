@@ -16,7 +16,6 @@ using RaiseOfNewWorld.Game.Dimensions.Special.Special;
 using RaiseOfNewWorld.Screens;
 using RaiseOfNewWorld.Screens.GameScreens;
 using SystemsRx.Events;
-using SystemsRx.Infrastructure;
 using SystemsRx.Infrastructure.Dependencies;
 using SystemsRx.Infrastructure.Extensions;
 using SystemsRx.MicroRx.Events;
@@ -26,56 +25,55 @@ namespace RaiseOfNewWorld.Engine;
 
 public sealed class GameManager
 {
-    private CoreApp _coreApp;
+    private CoreApp? _coreApp;
     
     public IScreenManager ScreenManager { get; }
 
-    public IEventSystem Events => _coreApp.EventSystem;
+    public IEventSystem Events => _coreApp!.EventSystem;
 
-    public IEntityDatabase Database => _coreApp.EntityDatabase;
+    public IEntityDatabase Database => _coreApp!.EntityDatabase;
     
     public ContentManager ContentManager { get; } = new();
     
     public GameManager(IScreenManager screenManager)
     {
-        _coreApp = new CoreApp(screenManager, ContentManager, this);
         ScreenManager = screenManager;
-        screenManager.Switch(nameof(MainMenu));
+        screenManager.Switch(nameof(MainScreen));
     }
 
     public async ValueTask ClearGame(Action? preStartApp)
     {
-        _coreApp.StopApplication();
-        _coreApp.Container.Dispose();
+        _coreApp?.StopApplication();
+        _coreApp?.Container.Dispose();
+        _coreApp = null;
 
         if (preStartApp is not null)
         {
-            _coreApp = new CoreApp(ScreenManager, ContentManager, this);
-            await Task.Run(() =>
-            {
-                preStartApp();
-                _coreApp.StartApplication();
-            });
+            _coreApp = new CoreApp(ScreenManager, ContentManager, this, preStartApp);
+            await Task.Run(() => _coreApp.StartApplication());
         }
     }
 
     public void ShutdownApp()
     {
-        EntityManager.Save(_coreApp.EntityDatabase, "ExitSave");
+        if(_coreApp is not null)
+            EntityManager.Save(_coreApp.EntityDatabase, "ExitSave");
         ScreenManager.Shutdown();
     }
     
     private sealed class CoreApp : EcsRxApplication
     {
-        private readonly IScreenManager _screenManager;
         private readonly ContentManager _contentManager;
+        private Action? _prestart;
 
-        public CoreApp(IScreenManager screenManager, ContentManager contentManager, GameManager gameManager)
+        public CoreApp(IScreenManager screenManager, ContentManager contentManager, GameManager gameManager, Action? prestart)
         {
-            _screenManager = screenManager;
             _contentManager = contentManager;
-            
+            _prestart = prestart;
+
             Container.Bind<GameManager>(bm => bm.ToInstance(gameManager));
+            Container.Bind<ContentManager>(cm => cm.ToInstance(contentManager));
+            Container.Bind<IScreenManager>(sm => sm.ToInstance(screenManager));
         }
 
         public override void StopApplication()
@@ -84,8 +82,22 @@ public sealed class GameManager
             Container.Dispose();
         }
 
+        protected override void ResolveApplicationDependencies()
+        {
+            base.ResolveApplicationDependencies();
+            _prestart?.Invoke();
+            _prestart = null;
+        }
+
         protected override void LoadModules()
         {
+            DimensionMapBuilder.CreateWorld(
+                _contentManager,
+                b =>
+                {
+                    SpecialBuilder.InitSpecial(b);
+                });
+            
             base.LoadModules();
         
             Container.Unbind<IMessageBroker>();
@@ -103,13 +115,6 @@ public sealed class GameManager
 
         protected override void BindSystems()
         {
-            DimensionMapBuilder.CreateWorld(
-                _contentManager,
-                b =>
-                {
-                    SpecialBuilder.InitSpecial(b);
-                });
-            
             BindSystem<MovementManager>();
             BindSystem<RoomManager>();
             BindSystem<TimeManager>();
@@ -150,8 +155,5 @@ public sealed class GameManager
         public override IDependencyContainer Container { get; } = new NinjectDependencyContainer();
     }
 
-    public void StopApplication()
-    {
-        _coreApp.StopApplication();
-    }
+    public void StopApplication() => _coreApp?.StopApplication();
 }

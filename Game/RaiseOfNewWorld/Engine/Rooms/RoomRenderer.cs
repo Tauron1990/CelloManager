@@ -3,24 +3,21 @@ using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Engine.Rooms;
 
-public class RoomRenderer : IReactToEventSystem<RenderRoom>, IReactToEventSystem<GameViewEvent>
+public class RoomRenderer : IReactToEventSystem<RenderRoom>
 {
     private readonly GameManager _gameManager;
-    private View? _view;
+    public static View? View { get; set; }
 
     public RoomRenderer(GameManager gameManager) => _gameManager = gameManager;
 
     public void Process(RenderRoom eventData)
     {
-        if(_view is null) return;
+        if(View is null) return;
 
         Application.MainLoop.Invoke(() =>
         {
-            _view.RemoveAll();
-            eventData.Room.Display(_view, _gameManager);
+            View.RemoveAll();
+            eventData.Room.Display(View, _gameManager);
         });
     }
-
-    public void Process(GameViewEvent eventData)
-        => _view = eventData.GameView;
 }

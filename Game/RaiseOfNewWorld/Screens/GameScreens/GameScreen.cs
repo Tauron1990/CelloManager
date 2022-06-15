@@ -1,7 +1,6 @@
 ﻿using System.Reactive.Linq;
 using RaiseOfNewWorld.Engine;
 using RaiseOfNewWorld.Engine.Data;
-using RaiseOfNewWorld.Engine.Movement;
 using RaiseOfNewWorld.Engine.Rooms;
 using RaiseOfNewWorld.Engine.Rooms.Maps;
 using RaiseOfNewWorld.Game;
@@ -16,7 +15,7 @@ public sealed class GameScreen : ScreenBase
         container.Title = "Spiel";
         
         var menu = container.CreateMenuBar(CreateMainMenu);
-
+        
         var contentView = new View
         {
             Height = Dim.Fill(),
@@ -25,21 +24,12 @@ public sealed class GameScreen : ScreenBase
         
         container.Add(menu, contentView);
         
-        gameManager.Events.Publish(new GameViewEvent(contentView));
+        RoomRenderer.View = contentView;
 
-        if (parameter is true)
-        {
-            Task.Delay(200)
-                .ContinueWith(_ =>
-                {
-
-                });
-        }
-        
         IEnumerable<UiExtensions.MenuBarItemBuilder> CreateMainMenu(UiExtensions.MenuItemFactory factory)
         {
             yield return factory.NewMenuBarItem()
-                .WithLabel("HauptMenü")
+                .WithLabel("_HauptMenü")
                 .WithChiledMenu(CreateGameSubMenu);
             
             IEnumerable<UiExtensions.MenuItemBuilder> CreateGameSubMenu()
@@ -52,7 +42,7 @@ public sealed class GameScreen : ScreenBase
                         // ReSharper disable once AsyncVoidLambda
                         .Subscribe(async _ =>
                     {
-                        gameManager.ScreenManager.Switch(nameof(MainMenu));
+                        gameManager.ScreenManager.Switch(nameof(MainScreen));
                         await gameManager.ClearGame(null);
                     }));
                 
@@ -63,8 +53,27 @@ public sealed class GameScreen : ScreenBase
         }
     }
 
-    public override void Teardown(GameManager gameManager) => gameManager.Events.Publish(new GameViewEvent(null));
+    public override void Teardown(GameManager gameManager) => RoomRenderer.View = null;
 
+    public static Func<GameManager, IProgress<int>, ValueTask> LoadGame(string gameName)
+        => async (gameManager, _) =>
+        {
+            try
+            {
+                await gameManager.ClearGame(() =>
+                {
+                    EntityManager.Load(gameManager.Database, gameName);
+                    
+                    gameManager.ScreenManager.Switch(nameof(GameScreen), false);
+                });
+            }
+            catch (Exception e)
+            {
+                MessageBox.Query("Fehler beim Laden des Spiels", e.ToString(), "Ok");
+                gameManager.ScreenManager.Switch(nameof(MainScreen));
+            }
+        };
+    
     public static async ValueTask StartNewGame(GameManager gameManager, IProgress<int> process)
     {
         await Task.Delay(TimeSpan.FromSeconds(2));
@@ -73,7 +82,7 @@ public sealed class GameScreen : ScreenBase
 
             var database = gameManager.Database;
 
-            var mainCollection = database.CreateCollection(CollectionIds.CommonCollection);
+            var mainCollection = database.GetCollection();
 
             mainCollection.CreateEntity(new TimeBlueprint(gameManager.ContentManager));
             mainCollection.CreateEntity(new PlayerBlueprint());

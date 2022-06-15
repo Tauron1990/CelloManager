@@ -3,7 +3,7 @@ using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Screens.GameScreens;
 
-public sealed class MainMenu : ScreenBase
+public sealed class MainScreen : ScreenBase
 {
     public override void Setup(Window container, GameManager manager, object? parameter)
     {
@@ -25,7 +25,7 @@ public sealed class MainMenu : ScreenBase
        {
            X = Pos.Center(),
            Y = Pos.Bottom(newGame) + 1
-       };
+       }.OnClick(container, o => o.Subscribe(_ => manager.ScreenManager.Switch(nameof(LoadGameScreen))));
        
        var close = new Button("Beenden")
        {

@@ -37,7 +37,7 @@ public static class EntityManager
                     ).ToImmutableList())
             ).ToImmutableList());
 
-        File.WriteAllText(targetName, JsonConvert.SerializeObject(data));
+        File.WriteAllText(targetName, JsonConvert.SerializeObject(data, Formatting.Indented));
     }
 
     public static void Load(IEntityDatabase database, string name)

@@ -10,9 +10,10 @@ public sealed class ScreenManager : Toplevel, IScreenManager
 
     private readonly Dictionary<string, IScreen> _screens = new()
     {
-        {nameof(MainMenu), new MainMenu()},
+        {nameof(MainScreen), new MainScreen()},
         {nameof(LoadingScreen), new LoadingScreen()},
-        {nameof(GameScreen), new GameScreen()}
+        {nameof(GameScreen), new GameScreen()},
+        {nameof(LoadGameScreen), new LoadGameScreen()}
     };
 
     private IScreen? _currentScreen;
@@ -26,7 +27,7 @@ public sealed class ScreenManager : Toplevel, IScreenManager
         _gameManager = new GameManager(this);
     }
 
-    public void Switch(string screen, object? parameter = null)
+    public void Switch(string screen, object? parameter = null, Action? runSync = null)
     {
         Application.MainLoop.Invoke(() =>
         {
@@ -38,6 +39,8 @@ public sealed class ScreenManager : Toplevel, IScreenManager
             _currentScreen.Setup(window, _gameManager, parameter);
             
             Add(window);
+
+            runSync?.Invoke();
         });
     }
 

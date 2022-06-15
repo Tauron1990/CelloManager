@@ -8,9 +8,10 @@ public sealed class TextDisplay : RoomBase
     private readonly Action<GameManager> _onNext;
     private readonly Label _page = new()
     {
+        TextAlignment = TextAlignment.Centered,
         Width = Dim.Fill(),
         Height = Dim.Percent(90),
-        X = Pos.Percent(95),
+        X = Pos.At(1),
         Y = Pos.At(1)
     };
 
