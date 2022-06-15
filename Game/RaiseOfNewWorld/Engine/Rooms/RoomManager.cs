@@ -20,18 +20,19 @@ public class RoomManager : IReactToEventSystem<MoveToRoom>, IReactToEventSystem<
     private readonly IObservableGroupManager _groupManager;
     private readonly IEventSystem _eventSystem;
     
-    private IObservableGroup _currentMap;
+    private IObservableGroup? _currentMap;
     
     public RoomManager(IObservableGroupManager groupManager, IEventSystem eventSystem)
     {
         _groupManager = groupManager;
         _eventSystem = eventSystem;
         _movables = groupManager.GetObservableGroup(_movableGroup, 0);
-        _currentMap = groupManager.GetObservableGroup(_roomGroup, 1);
     }
 
     public void Process(MoveToRoom eventData)
     {
+        if(_currentMap is null) return;
+        
         var roomComponent = _currentMap.Select(e => e.GetComponent<RoomComponent>()).First(c => c.Name == eventData.RoomName);
         var movableEntity = _movables.Select(e => e.GetComponent<MoveableComponent>()).First(c => c.Id == eventData.Id);
         movableEntity.Position.Value = roomComponent.Name;

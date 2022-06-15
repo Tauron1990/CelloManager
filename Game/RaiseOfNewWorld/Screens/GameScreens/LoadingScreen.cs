@@ -3,7 +3,7 @@ using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Screens.GameScreens;
 
-public sealed record LoadingParameter(Func<GameManager, IProgress<int>, Task> StartProgress, int Max, string Title);
+public sealed record LoadingParameter(Func<GameManager, IProgress<int>, ValueTask> StartProgress, int Max, string Title);
 
 public sealed class LoadingScreen : ScreenBase, IProgress<int>
 {

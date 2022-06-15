@@ -16,7 +16,7 @@ public sealed class ContentManager
             throw new InvalidOperationException("No File Name Provided");
 
         JToken? propertyToken;
-        
+
         lock (_lock)
         {
             if (_loadedData.TryGetValue(fileName, out var token))
@@ -26,14 +26,14 @@ public sealed class ContentManager
                 var targetFile = Path.Combine(BaseDirectory, Path.GetFileNameWithoutExtension(fileName)) + ".json";
                 if (!File.Exists(targetFile))
                     throw new InvalidOperationException($"No File for Key Found: {targetFile}");
-                
+
                 token = JToken.Parse(File.ReadAllText(targetFile));
                 _loadedData[fileName] = token;
 
                 propertyToken = token[name];
             }
         }
-        
+
         return propertyToken ?? throw new InvalidOperationException($"No Entry with name {name} Found");
     }
 
@@ -44,9 +44,6 @@ public sealed class ContentManager
     public string GetString(string name, [CallerFilePath] string? fileName = null)
     {
         var value = GetToken(name, fileName).Value<string>() ?? string.Empty;
-        if (value.StartsWith("$"))
-        {
-            
-        }
+        return value.StartsWith("$") ? File.ReadAllText(Path.Combine(BaseDirectory, value[1..])) : value;
     }
 }
