@@ -1,3 +1,4 @@
 ﻿{
-  "PrologText": "$Prolog\\PrologText.txt"
+  "PrologText": "$Prolog\\PrologText.txt",
+  "EpilogText": "$Epilog.txt"
 }

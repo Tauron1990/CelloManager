@@ -34,5 +34,8 @@ public sealed class MainScreen : ScreenBase
        }.OnClick(container, o => o.Subscribe(_ => manager.ScreenManager.Shutdown()));
         
         container.Add(title, newGame, loadGame, close);
+
+        if (parameter is Action action)
+            action();
     }
 }

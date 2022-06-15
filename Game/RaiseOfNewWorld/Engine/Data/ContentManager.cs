@@ -46,4 +46,11 @@ public sealed class ContentManager
         var value = GetToken(name, fileName).Value<string>() ?? string.Empty;
         return value.StartsWith("$") ? File.ReadAllText(Path.Combine(BaseDirectory, value[1..])) : value;
     }
+
+    public Func<string> GetStringFunc(string name, [CallerFilePath] string? fileName = null)
+        => () =>
+        {
+            var value = GetToken(name, fileName).Value<string>() ?? string.Empty;
+            return value.StartsWith("$") ? File.ReadAllText(Path.Combine(BaseDirectory, value[1..])) : value;
+        };
 }

@@ -2,5 +2,6 @@
 
 public static class TextParser
 {
-    public static IReadOnlyCollection<string> ParsePages(string input) => input.Split(new[] { "@@@" }, StringSplitOptions.TrimEntries);
+    public static Func<IReadOnlyCollection<string>> Pages(Func<string> input) 
+        => () => input().Split(new[] { "@@@" }, StringSplitOptions.TrimEntries);
 }

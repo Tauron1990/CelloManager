@@ -41,17 +41,19 @@ public sealed class GameManager
         screenManager.Switch(nameof(MainScreen));
     }
 
-    public async ValueTask ClearGame(Action? preStartApp)
+    public async ValueTask ClearGame(Action preStartApp)
+    {
+        ClearGame();
+
+        _coreApp = new CoreApp(ScreenManager, ContentManager, this, preStartApp);
+        await Task.Run(() => _coreApp.StartApplication());
+    }
+
+    public void ClearGame()
     {
         _coreApp?.StopApplication();
         _coreApp?.Container.Dispose();
         _coreApp = null;
-
-        if (preStartApp is not null)
-        {
-            _coreApp = new CoreApp(ScreenManager, ContentManager, this, preStartApp);
-            await Task.Run(() => _coreApp.StartApplication());
-        }
     }
 
     public void ShutdownApp()
@@ -133,7 +135,7 @@ public sealed class GameManager
             if (gameInfo.IsNewGame.Value)
             {
                 EventSystem.Publish(new SwitchDimesionEvent(1));
-                EventSystem.Publish(new MoveToRoom("player", "start", TimeSpan.Zero));
+                EventSystem.Publish(MoveToRoom.MovePlayerTo("start"));
             }
             else
             {
@@ -143,7 +145,7 @@ public sealed class GameManager
                     .First();
                 
                 EventSystem.Publish(new SwitchDimesionEvent(gameInfo.LastDimension.Value));
-                EventSystem.Publish(new MoveToRoom("player", player.Position.Value, TimeSpan.Zero));
+                EventSystem.Publish(MoveToRoom.MovePlayerTo(player.Position.Value));
             }
         }
 

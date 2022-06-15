@@ -32,7 +32,7 @@ public sealed class LoadGameScreen : IScreen
             .Where(_ => files.Count != 0)
             .Subscribe(_ =>
             {
-                gameManager.ScreenManager.Switch(nameof(LoadGameScreen),
+                gameManager.ScreenManager.Switch(nameof(LoadingScreen),
                     new LoadingParameter(
                         GameScreen.LoadGame(files[saveGames.SelectedItem]),
                         -1,
