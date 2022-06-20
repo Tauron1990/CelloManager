@@ -1,4 +1,6 @@
-﻿using Terminal.Gui;
+﻿using System.Runtime.CompilerServices;
+using RaiseOfNewWorld.Engine.Data;
+using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Engine.Rooms.Types;
 
@@ -6,13 +8,15 @@ public sealed class TextDisplay : RoomBase
 {
     private readonly Func<IReadOnlyCollection<string>> _pagesFactory;
     private readonly Action<GameManager> _onNext;
+    private readonly string? _filePath;
 
     private int _index;
 
-    public TextDisplay(Func<IReadOnlyCollection<string>> pages, Action<GameManager> onNext)
+    public TextDisplay(Func<IReadOnlyCollection<string>> pages, Action<GameManager> onNext, [CallerFilePath] string? filePath = null)
     {
         _pagesFactory = pages;
         _onNext = onNext;
+        _filePath = filePath;
     }
 
     public override void Display(View view, GameManager gameManager)
@@ -27,7 +31,7 @@ public sealed class TextDisplay : RoomBase
             Y = Pos.At(1)
         };
 
-        page.Text = pages.ElementAt(0);
+        page.Text = TextParser.FormatText(pages.ElementAt(0), gameManager.ContentManager, _filePath);
         
         {
             var button = new Button
@@ -47,7 +51,7 @@ public sealed class TextDisplay : RoomBase
                 if (_index == pages.Count)
                     _onNext(gameManager);
                 else
-                    page.Text = pages.ElementAt(_index);
+                    page.Text = TextParser.FormatText(pages.ElementAt(_index), gameManager.ContentManager, _filePath);
             }
         }
     }
