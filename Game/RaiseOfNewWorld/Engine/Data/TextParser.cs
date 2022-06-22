@@ -79,5 +79,7 @@ public static class TextParser
                 break;
             }
         }
+
+        return null;
     }
 }

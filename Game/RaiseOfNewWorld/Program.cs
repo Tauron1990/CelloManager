@@ -1,9 +1,18 @@
-﻿// See https://aka.ms/new-console-template for more information
-
-using EcsRx.ReactiveData;
-using Newtonsoft.Json;
+﻿using RaiseOfNewWorld.Engine.Data.TextProcessing;
 using RaiseOfNewWorld.Screens;
 using Terminal.Gui;
+
+ReadOnlySpan<char> testString = "{hallo}";
+Token token;
+
+do
+{
+    token = Tokenizer.NextToken(testString);
+    testString = testString[token.Text.Length..];
+
+    var tokenDebug = token.ToString();
+    var stringDebug = testString.ToString();
+} while (!token.IsEof);
 
 Console.Title = "Rise of New World";
 
