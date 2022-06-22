@@ -22,7 +22,7 @@ public sealed class TextDisplay : RoomBase
     public override void Display(View view, GameManager gameManager)
     {
         var pages = _pagesFactory();
-        Label page = new()
+        View page = new()
         {
             TextAlignment = TextAlignment.Centered,
             Width = Dim.Fill(),
@@ -31,7 +31,7 @@ public sealed class TextDisplay : RoomBase
             Y = Pos.At(1)
         };
 
-        page.Text = TextParser.FormatText(pages.ElementAt(0), gameManager.ContentManager, _filePath);
+        TextParser.FormatText(pages.ElementAt(0), gameManager.ContentManager, _filePath).Render(page);
         
         {
             var button = new Button
@@ -51,7 +51,7 @@ public sealed class TextDisplay : RoomBase
                 if (_index == pages.Count)
                     _onNext(gameManager);
                 else
-                    page.Text = TextParser.FormatText(pages.ElementAt(_index), gameManager.ContentManager, _filePath);
+                    TextParser.FormatText(pages.ElementAt(_index), gameManager.ContentManager, _filePath).Render(page);
             }
         }
     }
