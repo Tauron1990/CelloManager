@@ -1,11 +1,57 @@
+using System.Collections.Immutable;
+
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
-public static class Tokenizer
+public class Tokenizer
 {
-    public static Token NextToken(in ReadOnlySpan<char> text)
+    private readonly ImmutableArray<Token> _tokens;
+    public int Pointer { get; private set; }
+
+    public bool CanNext => _tokens.Length > Pointer;
+    
+    private Tokenizer(ImmutableArray<Token> tokens) => _tokens = tokens;
+
+    public Token Get() => _tokens[Pointer];
+    
+    public Token GetAndIncement()
+    {
+        var token = Get();
+        Pointer++;
+        return token;
+    }
+
+    public void Incremnt()
+    {
+        Pointer++;
+    }
+
+    public Token GetNext()
+        => _tokens[Pointer + 1];
+
+    public Token GetPrevorius()
+        => _tokens[Pointer - 1];
+    
+    public static Tokenizer Tokens(in ReadOnlySpan<char> text)
+    {
+        var input = text;
+        var tokens = ImmutableArray<Token>.Empty;
+        Token token;
+
+        do
+        {
+            token = NextToken(input);
+            input = input[token.Text.Length..];
+
+            tokens = tokens.Add(token);
+        } while (!token.IsEof);
+
+        return new Tokenizer(tokens);
+    }
+
+    private static Token NextToken(in ReadOnlySpan<char> text)
     {
         if (text.IsEmpty)
-            return Token.Eof();
+            return Token.Eof;
 
         for (var i = 0; i < text.Length; i++)
         {
@@ -38,6 +84,6 @@ public static class Tokenizer
             }
         }
 
-        return new Token(text, TokenType.Text);
+        return new Token(text.ToString(), TokenType.Text);
     }
 }

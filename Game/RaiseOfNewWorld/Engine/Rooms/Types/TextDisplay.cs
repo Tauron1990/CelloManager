@@ -31,7 +31,7 @@ public sealed class TextDisplay : RoomBase
             Y = Pos.At(1)
         };
 
-        TextParser.FormatText(pages.ElementAt(0), gameManager.ContentManager, _filePath).Render(page);
+        TextProcessor.FormatText(pages.ElementAt(0), gameManager.ContentManager, _filePath).Render(page);
         
         {
             var button = new Button
@@ -51,7 +51,7 @@ public sealed class TextDisplay : RoomBase
                 if (_index == pages.Count)
                     _onNext(gameManager);
                 else
-                    TextParser.FormatText(pages.ElementAt(_index), gameManager.ContentManager, _filePath).Render(page);
+                    TextProcessor.FormatText(pages.ElementAt(_index), gameManager.ContentManager, _filePath).Render(page);
             }
         }
     }

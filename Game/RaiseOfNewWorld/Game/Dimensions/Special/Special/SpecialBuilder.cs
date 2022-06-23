@@ -15,7 +15,7 @@ public static class SpecialBuilder
         {
             b.WithRoom("start", r =>
             {
-                r.WithFactory((_, manager) => new TextDisplay(TextParser.Pages(manager.GetStringFunc("PrologText")),
+                r.WithFactory((_, manager) => new TextDisplay(TextProcessor.Pages(manager.GetStringFunc("PrologText")),
                     static m =>
                     {
                         var gameInfo = m.Database.GetCollection()
@@ -31,7 +31,7 @@ public static class SpecialBuilder
             b.WithRoom("end", rb =>
             {
                 rb.WithFactory((_, manager) => new TextDisplay(
-                    TextParser.Pages(manager.GetStringFunc("EpilogText")),
+                    TextProcessor.Pages(manager.GetStringFunc("EpilogText")),
                     static m => m.ScreenManager.Switch(nameof(MainScreen), new Action(m.ClearGame))));
             });
         });

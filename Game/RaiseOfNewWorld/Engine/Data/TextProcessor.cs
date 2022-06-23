@@ -5,7 +5,7 @@ using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Engine.Data;
 
-public static class TextParser
+public static class TextProcessor
 {
     private static readonly ObjectPool<List<TextFragment>> FragmentPools = ObjectPool.Create(new DefaultPooledObjectPolicy<List<TextFragment>>());
 
