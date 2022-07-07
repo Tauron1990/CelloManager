@@ -34,7 +34,7 @@ public sealed class PosFabricatorExpression : FabricatorExpression<Pos>
         protected override ExpressionNode<Pos> CreateFabricator(ParameterParser token) =>
             token.MethodName switch
             {
-                "anchorend" => AnchorEnd(token.CanResolve(0) ? token.ResolveParameter(0, int.Parse) : 0),
+                "anchorend" => AnchorEnd(token.ResolveParameter(0, int.Parse, 0)),
                 "y" => Y(token.ResolveParameter(0)),
                 "x" => X(token.ResolveParameter(0)),
                 "top" => Top(token.ResolveParameter(0)),

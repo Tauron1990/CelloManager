@@ -43,4 +43,7 @@ public sealed class ParameterParser
     
     public TResult ResolveParameter<TResult>(int pos, Func<string, TResult> parser)
         => parser(pos == -1 ? MethodName : Parameters[pos]);
+
+    public TResult ResolveParameter<TResult>(int pos, Func<string, TResult> parser, TResult defaultValue) 
+        => CanResolve(pos) ? ResolveParameter(pos, parser) : defaultValue;
 }
