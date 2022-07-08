@@ -5,6 +5,14 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public static class ViewBuilderContstructor
 {
+    private static readonly ImmutableDictionary<string, Type> ViewTypes = ImmutableDictionary<string, Type>.Empty
+        .Add("button", typeof(Button))
+        .Add("checkbox", typeof(CheckBox))
+        .Add("colorpicker", typeof(ColorPicker))
+        .Add("combobox", typeof(ComboBox))
+        .Add("frameview", typeof(FrameView))
+        .Add("graphview", typeof(GraphView));
+
     public static View CreateView(ITextData textData)
     {
         var result = textData switch
@@ -42,12 +50,43 @@ public static class ViewBuilderContstructor
                 case Button button:
                     ApplyButtonAttributes(button, name, value);
                     break;
+                case CheckBox checkBox:
+                    ApplyChekBoxAttribute(checkBox, name, value);
+                    break;
+                case ColorPicker colorPicker:
+                    ApplyColorPickerAttribute(colorPicker, name, value);
+                    break;
+                case FrameView frameView:
+                    ApplyFrameviewAttributes(frameView, name, value);
+                    break;
+                case GraphView graphView:
+                    ApplyGraphViewAttribute(graphView, name, value);
+                    break;
             }
         }
         
         view.EndInit();
     }
 
+    private static void ApplyGraphViewAttribute(GraphView graphView, string name, string value)
+    {
+        
+    }
+    
+    private static void ApplyFrameviewAttributes(FrameView frameView, string name, string value)
+    {
+        if (name == "title")
+            frameView.Title = value;
+    }
+    
+    private static void ApplyColorPickerAttribute(ColorPicker colorPicker, string name, string value)
+    {
+        if (name == "selectedcolor") colorPicker.SelectedColor = Enum.Parse<Color>(value);
+    }
+    private static void ApplyChekBoxAttribute(CheckBox checkBox, string name, string value)
+    {
+        if (name == "checked") checkBox.Checked = bool.Parse(value);
+    }
     private static void ApplyButtonAttributes(Button button, string name, string value)
     {
         if (name == "isdefault") button.IsDefault = bool.Parse(value);
