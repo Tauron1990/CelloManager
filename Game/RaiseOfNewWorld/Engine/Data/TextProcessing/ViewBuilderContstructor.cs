@@ -1,17 +1,35 @@
 ﻿using System.Collections.Immutable;
+using System.Linq.Expressions;
+using FastExpressionCompiler;
+using Figgle;
 using Terminal.Gui;
+using Terminal.Gui.Graphs;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public static class ViewBuilderContstructor
 {
+    private static readonly ImmutableDictionary<string, Func<FiggleFont>> FiggleFonts = CreateFonts();
+
+    private static ImmutableDictionary<string,Func<FiggleFont>> CreateFonts()
+    {
+        var props = typeof(FiggleFonts).GetProperties();
+
+        return props.ToImmutableDictionary(
+            p => p.Name.ToLower(),
+            pi => Expression.Lambda<Func<FiggleFont>>(
+                    Expression.Property(null, pi))
+                .CompileFast());
+    }
+
     private static readonly ImmutableDictionary<string, Type> ViewTypes = ImmutableDictionary<string, Type>.Empty
         .Add("button", typeof(Button))
         .Add("checkbox", typeof(CheckBox))
         .Add("colorpicker", typeof(ColorPicker))
         .Add("combobox", typeof(ComboBox))
         .Add("frameview", typeof(FrameView))
-        .Add("graphview", typeof(GraphView));
+        .Add("lineview", typeof(LineView))
+        .Add("label", typeof(Label));
 
     public static View CreateView(ITextData textData)
     {
@@ -31,10 +49,23 @@ public static class ViewBuilderContstructor
         => new Label { Text = textData.Text };
 
     private static View CreateComplexView(TextData textData)
-        => textData.Type switch
+    {
+        if (ViewTypes.TryGetValue(textData.Type ?? string.Empty, out var type))
         {
-            _ => new View{ Id = textData.Name },
-        };
+            if (Activator.CreateInstance(type) is not View inst) throw new InvalidOperationException("View Creation Failed");
+            inst.Id = textData.Name;
+            
+            return inst;
+        }
+
+        if (textData.Type == "figgle")
+        {
+            FiggleFont font;
+            
+            FiggleFonts.Double
+        }
+        return new View { Id = textData.Name };
+    }
 
 
     // ReSharper disable once CognitiveComplexity
@@ -59,19 +90,41 @@ public static class ViewBuilderContstructor
                 case FrameView frameView:
                     ApplyFrameviewAttributes(frameView, name, value);
                     break;
-                case GraphView graphView:
-                    ApplyGraphViewAttribute(graphView, name, value);
+                case LineView lineView:
+                    ApplyLineViewAttributes(lineView, name, value);
                     break;
+                // case GraphView graphView:
+                //     ApplyGraphViewAttribute(graphView, name, value);
+                //     break;
             }
         }
         
         view.EndInit();
     }
 
-    private static void ApplyGraphViewAttribute(GraphView graphView, string name, string value)
+    private static void ApplyLineViewAttributes(LineView lineView, string name, string value)
     {
-        
+        switch (name)
+        {
+            case "startinganchor":
+                lineView.StartingAnchor = value[0];
+                break;
+            case "endinganchor":
+                lineView.EndingAnchor = value[0];
+                break;
+            case "linerune":
+                lineView.LineRune = value[0];
+                break;
+            case "orientation":
+                lineView.Orientation = Enum.Parse<Orientation>(value);
+                break;
+        }
     }
+
+    // private static void ApplyGraphViewAttribute(GraphView graphView, string name, string value)
+    // {
+    //     
+    // }
     
     private static void ApplyFrameviewAttributes(FrameView frameView, string name, string value)
     {

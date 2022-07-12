@@ -53,7 +53,7 @@ public static class TextParser
         if (tokens.Get().TokenType is TokenType.AttributeValueSeperator)
         {
             tokens.Incremnt();
-            type = tokens.GetAndIncement().Text;
+            type = tokens.GetAndIncement().Text.ToLower();
         }
 
         ValidateToken(tokens, tokens.GetAndIncement(), TokenType.OpenAttribute);
@@ -65,7 +65,7 @@ public static class TextParser
             ValidateToken(tokens, tokens.GetAndIncement(), TokenType.AttributeValueSeperator);
             var attrValue = ValidateToken(tokens, tokens.GetAndIncement(), TokenType.Text);
 
-            attributes = attributes.Add(new AttributeData(attrName.Text, attrValue.Text));
+            attributes = attributes.Add(new AttributeData(attrName.Text.ToLower(), attrValue.Text.ToLower()));
 
             var token = tokens.GetAndIncement();
             if(token.TokenType is TokenType.CloseAttribute)
