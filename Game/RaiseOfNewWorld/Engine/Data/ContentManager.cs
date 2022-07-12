@@ -3,7 +3,34 @@ using Newtonsoft.Json.Linq;
 
 namespace RaiseOfNewWorld.Engine.Data;
 
-public sealed class ContentManager
+public abstract class ContentManager
+{
+    private sealed class EmptyManager : ContentManager
+    {
+        public override DateTime GetDateTime(string name, string? fileName = null) => throw new NotImplementedException();
+
+        public override int GetInt(string name, string? fileName = null) => throw new NotImplementedException();
+
+        public override string GetString(string name, string? fileName = null) => throw new NotImplementedException();
+
+        public override Func<string> GetStringFunc(string name, string? fileName = null) => throw new NotImplementedException();
+        public override string ReadFile(string relativeFileName) => throw new NotImplementedException();
+    }
+
+    public static readonly ContentManager Empty = new EmptyManager();
+    
+    public abstract DateTime GetDateTime(string name, [CallerFilePath] string? fileName = null);
+
+    public abstract int GetInt(string name, [CallerFilePath] string? fileName = null);
+
+    public abstract string GetString(string name, [CallerFilePath] string? fileName = null);
+
+    public abstract Func<string> GetStringFunc(string name, [CallerFilePath] string? fileName = null);
+
+    public abstract string ReadFile(string relativeFileName);
+}
+
+public sealed class FileContentManager : ContentManager
 {
     private static readonly string BaseDirectory = Path.GetFullPath("GameData");
 
@@ -37,20 +64,23 @@ public sealed class ContentManager
         return propertyToken ?? throw new InvalidOperationException($"No Entry with name {name} Found");
     }
 
-    public DateTime GetDateTime(string name, [CallerFilePath] string? fileName = null) => GetToken(name, fileName).Value<DateTime>();
+    public override DateTime GetDateTime(string name, [CallerFilePath] string? fileName = null) => GetToken(name, fileName).Value<DateTime>();
 
-    public int GetInt(string name, [CallerFilePath] string? fileName = null) => GetToken(name, fileName).Value<int>();
+    public override  int GetInt(string name, [CallerFilePath] string? fileName = null) => GetToken(name, fileName).Value<int>();
 
-    public string GetString(string name, [CallerFilePath] string? fileName = null)
+    public override string GetString(string name, [CallerFilePath] string? fileName = null)
     {
         var value = GetToken(name, fileName).Value<string>() ?? string.Empty;
         return value.StartsWith("$") ? File.ReadAllText(Path.Combine(BaseDirectory, value[1..])) : value;
     }
 
-    public Func<string> GetStringFunc(string name, [CallerFilePath] string? fileName = null)
+    public override Func<string> GetStringFunc(string name, [CallerFilePath] string? fileName = null)
         => () =>
         {
             var value = GetToken(name, fileName).Value<string>() ?? string.Empty;
             return value.StartsWith("$") ? File.ReadAllText(Path.Combine(BaseDirectory, value[1..])) : value;
         };
+
+    public override string ReadFile(string relativeFileName)
+        => File.ReadAllText(Path.Combine(BaseDirectory, relativeFileName));
 }

@@ -1,4 +1,4 @@
-﻿namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+﻿namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
 
 public abstract class FabricatorExpression<TResult> : ExpressionNode<TResult>
 {

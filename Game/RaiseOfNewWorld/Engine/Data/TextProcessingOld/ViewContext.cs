@@ -1,7 +1,7 @@
 ﻿using System.Collections.Immutable;
 using Terminal.Gui;
 
-namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
 
 public sealed record ViewContext(View Target, ImmutableDictionary<string, View> NamedViews)
 {

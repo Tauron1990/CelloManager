@@ -1,0 +1,9 @@
+﻿{()
+    Test Zeile 1
+    {TestType:TestName () TestZeile 2}
+    {(Test:Hallo) Test Zeile 3}
+    {(Test:Hallo, Test2:Welt) Test Zeile 4}
+    {Fiddle (ExpressionTest1:Test + 1, ExpressionTest2:Test(1) + Test(2 +3, 4) - 8) 
+        {() SubFragment}
+    }
+}

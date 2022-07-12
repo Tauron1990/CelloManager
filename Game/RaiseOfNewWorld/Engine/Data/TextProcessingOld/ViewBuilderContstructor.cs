@@ -5,7 +5,7 @@ using Figgle;
 using Terminal.Gui;
 using Terminal.Gui.Graphs;
 
-namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
 
 public static class ViewBuilderContstructor
 {
@@ -36,7 +36,7 @@ public static class ViewBuilderContstructor
         var result = textData switch
         {
             SimpleText simpleText => CreateSimpleView(simpleText),
-            TextData complexText => CreateComplexView(complexText),
+            TextDataOld complexText => CreateComplexView(complexText),
             _ => throw new InvalidOperationException($"Unkowen ITextData Types {textData}")
         };
         
@@ -48,23 +48,22 @@ public static class ViewBuilderContstructor
     private static View CreateSimpleView(SimpleText textData)
         => new Label { Text = textData.Text };
 
-    private static View CreateComplexView(TextData textData)
+    private static View CreateComplexView(TextDataOld textDataOld)
     {
-        if (ViewTypes.TryGetValue(textData.Type ?? string.Empty, out var type))
+        if (ViewTypes.TryGetValue(textDataOld.Type ?? string.Empty, out var type))
         {
             if (Activator.CreateInstance(type) is not View inst) throw new InvalidOperationException("View Creation Failed");
-            inst.Id = textData.Name;
+            inst.Id = textDataOld.Name;
             
             return inst;
         }
 
-        if (textData.Type == "figgle")
+        if (textDataOld.Type == "figgle")
         {
             FiggleFont font;
             
-            FiggleFonts.Double
         }
-        return new View { Id = textData.Name };
+        return new View { Id = textDataOld.Name };
     }
 
 

@@ -1,18 +1,19 @@
 ﻿using System.Collections.Immutable;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
 
-namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
 
 public static class TextParser
 {
     public static IEnumerable<ITextData> ParseText(string text)
     {
-        var tokenizer = Tokenizer.Tokens(text);
+        var tokenizer = TokenizerOld.Tokens(text);
 
         while ( tokenizer.CanNext && tokenizer.Get().TokenType is not TokenType.Eof)
             yield return ReadFragment(tokenizer);
     }
 
-    private static ITextData ReadFragment(Tokenizer tokens)
+    private static ITextData ReadFragment(TokenizerOld tokens)
     {
         var token = tokens.Get();
         if(token.TokenType is TokenType.OpenFragment)
@@ -45,7 +46,7 @@ public static class TextParser
         }
     }
 
-    private static TextData ReadMetadata(string name, Tokenizer tokens)
+    private static TextDataOld ReadMetadata(string name, TokenizerOld tokens)
     {
         var attributes = ImmutableArray<AttributeData>.Empty;
         string? type = null;
@@ -77,10 +78,10 @@ public static class TextParser
         if(tokens.Get().TokenType is TokenType.CloseAttribute)
             tokens.Incremnt();
 
-        return new TextData(name, type, attributes, ImmutableArray<ITextData>.Empty);
+        return new TextDataOld(name, type, attributes, ImmutableArray<ITextData>.Empty);
     }
 
-    private static void ReadFragmentContent(ref TextData data, Tokenizer tokens)
+    private static void ReadFragmentContent(ref TextDataOld dataOld, TokenizerOld tokens)
     {
         var textData = ImmutableArray<ITextData>.Empty;
 
@@ -102,21 +103,21 @@ public static class TextParser
         }
 
         ValidateToken(tokens, tokens.GetAndIncement(), TokenType.CloseFragment);
-        data = data with { Content = textData };
+        dataOld = dataOld with { Content = textData };
     }
 
-    private static Token ValidateToken(Tokenizer tokens, Token token, TokenType expected)
+    private static TextToken ValidateToken(TokenizerOld tokens, TextToken textToken, TokenType expected)
     {
-        if(token.TokenType != expected)
-            ThrowInvalidToken(token, tokens);
+        if(textToken.TokenType != expected)
+            ThrowInvalidToken(textToken, tokens);
 
-        return token;
+        return textToken;
     }
     
-    private static void ThrowInvalidToken(Token token, Tokenizer tokenArray)
+    private static void ThrowInvalidToken(TextToken textToken, TokenizerOld tokenArray)
     {
         if(tokenArray.Pointer > 0)
-            throw new InvalidOperationException($"Invalid Token: {token} after {tokenArray.GetPrevorius()}");
-        throw new InvalidOperationException($"Invalid Token: {token}");
+            throw new InvalidOperationException($"Invalid Token: {textToken} after {tokenArray.GetPrevorius()}");
+        throw new InvalidOperationException($"Invalid Token: {textToken}");
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Terminal.Gui;
 using Attribute = Terminal.Gui.Attribute;
 
-namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
 
 public static class ColorExpression
 {

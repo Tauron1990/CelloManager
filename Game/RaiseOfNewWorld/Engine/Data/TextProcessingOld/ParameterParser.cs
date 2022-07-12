@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 
-namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
 
 public sealed class ParameterParser
 {

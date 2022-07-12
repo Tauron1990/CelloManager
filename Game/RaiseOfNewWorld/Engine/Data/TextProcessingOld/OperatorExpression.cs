@@ -1,6 +1,4 @@
-﻿using Terminal.Gui;
-
-namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+﻿namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
 
 public abstract class OperatorExpression<TResult> : ExpressionNode<TResult>
 {
