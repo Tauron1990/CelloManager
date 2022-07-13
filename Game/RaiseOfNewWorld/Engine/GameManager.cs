@@ -41,7 +41,7 @@ public sealed class GameManager
         screenManager.Switch(nameof(MainScreen));
     }
 
-    public async ValueTask ClearGame(Action preStartApp)
+    public async ValueTask ClearGame(Action? preStartApp)
     {
         ClearGame();
 

@@ -13,7 +13,7 @@ public sealed class TextParser
     public TextDataNode Parse(ContentManager contentManager)
     {
         _contentManager = contentManager;
-        var tokens = Tokenizer.Tokens(_input.AsSpan());
+        var tokens = new Tokenizer(_input);
 
         return new TextDataNode
         {
@@ -84,7 +84,7 @@ public sealed class TextParser
 
     private IEnumerable<AttributeNode> ReadAttributes(Tokenizer tokenizer)
     {
-        TextToken textToken = default;
+        TextToken textToken;
         textToken = tokenizer.GetAndIncement();
         ValidateToken(textToken, TokenType.OpenAttribute);
         

@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
 
-public delegate ref TToken TokenBuilder<TToken>(string? text, int position)
+public delegate TToken TokenBuilder<out TToken>(string text, int position)
     where TToken : struct;
 
 public abstract class TokenizerBase<TToken>
@@ -41,6 +41,11 @@ public abstract class TokenizerBase<TToken>
         return token;
     }
 
+    public void Incremnt()
+    {
+        Get();
+        Pointer++;
+    }
 
     private void NextToken()
     {
@@ -55,12 +60,12 @@ public abstract class TokenizerBase<TToken>
         _tokens = _tokens.Add(token);
     }
 
-    private ref TToken NextToken(in ReadOnlySpan<char> text, int position, out int lenght)
+    private TToken NextToken(in ReadOnlySpan<char> text, int position, out int lenght)
     {
         if (text.IsEmpty)
         {
             lenght = 0;
-            return ref _textBuilder(null, position);
+            return _textBuilder(string.Empty, position);
         }
 
         for (var i = 0; i < text.Length; i++)
@@ -70,15 +75,15 @@ public abstract class TokenizerBase<TToken>
             if (i == 0)
             {
                 lenght = 1;
-                return ref builder(MakeString(text[..1]), position);
+                return builder(MakeString(text[..1]), position);
             }
 
-            lenght = i + 1;
-            return ref _textBuilder(MakeString(text[..i]), position);
+            lenght = i;
+            return _textBuilder(MakeString(text[..i]), position);
         }
 
         lenght = text.Length;
-        return ref _textBuilder(MakeString(text), position);
+        return _textBuilder(MakeString(text), position);
     }
     
     private static string MakeString(in ReadOnlySpan<char> text)
