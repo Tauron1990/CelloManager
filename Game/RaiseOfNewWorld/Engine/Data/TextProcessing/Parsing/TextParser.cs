@@ -82,10 +82,9 @@ public sealed class TextParser
         } while (!textToken.IsEof);
     }
 
-    private IEnumerable<AttributeNode> ReadAttributes(Tokenizer tokenizer)
+    public static IEnumerable<AttributeNode> ReadAttributes(Tokenizer tokenizer)
     {
-        TextToken textToken;
-        textToken = tokenizer.GetAndIncement();
+        var textToken = tokenizer.GetAndIncement();
         ValidateToken(textToken, TokenType.OpenAttribute);
         
         do
@@ -116,14 +115,14 @@ public sealed class TextParser
         } while (!textToken.IsEof);
     }
 
-    private AttributeValueNode ReadAttributeValue(Tokenizer tokenizer)
+    private static AttributeValueNode ReadAttributeValue(Tokenizer tokenizer)
     {
         var token = tokenizer.GetAndIncement();
         ValidateToken(token, TokenType.Text);
 
         var token2 = tokenizer.Get();
         if (token2.TokenType is TokenType.AttributeSeperator or TokenType.CloseAttribute) 
-            return new TextAttributeValue { Value = token.Text };
+            return CreateAttributeTextValue(token.Text);
 
         AttributeValueNode left;
         if (token2.TokenType is TokenType.OpenAttribute)
@@ -139,7 +138,7 @@ public sealed class TextParser
         }
         else
         {
-            left = new TextAttributeValue { Value = token.Text };
+            left = CreateAttributeTextValue(token.Text);
         }
 
         return token2.TokenType switch
@@ -162,7 +161,12 @@ public sealed class TextParser
         }
     }
 
-    private IEnumerable<AttributeValueNode> ReadParameters(Tokenizer tokenizer)
+    private static TextAttributeValue CreateAttributeTextValue(string value)
+        => value.StartsWith('@')
+            ? new TextAttributeValue { IsReference = true, Value = value[1..] }
+            : new TextAttributeValue { Value = value };
+
+    private static IEnumerable<AttributeValueNode> ReadParameters(Tokenizer tokenizer)
     {
         do
         {

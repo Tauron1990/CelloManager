@@ -47,6 +47,9 @@ public abstract class TokenizerBase<TToken>
         Pointer++;
     }
 
+    protected TToken GetPrevorius()
+        => _tokens[Pointer - 1];
+    
     private void NextToken()
     {
         var text = _input.AsSpan();
