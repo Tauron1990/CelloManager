@@ -11,7 +11,7 @@ public sealed class TemplateTokenizer : TokenizerBase<TemplateToken>
         = ImmutableDictionary<char, TokenBuilder<TemplateToken>>.Empty
             .Add('{', (txt, pos) => new TemplateToken(txt, TemplateTokentype.OpenTemplate, pos))
             .Add('}', (txt, pos) => new TemplateToken(txt, TemplateTokentype.CloseTemplate, pos))
-            .Add(':' );
+            .Add(':' , (txt, pos) => new TemplateToken(txt, TemplateTokentype.TemplateMatchSeperator, pos));
 
     public TemplateTokenizer(string input) 
         : base(input, Tokens, CreateText) { }

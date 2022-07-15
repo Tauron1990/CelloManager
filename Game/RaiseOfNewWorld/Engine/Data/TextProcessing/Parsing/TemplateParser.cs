@@ -48,7 +48,17 @@ public sealed class TemplateParser
     private TemplateMatcherNode ParseMatcher()
     {
         var token = _template.GetAndIncement();
-        
+        ValidateToken(token, TemplateTokentype.Text);
+
+        var token2 = _template.Get();
+        if (token2.Type == TemplateTokentype.TemplateMatchSeperator)
+        {
+            
+        }
+        else
+        {
+            
+        }
     }
     
     private static void ValidateToken(TemplateToken textToken, TemplateTokentype expected)
