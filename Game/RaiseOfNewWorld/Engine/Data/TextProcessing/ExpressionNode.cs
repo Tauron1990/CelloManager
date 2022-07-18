@@ -1,8 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
-using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
 
-namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
+namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public abstract class ExpressionNode<TResult>
 {   

@@ -1,7 +1,6 @@
-﻿using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
-namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
+namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public sealed class PosAddExpressions : AddExpression<Pos>
 {

@@ -27,7 +27,7 @@ public sealed class TemplateParser
 
     private IEnumerable<TemplateEntryNode> ParseEntrys()
     {
-        TemplateToken token = default;
+        TemplateToken token;
         
         do
         {
@@ -47,18 +47,56 @@ public sealed class TemplateParser
 
     private TemplateMatcherNode ParseMatcher()
     {
+        //TODO Type Matcher, NameMatcher, Regexmatcher, Not, And, Or
+
+        var token = _template.Get();
+        var leftNode = token.Type switch
+        {
+            TemplateTokentype.MatchNot => ParseNotMatcher(),
+            TemplateTokentype.Text => ParseSimpleMatcher(),
+            _ => throw new InvalidOperationException($"Invalid Token {token}")
+        };
+
+        token = _template.Get();
+        return token.Text switch
+        {
+            "and" => new AndMatcherNode { Left = leftNode, Right = ParseMatcher()},
+            "or" => new AndMatcherNode { Left = leftNode, Right = ParseMatcher()},
+            _ => leftNode
+        };
+    }
+
+    private TemplateMatcherNode ParseNotMatcher()
+    {
+        ValidateToken(_template.GetAndIncement(), TemplateTokentype.MatchNot);
+        ValidateToken(_template.GetAndIncement(), TemplateTokentype.OpenExpression);
+
+        var node = new NotMatcherNode { MatcherNode = ParseMatcher() };
+        
+        ValidateToken(_template.GetAndIncement(), TemplateTokentype.CloseExpression);
+        return node;
+    }
+    
+    private TemplateMatcherNode ParseSimpleMatcher()
+    {
         var token = _template.GetAndIncement();
         ValidateToken(token, TemplateTokentype.Text);
 
         var token2 = _template.Get();
-        if (token2.Type == TemplateTokentype.TemplateMatchSeperator)
+        if (token2.Type != TemplateTokentype.TemplateMatchSeperator) return new NameMatchNode { Name = token.Text };
+        
+        _template.Incremnt();
+        token2 = _template.GetAndIncement();
+        ValidateToken(token2, TemplateTokentype.Text);
+
+        return token.Text switch
         {
-            
-        }
-        else
-        {
-            
-        }
+            "simple" => new NameMatchNode { Name = token2.Text },
+            "exp" => new NameMatchNode { Name = token2.Text, SimpleExpression = true },
+            "regx" => new RegexMatcherNode { Regex = token2.Text },
+            _ => throw new InvalidOperationException($"Matcher Type Unkowen: {token}")
+        };
+
     }
     
     private static void ValidateToken(TemplateToken textToken, TemplateTokentype expected)

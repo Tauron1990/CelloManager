@@ -1,4 +1,4 @@
-﻿namespace RaiseOfNewWorld.Engine.Data.TextProcessingOld;
+﻿namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public abstract class OperatorExpression<TResult> : ExpressionNode<TResult>
 {

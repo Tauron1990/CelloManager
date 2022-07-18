@@ -7,6 +7,9 @@ public enum TemplateTokentype
     OpenTemplate,
     CloseTemplate,
     TemplateMatchSeperator,
+    MatchNot,
+    OpenExpression,
+    CloseExpression
 }
 
 public record struct TemplateToken(string Text, TemplateTokentype Type, int Position);

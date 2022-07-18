@@ -8,5 +8,16 @@ public abstract class AttributeValueNode : AstNode
     {
         protected override string Format()
             => string.Empty;
+
+        public override TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor)
+            => throw new InvalidOperationException("An Empty Node sould not be Encounterd");
+
+        public override AttributeValueNode Merge(AttributeValueNode node)
+            => node;
     }
+
+    public abstract TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor);
+
+    public virtual AttributeValueNode Merge(AttributeValueNode node)
+        => new ExpressionAttributeValue { Left = this, Right = node };
 }

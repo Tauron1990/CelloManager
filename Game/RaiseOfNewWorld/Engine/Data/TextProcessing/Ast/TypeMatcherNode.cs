@@ -1,6 +1,10 @@
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 
-public class TypeMatcherNode
+public sealed class TypeMatcherNode : TemplateMatcherNode
 {
+    public string TypeName { get; set; } = string.Empty;
     
+
+    protected override string Format()
+        => TypeName;
 }

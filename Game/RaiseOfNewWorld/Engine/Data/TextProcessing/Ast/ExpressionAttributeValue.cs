@@ -42,4 +42,7 @@ public sealed class ExpressionAttributeValue : AttributeValueNode
 
         return builder.ToString();
     }
+
+    public override TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor)
+        => visitor.VisitExpression(this);
 }
