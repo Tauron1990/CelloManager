@@ -7,7 +7,6 @@ namespace RaiseOfNewWorld.Engine.Data;
 
 public static class TextProcessor
 {
-    private static readonly ObjectPool<List<TextFragment>> FragmentPools = ObjectPool.Create(new DefaultPooledObjectPolicy<List<TextFragment>>());
 
     //private static readonly ObjectPool<StringBuilder> StringBuilderPools = ObjectPool.Create(new DefaultPooledObjectPolicy<StringBuilder>());
     
@@ -27,7 +26,7 @@ public static class TextProcessor
     {
         pointer++;
         
-        var fragments = FragmentPools.Get();
+        var fragments = Pools.FragmentPools.Get();
         var start = 0;
         var attributeBuilder = ReadAttributes(text, ref pointer);
         
@@ -62,7 +61,7 @@ public static class TextProcessor
         }
         finally
         {
-            FragmentPools.Return(fragments);
+            Pools.FragmentPools.Return(fragments);
         }
 
         TextFragment ExtractFragment(in ReadOnlySpan<char> text, int pointer)

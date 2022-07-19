@@ -47,8 +47,6 @@ public sealed class TemplateParser
 
     private TemplateMatcherNode ParseMatcher()
     {
-        //TODO Type Matcher, NameMatcher, Regexmatcher, Not, And, Or
-
         var token = _template.Get();
         var leftNode = token.Type switch
         {

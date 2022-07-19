@@ -1,6 +1,33 @@
-﻿using Terminal.Gui;
+﻿using RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
+using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
+
+public sealed class DimVisitor : AttributeValueVisitor<Dim>
+{
+    
+    
+    public override Dim VisitCall(CallAttributeValue callAttributeValue)
+        => callAttributeValue.MethodName switch
+        {
+            "width" => Dim.Width(callAttributeValue.GetParameter(0)),
+            "percent" => Dim.Percent(token.ResolveParameter(0, int.Parse), token.ResolveParameter(1, bool.Parse, false)),
+            "height" => Dim.Height(token.ResolveParameter(0)),
+            "fill" => Dim.Fill(token.ResolveParameter(0, int.Parse, 0)),
+            "sized" => Dim.Sized(token.ResolveParameter(0, int.Parse)),
+            _ => Dim.Sized(token.ResolveParameter(-1, int.Parse))
+        }
+
+    public override Dim VisitExpression(ExpressionAttributeValue expressionAttributeValue)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override Dim VisitText(TextAttributeValue textAttributeValue)
+    {
+        throw new NotImplementedException();
+    }
+}
 
 public sealed class DimAddExpressions : AddExpression<Dim>
 {

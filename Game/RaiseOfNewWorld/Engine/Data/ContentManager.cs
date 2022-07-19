@@ -1,5 +1,6 @@
 ﻿using System.Runtime.CompilerServices;
 using Newtonsoft.Json.Linq;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 
 namespace RaiseOfNewWorld.Engine.Data;
 
@@ -28,6 +29,9 @@ public abstract class ContentManager
     public abstract Func<string> GetStringFunc(string name, [CallerFilePath] string? fileName = null);
 
     public abstract string ReadFile(string relativeFileName);
+
+    public string GetString(TextAttributeValue attributeValue) 
+        => attributeValue.IsReference ? ReadFile(attributeValue.Value) : attributeValue.Value;
 }
 
 public sealed class FileContentManager : ContentManager
