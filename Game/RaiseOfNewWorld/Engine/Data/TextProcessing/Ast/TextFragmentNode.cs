@@ -24,7 +24,12 @@ public sealed class TextFragmentNode : FragmentContainerNode
                 element.Value = element.Value.Merge(attributeNode.Value);
         }
     }
-    
+
+    public override void Validate()
+    {
+        Attributes.ForEach(a => a.Validate());
+    }
+
     protected override string Format()
     {
         var builder = new StringBuilder();

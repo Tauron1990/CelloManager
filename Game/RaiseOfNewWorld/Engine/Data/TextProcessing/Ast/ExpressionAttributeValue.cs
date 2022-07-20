@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 
@@ -16,8 +17,21 @@ public sealed class ExpressionAttributeValue : AttributeValueNode
     public AttributeValueNode Left { get; set; } = Empty;
 
     public AttributeValueNode Right { get; set; } = Empty;
-    
-    
+
+
+    public override void Validate()
+    {
+        if(OperatorType == OperatorType.None)
+            ThrowValidationError("No operator type provided");
+        if(Left == Empty)
+            ThrowValidationError("No Left Operant for Expression");
+        if(Right == Empty)
+            ThrowValidationError("No Right Operant for Expression");
+        
+        Left.Validate();
+        Right.Validate();
+    }
+
     protected override string Format()
     {
         var builder = new StringBuilder();

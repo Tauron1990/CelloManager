@@ -26,7 +26,7 @@ public static class TextProcessor
     {
         pointer++;
         
-        var fragments = Pools.FragmentPools.Get();
+        var fragments = Pools.FragmentPool.Get();
         var start = 0;
         var attributeBuilder = ReadAttributes(text, ref pointer);
         
@@ -61,7 +61,7 @@ public static class TextProcessor
         }
         finally
         {
-            Pools.FragmentPools.Return(fragments);
+            Pools.FragmentPool.Return(fragments);
         }
 
         TextFragment ExtractFragment(in ReadOnlySpan<char> text, int pointer)

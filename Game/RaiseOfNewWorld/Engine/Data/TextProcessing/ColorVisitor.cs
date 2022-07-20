@@ -1,4 +1,6 @@
 ﻿using RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.PrimitiveVisitor;
 using Terminal.Gui;
 using Attribute = Terminal.Gui.Attribute;
 
@@ -13,7 +15,7 @@ public class ColorVisitor : AttributeValueVisitor<ColorScheme>
             _ => throw new InvalidOperationException("Attribute Value for Color Should be color")
         };
 
-    private ColorScheme CreateColorScheme(CallAttributeValue attributeValue)
+    private static ColorScheme CreateColorScheme(CallAttributeValue attributeValue)
     {
         var scheme = new ColorScheme();
         string? paramName = null;
@@ -23,10 +25,7 @@ public class ColorVisitor : AttributeValueVisitor<ColorScheme>
         foreach (var node in attributeValue.Parameters)
         {
             CheckIsReady();
-            if (node is not TextAttributeValue paramAttribute)
-                throw new InvalidOperationException("Only Textparameters are Supportet for ColorScheme Method");
-
-            var value = paramAttribute.Value;
+            var value = StringVisitor.Instance.ToString(node);
 
             if (string.IsNullOrEmpty(paramName))
                 paramName = value;

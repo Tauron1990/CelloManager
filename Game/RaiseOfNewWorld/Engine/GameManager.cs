@@ -33,7 +33,7 @@ public sealed class GameManager
 
     public IEntityDatabase Database => _coreApp!.EntityDatabase;
     
-    public ContentManager ContentManager { get; } = new FileContentManager();
+    public static ContentManager ContentManager { get; } = new FileContentManager();
     
     public GameManager(IScreenManager screenManager)
     {

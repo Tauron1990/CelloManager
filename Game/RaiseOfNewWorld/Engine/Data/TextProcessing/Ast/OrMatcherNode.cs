@@ -2,7 +2,7 @@
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 
-public sealed class AndMatcherNode : TemplateMatcherNode
+public sealed class OrMatcherNode : TemplateMatcherNode
 {
     public TemplateMatcherNode Left { get; set; } = Empty;
 
@@ -10,17 +10,17 @@ public sealed class AndMatcherNode : TemplateMatcherNode
 
     public override void Validate()
     {
-        if (Left == Empty)
-            ThrowValidationError("No Left Matcher");
+        if(Left == Empty)
+            ThrowValidationError("No Left Operant");
         if(Right == Empty)
-            ThrowValidationError("No Right Matcher");
+            ThrowValidationError("No Right Operant");
         
         Left.Validate();
         Right.Validate();
     }
 
     protected override string Format()
-        => $"{Left} and {Right}";
+        => $"{Left} or {Right}";
 
-    public override TResult Visit<TResult>(TemplateMatcherVisitor<TResult> visitor) => visitor.VisitAndMatcher(this);
+    public override TResult Visit<TResult>(TemplateMatcherVisitor<TResult> visitor) => visitor.VisitOrMatcher(this);
 }

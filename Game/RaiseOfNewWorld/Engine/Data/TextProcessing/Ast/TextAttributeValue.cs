@@ -1,11 +1,19 @@
-﻿namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
+﻿using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
+
+namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 
 public sealed class TextAttributeValue : AttributeValueNode
 {
     public string Value { get; set; } = string.Empty;
 
     public bool IsReference { get; set; }
-    
+
+    public override void Validate()
+    {
+        if(IsReference && string.IsNullOrWhiteSpace(Value))
+            ThrowValidationError("For Refernce an Path is Requiered");
+    }
+
     protected override string Format()
         => IsReference ? $"@{Value}" : Value;
 

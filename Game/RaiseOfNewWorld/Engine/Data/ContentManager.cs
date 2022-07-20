@@ -19,7 +19,7 @@ public abstract class ContentManager
     }
 
     public static readonly ContentManager Empty = new EmptyManager();
-    
+
     public abstract DateTime GetDateTime(string name, [CallerFilePath] string? fileName = null);
 
     public abstract int GetInt(string name, [CallerFilePath] string? fileName = null);

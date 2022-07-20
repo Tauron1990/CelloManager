@@ -84,7 +84,7 @@ public sealed class GameScreen : ScreenBase
 
             var mainCollection = database.GetCollection();
 
-            mainCollection.CreateEntity(new TimeBlueprint(gameManager.ContentManager));
+            mainCollection.CreateEntity(new TimeBlueprint(GameManager.ContentManager));
             mainCollection.CreateEntity(new PlayerBlueprint());
             mainCollection.CreateEntity(new GameInfoBlueprint());
             

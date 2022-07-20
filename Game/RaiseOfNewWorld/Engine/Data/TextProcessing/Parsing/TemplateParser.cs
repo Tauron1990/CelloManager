@@ -59,7 +59,7 @@ public sealed class TemplateParser
         return token.Text switch
         {
             "and" => new AndMatcherNode { Left = leftNode, Right = ParseMatcher()},
-            "or" => new AndMatcherNode { Left = leftNode, Right = ParseMatcher()},
+            "or" => new OrMatcherNode { Left = leftNode, Right = ParseMatcher()},
             _ => leftNode
         };
     }
@@ -89,8 +89,7 @@ public sealed class TemplateParser
 
         return token.Text switch
         {
-            "simple" => new NameMatchNode { Name = token2.Text },
-            "exp" => new NameMatchNode { Name = token2.Text, SimpleExpression = true },
+            "name" => new NameMatchNode { Name = token2.Text },
             "regx" => new RegexMatcherNode { Regex = token2.Text },
             _ => throw new InvalidOperationException($"Matcher Type Unkowen: {token}")
         };

@@ -8,6 +8,11 @@ public sealed class TextDataNode : FragmentContainerNode
     public ImmutableList<TemplateReferenceNode> Templates { get; set; } = ImmutableList<TemplateReferenceNode>.Empty;
 
 
+    public override void Validate()
+    {
+        Templates.ForEach(t => t.Validate());
+    }
+
     protected override string Format()
     {
         var builder = new StringBuilder();

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
-using Terminal.Gui;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 
@@ -9,6 +9,14 @@ public sealed class CallAttributeValue : AttributeValueNode
     public string MethodName { get; set; } = string.Empty;
     
     public ImmutableList<AttributeValueNode> Parameters { get; set; } = ImmutableList<AttributeValueNode>.Empty;
+    public override void Validate()
+    {
+        if(string.IsNullOrWhiteSpace(MethodName))
+            ThrowValidationError("No Method Name Provided");
+        
+        Parameters.ForEach(p => p.Validate());
+    }
+
     protected override string Format()
     {
         return new StringBuilder()

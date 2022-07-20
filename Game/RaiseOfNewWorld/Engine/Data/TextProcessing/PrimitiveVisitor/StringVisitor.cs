@@ -1,18 +1,29 @@
 ﻿using System.Text;
 using RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.PrimitiveVisitor;
 
 public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
 {
-    private readonly ContentManager _manager;
+    public static readonly StringVisitor Instance = new();
 
-    public StringVisitor(ContentManager manager) 
-        => _manager = manager;
-
+    public string ToString(AttributeValueNode node)
+    {
+        var builder = Accept(node);
+        try
+        {
+            return builder.ToString();
+        }
+        finally
+        {
+            Pools.StringBuildersPool.Return(builder);
+        }
+    }
+    
     public override StringBuilder VisitCall(CallAttributeValue callAttributeValue)
     {
-        var builder = Pools.StringBuilders.Get();
+        var builder = Pools.StringBuildersPool.Get();
 
         foreach (var subBuilder in callAttributeValue.Parameters.Select(Accept))
         {
@@ -22,7 +33,7 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
             }
             finally
             {
-                Pools.StringBuilders.Return(subBuilder);
+                Pools.StringBuildersPool.Return(subBuilder);
             }
         }
 
@@ -35,7 +46,7 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
         var rightBuilder = Accept(expressionAttributeValue.Right);
         try
         {
-            var target = Pools.StringBuilders.Get();
+            var target = Pools.StringBuildersPool.Get();
 
             return expressionAttributeValue.OperatorType switch
             {
@@ -45,8 +56,8 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
         }
         finally
         {
-            Pools.StringBuilders.Return(rightBuilder);
-            Pools.StringBuilders.Return(leftBuilder);
+            Pools.StringBuildersPool.Return(rightBuilder);
+            Pools.StringBuildersPool.Return(leftBuilder);
         }
 
         StringBuilder Subtract(StringBuilder target, StringBuilder input, StringBuilder subtract)
@@ -79,5 +90,5 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
     }
 
     public override StringBuilder VisitText(TextAttributeValue textAttributeValue) 
-        => Pools.StringBuilders.Get().Append(_manager.GetString(textAttributeValue));
+        => Pools.StringBuildersPool.Get().Append(ResolveTextAttribute(textAttributeValue));
 }

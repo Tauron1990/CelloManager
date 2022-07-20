@@ -1,4 +1,6 @@
-﻿namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
+﻿using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
+
+namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 
 public abstract class AttributeValueNode : AstNode
 {
@@ -6,6 +8,8 @@ public abstract class AttributeValueNode : AstNode
 
     protected sealed class EmptyNode : AttributeValueNode
     {
+        public override void Validate() { }
+
         protected override string Format()
             => string.Empty;
 

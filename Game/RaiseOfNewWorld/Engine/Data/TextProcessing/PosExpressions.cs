@@ -1,89 +1,51 @@
-﻿using Terminal.Gui;
+﻿using System.Collections.Immutable;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
+using RaiseOfNewWorld.Engine.Data.TextProcessing.PrimitiveVisitor;
+using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
-public sealed class PosAddExpressions : AddExpression<Pos>
+public sealed class PosVisitor : AttributeValueVisitor<Pos>
 {
-    public PosAddExpressions() : base((_, r, l) => r + l)
-    {
-    }
-}
+    private readonly ImmutableDictionary<string, View> _views;
 
-public sealed class PosSubstractExpression : SubstractExpression<Pos>
-{
-    public PosSubstractExpression() : base((_, r, l) => r - l)
-    {
-    }
-}
+    public PosVisitor(ImmutableDictionary<string, View> views) => _views = views;
 
-public sealed class PosFabricatorExpression : FabricatorExpression<Pos>
-{
-    private class PosParser : ExpressionParser
+    private View Lookup(string name)
     {
-        public PosParser(string input) : base(input)
+        if (_views.TryGetValue(name, out var view))
+            return view;
+
+        throw new InvalidOperationException("No View Found");
+    }
+
+    public override Pos VisitCall(CallAttributeValue callAttributeValue)
+    {
+        return callAttributeValue.MethodName switch
         {
-        }
-
-        protected override SubstractExpression<Pos> CreateSubstract(ExpressionNode<Pos> first, StringTokenizer input)
-            => new PosSubstractExpression { Right = first, Left = Create(input) };
-
-        protected override AddExpression<Pos> CreateAdd(ExpressionNode<Pos> first, StringTokenizer input)
-            => new PosAddExpressions { Right = first, Left = Create(input) };
-
-        protected override ExpressionNode<Pos> CreateFabricator(ParameterParser token) =>
-            token.MethodName switch
-            {
-                "anchorend" => AnchorEnd(token.ResolveParameter(0, int.Parse, 0)),
-                "y" => Y(token.ResolveParameter(0)),
-                "x" => X(token.ResolveParameter(0)),
-                "top" => Top(token.ResolveParameter(0)),
-                "right" => Right(token.ResolveParameter(0)),
-                "percent" => Percent(token.ResolveParameter(0, float.Parse)),
-                "left" => Left(token.ResolveParameter(0)),
-                "center" => Center(),
-                "bottom" => Bottom(token.ResolveParameter(0)),
-                "at" => At(token.ResolveParameter(0, int.Parse)),
-                _ => At(token.ResolveParameter(-1, int.Parse))
-            };
+            "anchorend" => Pos.AnchorEnd(callAttributeValue.GetIntParameter(0)),
+            "y" => Pos.Y(Lookup(callAttributeValue.GetStringParameter(0))),
+            "x" => Pos.X(Lookup(callAttributeValue.GetStringParameter(0))),
+            "top" => Pos.Top(Lookup(callAttributeValue.GetStringParameter(0))),
+            "right" => Pos.Right(Lookup(callAttributeValue.GetStringParameter(0))),
+            "percent" => Pos.Percent(callAttributeValue.GetFloatParameter(0)),
+            "left" => Pos.Left(Lookup(callAttributeValue.GetStringParameter(0))),
+            "center" => Pos.Center(),
+            "bottom" => Pos.Bottom(Lookup(callAttributeValue.GetStringParameter(0))),
+            "at" => Pos.At(callAttributeValue.GetIntParameter(0)),
+            _ => Pos.At(callAttributeValue.GetIntParameter(-1))
+        };
     }
 
-    private PosFabricatorExpression(Func<ViewContext, Pos> creationFunc) : base(creationFunc)
-    {
-    }
+    public override Pos VisitExpression(ExpressionAttributeValue expressionAttributeValue)
+        => expressionAttributeValue.OperatorType switch
+        {
+            OperatorType.Add => Accept(expressionAttributeValue.Left) + Accept(expressionAttributeValue.Right),
+            OperatorType.Subtract => Accept(expressionAttributeValue.Left) - Accept(expressionAttributeValue.Left),
+            _ => throw new InvalidOperationException("No Operator for pos provided")
+        };
 
-    public static ExpressionNode<Pos> Parse(string input)
-    {
-        var parser = new PosParser(input);
-        return parser.Create();
-    }
-
-    private static PosFabricatorExpression AnchorEnd(int margin)
-        => new(_ => Pos.AnchorEnd(margin));
-    
-    private static PosFabricatorExpression Y(string name)
-        => new(c => Pos.Y(c.GetView(name)));
-    
-    private static PosFabricatorExpression X(string name)
-        => new(c => Pos.X(c.GetView(name)));
-    
-    private static PosFabricatorExpression Top(string name)
-        => new(c => Pos.Top(c.GetView(name)));
-    
-    private static PosFabricatorExpression Right(string name)
-        => new(c => Pos.Right(c.GetView(name)));
-    
-    private static PosFabricatorExpression Percent(float input)
-        => new(_ => Pos.Percent(input));
-    
-    private static PosFabricatorExpression At(int input) 
-        => new(_ => Pos.At(input));
-
-    private static PosFabricatorExpression Bottom(string viewName)
-        => new(c => Pos.Bottom(c.GetView(viewName)));
-
-    private static PosFabricatorExpression Center()
-        => new(_ => Pos.Center());
-
-    private static PosFabricatorExpression Left(string viewName)
-        => new(c => Pos.Left(c.GetView(viewName)));
+    public override Pos VisitText(TextAttributeValue textAttributeValue)
+        => int.Parse(textAttributeValue.Value);
 }

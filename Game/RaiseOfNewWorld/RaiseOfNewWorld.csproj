@@ -44,6 +44,8 @@
       <None Update="test.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <Compile Remove="Engine\Data\TextProcessing\ViewBuilderContstructorOld.cs" />
+      <None Include="Engine\Data\TextProcessing\ViewBuilderContstructorOld.cs" />
     </ItemGroup>
 
 </Project>
