@@ -9,8 +9,8 @@ namespace RaiseOfNewWorld.Game;
 
 public sealed class RoomBluePrint : IBlueprint
 {
-    private readonly string _id;
     private readonly int _dimension;
+    private readonly string _id;
     private readonly ImmutableArray<RoomLink> _links;
 
     public RoomBluePrint(string id, int dimension, ImmutableArray<RoomLink> links)
@@ -19,10 +19,13 @@ public sealed class RoomBluePrint : IBlueprint
         _dimension = dimension;
         _links = links;
     }
-    
+
     public void Apply(IEntity entity)
     {
-        entity.AddComponent(new RoomComponent(_dimension, _id));
+        entity.AddComponent(
+            new RoomComponent(
+                _dimension,
+                _id));
         entity.AddComponent(new RoomLinkData(_links));
     }
 }

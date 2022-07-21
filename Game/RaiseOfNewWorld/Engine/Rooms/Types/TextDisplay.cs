@@ -6,13 +6,14 @@ namespace RaiseOfNewWorld.Engine.Rooms.Types;
 
 public sealed class TextDisplay : RoomBase
 {
-    private readonly Func<IReadOnlyCollection<string>> _pagesFactory;
-    private readonly Action<GameManager> _onNext;
     private readonly string? _filePath;
+    private readonly Action<GameManager> _onNext;
+    private readonly Func<IReadOnlyCollection<string>> _pagesFactory;
 
     private int _index;
 
-    public TextDisplay(Func<IReadOnlyCollection<string>> pages, Action<GameManager> onNext, [CallerFilePath] string? filePath = null)
+    public TextDisplay(Func<IReadOnlyCollection<string>> pages, Action<GameManager> onNext,
+        [CallerFilePath] string? filePath = null)
     {
         _pagesFactory = pages;
         _onNext = onNext;
@@ -31,8 +32,11 @@ public sealed class TextDisplay : RoomBase
             Y = Pos.At(1)
         };
 
-        TextProcessor.FormatText(pages.ElementAt(0), GameManager.ContentManager, _filePath).Render(page);
-        
+        TextProcessor.FormatText(
+            pages.ElementAt(0),
+            GameManager.ContentManager,
+            _filePath).Render(page);
+
         {
             var button = new Button
             {
@@ -43,7 +47,9 @@ public sealed class TextDisplay : RoomBase
 
             button.Clicked += NextClicked;
 
-            view.Add(page, button);
+            view.Add(
+                page,
+                button);
 
             void NextClicked()
             {
@@ -51,7 +57,10 @@ public sealed class TextDisplay : RoomBase
                 if (_index == pages.Count)
                     _onNext(gameManager);
                 else
-                    TextProcessor.FormatText(pages.ElementAt(_index), GameManager.ContentManager, _filePath).Render(page);
+                    TextProcessor.FormatText(
+                        pages.ElementAt(_index),
+                        GameManager.ContentManager,
+                        _filePath).Render(page);
             }
         }
     }

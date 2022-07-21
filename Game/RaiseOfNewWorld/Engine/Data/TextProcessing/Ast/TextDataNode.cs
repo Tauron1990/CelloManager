@@ -16,12 +16,12 @@ public sealed class TextDataNode : FragmentContainerNode
     protected override string Format()
     {
         var builder = new StringBuilder();
-        foreach (var template in Templates) 
+        foreach (var template in Templates)
             builder.AppendLine(template.ToString());
 
         if (Templates.Count != 0)
             builder.AppendLine();
-        
+
         FormatFragments(builder);
 
         return builder.ToString();

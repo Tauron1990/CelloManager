@@ -8,11 +8,11 @@ public sealed class AttributeNode : AstNode
 
     public override void Validate()
     {
-        if(string.IsNullOrWhiteSpace(Name))
+        if (string.IsNullOrWhiteSpace(Name))
             ThrowValidationError("Name is null of whitespace");
-        if(Value == AttributeValueNode.Empty)
+        if (Value == AttributeValueNode.Empty)
             ThrowValidationError($"No Attribute Value: {Name} ");
-        
+
         Value.Validate();
     }
 

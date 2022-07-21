@@ -6,9 +6,16 @@ public abstract class AttributeValueNode : AstNode
 {
     public static readonly AttributeValueNode Empty = new EmptyNode();
 
+    public abstract TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor);
+
+    public virtual AttributeValueNode Merge(AttributeValueNode node)
+        => new ExpressionAttributeValue { Left = this, Right = node };
+
     protected sealed class EmptyNode : AttributeValueNode
     {
-        public override void Validate() { }
+        public override void Validate()
+        {
+        }
 
         protected override string Format()
             => string.Empty;
@@ -19,9 +26,4 @@ public abstract class AttributeValueNode : AstNode
         public override AttributeValueNode Merge(AttributeValueNode node)
             => node;
     }
-
-    public abstract TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor);
-
-    public virtual AttributeValueNode Merge(AttributeValueNode node)
-        => new ExpressionAttributeValue { Left = this, Right = node };
 }

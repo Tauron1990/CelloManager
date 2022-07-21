@@ -42,14 +42,16 @@ public sealed class TextFragmentNode : FragmentContainerNode
             builder.Append($":{Name}");
 
         builder.Append('(')
-            .AppendJoin(',', Attributes)
+            .AppendJoin(
+                ',',
+                Attributes)
             .AppendLine(")");
-        
+
         if (!string.IsNullOrWhiteSpace(Text))
             builder.AppendLine(Text);
-        
+
         FormatFragments(builder);
-        
+
         builder.Append('}');
 
         return builder.ToString();

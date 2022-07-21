@@ -10,11 +10,16 @@ public sealed class PosVisitor : AttributeValueVisitor<Pos>
 {
     private readonly ImmutableDictionary<string, View> _views;
 
-    public PosVisitor(ImmutableDictionary<string, View> views) => _views = views;
+    public PosVisitor(ImmutableDictionary<string, View> views)
+    {
+        _views = views;
+    }
 
     private View Lookup(string name)
     {
-        if (_views.TryGetValue(name, out var view))
+        if (_views.TryGetValue(
+                name,
+                out var view))
             return view;
 
         throw new InvalidOperationException("No View Found");

@@ -8,9 +8,9 @@ public sealed class NotMatcherNode : TemplateMatcherNode
 
     public override void Validate()
     {
-        if(MatcherNode == Empty)
+        if (MatcherNode == Empty)
             ThrowValidationError("No matcher Provided");
-        
+
         MatcherNode.Validate();
     }
 

@@ -26,26 +26,30 @@ namespace RaiseOfNewWorld.Engine;
 public sealed class GameManager
 {
     private CoreApp? _coreApp;
-    
-    public IScreenManager ScreenManager { get; }
 
-    public IEventSystem Events => _coreApp!.EventSystem;
-
-    public IEntityDatabase Database => _coreApp!.EntityDatabase;
-    
-    public static ContentManager ContentManager { get; } = new FileContentManager();
-    
     public GameManager(IScreenManager screenManager)
     {
         ScreenManager = screenManager;
         screenManager.Switch(nameof(MainScreen));
     }
 
+    public IScreenManager ScreenManager { get; }
+
+    public IEventSystem Events => _coreApp!.EventSystem;
+
+    public IEntityDatabase Database => _coreApp!.EntityDatabase;
+
+    public static ContentManager ContentManager { get; } = new FileContentManager();
+
     public async ValueTask ClearGame(Action? preStartApp)
     {
         ClearGame();
 
-        _coreApp = new CoreApp(ScreenManager, ContentManager, this, preStartApp);
+        _coreApp = new CoreApp(
+            ScreenManager,
+            ContentManager,
+            this,
+            preStartApp);
         await Task.Run(() => _coreApp.StartApplication());
     }
 
@@ -58,17 +62,22 @@ public sealed class GameManager
 
     public void ShutdownApp()
     {
-        if(_coreApp is not null)
-            EntityManager.Save(_coreApp.EntityDatabase, "ExitSave");
+        if (_coreApp is not null)
+            EntityManager.Save(
+                _coreApp.EntityDatabase,
+                "ExitSave");
         ScreenManager.Shutdown();
     }
-    
+
+    public void StopApplication() => _coreApp?.StopApplication();
+
     private sealed class CoreApp : EcsRxApplication
     {
         private readonly ContentManager _contentManager;
         private Action? _prestart;
 
-        public CoreApp(IScreenManager screenManager, ContentManager contentManager, GameManager gameManager, Action? prestart)
+        public CoreApp(IScreenManager screenManager, ContentManager contentManager, GameManager gameManager,
+            Action? prestart)
         {
             _contentManager = contentManager;
             _prestart = prestart;
@@ -77,6 +86,8 @@ public sealed class GameManager
             Container.Bind<ContentManager>(cm => cm.ToInstance(contentManager));
             Container.Bind<IScreenManager>(sm => sm.ToInstance(screenManager));
         }
+
+        public override IDependencyContainer Container { get; } = new NinjectDependencyContainer();
 
         public override void StopApplication()
         {
@@ -95,13 +106,10 @@ public sealed class GameManager
         {
             DimensionMapBuilder.CreateWorld(
                 _contentManager,
-                b =>
-                {
-                    SpecialBuilder.InitSpecial(b);
-                });
-            
+                b => { SpecialBuilder.InitSpecial(b); });
+
             base.LoadModules();
-        
+
             Container.Unbind<IMessageBroker>();
             Container.Bind<IMessageBroker, CastingMessageBroker>();
         }
@@ -143,7 +151,7 @@ public sealed class GameManager
                     .Where(e => e.HasComponent<PlayerComponent>())
                     .Select(e => e.GetComponent<MoveableComponent>())
                     .First();
-                
+
                 EventSystem.Publish(new SwitchDimesionEvent(gameInfo.LastDimension.Value));
                 EventSystem.Publish(MoveToRoom.MovePlayerTo(player.Position.Value));
             }
@@ -151,11 +159,7 @@ public sealed class GameManager
 
         private void BindSystem<T>() where T : ISystem
         {
-            Container.Bind<ISystem, T>((Action<BindingBuilder>) (x => x.WithName(typeof (T).Name)));
+            Container.Bind<ISystem, T>((Action<BindingBuilder>)(x => x.WithName(typeof(T).Name)));
         }
-
-        public override IDependencyContainer Container { get; } = new NinjectDependencyContainer();
     }
-
-    public void StopApplication() => _coreApp?.StopApplication();
 }

@@ -7,8 +7,11 @@ public sealed class TextParser
 {
     private readonly string _input;
     private ContentManager _contentManager = ContentManager.Empty;
-    
-    public TextParser(string input) => _input = input;
+
+    public TextParser(string input)
+    {
+        _input = input;
+    }
 
     public TextDataNode Parse(ContentManager contentManager)
     {
@@ -30,8 +33,10 @@ public sealed class TextParser
             textToken = tokenizer.GetAndIncement();
             if (textToken.TokenType == TokenType.Text)
                 yield return new TextFragmentNode { Text = textToken.Text };
-            
-            ValidateToken(textToken, TokenType.OpenFragment);
+
+            ValidateToken(
+                textToken,
+                TokenType.OpenFragment);
             textToken = tokenizer.Get();
 
             var fragment = new TextFragmentNode();
@@ -39,7 +44,7 @@ public sealed class TextParser
             if (textToken.TokenType == TokenType.Text)
             {
                 tokenizer.Incremnt();
-                
+
                 fragment.Type = textToken.Text;
 
                 textToken = tokenizer.Get();
@@ -47,12 +52,14 @@ public sealed class TextParser
                 {
                     tokenizer.Incremnt();
                     textToken = tokenizer.GetAndIncement();
-                    ValidateToken(textToken, TokenType.Text);
+                    ValidateToken(
+                        textToken,
+                        TokenType.Text);
 
                     fragment.Name = textToken.Text;
                 }
             }
-            
+
             fragment.Attributes = ReadAttributes(tokenizer).ToImmutableList();
 
             textToken = tokenizer.Get();
@@ -68,38 +75,44 @@ public sealed class TextParser
                 fragment.FragmentNodes = ReadFragments(tokenizer).ToImmutableList();
                 textToken = tokenizer.Get();
             }
-            
-            ValidateToken(textToken, TokenType.CloseFragment);
+
+            ValidateToken(
+                textToken,
+                TokenType.CloseFragment);
             tokenizer.Incremnt();
-            
+
             yield return fragment;
 
             textToken = tokenizer.Get();
             if (textToken.TokenType != TokenType.CloseFragment) continue;
-            
-            yield break;
 
+            yield break;
         } while (!textToken.IsEof);
     }
 
     public static IEnumerable<AttributeNode> ReadAttributes(Tokenizer tokenizer)
     {
         var textToken = tokenizer.GetAndIncement();
-        ValidateToken(textToken, TokenType.OpenAttribute);
-        
+        ValidateToken(
+            textToken,
+            TokenType.OpenAttribute);
+
         do
         {
-
             textToken = tokenizer.GetAndIncement();
-            if(textToken.TokenType == TokenType.CloseAttribute) yield break;
-            
+            if (textToken.TokenType == TokenType.CloseAttribute) yield break;
+
             var node = new AttributeNode();
-            
-            ValidateToken(textToken, TokenType.Text);
+
+            ValidateToken(
+                textToken,
+                TokenType.Text);
             node.Name = textToken.Text;
 
             textToken = tokenizer.GetAndIncement();
-            ValidateToken(textToken, TokenType.AttributeValueSeperator);
+            ValidateToken(
+                textToken,
+                TokenType.AttributeValueSeperator);
 
             node.Value = ReadAttributeValue(tokenizer);
 
@@ -107,21 +120,25 @@ public sealed class TextParser
             if (textToken.TokenType is TokenType.AttributeSeperator or TokenType.CloseAttribute)
             {
                 yield return node;
-                if(textToken.TokenType == TokenType.CloseAttribute)
+                if (textToken.TokenType == TokenType.CloseAttribute)
                     yield break;
             }
             else
+            {
                 ThrowInvalidToken(textToken);
+            }
         } while (!textToken.IsEof);
     }
 
     private static AttributeValueNode ReadAttributeValue(Tokenizer tokenizer)
     {
         var token = tokenizer.GetAndIncement();
-        ValidateToken(token, TokenType.Text);
+        ValidateToken(
+            token,
+            TokenType.Text);
 
         var token2 = tokenizer.Get();
-        if (token2.TokenType is TokenType.AttributeSeperator or TokenType.CloseAttribute) 
+        if (token2.TokenType is TokenType.AttributeSeperator or TokenType.CloseAttribute)
             return CreateAttributeTextValue(token.Text);
 
         AttributeValueNode left;
@@ -173,9 +190,11 @@ public sealed class TextParser
             yield return ReadAttributeValue(tokenizer);
 
             var token = tokenizer.GetAndIncement();
-            if(token.TokenType == TokenType.CloseAttribute) yield break;
+            if (token.TokenType == TokenType.CloseAttribute) yield break;
 
-            ValidateToken(token, TokenType.AttributeSeperator);
+            ValidateToken(
+                token,
+                TokenType.AttributeSeperator);
         } while (true);
     }
 
@@ -195,29 +214,35 @@ public sealed class TextParser
     {
         tokenizer.Incremnt();
         var textRef = tokenizer.GetAndIncement();
-        ValidateToken(textRef, TokenType.Text);
+        ValidateToken(
+            textRef,
+            TokenType.Text);
 
-        return TemplateParser.Parse(_contentManager, textRef.Text);
+        return TemplateParser.Parse(
+            _contentManager,
+            textRef.Text);
     }
 
     private static void ValidateToken(TextToken textToken, TokenType expected)
     {
-        if(textToken.TokenType == expected)
+        if (textToken.TokenType == expected)
             return;
 
-        ThrowInvalidToken(textToken, expected);
+        ThrowInvalidToken(
+            textToken,
+            expected);
     }
 
     private static void ThrowInvalidToken(TextToken textToken, TokenType expected)
     {
         throw new InvalidOperationException($"Invalid Token {textToken} :Expeced:{expected}");
     }
-    
+
     private static void ThrowInvalidToken(TextToken textToken)
     {
         throw new InvalidOperationException($"Invalid Token {textToken}");
     }
-    
-    private static InvalidOperationException CreateInvalidToken(TextToken textToken) 
+
+    private static InvalidOperationException CreateInvalidToken(TextToken textToken)
         => new($"Invalid Token {textToken}");
 }

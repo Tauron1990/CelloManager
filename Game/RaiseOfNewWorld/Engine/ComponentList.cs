@@ -8,10 +8,16 @@ using EcsRx.Plugins.Computeds.Collections;
 
 namespace RaiseOfNewWorld.Engine;
 
-public sealed class ComponentList<TComponent> : ComputedCollectionFromGroup<TComponent> where TComponent : class, IComponent
+public sealed class ComponentList<TComponent> : ComputedCollectionFromGroup<TComponent>
+    where TComponent : class, IComponent
 {
     public ComponentList(IObservableGroupManager groupManager, params int[] ids)
-        : base(groupManager.GetObservableGroup(new Group(typeof(TComponent)), ids)) { }
+        : base(
+            groupManager.GetObservableGroup(
+                new Group(typeof(TComponent)),
+                ids))
+    {
+    }
 
     public override IObservable<bool> RefreshWhen()
         => InternalObservableGroup.OnEntityAdded.Merge(InternalObservableGroup.OnEntityRemoved).Select(_ => true);

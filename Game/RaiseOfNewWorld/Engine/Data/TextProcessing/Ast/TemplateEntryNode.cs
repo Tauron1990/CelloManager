@@ -11,17 +11,19 @@ public sealed class TemplateEntryNode : TemplateNode
 
     public override void Validate()
     {
-        if(Match == TemplateMatcherNode.Empty)
+        if (Match == TemplateMatcherNode.Empty)
             ThrowValidationError("No matcher for Emplate");
         Attributes.ForEach(a => a.Validate());
     }
 
     protected override string Format()
-    => new StringBuilder()
+        => new StringBuilder()
             .Append('{')
             .Append(Match)
             .Append('(')
-            .AppendJoin(',', Attributes)
+            .AppendJoin(
+                ',',
+                Attributes)
             .Append(')')
             .Append('}')
             .ToString();

@@ -11,7 +11,7 @@ public enum LinkDirection
     West,
     East,
     Up,
-    Down,
+    Down
 }
 
 public record struct RoomLink(string Target, string DisplayName, LinkDirection LinkDirection);

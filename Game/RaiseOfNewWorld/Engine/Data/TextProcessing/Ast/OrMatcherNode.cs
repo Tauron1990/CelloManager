@@ -10,11 +10,11 @@ public sealed class OrMatcherNode : TemplateMatcherNode
 
     public override void Validate()
     {
-        if(Left == Empty)
+        if (Left == Empty)
             ThrowValidationError("No Left Operant");
-        if(Right == Empty)
+        if (Right == Empty)
             ThrowValidationError("No Right Operant");
-        
+
         Left.Validate();
         Right.Validate();
     }

@@ -10,7 +10,7 @@ public sealed class TextAttributeValue : AttributeValueNode
 
     public override void Validate()
     {
-        if(IsReference && string.IsNullOrWhiteSpace(Value))
+        if (IsReference && string.IsNullOrWhiteSpace(Value))
             ThrowValidationError("For Refernce an Path is Requiered");
     }
 

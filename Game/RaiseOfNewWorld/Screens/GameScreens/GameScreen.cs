@@ -13,17 +13,19 @@ public sealed class GameScreen : ScreenBase
     public override void Setup(Window container, GameManager gameManager, object? parameter)
     {
         container.Title = "Spiel";
-        
+
         var menu = container.CreateMenuBar(CreateMainMenu);
-        
+
         var contentView = new View
         {
             Height = Dim.Fill(),
             Width = Dim.Fill()
         };
-        
-        container.Add(menu, contentView);
-        
+
+        container.Add(
+            menu,
+            contentView);
+
         RoomRenderer.View = contentView;
 
         IEnumerable<UiExtensions.MenuBarItemBuilder> CreateMainMenu(UiExtensions.MenuItemFactory factory)
@@ -31,21 +33,30 @@ public sealed class GameScreen : ScreenBase
             yield return factory.NewMenuBarItem()
                 .WithLabel("_HauptMenü")
                 .WithChiledMenu(CreateGameSubMenu);
-            
+
             IEnumerable<UiExtensions.MenuItemBuilder> CreateGameSubMenu()
             {
                 yield return factory.NewMenuItem()
                     .WithLabel("Hauptmenü")
-                    .WithClick(o => o
-                        .Select(_ => MessageBox.Query(50, 10, "Hauptmenü", "Ohne Speichern beenden?", "Ja", "Nein"))
-                        .Where(r => r == 0)
-                        // ReSharper disable once AsyncVoidLambda
-                        .Subscribe(async _ =>
-                    {
-                        gameManager.ScreenManager.Switch(nameof(MainScreen));
-                        await gameManager.ClearGame(null);
-                    }));
-                
+                    .WithClick(
+                        o => o
+                            .Select(
+                                _ => MessageBox.Query(
+                                    50,
+                                    10,
+                                    "Hauptmenü",
+                                    "Ohne Speichern beenden?",
+                                    "Ja",
+                                    "Nein"))
+                            .Where(r => r == 0)
+                            // ReSharper disable once AsyncVoidLambda
+                            .Subscribe(
+                                async _ =>
+                                {
+                                    gameManager.ScreenManager.Switch(nameof(MainScreen));
+                                    await gameManager.ClearGame(null);
+                                }));
+
                 yield return factory.NewMenuItem()
                     .WithLabel("Beenden")
                     .WithClick(o => o.Subscribe(_ => gameManager.ShutdownApp()));
@@ -60,37 +71,47 @@ public sealed class GameScreen : ScreenBase
         {
             try
             {
-                await gameManager.ClearGame(() =>
-                {
-                    EntityManager.Load(gameManager.Database, gameName);
-                    
-                    gameManager.ScreenManager.Switch(nameof(GameScreen), false);
-                });
+                await gameManager.ClearGame(
+                    () =>
+                    {
+                        EntityManager.Load(
+                            gameManager.Database,
+                            gameName);
+
+                        gameManager.ScreenManager.Switch(
+                            nameof(GameScreen),
+                            false);
+                    });
             }
             catch (Exception e)
             {
-                MessageBox.Query("Fehler beim Laden des Spiels", e.ToString(), "Ok");
+                MessageBox.Query(
+                    "Fehler beim Laden des Spiels",
+                    e.ToString(),
+                    "Ok");
                 gameManager.ScreenManager.Switch(nameof(MainScreen));
             }
         };
-    
+
     public static async ValueTask StartNewGame(GameManager gameManager, IProgress<int> process)
     {
         await Task.Delay(TimeSpan.FromSeconds(2));
-        await gameManager.ClearGame(() =>
-        {
+        await gameManager.ClearGame(
+            () =>
+            {
+                var database = gameManager.Database;
 
-            var database = gameManager.Database;
+                var mainCollection = database.GetCollection();
 
-            var mainCollection = database.GetCollection();
+                mainCollection.CreateEntity(new TimeBlueprint(GameManager.ContentManager));
+                mainCollection.CreateEntity(new PlayerBlueprint());
+                mainCollection.CreateEntity(new GameInfoBlueprint());
 
-            mainCollection.CreateEntity(new TimeBlueprint(GameManager.ContentManager));
-            mainCollection.CreateEntity(new PlayerBlueprint());
-            mainCollection.CreateEntity(new GameInfoBlueprint());
-            
-            DimensionMapBuilder.InitMap(database);
+                DimensionMapBuilder.InitMap(database);
 
-            gameManager.ScreenManager.Switch(nameof(GameScreen), true);
-        });
+                gameManager.ScreenManager.Switch(
+                    nameof(GameScreen),
+                    true);
+            });
     }
 }

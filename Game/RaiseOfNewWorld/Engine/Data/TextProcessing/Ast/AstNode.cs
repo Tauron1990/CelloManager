@@ -8,7 +8,7 @@ public abstract class AstNode
 
     public override string ToString()
         => Format();
-    
-        protected void ThrowValidationError(string message)
-            => throw new InvalidOperationException($"{GetType()} -- {message}");
+
+    protected void ThrowValidationError(string message)
+        => throw new InvalidOperationException($"{GetType()} -- {message}");
 }

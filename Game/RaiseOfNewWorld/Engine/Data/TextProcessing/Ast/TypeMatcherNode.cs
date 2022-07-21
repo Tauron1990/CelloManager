@@ -9,10 +9,12 @@ public sealed class TypeMatcherNode : TemplateMatcherNode
 
     public override void Validate()
     {
-        if(string.IsNullOrWhiteSpace(TypeName))
+        if (string.IsNullOrWhiteSpace(TypeName))
             ThrowValidationError("No Type Name");
 
-        if (Type.GetType(TypeName, true)?.IsAbstract == null)
+        if (Type.GetType(
+                TypeName,
+                true)?.IsAbstract == null)
             ThrowValidationError("Abstract Class");
     }
 

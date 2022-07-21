@@ -11,29 +11,40 @@ public static class SpecialBuilder
 {
     public static void InitSpecial(DimensionBuilder builder)
     {
-        builder.WithDimension(1, b =>
-        {
-            b.WithRoom("start", r =>
+        builder.WithDimension(
+            1,
+            b =>
             {
-                r.WithFactory((_, manager) => new TextDisplay(TextProcessor.Pages(manager.GetStringFunc("PrologText")),
-                    static m =>
+                b.WithRoom(
+                    "start",
+                    r =>
                     {
-                        var gameInfo = m.Database.GetCollection()
-                            .Where(e => e.HasComponent(typeof(GameInfo)))
-                            .Select(e => e.GetComponent<GameInfo>())
-                            .First();
-                        gameInfo.IsNewGame.Value = false;
+                        r.WithFactory(
+                            (_, manager) => new TextDisplay(
+                                TextProcessor.Pages(manager.GetStringFunc("PrologText")),
+                                static m =>
+                                {
+                                    var gameInfo = m.Database.GetCollection()
+                                        .Where(e => e.HasComponent(typeof(GameInfo)))
+                                        .Select(e => e.GetComponent<GameInfo>())
+                                        .First();
+                                    gameInfo.IsNewGame.Value = false;
 
-                        m.Events.Publish(MoveToRoom.MovePlayerTo("end"));
-                    }));
-            });
+                                    m.Events.Publish(MoveToRoom.MovePlayerTo("end"));
+                                }));
+                    });
 
-            b.WithRoom("end", rb =>
-            {
-                rb.WithFactory((_, manager) => new TextDisplay(
-                    TextProcessor.Pages(manager.GetStringFunc("EpilogText")),
-                    static m => m.ScreenManager.Switch(nameof(MainScreen), new Action(m.ClearGame))));
+                b.WithRoom(
+                    "end",
+                    rb =>
+                    {
+                        rb.WithFactory(
+                            (_, manager) => new TextDisplay(
+                                TextProcessor.Pages(manager.GetStringFunc("EpilogText")),
+                                static m => m.ScreenManager.Switch(
+                                    nameof(MainScreen),
+                                    new Action(m.ClearGame))));
+                    });
             });
-        });
     }
 }

@@ -12,9 +12,9 @@ public sealed class AndMatcherNode : TemplateMatcherNode
     {
         if (Left == Empty)
             ThrowValidationError("No Left Matcher");
-        if(Right == Empty)
+        if (Right == Empty)
             ThrowValidationError("No Right Matcher");
-        
+
         Left.Validate();
         Right.Validate();
     }

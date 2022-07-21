@@ -8,6 +8,9 @@ public sealed class GameInfoBlueprint : IBlueprint
 {
     public void Apply(IEntity entity)
     {
-        entity.AddComponent(new GameInfo(RxProperty.New(true), RxProperty.New(-1)));
+        entity.AddComponent(
+            new GameInfo(
+                RxProperty.New(true),
+                RxProperty.New(-1)));
     }
 }

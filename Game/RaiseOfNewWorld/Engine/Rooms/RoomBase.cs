@@ -7,5 +7,7 @@ public abstract class RoomBase : IComponent
 {
     public abstract void Display(View view, GameManager gameManager);
 
-    public virtual void Close() { }
+    public virtual void Close()
+    {
+    }
 }

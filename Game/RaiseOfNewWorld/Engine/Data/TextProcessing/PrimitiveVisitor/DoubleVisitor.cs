@@ -10,22 +10,37 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing.PrimitiveVisitor;
 public sealed class DoubleVisitor : AttributeValueVisitor<double>
 {
     public static readonly DoubleVisitor Instance = new();
-    
-    private static ImmutableDictionary<string, Lazy<Func<double, double>>> _singleMethod = GetSimgleMethods();
+
+    private static readonly ImmutableDictionary<string, Lazy<Func<double, double>>> _singleMethod = GetSimgleMethods();
+
+    private static readonly ImmutableDictionary<string, Lazy<Func<double, double, double>>> _method = GetMethods();
 
     private static ImmutableDictionary<string, Lazy<Func<double, double>>> GetSimgleMethods()
         => typeof(Math).GetMethods()
-            .Where(m => m.ReturnType == typeof(double) && ValidateParameters(m, typeof(double), typeof(double)))
+            .Where(
+                m => m.ReturnType == typeof(double) && ValidateParameters(
+                    m,
+                    typeof(double),
+                    typeof(double)))
             .Select(m => (m.Name, Lazy: new Lazy<Func<double, double>>(GetDelegateFactory<Func<double, double>>(m))))
-            .ToImmutableDictionary(t => t.Name, t => t.Lazy);
+            .ToImmutableDictionary(
+                t => t.Name,
+                t => t.Lazy);
 
-    private static ImmutableDictionary<string, Lazy<Func<double, double, double>>> _method = GetMethods();
-
-    private static ImmutableDictionary<string,Lazy<Func<double,double,double>>> GetMethods()
+    private static ImmutableDictionary<string, Lazy<Func<double, double, double>>> GetMethods()
         => typeof(Math).GetMethods()
-            .Where(m => m.ReturnType == typeof(double) && ValidateParameters(m, typeof(double), typeof(double), typeof(double)))
-            .Select(m => (m.Name, Lazy: new Lazy<Func<double, double, double>>(GetDelegateFactory<Func<double, double, double>>(m))))
-            .ToImmutableDictionary(t => t.Name, t => t.Lazy);
+            .Where(
+                m => m.ReturnType == typeof(double) && ValidateParameters(
+                    m,
+                    typeof(double),
+                    typeof(double),
+                    typeof(double)))
+            .Select(
+                m => (m.Name,
+                    Lazy: new Lazy<Func<double, double, double>>(GetDelegateFactory<Func<double, double, double>>(m))))
+            .ToImmutableDictionary(
+                t => t.Name,
+                t => t.Lazy);
 
     private static bool ValidateParameters(MethodBase methodInfo, params Type[] parameterTypes)
     {
@@ -37,7 +52,10 @@ public sealed class DoubleVisitor : AttributeValueVisitor<double>
 
     private static Func<TDelegate> GetDelegateFactory<TDelegate>(MethodInfo methodInfo)
         where TDelegate : Delegate
-        => () => Expression.Lambda<TDelegate>(Expression.Call(null, methodInfo))
+        => () => Expression.Lambda<TDelegate>(
+                Expression.Call(
+                    null,
+                    methodInfo))
             .CompileFast();
 
     public override double VisitCall(CallAttributeValue callAttributeValue)

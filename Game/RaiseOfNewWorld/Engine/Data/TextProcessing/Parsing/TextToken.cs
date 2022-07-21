@@ -19,7 +19,10 @@ public enum TokenType
 
 public readonly struct TextToken
 {
-    public static readonly TextToken Eof = new(string.Empty, TokenType.Eof, -1);
+    public static readonly TextToken Eof = new(
+        string.Empty,
+        TokenType.Eof,
+        -1);
 
     public readonly string Text;
     public readonly TokenType TokenType;
@@ -40,7 +43,9 @@ public readonly struct TextToken
         try
         {
             var output = arr.AsSpan();
-            var count = text.Trim().ToLower(output, null);
+            var count = text.Trim().ToLower(
+                output,
+                null);
 
             return output[..count].ToString();
         }
@@ -49,18 +54,30 @@ public readonly struct TextToken
             ArrayPool<char>.Shared.Return(arr);
         }
     }
-    
+
     private static TextToken NewSingle(in ReadOnlySpan<char> text, TokenType type, int position)
-        => new(MakeString(text[..1]), type, position);
+        => new(
+            MakeString(text[..1]),
+            type,
+            position);
 
     private static TextToken NewText(in ReadOnlySpan<char> text, int index, int position)
-        => new(MakeString(text[..index]), TokenType.Text, position);
+        => new(
+            MakeString(text[..index]),
+            TokenType.Text,
+            position);
 
     public static TextToken GetToken(in ReadOnlySpan<char> text, int index, TokenType type, int position)
         => index == 0
-            ? NewSingle(text, type, position)
-            : NewText(text, index, position);
-    
+            ? NewSingle(
+                text,
+                type,
+                position)
+            : NewText(
+                text,
+                index,
+                position);
+
     public override string ToString()
         => $"{Text} -- {TokenType} -- Position:{Position}";
 }

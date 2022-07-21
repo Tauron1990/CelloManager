@@ -4,7 +4,7 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
 
 public abstract class AttributeValueVisitor<TReturn>
 {
-    public TReturn Accept(AttributeValueNode node) 
+    public TReturn Accept(AttributeValueNode node)
         => node.Visit(this);
 
     public abstract TReturn VisitCall(CallAttributeValue callAttributeValue);

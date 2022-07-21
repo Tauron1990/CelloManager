@@ -1,5 +1,4 @@
-﻿using System.Reactive.Disposables;
-using EcsRx.Collections;
+﻿using EcsRx.Collections;
 using EcsRx.Extensions;
 using EcsRx.Groups;
 using EcsRx.Groups.Observable;
@@ -17,14 +16,19 @@ public sealed class MovementManager : IReactToEventSystem<MoveToRoom>, IReactToE
     public MovementManager(IObservableGroupManager manager)
     {
         _manager = manager;
-        _observableGroup = manager.GetObservableGroup(GroupFilter, 0);
+        _observableGroup = manager.GetObservableGroup(
+            GroupFilter,
+            0);
     }
-    
-    public void Process(MoveToRoom eventData) 
+
+    public void Process(MoveToRoom eventData)
         => _observableGroup
             .Select(e => e.GetComponent<MoveableComponent>())
             .Where(mc => mc.Id == eventData.Id)
             .ForEachRun(e => e.Position.Value = eventData.RoomName);
 
-    public void Process(SwitchDimesionEvent eventData) => _observableGroup = _manager.GetObservableGroup(GroupFilter, 0, eventData.Dimesion);
+    public void Process(SwitchDimesionEvent eventData) => _observableGroup = _manager.GetObservableGroup(
+        GroupFilter,
+        0,
+        eventData.Dimesion);
 }

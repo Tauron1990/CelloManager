@@ -10,14 +10,14 @@ public sealed class ScreenManager : Toplevel, IScreenManager
 
     private readonly Dictionary<string, IScreen> _screens = new()
     {
-        {nameof(MainScreen), new MainScreen()},
-        {nameof(LoadingScreen), new LoadingScreen()},
-        {nameof(GameScreen), new GameScreen()},
-        {nameof(LoadGameScreen), new LoadGameScreen()}
+        { nameof(MainScreen), new MainScreen() },
+        { nameof(LoadingScreen), new LoadingScreen() },
+        { nameof(GameScreen), new GameScreen() },
+        { nameof(LoadGameScreen), new LoadGameScreen() }
     };
 
     private IScreen? _currentScreen;
-    
+
     public ScreenManager()
     {
         LayoutStyle = LayoutStyle.Computed;
@@ -29,27 +29,32 @@ public sealed class ScreenManager : Toplevel, IScreenManager
 
     public void Switch(string screen, object? parameter = null, Action? runSync = null)
     {
-        Application.MainLoop.Invoke(() =>
-        {
-            RemoveAll();
-            _currentScreen?.Teardown(_gameManager);
-            
-            var window = new Window();
-            _currentScreen = _screens[screen];
-            _currentScreen.Setup(window, _gameManager, parameter);
-            
-            Add(window);
+        Application.MainLoop.Invoke(
+            () =>
+            {
+                RemoveAll();
+                _currentScreen?.Teardown(_gameManager);
 
-            runSync?.Invoke();
-        });
+                var window = new Window();
+                _currentScreen = _screens[screen];
+                _currentScreen.Setup(
+                    window,
+                    _gameManager,
+                    parameter);
+
+                Add(window);
+
+                runSync?.Invoke();
+            });
     }
 
     public void Shutdown()
     {
-        Application.MainLoop.Invoke(() =>
-        {
-            _gameManager.StopApplication();
-            RequestStop();
-        });
+        Application.MainLoop.Invoke(
+            () =>
+            {
+                _gameManager.StopApplication();
+                RequestStop();
+            });
     }
 }

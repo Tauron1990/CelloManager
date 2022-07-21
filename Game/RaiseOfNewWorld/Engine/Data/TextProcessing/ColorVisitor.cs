@@ -21,7 +21,7 @@ public class ColorVisitor : AttributeValueVisitor<ColorScheme>
         string? paramName = null;
         Color? color1 = null;
         Color? color2 = null;
-        
+
         foreach (var node in attributeValue.Parameters)
         {
             CheckIsReady();
@@ -36,12 +36,14 @@ public class ColorVisitor : AttributeValueVisitor<ColorScheme>
         }
 
         CheckIsReady();
-        
+
         void CheckIsReady()
         {
             if (paramName is null || color1 is null || color2 is null) return;
-            
-            var colorAttr = Attribute.Make(color1.Value, color2.Value);
+
+            var colorAttr = Attribute.Make(
+                color1.Value,
+                color2.Value);
             switch (paramName)
             {
                 case "normal":
@@ -50,7 +52,7 @@ public class ColorVisitor : AttributeValueVisitor<ColorScheme>
                 case "focus":
                     scheme.Focus = colorAttr;
                     break;
-                case  "hotnormal":
+                case "hotnormal":
                     scheme.HotNormal = colorAttr;
                     break;
                 case "hotfocus":
@@ -60,7 +62,7 @@ public class ColorVisitor : AttributeValueVisitor<ColorScheme>
                     scheme.Disabled = colorAttr;
                     break;
             }
-            
+
             paramName = null;
             color1 = null;
             color2 = null;
@@ -68,7 +70,7 @@ public class ColorVisitor : AttributeValueVisitor<ColorScheme>
 
         return scheme;
     }
-    
+
     public override ColorScheme VisitExpression(ExpressionAttributeValue expressionAttributeValue)
     {
         if (expressionAttributeValue.OperatorType == OperatorType.Add)

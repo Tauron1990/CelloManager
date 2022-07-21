@@ -8,7 +8,7 @@ public class RegexMatcherNode : TemplateMatcherNode
 
     public override void Validate()
     {
-        if(string.IsNullOrWhiteSpace(Regex))
+        if (string.IsNullOrWhiteSpace(Regex))
             ThrowValidationError("No Regex Expression");
     }
 

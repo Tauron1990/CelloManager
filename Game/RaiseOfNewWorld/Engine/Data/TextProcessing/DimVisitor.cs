@@ -10,11 +10,16 @@ public sealed class DimVisitor : AttributeValueVisitor<Dim>
 {
     private readonly ImmutableDictionary<string, View> _views;
 
-    public DimVisitor(ImmutableDictionary<string, View> views) => _views = views;
+    public DimVisitor(ImmutableDictionary<string, View> views)
+    {
+        _views = views;
+    }
 
     private View Lookup(string name)
     {
-        if (_views.TryGetValue(name, out var view))
+        if (_views.TryGetValue(
+                name,
+                out var view))
             return view;
 
         throw new InvalidOperationException("No View Found");
@@ -24,7 +29,9 @@ public sealed class DimVisitor : AttributeValueVisitor<Dim>
         => callAttributeValue.MethodName switch
         {
             "width" => Dim.Width(Lookup(callAttributeValue.GetStringParameter(0))),
-            "percent" => Dim.Percent(callAttributeValue.GetIntParameter(0), callAttributeValue.GetBoolParameter(1)),
+            "percent" => Dim.Percent(
+                callAttributeValue.GetIntParameter(0),
+                callAttributeValue.GetBoolParameter(1)),
             "height" => Dim.Height(Lookup(callAttributeValue.GetStringParameter(0))),
             "fill" => Dim.Fill(callAttributeValue.GetIntParameter(0)),
             "sized" => Dim.Sized(callAttributeValue.GetIntParameter(0)),
@@ -38,6 +45,6 @@ public sealed class DimVisitor : AttributeValueVisitor<Dim>
             OperatorType.Subtract => Accept(expressionAttributeValue.Left) - Accept(expressionAttributeValue.Right),
             _ => throw new InvalidOperationException("No Operator Setted")
         };
-    
+
     public override Dim VisitText(TextAttributeValue textAttributeValue) => int.Parse(textAttributeValue.Value);
 }

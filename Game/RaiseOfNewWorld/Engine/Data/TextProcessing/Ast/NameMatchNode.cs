@@ -8,7 +8,7 @@ public sealed class NameMatchNode : TemplateMatcherNode
 
     public override void Validate()
     {
-        if(string.IsNullOrWhiteSpace(Name))
+        if (string.IsNullOrWhiteSpace(Name))
             ThrowValidationError("No Name for Matcher");
     }
 

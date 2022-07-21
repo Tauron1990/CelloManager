@@ -21,13 +21,13 @@ public sealed class ExpressionAttributeValue : AttributeValueNode
 
     public override void Validate()
     {
-        if(OperatorType == OperatorType.None)
+        if (OperatorType == OperatorType.None)
             ThrowValidationError("No operator type provided");
-        if(Left == Empty)
+        if (Left == Empty)
             ThrowValidationError("No Left Operant for Expression");
-        if(Right == Empty)
+        if (Right == Empty)
             ThrowValidationError("No Right Operant for Expression");
-        
+
         Left.Validate();
         Right.Validate();
     }
