@@ -8,6 +8,9 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public class ColorVisitor : AttributeValueVisitor<ColorScheme>
 {
+    public static ColorScheme Evaluate(AttributeValueNode node)
+        => new ColorVisitor().Accept(node);
+    
     public override ColorScheme VisitCall(CallAttributeValue callAttributeValue)
         => callAttributeValue.MethodName switch
         {

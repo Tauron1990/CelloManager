@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
+using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.PrimitiveVisitor;
 
@@ -94,4 +95,7 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
 
     public override StringBuilder VisitText(TextAttributeValue textAttributeValue)
         => Pools.StringBuildersPool.Get().Append(ResolveTextAttribute(textAttributeValue));
+
+    public static string Evaluate(AttributeValueNode value)
+        => Instance.ToString(value);
 }

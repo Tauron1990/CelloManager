@@ -29,4 +29,7 @@ public sealed class BoolVisitor : AttributeValueVisitor<bool>
 
     public override bool VisitText(TextAttributeValue textAttributeValue)
         => throw new NotImplementedException();
+
+    public static bool Evaluate(AttributeValueNode value)
+        => Instance.Accept(value);
 }

@@ -85,9 +85,6 @@ public static class ViewBuilderContstructorOld
                 case LineView lineView:
                     ApplyLineViewAttributes(lineView, name, value);
                     break;
-                // case GraphView graphView:
-                //     ApplyGraphViewAttribute(graphView, name, value);
-                //     break;
             }
         }
         
@@ -113,10 +110,6 @@ public static class ViewBuilderContstructorOld
         }
     }
 
-    // private static void ApplyGraphViewAttribute(GraphView graphView, string name, string value)
-    // {
-    //     
-    // }
     
     private static void ApplyFrameviewAttributes(FrameView frameView, string name, string value)
     {

@@ -12,9 +12,6 @@ public static class Pools
     public static readonly ObjectPool<List<TextFragment>> FragmentPool =
         ObjectPool.Create(new ListPoolPolicy<TextFragment>());
 
-    public static readonly ObjectPool<List<TemplateCompiler.ProcessElement>> TemplateCompilerPool =
-        ObjectPool.Create(new ListPoolPolicy<TemplateCompiler.ProcessElement>());
-
     public static readonly ObjectPool<List<Expression>> ExpressionPool =
         ObjectPool.Create(new ListPoolPolicy<Expression>());
 

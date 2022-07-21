@@ -26,4 +26,7 @@ public sealed class TextDataNode : FragmentContainerNode
 
         return builder.ToString();
     }
+
+    public override TReturn Visit<TReturn>(FragmentNodeVisitor<TReturn> fragmentNodeVisitor)
+        => fragmentNodeVisitor.VisitTextData(this);
 }

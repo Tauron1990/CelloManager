@@ -7,7 +7,7 @@ public sealed class TextFragmentNode : FragmentContainerNode
 {
     public string Name { get; set; } = string.Empty;
 
-    public string Type { get; set; } = string.Empty;
+    public TypeRepesentation Type { get; set; } = TypeRepesentation.Empty;
 
     public string Text { get; set; } = string.Empty;
 
@@ -34,10 +34,8 @@ public sealed class TextFragmentNode : FragmentContainerNode
     {
         var builder = new StringBuilder();
 
-        builder.Append('{');
-
-        if (!string.IsNullOrWhiteSpace(Type))
-            builder.Append(Type);
+        builder.Append('{').Append(Type);
+        
         if (!string.IsNullOrWhiteSpace(Name))
             builder.Append($":{Name}");
 
@@ -56,4 +54,7 @@ public sealed class TextFragmentNode : FragmentContainerNode
 
         return builder.ToString();
     }
+
+    public override TReturn Visit<TReturn>(FragmentNodeVisitor<TReturn> fragmentNodeVisitor)
+        => fragmentNodeVisitor.VisitTextFragment(this);
 }

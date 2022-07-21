@@ -105,4 +105,9 @@ public sealed class DoubleVisitor : AttributeValueVisitor<double>
             _ => double.Parse(str)
         };
     }
+
+    public static int EvaluateInt(AttributeValueNode value)
+    {
+        throw new NotImplementedException();
+    }
 }

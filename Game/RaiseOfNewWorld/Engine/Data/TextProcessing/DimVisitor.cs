@@ -8,6 +8,9 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public sealed class DimVisitor : AttributeValueVisitor<Dim>
 {
+    public static Dim Evaluate(ImmutableDictionary<string, View> views, AttributeValueNode value)
+        => new DimVisitor(views).Accept(value);
+    
     private readonly ImmutableDictionary<string, View> _views;
 
     public DimVisitor(ImmutableDictionary<string, View> views)

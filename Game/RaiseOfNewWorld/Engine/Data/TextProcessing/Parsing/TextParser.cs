@@ -44,8 +44,17 @@ public sealed class TextParser
             if (textToken.TokenType == TokenType.Text)
             {
                 tokenizer.Incremnt();
+                var token = tokenizer.Get();
+                if (token.TokenType == TokenType.Minus)
+                {
+                    tokenizer.Incremnt();
+                    token = tokenizer.GetAndIncement();
+                    ValidateToken(token, TokenType.Text);
 
-                fragment.Type = textToken.Text;
+                    fragment.Type = new TypeRepesentation { Type = textToken.Text, Parameter = token.Text };
+                }
+                else
+                    fragment.Type = new TypeRepesentation { Type = textToken.Text };
 
                 textToken = tokenizer.Get();
                 if (textToken.TokenType == TokenType.AttributeValueSeperator)
