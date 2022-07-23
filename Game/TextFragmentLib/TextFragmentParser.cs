@@ -117,16 +117,21 @@ public class TextFragmentParser
             .Labelled("Expression");
 
     
-    public static Result<char, ExpressionNode> ParseExpression(string input)
-    {
-        return Expression.Parse(input);
-    }
+    // public static Result<char, ExpressionNode> ParseExpression(string input)
+    // {
+    //     return Expression.Parse(input);
+    // }
 
     #endregion
 
     #region TextFragments
 
-    private 
+    public static readonly Parser<char, ImmutableArray<FragmentAttributeNode>> AttributeParameters =
+        CommaSeparated(
+            from txt in Text.Before(DoublePoint)
+            from exp in Expression
+            select new FragmentAttributeNode(txt, exp)
+        ).Between(OpenParen, CloseParen);
 
     #endregion
 }

@@ -11,7 +11,7 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
 {
-    private ImmutableDictionary<string, View> _views;
+    private readonly ImmutableDictionary<string, View> _views;
     private ImmutableList<CompiledTemplate> _templates = ImmutableList<CompiledTemplate>.Empty;
 
     public ViewAttributeApplayer(ImmutableDictionary<string, View> views)
@@ -27,7 +27,11 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
             .Where(t => t.IsMatch(view))
             .ForEachRun(e => textFragmentNode.Intigrate(e.Attributes));
         
+        ApplyAttributes(view, textFragmentNode.Attributes);
         
+        textFragmentNode.FragmentNodes.ForEach(n => Accept(n));
+        
+        return Unit.Default;
     }
 
     public override Unit VisitTextData(TextDataNode textDataNode)
@@ -43,8 +47,7 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
         }
     }
     
-      // ReSharper disable once CognitiveComplexity
-    public void ApplyAttributes(View view, ImmutableArray<AttributeNode> datas)
+      private void ApplyAttributes(View view, ImmutableList<AttributeNode> datas)
     {
         foreach (var value in datas)
         {
@@ -72,7 +75,7 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
         view.EndInit();
     }
 
-    private void ApplyLineViewAttributes(LineView lineView, string name, AttributeValueNode value)
+    private static void ApplyLineViewAttributes(LineView lineView, string name, AttributeValueNode value)
     {
         switch (name)
         {
@@ -92,26 +95,26 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
     }
 
     
-    private void ApplyFrameviewAttributes(FrameView frameView, string name, AttributeValueNode value)
+    private static void ApplyFrameviewAttributes(FrameView frameView, string name, AttributeValueNode value)
     {
         if (name == "title")
             frameView.Title = StringVisitor.Evaluate(value);
     }
     
-    private void ApplyColorPickerAttribute(ColorPicker colorPicker, string name, AttributeValueNode value)
+    private static void ApplyColorPickerAttribute(ColorPicker colorPicker, string name, AttributeValueNode value)
     {
         if (name == "selectedcolor") colorPicker.SelectedColor = Enum.Parse<Color>(StringVisitor.Evaluate(value));
     }
-    private void ApplyChekBoxAttribute(CheckBox checkBox, string name, AttributeValueNode value)
+    private static void ApplyChekBoxAttribute(CheckBox checkBox, string name, AttributeValueNode value)
     {
         if (name == "checked") checkBox.Checked = BoolVisitor.Evaluate(value);
     }
-    private void ApplyButtonAttributes(Button button, string name, AttributeValueNode value)
+    private static void ApplyButtonAttributes(Button button, string name, AttributeValueNode value)
     {
         if (name == "isdefault") button.IsDefault = BoolVisitor.Evaluate(value);
     }
     
-    // ReSharper disable once CognitiveComplexity
+    //ReSharper disable once CognitiveComplexity
     private void ApplyViewAttributes(View view, string name, AttributeValueNode value)
     {
         switch (name.ToLower())
@@ -141,13 +144,13 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
                 view.TabStop = BoolVisitor.Evaluate(value);
                 break;
             case "id":
-                view.Id = value;
+                view.Id = StringVisitor.Evaluate(value);
                 break;
             case "x":
-                view.X =  PosVisitor.Evaluate() e(value).Evaluate(context);
+                view.X = PosVisitor.Evaluate(_views, value);
                 break;
             case "y":
-                view.Y = PosFabricatorExpression.Parse(value).Evaluate(context);
+                view.Y = PosVisitor.Evaluate(_views, value);
                 break;
             case "width":
                 view.Width = DimFabricatorExpression.Parse(value).Evaluate(context);
