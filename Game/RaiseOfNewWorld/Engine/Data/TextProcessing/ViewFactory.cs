@@ -11,7 +11,18 @@ public sealed class ViewFactory : FragmentNodeVisitor<ImmutableDictionary<string
 {
     private static readonly ImmutableDictionary<string, Func<FiggleFont>> FiggleFonts = CreateFonts();
 
-    private static ImmutableDictionary<string,Func<FiggleFont>> CreateFonts()
+    private static readonly ImmutableDictionary<string, Type> ViewTypes = ImmutableDictionary<string, Type>.Empty
+        .Add("button", typeof(Button))
+        .Add("checkbox", typeof(CheckBox))
+        .Add("colorpicker", typeof(ColorPicker))
+        .Add("combobox", typeof(ComboBox))
+        .Add("frameview", typeof(FrameView))
+        .Add("lineview", typeof(LineView))
+        .Add("label", typeof(Label));
+
+    private bool _root = true;
+
+    private static ImmutableDictionary<string, Func<FiggleFont>> CreateFonts()
     {
         var props = typeof(FiggleFonts).GetProperties();
 
@@ -22,17 +33,6 @@ public sealed class ViewFactory : FragmentNodeVisitor<ImmutableDictionary<string
                 .CompileFast());
     }
 
-    private static readonly ImmutableDictionary<string, Type> ViewTypes = ImmutableDictionary<string, Type>.Empty
-        .Add("button", typeof(Button))
-        .Add("checkbox", typeof(CheckBox))
-        .Add("colorpicker", typeof(ColorPicker))
-        .Add("combobox", typeof(ComboBox))
-        .Add("frameview", typeof(FrameView))
-        .Add("lineview", typeof(LineView))
-        .Add("label", typeof(Label));
-    
-    private bool _root = true;
-    
     public override ImmutableDictionary<string, View> VisitTextFragment(TextFragmentNode textFragmentNode)
     {
         try
@@ -50,6 +50,7 @@ public sealed class ViewFactory : FragmentNodeVisitor<ImmutableDictionary<string
                 name = Guid.NewGuid().ToString("N");
                 textFragmentNode.Name = name;
             }
+
             if (string.IsNullOrWhiteSpace(type.Type))
                 type.Type = "label";
 
@@ -76,15 +77,16 @@ public sealed class ViewFactory : FragmentNodeVisitor<ImmutableDictionary<string
 
     public override ImmutableDictionary<string, View> VisitTextData(TextDataNode textDataNode)
         => ImmutableDictionary<string, View>.Empty.AddRange(textDataNode.FragmentNodes.SelectMany(Accept));
-    
+
     private static View CreateView(TypeRepesentation typeName, string id, string text)
     {
         if (ViewTypes.TryGetValue(typeName.Type, out var type))
         {
-            if (Activator.CreateInstance(type) is not View inst) throw new InvalidOperationException("View Creation Failed");
+            if (Activator.CreateInstance(type) is not View inst)
+                throw new InvalidOperationException("View Creation Failed");
             inst.Id = id;
             inst.Text = text;
-            
+
             return inst;
         }
 
@@ -92,6 +94,6 @@ public sealed class ViewFactory : FragmentNodeVisitor<ImmutableDictionary<string
                 typeName.Parameter,
                 out var font))
             return new Label { Id = id, Text = font().Render(text) };
-        return new View { Id = id, Text = text};
+        return new View { Id = id, Text = text };
     }
 }

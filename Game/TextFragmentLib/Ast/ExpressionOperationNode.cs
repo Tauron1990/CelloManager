@@ -2,14 +2,16 @@
 
 public abstract class ExpressionOperationNode : ExpressionNode
 {
-    public BinaryOperationType OperationType { get; }
-
     public ExpressionOperationNode(BinaryOperationType operationType)
-        => OperationType = operationType;
+    {
+        OperationType = operationType;
+    }
+
+    public BinaryOperationType OperationType { get; }
 
     public override void Validate()
     {
-        if(OperationType == BinaryOperationType.None)
+        if (OperationType == BinaryOperationType.None)
             ThrowValidationError("OperationType none is invalid");
     }
 

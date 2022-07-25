@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using RaiseOfNewWorld.Engine.Data.TextProcessing.Ast;
 using RaiseOfNewWorld.Engine.Data.TextProcessing.Parsing;
-using Terminal.Gui;
 
 namespace RaiseOfNewWorld.Engine.Data.TextProcessing.PrimitiveVisitor;
 

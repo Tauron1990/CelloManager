@@ -4,19 +4,19 @@ namespace TextFragmentLib.Ast;
 
 public sealed class CallExpressionNode : ExpressionNode
 {
-    public string MethodName { get; }
-
-    public ImmutableArray<ExpressionNode> Parameters { get; }
-
     public CallExpressionNode(string methodName, ImmutableArray<ExpressionNode> parameters)
     {
         MethodName = methodName;
         Parameters = parameters;
     }
 
+    public string MethodName { get; }
+
+    public ImmutableArray<ExpressionNode> Parameters { get; }
+
     public override void Validate()
     {
-        if(string.IsNullOrWhiteSpace(MethodName))
+        if (string.IsNullOrWhiteSpace(MethodName))
             ThrowValidationError("Nod Method Name");
     }
 

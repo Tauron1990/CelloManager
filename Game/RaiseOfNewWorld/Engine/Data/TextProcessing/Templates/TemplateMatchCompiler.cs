@@ -10,7 +10,9 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing.Templates;
 public sealed class TemplateMatchCompiler : TemplateMatcherVisitor<Expression>
 {
     public TemplateMatchCompiler()
-        => ParameterExpression = Expression.Parameter(typeof(View));
+    {
+        ParameterExpression = Expression.Parameter(typeof(View));
+    }
 
     public ParameterExpression ParameterExpression { get; }
 
@@ -57,7 +59,7 @@ public sealed class TemplateMatchCompiler : TemplateMatcherVisitor<Expression>
 
         if (type is null)
             throw new InvalidOperationException($"No Type of {typeMatcherNode.TypeName} for type matcher Found");
-        
+
         return Expression.Equal(
             Expression.Call(
                 ParameterExpression,

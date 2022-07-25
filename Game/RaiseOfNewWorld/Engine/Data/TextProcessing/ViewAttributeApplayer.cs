@@ -15,22 +15,24 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
     private ImmutableList<CompiledTemplate> _templates = ImmutableList<CompiledTemplate>.Empty;
 
     public ViewAttributeApplayer(ImmutableDictionary<string, View> views)
-        => _views = views;
+    {
+        _views = views;
+    }
 
     public override Unit VisitTextFragment(TextFragmentNode textFragmentNode)
     {
-        if(!_views.TryGetValue(textFragmentNode.Name, out var view))
+        if (!_views.TryGetValue(textFragmentNode.Name, out var view))
             return Unit.Default;
 
         _templates
             .SelectMany(t => t.Entrys)
             .Where(t => t.IsMatch(view))
             .ForEachRun(e => textFragmentNode.Intigrate(e.Attributes));
-        
+
         ApplyAttributes(view, textFragmentNode.Attributes);
-        
+
         textFragmentNode.FragmentNodes.ForEach(n => Accept(n));
-        
+
         return Unit.Default;
     }
 
@@ -46,8 +48,8 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
             _templates = ImmutableList<CompiledTemplate>.Empty;
         }
     }
-    
-      private void ApplyAttributes(View view, ImmutableList<AttributeNode> datas)
+
+    private void ApplyAttributes(View view, ImmutableList<AttributeNode> datas)
     {
         foreach (var value in datas)
         {
@@ -71,7 +73,7 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
                     break;
             }
         }
-        
+
         view.EndInit();
     }
 
@@ -94,26 +96,28 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
         }
     }
 
-    
+
     private static void ApplyFrameviewAttributes(FrameView frameView, string name, AttributeValueNode value)
     {
         if (name == "title")
             frameView.Title = StringVisitor.Evaluate(value);
     }
-    
+
     private static void ApplyColorPickerAttribute(ColorPicker colorPicker, string name, AttributeValueNode value)
     {
         if (name == "selectedcolor") colorPicker.SelectedColor = Enum.Parse<Color>(StringVisitor.Evaluate(value));
     }
+
     private static void ApplyChekBoxAttribute(CheckBox checkBox, string name, AttributeValueNode value)
     {
         if (name == "checked") checkBox.Checked = BoolVisitor.Evaluate(value);
     }
+
     private static void ApplyButtonAttributes(Button button, string name, AttributeValueNode value)
     {
         if (name == "isdefault") button.IsDefault = BoolVisitor.Evaluate(value);
     }
-    
+
     //ReSharper disable once CognitiveComplexity
     private void ApplyViewAttributes(View view, string name, AttributeValueNode value)
     {
@@ -153,28 +157,28 @@ public sealed class ViewAttributeApplayer : FragmentNodeVisitor<Unit>
                 view.Y = PosVisitor.Evaluate(_views, value);
                 break;
             case "width":
-                view.Width = DimFabricatorExpression.Parse(value).Evaluate(context);
+                view.Width = DimVisitor.Evaluate(_views, value);
                 break;
             case "height":
-                view.Height = DimFabricatorExpression.Parse(value).Evaluate(context);
+                view.Height = DimVisitor.Evaluate(_views, value);
                 break;
             case "colorscheme":
-                view.ColorScheme = ColorExtensions.Parse(value).MergeColorScheme(view.ColorScheme);
+                view.ColorScheme = ColorVisitor.Evaluate(value).MergeColorScheme(view.ColorScheme);
                 break;
             case "text":
-                view.Text = value;
+                view.Text = StringVisitor.Evaluate(value);
                 break;
             case "autosize":
-                view.AutoSize = bool.Parse(value);
+                view.AutoSize = BoolVisitor.Evaluate(value);
                 break;
             case "textalignment":
-                view.TextAlignment = Enum.Parse<TextAlignment>(value);
+                view.TextAlignment = Enum.Parse<TextAlignment>(StringVisitor.Evaluate(value));
                 break;
             case "verticaltextalignment":
-                view.VerticalTextAlignment = Enum.Parse<VerticalTextAlignment>(value);
+                view.VerticalTextAlignment = Enum.Parse<VerticalTextAlignment>(StringVisitor.Evaluate(value));
                 break;
             case "textdirection":
-                view.TextDirection = Enum.Parse<TextDirection>(value);
+                view.TextDirection = Enum.Parse<TextDirection>(StringVisitor.Evaluate(value));
                 break;
         }
     }

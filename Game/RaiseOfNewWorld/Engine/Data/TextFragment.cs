@@ -4,7 +4,7 @@ namespace RaiseOfNewWorld.Engine.Data;
 
 public abstract class TextFragment
 {
-    public static TextFragment Create(IEnumerable<TextFragment> fragments)
+    /*public static TextFragment Create(IEnumerable<TextFragment> fragments)
         => new CompountFragment(fragments);
 
     public static TextFragment Create(string text, Action<Label>? attributeBuilder)
@@ -19,15 +19,12 @@ public abstract class TextFragment
         view.Y = next == null ? 1 : Pos.Top(next) + 1;
 
         return view;
-    }
+    }*/
 
-    public void Render(View view) => Render(
-        view,
-        null);
 
-    protected abstract View Render(View view, View? next);
+    public abstract View Render(View view);
 
-    private sealed class SimpleText : TextFragment
+    /*private sealed class SimpleText : TextFragment
     {
         private readonly Action<Label>? _changeLabel;
         private readonly string _text;
@@ -73,5 +70,5 @@ public abstract class TextFragment
 
             return view;
         }
-    }
+    }*/
 }

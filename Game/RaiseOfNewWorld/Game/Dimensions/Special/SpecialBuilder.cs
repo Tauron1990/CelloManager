@@ -5,7 +5,7 @@ using RaiseOfNewWorld.Engine.Rooms.Maps;
 using RaiseOfNewWorld.Engine.Rooms.Types;
 using RaiseOfNewWorld.Screens.GameScreens;
 
-namespace RaiseOfNewWorld.Game.Dimensions.Special.Special;
+namespace RaiseOfNewWorld.Game.Dimensions.Special;
 
 public static class SpecialBuilder
 {

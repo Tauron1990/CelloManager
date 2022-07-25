@@ -107,7 +107,5 @@ public sealed class DoubleVisitor : AttributeValueVisitor<double>
     }
 
     public static int EvaluateInt(AttributeValueNode value)
-    {
-        throw new NotImplementedException();
-    }
+        => throw new NotImplementedException();
 }

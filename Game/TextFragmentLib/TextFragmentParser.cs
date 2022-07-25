@@ -8,12 +8,6 @@ namespace TextFragmentLib;
 
 public class TextFragmentParser
 {
-    private static Parser<char, T> Tok<T>(Parser<char, T> p)
-        => Try(p).Before(SkipWhitespaces);
-
-    private static Parser<char, char> Tok(char value) => Tok(Char(value));
-    private static Parser<char, string> Tok(string value) => Tok(String(value));
-    
     private static readonly Parser<char, char> Comma = Tok(',');
     private static readonly Parser<char, char> OpenParen = Tok('(');
     private static readonly Parser<char, char> CloseParen = Tok(')');
@@ -37,7 +31,7 @@ public class TextFragmentParser
                 Char('_')).ManyString()
             select first + rest);
 
-    #region Expresssion
+    #region TextFragments
 
     private static readonly Parser<char, string> Operator = OneOf(
         Multy.Map(c => c.ToString()),
@@ -48,32 +42,15 @@ public class TextFragmentParser
         And,
         Or);
 
-    static Parser<char, ImmutableArray<T>> CommaSeparated<T>(Parser<char, T> p)
-        => Try(p.SeparatedAtLeastOnce(Comma).Select(x => x.ToImmutableArray()))
-            .Or(Return(ImmutableArray<T>.Empty));
-
     private static readonly Parser<char, CallExpressionNode> Call =
         Rec(
-            () => from methodName in Text
-                from a in CommaSeparated(Expression).Between(OpenParen, CloseParen)
-                select new CallExpressionNode(
-                    methodName,
-                    a)
-        )
+                () => from methodName in Text
+                    from a in CommaSeparated(Expression).Between(OpenParen, CloseParen)
+                    select new CallExpressionNode(
+                        methodName,
+                        a)
+            )
             .Labelled("CallExpression");
-
-    private static BinaryOperationType CreateOperatorType(string c)
-        => c switch
-        {
-            "+" => BinaryOperationType.Plus,
-            "-" => BinaryOperationType.Minus,
-            "*" => BinaryOperationType.Multy,
-            ":" => BinaryOperationType.Divide,
-            "!" => BinaryOperationType.Negate,
-            "and" => BinaryOperationType.And,
-            "or" => BinaryOperationType.Or,
-            _ => BinaryOperationType.None
-        };
 
     private static readonly Parser<char, BinaryOperationNode> BinaryOperation =
         Rec(
@@ -103,7 +80,10 @@ public class TextFragmentParser
 
     private static readonly Parser<char, ExpressionLiteralNode> Expressionliteral =
     (
-        from txt in LetterOrDigit.ManyString().Before(SkipWhitespaces) //LetterOrDigit.AtLeastOnceUntil(Lookahead(Not(LetterOrDigit))).Before(SkipWhitespaces)
+        from txt in
+            LetterOrDigit.ManyString()
+                .Before(
+                    SkipWhitespaces) //LetterOrDigit.AtLeastOnceUntil(Lookahead(Not(LetterOrDigit))).Before(SkipWhitespaces)
         select new ExpressionLiteralNode(new string(txt.ToArray()))
     ).Labelled("Literal");
 
@@ -116,22 +96,46 @@ public class TextFragmentParser
             )
             .Labelled("Expression");
 
-    
-    // public static Result<char, ExpressionNode> ParseExpression(string input)
-    // {
-    //     return Expression.Parse(input);
-    // }
-
-    #endregion
-
-    #region TextFragments
-
     public static readonly Parser<char, ImmutableArray<FragmentAttributeNode>> AttributeParameters =
         CommaSeparated(
             from txt in Text.Before(DoublePoint)
             from exp in Expression
             select new FragmentAttributeNode(txt, exp)
         ).Between(OpenParen, CloseParen);
+
+    #endregion
+
+    private static Parser<char, T> Tok<T>(Parser<char, T> p)
+        => Try(p).Before(SkipWhitespaces);
+
+    private static Parser<char, char> Tok(char value) => Tok(Char(value));
+    private static Parser<char, string> Tok(string value) => Tok(String(value));
+
+    #region Expresssion
+
+    private static Parser<char, ImmutableArray<T>> CommaSeparated<T>(Parser<char, T> p)
+        => Try(p.SeparatedAtLeastOnce(Comma).Select(x => x.ToImmutableArray()))
+            .Or(Return(ImmutableArray<T>.Empty));
+
+
+    private static BinaryOperationType CreateOperatorType(string c)
+        => c switch
+        {
+            "+" => BinaryOperationType.Plus,
+            "-" => BinaryOperationType.Minus,
+            "*" => BinaryOperationType.Multy,
+            ":" => BinaryOperationType.Divide,
+            "!" => BinaryOperationType.Negate,
+            "and" => BinaryOperationType.And,
+            "or" => BinaryOperationType.Or,
+            _ => BinaryOperationType.None
+        };
+
+
+    // public static Result<char, ExpressionNode> ParseExpression(string input)
+    // {
+    //     return Expression.Parse(input);
+    // }
 
     #endregion
 }

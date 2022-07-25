@@ -31,8 +31,13 @@ public sealed class TextParser
         do
         {
             textToken = tokenizer.GetAndIncement();
+            if (textToken.IsEof) break;
+
             if (textToken.TokenType == TokenType.Text)
+            {
                 yield return new TextFragmentNode { Text = textToken.Text };
+                continue;
+            }
 
             ValidateToken(
                 textToken,
@@ -54,7 +59,9 @@ public sealed class TextParser
                     fragment.Type = new TypeRepesentation { Type = textToken.Text, Parameter = token.Text };
                 }
                 else
+                {
                     fragment.Type = new TypeRepesentation { Type = textToken.Text };
+                }
 
                 textToken = tokenizer.Get();
                 if (textToken.TokenType == TokenType.AttributeValueSeperator)

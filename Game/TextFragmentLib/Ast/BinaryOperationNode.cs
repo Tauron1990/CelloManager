@@ -2,12 +2,6 @@
 
 public sealed class BinaryOperationNode : ExpressionOperationNode
 {
-
-
-    public ExpressionNode Left { get; }
-
-    public ExpressionNode Right { get; }
-
     public BinaryOperationNode(BinaryOperationType operationType, ExpressionNode left, ExpressionNode right)
         : base(operationType)
     {
@@ -15,6 +9,10 @@ public sealed class BinaryOperationNode : ExpressionOperationNode
         Right = right;
     }
 
+
+    public ExpressionNode Left { get; }
+
+    public ExpressionNode Right { get; }
 
 
     protected override string Format()

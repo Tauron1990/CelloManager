@@ -1,4 +1,4 @@
-﻿using Terminal.Gui;
+﻿using RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 namespace RaiseOfNewWorld.Engine.Data;
 
@@ -11,92 +11,6 @@ public static class TextProcessor
             new[] { "@@@" },
             StringSplitOptions.TrimEntries);
 
-    public static TextFragment FormatText(string text, ContentManager contentManager, string? filename)
-    {
-        var span = ("{" + text + "}").AsSpan();
-        var pointer = 0;
-
-        return ParseText(
-            span,
-            ref pointer,
-            contentManager,
-            filename);
-    }
-
-    // ReSharper disable once CognitiveComplexity
-    private static TextFragment ParseText(in ReadOnlySpan<char> text, ref int pointer, ContentManager contentManager,
-        string? filename)
-    {
-        pointer++;
-
-        var fragments = Pools.FragmentPool.Get();
-        var start = 0;
-        var attributeBuilder = ReadAttributes(
-            text,
-            ref pointer);
-
-        try
-        {
-            while (pointer < text.Length)
-                if (text[pointer] == '{')
-                {
-                    pointer++;
-                    if (start != 0)
-                        fragments.Add(
-                            ExtractFragment(
-                                text,
-                                pointer));
-                    fragments.Add(
-                        ParseText(
-                            text,
-                            ref pointer,
-                            contentManager,
-                            filename));
-                    start = 0;
-                }
-                else if (text[pointer] == '}')
-                {
-                    pointer++;
-                    break;
-                }
-                else
-                {
-                    start++;
-                    pointer++;
-                }
-
-            if (start != 0)
-                fragments.Add(
-                    ExtractFragment(
-                        text,
-                        pointer));
-
-            return fragments.Count > 0 ? TextFragment.Create(fragments) : fragments[0];
-        }
-        finally
-        {
-            Pools.FragmentPool.Return(fragments);
-        }
-
-        TextFragment ExtractFragment(in ReadOnlySpan<char> text, int pointer)
-        {
-            return TextFragment.Create(
-                text.Slice(
-                    pointer,
-                    start).ToString(),
-                attributeBuilder);
-        }
-    }
-
-    private static Action<Label>? ReadAttributes(in ReadOnlySpan<char> text, ref int pointer)
-    {
-        while (text.Length > pointer)
-            if (text[pointer] == ')')
-            {
-                pointer++;
-                break;
-            }
-
-        return null;
-    }
+    public static TextFragment FormatText(string text)
+        => FragmentFactory.Create(text);
 }

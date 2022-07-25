@@ -8,13 +8,15 @@ namespace RaiseOfNewWorld.Engine.Data.TextProcessing;
 
 public sealed class PosVisitor : AttributeValueVisitor<Pos>
 {
-    public static Pos Evaluate(ImmutableDictionary<string, View> views, AttributeValueNode value)
-        => new PosVisitor(views).Accept(value);
-    
     private readonly ImmutableDictionary<string, View> _views;
 
     public PosVisitor(ImmutableDictionary<string, View> views)
-        => _views = views;
+    {
+        _views = views;
+    }
+
+    public static Pos Evaluate(ImmutableDictionary<string, View> views, AttributeValueNode value)
+        => new PosVisitor(views).Accept(value);
 
     private View Lookup(string name)
     {

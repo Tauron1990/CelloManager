@@ -4,6 +4,6 @@
     {(Test:Hallo) Test Zeile 3}
     {(Test:Hallo, Test2:Welt) Test Zeile 4}
     {Fiddle (ExpressionTest1:Test + 1, ExpressionTest2:Test(1) + Test(2 +3, 4) - 8) 
-        {() SubFragment}
+        {(ExpressionTest2:Test and 3 0r 2 != 5) SubFragment}
     }
 }

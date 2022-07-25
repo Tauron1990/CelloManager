@@ -17,7 +17,7 @@ public sealed class TemplateParser
     }
 
     private TemplateReferenceNode ParseTemplate()
-        => new TemplateReferenceNode
+        => new()
         {
             Source = _source,
             Entrys = ParseEntrys().ToImmutableList()

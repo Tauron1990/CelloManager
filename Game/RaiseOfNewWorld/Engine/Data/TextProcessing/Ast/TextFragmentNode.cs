@@ -35,7 +35,7 @@ public sealed class TextFragmentNode : FragmentContainerNode
         var builder = new StringBuilder();
 
         builder.Append('{').Append(Type);
-        
+
         if (!string.IsNullOrWhiteSpace(Name))
             builder.Append($":{Name}");
 

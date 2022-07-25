@@ -12,7 +12,7 @@ using RaiseOfNewWorld.Engine.Player;
 using RaiseOfNewWorld.Engine.Rooms;
 using RaiseOfNewWorld.Engine.Rooms.Maps;
 using RaiseOfNewWorld.Engine.Time;
-using RaiseOfNewWorld.Game.Dimensions.Special.Special;
+using RaiseOfNewWorld.Game.Dimensions.Special;
 using RaiseOfNewWorld.Screens;
 using RaiseOfNewWorld.Screens.GameScreens;
 using SystemsRx.Events;

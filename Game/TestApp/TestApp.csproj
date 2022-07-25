@@ -8,7 +8,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\TextFragmentLib\TextFragmentLib.csproj" />
+      <ProjectReference Include="..\TextFragmentLib2\TextFragmentLib2.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="test.txt">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

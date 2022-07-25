@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextFragmentLib", "Game\Tex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestApp", "Game\TestApp\TestApp.csproj", "{068DC93D-81DF-4344-A2F4-400EC47EBBFE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextFragmentLib2", "Game\TextFragmentLib2\TextFragmentLib2.csproj", "{A0B302D5-5812-4544-8058-03FD07D7ADAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,12 @@ Global
 		{068DC93D-81DF-4344-A2F4-400EC47EBBFE}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
 		{068DC93D-81DF-4344-A2F4-400EC47EBBFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{068DC93D-81DF-4344-A2F4-400EC47EBBFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0B302D5-5812-4544-8058-03FD07D7ADAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B302D5-5812-4544-8058-03FD07D7ADAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B302D5-5812-4544-8058-03FD07D7ADAE}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0B302D5-5812-4544-8058-03FD07D7ADAE}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0B302D5-5812-4544-8058-03FD07D7ADAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0B302D5-5812-4544-8058-03FD07D7ADAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,6 +63,7 @@ Global
 		{D019D9FF-A9BD-4FFB-B19F-8AE4B5878484} = {48D53D23-7C93-461C-BEF3-CEE606B1D53E}
 		{47CEFF78-7F84-4201-8173-6974A2656D75} = {48D53D23-7C93-461C-BEF3-CEE606B1D53E}
 		{068DC93D-81DF-4344-A2F4-400EC47EBBFE} = {48D53D23-7C93-461C-BEF3-CEE606B1D53E}
+		{A0B302D5-5812-4544-8058-03FD07D7ADAE} = {48D53D23-7C93-461C-BEF3-CEE606B1D53E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}
