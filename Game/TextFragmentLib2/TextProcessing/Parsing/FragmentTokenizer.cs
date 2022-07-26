@@ -1,4 +1,5 @@
-﻿using Superpower;
+﻿using System.Buffers;
+using Superpower;
 using Superpower.Model;
 using Superpower.Parsers;
 using Superpower.Tokenizers;
@@ -11,6 +12,7 @@ public static class FragmentTokenizer
     
     public static readonly Tokenizer<TextToken> Instance =
         new TokenizerBuilder<TextToken>()
+            .Match(Span.WhiteSpace.AtLeastOnce(), TextToken.Whitespace)
             .Match(Character.EqualTo('-'), TextToken.Minus)
             .Match(Character.EqualTo('\\'), TextToken.Backslash)
             .Match(Character.EqualTo('+'), TextToken.Plus)
@@ -21,8 +23,10 @@ public static class FragmentTokenizer
             .Match(Character.EqualTo(')'), TextToken.ClosePan)
             .Match(Character.EqualTo(':'), TextToken.DoublePoint)
             .Match(Character.EqualTo(','), TextToken.Comma)
+            .Match(Character.EqualTo('!'), TextToken.Not)
+            .Match(Character.EqualTo('*'), TextToken.Mult)
             .Match(Span.EqualTo("=="), TextToken.Equal)
-            .Match(Span.EqualTo("!="), TextToken.UnEqual)
+            .Match(Span.EqualTo("!="), TextToken.NotEqual)
             .Match(Span.EqualTo("and"), TextToken.And)
             .Match(Span.EqualTo("or"), TextToken.Or)
             .Match(Identifier.CStyle, TextToken.Identifer)

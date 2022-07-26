@@ -15,4 +15,6 @@ public abstract class AttributeValueVisitor<TReturn>
 
     protected static string ResolveTextAttribute(TextAttributeValue value)
         => Pools.ResolveResource(value);
+
+    public abstract TReturn VisitUnary(UnaryAttributeValue unaryAttributeValue);
 }

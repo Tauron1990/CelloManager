@@ -7,7 +7,14 @@ public enum OperatorType
 {
     None,
     Subtract,
-    Add
+    Add,
+    And,
+    Or,
+    Mult,
+    Div,
+    Equal,
+    NotEqual,
+    Not
 }
 
 public sealed class ExpressionAttributeValue : AttributeValueNode
@@ -37,20 +44,8 @@ public sealed class ExpressionAttributeValue : AttributeValueNode
         var builder = new StringBuilder();
 
         builder.Append(Left);
-        switch (OperatorType)
-        {
-            case OperatorType.None:
-                builder.Append('n');
-                break;
-            case OperatorType.Subtract:
-                builder.Append('-');
-                break;
-            case OperatorType.Add:
-                builder.Append('+');
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
+
+        builder.Append(FormatOperatorType(OperatorType));
 
         builder.Append(Right);
 

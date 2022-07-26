@@ -26,4 +26,20 @@ public abstract class AttributeValueNode : AstNode
         public override AttributeValueNode Merge(AttributeValueNode node)
             => node;
     }
+    
+    protected string FormatOperatorType(OperatorType operatorType)
+        => operatorType switch
+        {
+            OperatorType.Subtract => "-",
+            OperatorType.Add => "+",
+            OperatorType.None => "n",
+            OperatorType.And => "and",
+            OperatorType.Or => "or",
+            OperatorType.Mult => "*",
+            OperatorType.Div => ":",
+            OperatorType.Equal => "==",
+            OperatorType.NotEqual => "!=",
+            OperatorType.Not => "!",
+            _ => throw new ArgumentOutOfRangeException()
+        };
 }

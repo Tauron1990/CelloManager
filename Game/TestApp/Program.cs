@@ -13,4 +13,5 @@ using TextFragmentLib2.TextProcessing.Parsing;
 
 var list = FragmentTokenizer.Instance.TryTokenize(File.ReadAllText("test.txt"));
 
+
 Console.ReadKey();

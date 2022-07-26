@@ -16,7 +16,10 @@ public enum TextToken
     Identifer,
     Comma,
     Equal,
-    UnEqual,
+    NotEqual,
     And,
-    Or
+    Or,
+    Whitespace,
+    Not,
+    Mult
 }
