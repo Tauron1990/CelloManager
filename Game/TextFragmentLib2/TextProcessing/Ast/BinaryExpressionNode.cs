@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using TextFragmentLib2.TextProcessing.ParsingOld;
+using TextFragmentLib2.TextProcessing.Parsing;
 
 namespace TextFragmentLib2.TextProcessing.Ast;
 
@@ -17,14 +17,20 @@ public enum OperatorType
     Not
 }
 
-public sealed class ExpressionAttributeValue : AttributeValueNode
+public sealed class BinaryExpressionNode : ExpressionBaseNode
 {
-    public OperatorType OperatorType { get; set; } = OperatorType.None;
+    public OperatorType OperatorType { get; }
 
-    public AttributeValueNode Left { get; set; } = Empty;
+    public ExpressionBaseNode Left { get; }
 
-    public AttributeValueNode Right { get; set; } = Empty;
+    public ExpressionBaseNode Right { get; }
 
+    public BinaryExpressionNode(OperatorType operatorType, ExpressionBaseNode left, ExpressionBaseNode right)
+    {
+        OperatorType = operatorType;
+        Left = left;
+        Right = right;
+    }
 
     public override void Validate()
     {
@@ -52,6 +58,6 @@ public sealed class ExpressionAttributeValue : AttributeValueNode
         return builder.ToString();
     }
 
-    public override TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor)
+    public override TReturn Visit<TReturn>(ExpressionNodeVisitor<TReturn> visitor)
         => visitor.VisitExpression(this);
 }

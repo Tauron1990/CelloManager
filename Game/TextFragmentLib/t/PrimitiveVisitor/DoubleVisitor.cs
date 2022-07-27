@@ -3,11 +3,11 @@ using System.Linq.Expressions;
 using System.Reflection;
 using FastExpressionCompiler;
 using TextFragmentLib2.TextProcessing.Ast;
-using TextFragmentLib2.TextProcessing.ParsingOld;
+using TextFragmentLib2.TextProcessing.Parsing;
 
 namespace TextFragmentLib2.TextProcessing.PrimitiveVisitor;
 
-public sealed class DoubleVisitor : AttributeValueVisitor<double>
+public sealed class DoubleVisitor : ExpressionNodeVisitor<double>
 {
     public static readonly DoubleVisitor Instance = new();
 
@@ -58,44 +58,44 @@ public sealed class DoubleVisitor : AttributeValueVisitor<double>
                     methodInfo))
             .CompileFast();
 
-    public override double VisitCall(CallAttributeValue callAttributeValue)
-        => callAttributeValue.Parameters.Count switch
+    public override double VisitCall(CallExpressionNode callExpressionNode)
+        => callExpressionNode.Parameters.Count switch
         {
-            1 when _singleMethod.ContainsKey(callAttributeValue.MethodName)
-                => _singleMethod[callAttributeValue.MethodName]
-                    .Value(Accept(callAttributeValue.Parameters[0])),
+            1 when _singleMethod.ContainsKey(callExpressionNode.MethodName)
+                => _singleMethod[callExpressionNode.MethodName]
+                    .Value(Accept(callExpressionNode.Parameters[0])),
 
-            2 when _method.ContainsKey(callAttributeValue.MethodName)
-                => _method[callAttributeValue.MethodName]
+            2 when _method.ContainsKey(callExpressionNode.MethodName)
+                => _method[callExpressionNode.MethodName]
                     .Value(
-                        Accept(callAttributeValue.Parameters[0]),
-                        Accept(callAttributeValue.Parameters[1])
+                        Accept(callExpressionNode.Parameters[0]),
+                        Accept(callExpressionNode.Parameters[1])
                     ),
 
-            2 when callAttributeValue.MethodName == "multiply"
-                => Accept(callAttributeValue.Parameters[0]) *
-                   Accept(callAttributeValue.Parameters[1]),
+            2 when callExpressionNode.MethodName == "multiply"
+                => Accept(callExpressionNode.Parameters[0]) *
+                   Accept(callExpressionNode.Parameters[1]),
 
 
-            2 when callAttributeValue.MethodName == "divide"
-                => Accept(callAttributeValue.Parameters[0]) /
-                   Accept(callAttributeValue.Parameters[1]),
+            2 when callExpressionNode.MethodName == "divide"
+                => Accept(callExpressionNode.Parameters[0]) /
+                   Accept(callExpressionNode.Parameters[1]),
 
             _ => throw new InvalidOperationException(
-                $"Invalid Count of parameter for Double Math Operation: {callAttributeValue.Parameters.Count} -- Or Method does not exist {callAttributeValue.MethodName}")
+                $"Invalid Count of parameter for Double Math Operation: {callExpressionNode.Parameters.Count} -- Or Method does not exist {callExpressionNode.MethodName}")
         };
 
-    public override double VisitExpression(ExpressionAttributeValue expressionAttributeValue)
-        => expressionAttributeValue.OperatorType switch
+    public override double VisitExpression(BinaryExpressionNode binaryExpressionNode)
+        => binaryExpressionNode.OperatorType switch
         {
-            OperatorType.Add => Accept(expressionAttributeValue.Left) + Accept(expressionAttributeValue.Right),
-            OperatorType.Subtract => Accept(expressionAttributeValue.Left) - Accept(expressionAttributeValue.Right),
+            OperatorType.Add => Accept(binaryExpressionNode.Left) + Accept(binaryExpressionNode.Right),
+            OperatorType.Subtract => Accept(binaryExpressionNode.Left) - Accept(binaryExpressionNode.Right),
             _ => throw new InvalidOperationException("No Operator Type Provided")
         };
 
-    public override double VisitText(TextAttributeValue textAttributeValue)
+    public override double VisitText(LiteralExpressionNode literalExpressionNode)
     {
-        var str = ResolveTextAttribute(textAttributeValue);
+        var str = ResolveTextAttribute(literalExpressionNode);
         return str switch
         {
             "epsilon" => double.Epsilon,
@@ -106,6 +106,6 @@ public sealed class DoubleVisitor : AttributeValueVisitor<double>
         };
     }
 
-    public static int EvaluateInt(AttributeValueNode value)
+    public static int EvaluateInt(ExpressionBaseNode value)
         => throw new NotImplementedException();
 }

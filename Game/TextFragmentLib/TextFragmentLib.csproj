@@ -7,7 +7,25 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Pidgin" Version="3.2.0"/>
+        <PackageReference Include="Pidgin" Version="3.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="t" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="t\ParsingOld\TemplateParser.cs" />
+      <None Include="t\ParsingOld\TemplateToken.cs" />
+      <None Include="t\ParsingOld\TemplateTokenizer.cs" />
+      <None Include="t\ParsingOld\TextParser.cs" />
+      <None Include="t\ParsingOld\TextToken.cs" />
+      <None Include="t\ParsingOld\Tokenizer.cs" />
+      <None Include="t\ParsingOld\TokenizerBase.cs" />
+      <None Include="t\PrimitiveVisitor\BoolVisitor.cs" />
+      <None Include="t\PrimitiveVisitor\DoubleVisitor.cs" />
+      <None Include="t\PrimitiveVisitor\ExpressionNodeExtensions.cs" />
+      <None Include="t\PrimitiveVisitor\StringVisitor.cs" />
     </ItemGroup>
 
 </Project>

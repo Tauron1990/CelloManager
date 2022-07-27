@@ -1,14 +1,20 @@
 ﻿using System.Collections.Immutable;
 using System.Text;
-using TextFragmentLib2.TextProcessing.ParsingOld;
+using TextFragmentLib2.TextProcessing.Parsing;
 
 namespace TextFragmentLib2.TextProcessing.Ast;
 
-public sealed class CallAttributeValue : AttributeValueNode
+public sealed class CallExpressionNode : ExpressionBaseNode
 {
-    public string MethodName { get; set; } = string.Empty;
+    public string MethodName { get; }
 
-    public ImmutableList<AttributeValueNode> Parameters { get; set; } = ImmutableList<AttributeValueNode>.Empty;
+    public ImmutableList<ExpressionBaseNode> Parameters { get; private set; }
+
+    public CallExpressionNode(string methodName, ImmutableList<ExpressionBaseNode> parameters)
+    {
+        MethodName = methodName;
+        Parameters = parameters;
+    }
 
     public override void Validate()
     {
@@ -28,9 +34,9 @@ public sealed class CallAttributeValue : AttributeValueNode
             .Append(')')
             .ToString();
 
-    public override AttributeValueNode Merge(AttributeValueNode node)
+    public override ExpressionBaseNode Merge(ExpressionBaseNode node)
     {
-        if (node is not CallAttributeValue call) return base.Merge(node);
+        if (node is not CallExpressionNode call) return base.Merge(node);
 
         if (call.MethodName != MethodName) return call;
 
@@ -50,6 +56,6 @@ public sealed class CallAttributeValue : AttributeValueNode
         return base.Merge(node);
     }
 
-    public override TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor)
+    public override TReturn Visit<TReturn>(ExpressionNodeVisitor<TReturn> visitor)
         => visitor.VisitCall(this);
 }

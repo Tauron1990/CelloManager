@@ -4,13 +4,13 @@ public sealed class AttributeNode : AstNode
 {
     public string Name { get; set; } = string.Empty;
 
-    public AttributeValueNode Value { get; set; } = AttributeValueNode.Empty;
+    public ExpressionBaseNode Value { get; set; } = ExpressionBaseNode.Empty;
 
     public override void Validate()
     {
         if (string.IsNullOrWhiteSpace(Name))
             ThrowValidationError("Name is null of whitespace");
-        if (Value == AttributeValueNode.Empty)
+        if (Value == ExpressionBaseNode.Empty)
             ThrowValidationError($"No Attribute Value: {Name} ");
 
         Value.Validate();

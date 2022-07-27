@@ -13,7 +13,7 @@ public static class Pools
     public static readonly ObjectPool<List<Expression>> ExpressionPool =
         ObjectPool.Create(new ListPoolPolicy<Expression>());
 
-    public static Func<TextAttributeValue, string> ResolveResource { get; set; } = s => s.Value;
+    public static Func<LiteralExpressionNode, string> ResolveResource { get; set; } = s => s.Value;
 
     public static Func<string, string> ReadFile { get; set; } = s => s;
 

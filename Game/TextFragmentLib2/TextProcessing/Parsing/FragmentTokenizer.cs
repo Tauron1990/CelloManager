@@ -30,6 +30,7 @@ public static class FragmentTokenizer
             .Match(Span.EqualTo("and"), TextToken.And)
             .Match(Span.EqualTo("or"), TextToken.Or)
             .Match(Identifier.CStyle, TextToken.Identifer)
+            .Match(Character.Numeric.Many(), TextToken.Identifer)
             .Match(Character.Except(c => Except.Contains(c), "Text Value").Many(), TextToken.Text)
             .Build();
 }

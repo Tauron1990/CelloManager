@@ -7,11 +7,8 @@
 
 //var attributeValue = TextFragmentParser.AttributeParameters.Parse("(true and false, 1 + 2, Test(1,2))");
 
-using Superpower;
-using Superpower.Parsers;
 using TextFragmentLib2.TextProcessing.Parsing;
 
-var list = FragmentTokenizer.Instance.TryTokenize(File.ReadAllText("test.txt"));
-
+var test3 = FragmentParser.ParseExpression("Test2(2) + !121 and 2 or 1");
 
 Console.ReadKey();

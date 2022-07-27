@@ -1,14 +1,14 @@
 ﻿using System.Text;
 using TextFragmentLib2.TextProcessing.Ast;
-using TextFragmentLib2.TextProcessing.ParsingOld;
+using TextFragmentLib2.TextProcessing.Parsing;
 
 namespace TextFragmentLib2.TextProcessing.PrimitiveVisitor;
 
-public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
+public sealed class StringVisitor : ExpressionNodeVisitor<StringBuilder>
 {
     public static readonly StringVisitor Instance = new();
 
-    public string ToString(AttributeValueNode node)
+    public string ToString(ExpressionBaseNode node)
     {
         var builder = Accept(node);
         try
@@ -21,11 +21,11 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
         }
     }
 
-    public override StringBuilder VisitCall(CallAttributeValue callAttributeValue)
+    public override StringBuilder VisitCall(CallExpressionNode callExpressionNode)
     {
         var builder = Pools.StringBuildersPool.Get();
 
-        foreach (var subBuilder in callAttributeValue.Parameters.Select(Accept))
+        foreach (var subBuilder in callExpressionNode.Parameters.Select(Accept))
             try
             {
                 builder.Append(subBuilder);
@@ -38,15 +38,15 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
         return builder;
     }
 
-    public override StringBuilder VisitExpression(ExpressionAttributeValue expressionAttributeValue)
+    public override StringBuilder VisitExpression(BinaryExpressionNode binaryExpressionNode)
     {
-        var leftBuilder = Accept(expressionAttributeValue.Left);
-        var rightBuilder = Accept(expressionAttributeValue.Right);
+        var leftBuilder = Accept(binaryExpressionNode.Left);
+        var rightBuilder = Accept(binaryExpressionNode.Right);
         try
         {
             var target = Pools.StringBuildersPool.Get();
 
-            return expressionAttributeValue.OperatorType switch
+            return binaryExpressionNode.OperatorType switch
             {
                 OperatorType.Subtract => Subtract(
                     target,
@@ -92,9 +92,9 @@ public sealed class StringVisitor : AttributeValueVisitor<StringBuilder>
         }
     }
 
-    public override StringBuilder VisitText(TextAttributeValue textAttributeValue)
-        => Pools.StringBuildersPool.Get().Append(ResolveTextAttribute(textAttributeValue));
+    public override StringBuilder VisitText(LiteralExpressionNode literalExpressionNode)
+        => Pools.StringBuildersPool.Get().Append(ResolveTextAttribute(literalExpressionNode));
 
-    public static string Evaluate(AttributeValueNode value)
+    public static string Evaluate(ExpressionBaseNode value)
         => Instance.ToString(value);
 }

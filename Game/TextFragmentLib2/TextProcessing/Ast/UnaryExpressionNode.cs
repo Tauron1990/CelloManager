@@ -1,14 +1,14 @@
-﻿using TextFragmentLib2.TextProcessing.ParsingOld;
+﻿using TextFragmentLib2.TextProcessing.Parsing;
 
 namespace TextFragmentLib2.TextProcessing.Ast;
 
-public sealed class UnaryAttributeValue : AttributeValueNode
+public sealed class UnaryExpressionNode : ExpressionBaseNode
 {
     public OperatorType Type { get; }
 
-    public AttributeValueNode Expression { get; }
+    public ExpressionBaseNode Expression { get; }
 
-    public UnaryAttributeValue(OperatorType type, AttributeValueNode expressions)
+    public UnaryExpressionNode(OperatorType type, ExpressionBaseNode expressions)
     {
         Type = type;
         Expression = expressions;
@@ -26,6 +26,6 @@ public sealed class UnaryAttributeValue : AttributeValueNode
     protected override string Format()
         => $"{FormatOperatorType(Type)} {Expression}";
 
-    public override TReturn Visit<TReturn>(AttributeValueVisitor<TReturn> visitor)
+    public override TReturn Visit<TReturn>(ExpressionNodeVisitor<TReturn> visitor)
         => visitor.VisitUnary(this);
 }

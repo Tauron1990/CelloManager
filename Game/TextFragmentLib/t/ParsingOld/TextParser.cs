@@ -144,7 +144,7 @@ public sealed class TextParser
         } while (!textToken.IsEof);
     }
 
-    private static AttributeValueNode ReadAttributeValue(Tokenizer tokenizer)
+    private static ExpressionBaseNode ReadAttributeValue(Tokenizer tokenizer)
     {
         var token = tokenizer.GetAndIncement();
         ValidateToken(
@@ -155,11 +155,11 @@ public sealed class TextParser
         if (token2.TokenType is TokenType.AttributeSeperator or TokenType.CloseAttribute)
             return CreateAttributeTextValue(token.Text);
 
-        AttributeValueNode left;
+        ExpressionBaseNode left;
         if (token2.TokenType is TokenType.OpenAttribute)
         {
             tokenizer.Incremnt();
-            left = new CallAttributeValue
+            left = new CallExpressionNode
             {
                 MethodName = token.Text,
                 Parameters = ReadParameters(tokenizer).ToImmutableList()
@@ -179,11 +179,11 @@ public sealed class TextParser
             _ => throw CreateInvalidToken(token2)
         };
 
-        ExpressionAttributeValue CreateExpression()
+        BinaryExpressionNode CreateExpression()
         {
             tokenizer.Incremnt();
 
-            return new ExpressionAttributeValue
+            return new BinaryExpressionNode
             {
                 OperatorType = token2.TokenType == TokenType.Plus ? OperatorType.Add : OperatorType.Subtract,
                 Left = left,
@@ -192,12 +192,12 @@ public sealed class TextParser
         }
     }
 
-    private static TextAttributeValue CreateAttributeTextValue(string value)
+    private static LiteralExpressionNode CreateAttributeTextValue(string value)
         => value.StartsWith('@')
-            ? new TextAttributeValue { IsReference = true, Value = value[1..] }
-            : new TextAttributeValue { Value = value };
+            ? new LiteralExpressionNode { IsReference = true, Value = value[1..] }
+            : new LiteralExpressionNode { Value = value };
 
-    private static IEnumerable<AttributeValueNode> ReadParameters(Tokenizer tokenizer)
+    private static IEnumerable<ExpressionBaseNode> ReadParameters(Tokenizer tokenizer)
     {
         do
         {
