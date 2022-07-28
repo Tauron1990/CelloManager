@@ -1,10 +1,31 @@
 ﻿using System.Collections.Immutable;
+using System.Linq.Expressions;
 using Superpower;
 using Superpower.Model;
 using Superpower.Parsers;
 using TextFragmentLib2.TextProcessing.Ast;
 
 namespace TextFragmentLib2.TextProcessing.Parsing;
+
+#if DEBUG
+public static class FragmentParserDebug
+{
+    private static ExpressionBaseNode ParseExpression(TokenListParser<TextToken, ExpressionBaseNode> parser, string input)
+    {
+        var tokens = FragmentTokenizer.Instance.Tokenize(input.Trim());
+        return parser.Parse(tokens);
+    }
+
+    public static ExpressionBaseNode ParseUnary(string input)
+        => ParseExpression(FragmentParser.UnaryExpression, input);
+
+    public static ExpressionBaseNode ParseCall(string input)
+        => ParseExpression(FragmentParser.CallExpression, input);
+
+    public static ExpressionBaseNode ParseBinary(string input)
+        => ParseExpression(FragmentParser.BinaryExpression, input);
+}
+#endif
 
 public static class FragmentParser
 {
@@ -49,20 +70,19 @@ public static class FragmentParser
             .Or(Token.EqualTo(TextToken.Identifer)
                 .Select(t => ExpressionBaseNode.Create(t.ToStringValue(), false)));
 
-    private static readonly TokenListParser<TextToken, ExpressionBaseNode> UnaryExpression =
+    internal static readonly TokenListParser<TextToken, ExpressionBaseNode> UnaryExpression =
         from op in Operator.IgnoreWhitespace()
         from exp in Expression.IgnoreWhitespace()
         select ExpressionBaseNode.Create(op, exp);
 
-    private static readonly TokenListParser<TextToken, ExpressionBaseNode> CallExpression =
+    internal static readonly TokenListParser<TextToken, ExpressionBaseNode> CallExpression =
         from name in Token.EqualTo(TextToken.Identifer).IgnoreWhitespace()
         from param in Expression.IgnoreWhitespace()
-            .Then(n => Comma.Select(_ => n).IgnoreWhitespace()).Many()
-            .OptionalOrDefault(Array.Empty<ExpressionBaseNode>())
+            .Then(n => Comma.Select(_ => n).IgnoreWhitespace().OptionalOrDefault(n)).Many()
             .Between(OpenPan, ClosePan).IgnoreWhitespace()
         select ExpressionBaseNode.Create(name.ToStringValue(), param.ToImmutableList());
 
-    private static readonly TokenListParser<TextToken, ExpressionBaseNode> BinaryExpression =
+    internal static readonly TokenListParser<TextToken, ExpressionBaseNode> BinaryExpression =
         from left in Parse.OneOf(UnaryExpression.Try(), CallExpression.Try(), Literal).IgnoreWhitespace()
         from op in Operator.IgnoreWhitespace()
         from right in Expression.IgnoreWhitespace()
@@ -72,9 +92,13 @@ public static class FragmentParser
         Parse.Ref(() => Parse.OneOf(UnaryExpression.Try(), BinaryExpression.Try(), CallExpression.Try(), Literal))
             .IgnoreWhitespace();
 
-    public static ExpressionBaseNode ParseExpression(string input)
+    public static TResult ParserBase<TResult>(TokenListParser<TextToken, TResult> parser, string input)
     {
-        var tokens = FragmentTokenizer.Instance.Tokenize(input);
-        return Expression.Parse(tokens);
+        var tokens = FragmentTokenizer.Instance.Tokenize(input.Trim());
+        return parser.Parse(tokens);
     }
+
+
+    public static ExpressionBaseNode ParseExpression(string input)
+        => ParserBase(Expression, input);
 }

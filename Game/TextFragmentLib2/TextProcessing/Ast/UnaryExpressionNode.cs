@@ -24,7 +24,7 @@ public sealed class UnaryExpressionNode : ExpressionBaseNode
     }
 
     protected override string Format()
-        => $"{FormatOperatorType(Type)} {Expression}";
+        => $"{FormatOperatorType(Type)}{Expression}";
 
     public override TReturn Visit<TReturn>(ExpressionNodeVisitor<TReturn> visitor)
         => visitor.VisitUnary(this);
