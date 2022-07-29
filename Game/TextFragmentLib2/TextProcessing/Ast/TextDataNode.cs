@@ -6,7 +6,7 @@ namespace TextFragmentLib2.TextProcessing.Ast;
 
 public sealed class TextDataNode : FragmentContainerNode
 {
-    public ImmutableList<TemplateReferenceNode> Templates { get; set; } = ImmutableList<TemplateReferenceNode>.Empty;
+    public ImmutableList<TemplateReferenceNode> Templates { get; }
 
 
     public override void Validate()
@@ -30,4 +30,7 @@ public sealed class TextDataNode : FragmentContainerNode
 
     public override TReturn Visit<TReturn>(FragmentNodeVisitor<TReturn> fragmentNodeVisitor)
         => fragmentNodeVisitor.VisitTextData(this);
+
+    public TextDataNode(ImmutableList<TextFragmentNode> fragmentNodes, ImmutableList<TemplateReferenceNode> templates) : base(fragmentNodes)
+        => Templates = templates;
 }

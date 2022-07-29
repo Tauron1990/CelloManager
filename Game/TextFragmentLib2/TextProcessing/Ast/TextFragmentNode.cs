@@ -6,13 +6,23 @@ namespace TextFragmentLib2.TextProcessing.Ast;
 
 public sealed class TextFragmentNode : FragmentContainerNode
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    public TypeRepesentation Type { get; set; } = TypeRepesentation.Empty;
+    public TypeRepesentation Type { get; }
 
-    public string Text { get; set; } = string.Empty;
+    public string Text { get; }
 
-    public ImmutableList<AttributeNode> Attributes { get; set; } = ImmutableList<AttributeNode>.Empty;
+    public ImmutableList<AttributeNode> Attributes { get; set; }
+
+    public TextFragmentNode(string name, TypeRepesentation type, string text, ImmutableList<AttributeNode> attributes,
+        ImmutableList<TextFragmentNode> fragmentNodes)
+        : base(fragmentNodes)
+    {
+        Name = name;
+        Type = type;
+        Text = text;
+        Attributes = attributes;
+    }
 
     public void Intigrate(IEnumerable<AttributeNode> attributes)
     {

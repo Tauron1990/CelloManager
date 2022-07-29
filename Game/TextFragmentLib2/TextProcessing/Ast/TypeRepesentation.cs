@@ -2,11 +2,17 @@
 
 public sealed class TypeRepesentation : AstNode
 {
-    public static readonly TypeRepesentation Empty = new();
+    public static readonly TypeRepesentation Empty = new(string.Empty, string.Empty);
 
-    public string Type { get; set; } = string.Empty;
+    public string Type { get; }
 
-    public string Parameter { get; set; } = string.Empty;
+    public string Parameter { get; }
+
+    public TypeRepesentation(string type, string parameter)
+    {
+        Type = type;
+        Parameter = parameter;
+    }
 
     public override void Validate()
     {

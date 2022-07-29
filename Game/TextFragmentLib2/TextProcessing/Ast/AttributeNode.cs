@@ -2,9 +2,15 @@
 
 public sealed class AttributeNode : AstNode
 {
-    public string Name { get; set; } = string.Empty;
+    public string Name { get; }
 
-    public ExpressionBaseNode Value { get; set; } = ExpressionBaseNode.Empty;
+    public ExpressionBaseNode Value { get; set; }
+
+    public AttributeNode(string name, ExpressionBaseNode value)
+    {
+        Name = name;
+        Value = value;
+    }
 
     public override void Validate()
     {

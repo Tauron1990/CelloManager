@@ -5,7 +5,10 @@ namespace TextFragmentLib2.TextProcessing.Ast;
 
 public abstract class FragmentContainerNode : FragmentNode
 {
-    public ImmutableList<TextFragmentNode> FragmentNodes { get; set; } = ImmutableList<TextFragmentNode>.Empty;
+    public ImmutableList<TextFragmentNode> FragmentNodes { get; }
+
+    protected FragmentContainerNode(ImmutableList<TextFragmentNode> fragmentNodes)
+        => FragmentNodes = fragmentNodes;
 
     protected void FormatFragments(StringBuilder builder)
     {

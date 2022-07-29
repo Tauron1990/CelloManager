@@ -21,5 +21,6 @@ public enum TextToken
     Or,
     Whitespace,
     Not,
-    Mult
+    Mult,
+    Assign
 }
