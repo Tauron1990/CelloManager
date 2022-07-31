@@ -112,8 +112,8 @@ public static class FragmentParser
     }
 
 
-    public static ExpressionBaseNode ParseExpression(string input)
-        => ParserBase(Expression, input);
+    // public static ExpressionBaseNode ParseExpression(string input)
+    //     => ParserBase(Expression, input);
 
     internal static readonly TokenListParser<TextToken, AttributeNode[]> Attributes =
         CommaSeperated(
@@ -177,6 +177,14 @@ public static class FragmentParser
     private static readonly TokenListParser<TextToken, TextFragmentNode> FragmentNodeParser =
         Parse.OneOf
         (
+            (
+                from open in Token.EqualTo(TextToken.OpenBrace)
+                from header in HeaderParser
+                from content in FragmentContent.Try().OptionalOrDefault(string.Empty)
+                from fragments in FragmentNodeParser.Many()
+                select header(content, fragments.ToImmutableList())
+            ).Try(),
+
             from open in Token.EqualTo(TextToken.OpenBrace)
             from close in Token.EqualTo(TextToken.Closebrace)
             select new TextFragmentNode(
