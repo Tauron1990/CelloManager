@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Game.Engine", "Game2\Game.E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tester", "Game2\Tester\Tester.csproj", "{12B9BB44-074B-4809-8756-49FF567A145A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RaiseOfNewWorld", "Game2\RaiseOfNewWorld\RaiseOfNewWorld.csproj", "{5300BC9C-C34B-4E42-A172-23E82EC703AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,6 +74,12 @@ Global
 		{12B9BB44-074B-4809-8756-49FF567A145A}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
 		{12B9BB44-074B-4809-8756-49FF567A145A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{12B9BB44-074B-4809-8756-49FF567A145A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5300BC9C-C34B-4E42-A172-23E82EC703AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5300BC9C-C34B-4E42-A172-23E82EC703AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5300BC9C-C34B-4E42-A172-23E82EC703AF}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5300BC9C-C34B-4E42-A172-23E82EC703AF}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5300BC9C-C34B-4E42-A172-23E82EC703AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5300BC9C-C34B-4E42-A172-23E82EC703AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +92,7 @@ Global
 		{A0B302D5-5812-4544-8058-03FD07D7ADAE} = {48D53D23-7C93-461C-BEF3-CEE606B1D53E}
 		{B789D834-3FF9-4C5E-ADB2-DEF11D572686} = {CA361914-DA47-43F9-83C0-B2D6EA985D81}
 		{12B9BB44-074B-4809-8756-49FF567A145A} = {CA361914-DA47-43F9-83C0-B2D6EA985D81}
+		{5300BC9C-C34B-4E42-A172-23E82EC703AF} = {CA361914-DA47-43F9-83C0-B2D6EA985D81}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}

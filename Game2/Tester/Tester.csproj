@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Game.Engine\Game.Engine.csproj" />
+      <ProjectReference Include="..\RaiseOfNewWorld\RaiseOfNewWorld.csproj" />
     </ItemGroup>
 
 </Project>
