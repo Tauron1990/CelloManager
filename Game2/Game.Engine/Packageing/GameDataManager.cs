@@ -1,4 +1,7 @@
 ﻿using System.Collections.Immutable;
+using Game.Engine.Packageing.Files;
+using Game.Engine.Packageing.ScriptHosting;
+using Game.Engine.Packageing.ScriptHosting.Scripts;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -10,10 +13,16 @@ public sealed class GameDataManager
     private readonly string _loadingRoot;
 
     public ImmutableList<InternalGamePackage> Packages { get; private set; } = ImmutableList<InternalGamePackage>.Empty;
+
+    public GlobalScriptVariables Globals { get; } = new();
     
+    public GameScriptManager ScriptManager { get; }
+
+    public GameContentManager ContentManager { get; } = new();
     
     public GameDataManager(string loadingRoot)
     {
+        ScriptManager = new GameScriptManager(Globals);
         _loadingRoot = loadingRoot;
     }
 
@@ -28,11 +37,17 @@ public sealed class GameDataManager
             var pack = JsonConvert.DeserializeObject<GamePackage>(await File.ReadAllTextAsync(infoFilePath));
             if(pack == null || toFilter.ExcludePackages.Contains(pack.Name))
                 continue;
-            Packages = Packages.Add(new InternalGamePackage(directory, pack));
+            Packages = Packages.Add(await CreateInternalPackage(directory, pack));
         }
     }
 
-    
+    private async ValueTask<InternalGamePackage> CreateInternalPackage(string sourcePath, GamePackage gamePackage)
+        => new(
+            sourcePath,
+            gamePackage,
+            await new PackageScriptManager(Path.Combine(sourcePath, "Scripts"), ScriptManager).Init(),
+            ContentManager.Register(new PackageContentManager(Path.Combine(sourcePath, "Data")))
+        );
     
     
     private async ValueTask<FilteredPackages> LoadFilter()

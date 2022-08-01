@@ -16,7 +16,7 @@ await Task.Delay(1000);
 var startPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
 
 var testConfig = ScriptOptions.Default
-        .WithMetadataResolver(ScriptMetadataResolver.Default.WithSearchPaths(new[] { RuntimeEnvironment.GetRuntimeDirectory(), startPath }))
+        .WithMetadataResolver(ScriptMetadataResolver.Default.WithSearchPaths(RuntimeEnvironment.GetRuntimeDirectory(), startPath))
         .WithSourceResolver(new SourceFileResolver(ImmutableArray<string>.Empty, Path.Combine(startPath, "scripts")))
         .WithReferences(typeof(IEntryPoint).Assembly, typeof(System.Reactive.Observer).Assembly)
         .AddReferences(Assembly.GetExecutingAssembly())

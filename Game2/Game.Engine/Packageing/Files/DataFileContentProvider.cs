@@ -1,10 +1,10 @@
 ﻿namespace Game.Engine.Packageing.Files;
 
-public sealed class LocalFileContentProvider : IContentProvider
+public sealed class DataFileContentProvider : IContentProvider
 {
     private readonly string _rootDirectory;
 
-    public LocalFileContentProvider(string rootDirectory)
+    public DataFileContentProvider(string rootDirectory)
         => _rootDirectory = rootDirectory;
 
     public bool CanOpen(string path)
