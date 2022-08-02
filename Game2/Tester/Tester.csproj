@@ -8,8 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Game.Engine\Game.Engine.csproj" />
-      <ProjectReference Include="..\RaiseOfNewWorld\RaiseOfNewWorld.csproj" />
+      <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.2.0" />
     </ItemGroup>
 
 </Project>

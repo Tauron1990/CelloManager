@@ -1,15 +1,34 @@
-﻿namespace Game.Engine.Packageing.Files;
+﻿using System.Collections.Immutable;
+using Newtonsoft.Json;
+
+namespace Game.Engine.Packageing.Files;
 
 public sealed class DataFileContentProvider : IContentProvider
 {
     private readonly string _rootDirectory;
+    private ImmutableDictionary<string, string> _entrys = ImmutableDictionary<string, string>.Empty;
 
     public DataFileContentProvider(string rootDirectory)
-        => _rootDirectory = rootDirectory;
+    {
+        _rootDirectory = rootDirectory;
+    }
 
-    public bool CanOpen(string path)
-        => File.Exists(Path.Combine(_rootDirectory, path));
+    public async Task Init()
+    {
+        var filePath = Path.Combine(_rootDirectory, "data.json");
 
-    public Stream Open(string path)
-        => File.OpenRead(Path.Combine(_rootDirectory, path));
+        var scriptDic = JsonConvert.DeserializeObject<ImmutableDictionary<string, string>>(await File.ReadAllTextAsync(filePath));
+
+        _entrys =
+        (
+            from pair in scriptDic
+            let fullPath = Path.Combine(_rootDirectory, pair.Value)
+            where File.Exists(fullPath)
+            select KeyValuePair.Create(pair.Key, fullPath)
+        ).ToImmutableDictionary();
+    }
+
+    public bool CanOpen(string name) => File.Exists(Path.Combine(_rootDirectory, name));
+
+    public Stream Open(string name) => File.OpenRead(Path.Combine(_rootDirectory, name));
 }

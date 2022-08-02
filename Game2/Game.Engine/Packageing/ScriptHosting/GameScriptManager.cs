@@ -11,17 +11,16 @@ namespace Game.Engine.Packageing.ScriptHosting;
 
 public sealed class GameScriptManager
 {
-    private readonly GlobalScriptVariables _scriptVariables;
     private readonly Script<Unit> _rootScript;
 
-    public GameScriptManager(GlobalScriptVariables scriptVariables)
+    public GameScriptManager()
     {
         var startPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
 
         var scriptConfig = ScriptOptions.Default
             .WithMetadataResolver(ScriptMetadataResolver.Default.WithSearchPaths(RuntimeEnvironment.GetRuntimeDirectory(), startPath))
             .WithSourceResolver(new SourceFileResolver(ImmutableArray<string>.Empty, Path.Combine(startPath, "scripts")))
-            .WithReferences(typeof(IEntryPoint).Assembly, typeof(Observer).Assembly)
+            .WithReferences(typeof(GlobalScriptVariables).Assembly, typeof(Observer).Assembly)
             .AddReferences(Assembly.GetExecutingAssembly())
             .WithOptimizationLevel(OptimizationLevel.Release)
             .WithImports(
@@ -38,12 +37,10 @@ public sealed class GameScriptManager
 #endif
 
         _rootScript = CSharpScript.Create<Unit>("Unit.Default", scriptConfig, typeof(GlobalScriptVariables));
-        _scriptVariables = scriptVariables;
     }
 
-    public Task<ScriptState<Unit>> CreateRootState()
-        => _rootScript.RunAsync(_scriptVariables);
+    public Task<ScriptState<Unit>> CreateRootState(GlobalScriptVariables scriptVariables) => _rootScript.RunAsync(scriptVariables);
 
-    public Script<TResult> CreateScript<TResult>(string code, ScriptState state)
-        => CSharpScript.Create<TResult>(code, state.Script.Options, typeof(GlobalScriptVariables));
+    public Script<TResult> CreateScript<TResult>(string code, ScriptState state) =>
+        CSharpScript.Create<TResult>(code, state.Script.Options, typeof(GlobalScriptVariables));
 }

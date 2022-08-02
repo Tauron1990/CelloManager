@@ -9,16 +9,13 @@ public static class CollectionExtensions
         var dict = new Dictionary<string, object>();
 
         if (@this is not null)
-        {
             foreach (var key in @this.AllKeys)
-            {
                 dict.Add(key ?? string.Empty, @this[key] ?? string.Empty);
-            }
-        }
+
 
         return dict;
     }
-    
+
     public static IEnumerable<KeyValuePair<string, string>> EnumerateEntrys(this NameValueCollection? @this)
     {
         if (@this is not null)

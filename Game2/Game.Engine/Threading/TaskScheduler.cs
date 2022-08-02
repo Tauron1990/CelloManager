@@ -8,9 +8,9 @@ namespace Game.Engine.Threading;
 [PublicAPI]
 public sealed class ReactiveCustomTaskScheduler : TaskScheduler
 {
+    private readonly IDictionary<int, Task> _queued = new ConcurrentDictionary<int, Task>();
     private readonly IScheduler _scheduler;
     private readonly bool _supportInline;
-    private readonly IDictionary<int, Task> _queued = new ConcurrentDictionary<int, Task>();
 
     public ReactiveCustomTaskScheduler(IScheduler scheduler, bool supportInline = true)
     {
@@ -18,22 +18,23 @@ public sealed class ReactiveCustomTaskScheduler : TaskScheduler
         _supportInline = supportInline;
     }
 
-    protected override IEnumerable<Task>? GetScheduledTasks()
-        => _queued.Values;
+    protected override IEnumerable<Task>? GetScheduledTasks() => _queued.Values;
 
     protected override void QueueTask(Task task)
     {
         var dipo = new SingleAssignmentDisposable();
         _queued.Add(task.Id, task);
-        
-        dipo.Disposable = _scheduler.Schedule(task, (_, toRun) =>
-        {
-            TryExecuteTask(toRun);
-            _queued.Remove(toRun.Id);
-            dipo.Dispose();
-            
-            return Disposable.Empty;
-        });
+
+        dipo.Disposable = _scheduler.Schedule(
+            task,
+            (_, toRun) =>
+            {
+                TryExecuteTask(toRun);
+                _queued.Remove(toRun.Id);
+                dipo.Dispose();
+
+                return Disposable.Empty;
+            });
     }
 
     protected override bool TryExecuteTaskInline(Task task, bool taskWasPreviouslyQueued)

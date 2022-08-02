@@ -6,9 +6,9 @@ namespace Game.Engine.Core;
 public class WeakReferenceDictionary<TKey, TValue> : IDictionary<TKey, TValue>
     where TValue : class where TKey : notnull
 {
-    private readonly IDictionary<TKey, WeakReference<TValue>> _weakReferences;
     private readonly Timer _purgeTimer;
-    
+    private readonly IDictionary<TKey, WeakReference<TValue>> _weakReferences;
+
     public WeakReferenceDictionary(IDictionary<TKey, WeakReference<TValue>>? dictionary = null)
     {
         _weakReferences = dictionary ?? new Dictionary<TKey, WeakReference<TValue>>();
@@ -17,24 +17,16 @@ public class WeakReferenceDictionary<TKey, TValue> : IDictionary<TKey, TValue>
 
     public WeakReferenceDictionary(int capacity)
         : this(new Dictionary<TKey, WeakReference<TValue>>(capacity))
-    { }
-
-    private void Purge(object? state)
     {
-        if(_weakReferences.IsReadOnly) return;
-        if(_weakReferences.Count == 0) return;
-
-        foreach (var pair in _weakReferences.ToArray())
-        {
-            if(pair.Value.TryGetTarget(out _))
-                continue;
-            _weakReferences.Remove(pair.Key);
-        }
     }
 
     public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
     {
-        TValue? GetData(WeakReference<TValue> reference) => reference.TryGetTarget(out var value) ? value : default;
+        TValue? GetData(WeakReference<TValue> reference)
+        {
+            return reference.TryGetTarget(out var value) ? value : default;
+        }
+
 
         return
         (
@@ -43,23 +35,26 @@ public class WeakReferenceDictionary<TKey, TValue> : IDictionary<TKey, TValue>
             where inst is not null
             select KeyValuePair.Create(value.Key, inst)
         ).GetEnumerator()!;
-
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
     public void Add(KeyValuePair<TKey, TValue> item)
-        => _weakReferences.Add(KeyValuePair.Create(item.Key, new WeakReference<TValue>(item.Value)));
+    {
+        _weakReferences.Add(KeyValuePair.Create(item.Key, new WeakReference<TValue>(item.Value)));
+    }
 
     public void Clear()
-        => _weakReferences.Clear();
+    {
+        _weakReferences.Clear();
+    }
 
-    public bool Contains(KeyValuePair<TKey, TValue> item)
-        => _weakReferences.ContainsKey(item.Key);
+    public bool Contains(KeyValuePair<TKey, TValue> item) => _weakReferences.ContainsKey(item.Key);
 
     public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
     {
         var index = 0;
+
         foreach (var weakReference in _weakReferences)
         {
             weakReference.Value.TryGetTarget(out var item);
@@ -68,26 +63,26 @@ public class WeakReferenceDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         }
     }
 
-    public bool Remove(KeyValuePair<TKey, TValue> item)
-        => _weakReferences.Remove(item.Key);
+    public bool Remove(KeyValuePair<TKey, TValue> item) => _weakReferences.Remove(item.Key);
 
     public int Count => _weakReferences.Count;
 
     public bool IsReadOnly => _weakReferences.IsReadOnly;
 
     public void Add(TKey key, TValue value)
-        => _weakReferences.Add(key, new WeakReference<TValue>(value));
+    {
+        _weakReferences.Add(key, new WeakReference<TValue>(value));
+    }
 
-    public bool ContainsKey(TKey key)
-        => _weakReferences.ContainsKey(key);
+    public bool ContainsKey(TKey key) => _weakReferences.ContainsKey(key);
 
-    public bool Remove(TKey key)
-        => _weakReferences.Remove(key);
+    public bool Remove(TKey key) => _weakReferences.Remove(key);
 
     public bool TryGetValue(TKey key, out TValue value)
     {
         if (_weakReferences.TryGetValue(key, out var reference) && reference.TryGetTarget(out value!))
             return true;
+
 
         value = default!;
         return false;
@@ -98,7 +93,7 @@ public class WeakReferenceDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         get => _weakReferences[key].TryGetTarget(out var item) ? item : default!;
         set
         {
-            if(_weakReferences.TryGetValue(key, out var reference))
+            if (_weakReferences.TryGetValue(key, out var reference))
                 reference.SetTarget(value);
             else
                 _weakReferences.Add(key, new WeakReference<TValue>(value));
@@ -113,5 +108,23 @@ public class WeakReferenceDictionary<TKey, TValue> : IDictionary<TKey, TValue>
         select value.Value
     ).ToImmutableList();
 
-    ~WeakReferenceDictionary() => _purgeTimer.Dispose();
+    private void Purge(object? state)
+    {
+        if (_weakReferences.IsReadOnly) return;
+        if (_weakReferences.Count == 0) return;
+
+        foreach (var pair in _weakReferences.ToArray())
+        {
+            if (pair.Value.TryGetTarget(out _))
+                continue;
+
+
+            _weakReferences.Remove(pair.Key);
+        }
+    }
+
+    ~WeakReferenceDictionary()
+    {
+        _purgeTimer.Dispose();
+    }
 }
