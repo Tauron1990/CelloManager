@@ -11,11 +11,13 @@ namespace Game.Engine.Packageing;
 public sealed class GameDataManager
 {
     private readonly string _loadingRoot;
+    private readonly GameManager _gameManager;
 
-    public GameDataManager(string loadingRoot)
+    public GameDataManager(string loadingRoot, GameManager gameManager)
     {
         ScriptManager = new GameScriptManager();
         _loadingRoot = loadingRoot;
+        _gameManager = gameManager;
     }
 
     public ImmutableList<InternalGamePackage> Packages { get; private set; } = ImmutableList<InternalGamePackage>.Empty;
@@ -61,7 +63,7 @@ public sealed class GameDataManager
     }
 
     private GlobalScriptVariables CreateVariables(PackageScriptManager scriptManager, PackageContentManager contentManager) =>
-        new(scriptManager, contentManager);
+        new(scriptManager, contentManager, _gameManager);
 
     private async ValueTask<FilteredPackages> LoadFilter()
     {

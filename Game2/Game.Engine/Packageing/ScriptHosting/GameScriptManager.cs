@@ -29,7 +29,8 @@ public sealed class GameScriptManager
                 "System.Linq",
                 "System.Threading.Tasks",
                 "System.Reactive",
-                "Game.Engine");
+                "Game.Engine",
+                "Game.Engine.Packageing.ScriptHosting.Scripts");
 
 
 #if DEBUG

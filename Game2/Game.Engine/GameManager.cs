@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+﻿using System.Collections.Immutable;
 using EcsRx.Collections.Database;
 using EcsRx.Extensions;
 using EcsRx.Infrastructure;
@@ -6,7 +6,15 @@ using EcsRx.Infrastructure.Ninject;
 using EcsRx.Plugins.Bootstrap;
 using EcsRx.Plugins.Computeds;
 using EcsRx.Plugins.GroupBinding;
+using EcsRx.Plugins.ReactiveSystems;
+using Game.Engine.Core;
+using Game.Engine.Core.Movement;
+using Game.Engine.Core.Player;
+using Game.Engine.Core.Rooms;
+using Game.Engine.Core.Time;
 using Game.Engine.Packageing;
+using Game.Engine.Packageing.Files;
+using Game.Engine.Packageing.ScriptHosting;
 using Game.Engine.Screens;
 using SystemsRx.Events;
 using SystemsRx.Infrastructure.Dependencies;
@@ -18,9 +26,14 @@ namespace Game.Engine;
 
 public sealed class GameManager
 {
+    private ImmutableList<Type> _systems = ImmutableList<Type>.Empty;
     private CoreApp? _coreApp;
 
-    public GameManager(IScreenManager screenManager) => ScreenManager = screenManager;
+    public GameManager(IScreenManager screenManager)
+    {
+        ScreenManager = screenManager;
+        DataManager = new GameDataManager(Path.GetFullPath("GameData"), this);
+    }
 
     public IScreenManager ScreenManager { get; }
 
@@ -28,7 +41,14 @@ public sealed class GameManager
 
     public IEntityDatabase Database => _coreApp!.EntityDatabase;
 
-    public GameDataManager DataManager { get; } = new(Path.GetFullPath("GameData"));
+    public static GameDataManager DataManager { get; private set; } = null!;
+
+    public void RegisterSystem<TSystem>()
+        where TSystem : ISystem =>
+        _systems = _systems.Add(typeof(TSystem));
+
+    public async ValueTask InitSystem()
+        => await DataManager.InitManager();
     
     public async ValueTask ClearGame(Action? preStartApp)
     {
@@ -38,7 +58,8 @@ public sealed class GameManager
             ScreenManager,
             DataManager,
             this,
-            preStartApp);
+            preStartApp,
+            _systems);
         
         await Task.Run(() => _coreApp.StartApplication());
     }
@@ -63,17 +84,18 @@ public sealed class GameManager
 
     private sealed class CoreApp : EcsRxApplication
     {
-        private readonly ContentManager _contentManager;
         private Action? _prestart;
+        private readonly IEnumerable<Type> _systems;
 
-        public CoreApp(IScreenManager screenManager, ContentManager contentManager, GameManager gameManager,
-            Action? prestart)
+        public CoreApp(IScreenManager screenManager, GameDataManager contentManager, GameManager gameManager,
+            Action? prestart, IEnumerable<Type> systems)
         {
-            _contentManager = contentManager;
             _prestart = prestart;
+            _systems = systems;
 
             Container.Bind<GameManager>(bm => bm.ToInstance(gameManager));
-            Container.Bind<ContentManager>(cm => cm.ToInstance(contentManager));
+            Container.Bind<GameContentManager>(cm => cm.ToInstance(contentManager.ContentManager));
+            Container.Bind<GameScriptManager>(cm => cm.ToInstance(contentManager.ScriptManager));
             Container.Bind<IScreenManager>(sm => sm.ToInstance(screenManager));
         }
 
@@ -94,10 +116,6 @@ public sealed class GameManager
 
         protected override void LoadModules()
         {
-            DimensionMapBuilder.CreateWorld(
-                _contentManager,
-                b => { SpecialBuilder.InitSpecial(b); });
-
             base.LoadModules();
 
             Container.Unbind<IMessageBroker>();
@@ -120,7 +138,19 @@ public sealed class GameManager
             BindSystem<TimeManager>();
             BindSystem<RoomRenderer>();
             BindSystem<GameInfoManager>();
+
+            foreach (var system in _systems)
+            {
+                Container.Bind(typeof(ISystem), system, new BindingConfiguration
+                {
+                    WithName = system.Name
+                });
+            }
+            
             base.BindSystems();
+            
+            void BindSystem<T>() where T : ISystem 
+                => Container.Bind<ISystem, T>((Action<BindingBuilder>)(x => x.WithName(typeof(T).Name)));
         }
 
         protected override void ApplicationStarted()
@@ -145,11 +175,6 @@ public sealed class GameManager
                 EventSystem.Publish(new SwitchDimesionEvent(gameInfo.LastDimension.Value));
                 EventSystem.Publish(MoveToRoom.MovePlayerTo(player.Position.Value));
             }
-        }
-
-        private void BindSystem<T>() where T : ISystem
-        {
-            Container.Bind<ISystem, T>((Action<BindingBuilder>)(x => x.WithName(typeof(T).Name)));
         }
     }
 }
