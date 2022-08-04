@@ -17,15 +17,15 @@ public sealed class TimeBlueprint : IBlueprint
     public void Apply(IEntity entity)
     {
         var broken = new TimeLine(
-            _contentManager.GetString("BrokenTimeLineName"),
-            _contentManager.GetInt("BrokenTimeLineShift"));
+            _contentManager.GetString("core", "BrokenTimeLineName"),
+            _contentManager.GetInt("core", "BrokenTimeLineShift"));
         var main = new TimeLine(
-            _contentManager.GetString("MainTimeLineName"),
-            _contentManager.GetInt("MainTimeLineTimeShift"));
+            _contentManager.GetString("core", "MainTimeLineName"),
+            _contentManager.GetInt("core", "MainTimeLineTimeShift"));
 
         entity.AddComponent(
             new GlobalBaseTimeComponent(
-                RxProperty.New(_contentManager.GetDateTime("GlobalBaseTime")),
+                RxProperty.New(_contentManager.GetDateTime("core", "GlobalBaseTime")),
                 RxProperty.New(broken)));
 
         entity.AddComponent(

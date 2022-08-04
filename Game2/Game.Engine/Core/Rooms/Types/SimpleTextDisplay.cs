@@ -1,23 +1,18 @@
-﻿using System.Runtime.CompilerServices;
-using RaiseOfNewWorld.Engine.Data;
-using Terminal.Gui;
+﻿using Terminal.Gui;
 
-namespace RaiseOfNewWorld.Engine.Rooms.Types;
+namespace Game.Engine.Core.Rooms.Types;
 
 public sealed class TextDisplay : RoomBase
 {
-    private readonly string? _filePath;
     private readonly Action<GameManager> _onNext;
     private readonly Func<IReadOnlyCollection<string>> _pagesFactory;
 
     private int _index;
 
-    public TextDisplay(Func<IReadOnlyCollection<string>> pages, Action<GameManager> onNext,
-        [CallerFilePath] string? filePath = null)
+    public TextDisplay(Func<IReadOnlyList<string>> pages, Action<GameManager> onNext)
     {
         _pagesFactory = pages;
         _onNext = onNext;
-        _filePath = filePath;
     }
 
     public override void Display(View view, GameManager gameManager)
@@ -29,10 +24,9 @@ public sealed class TextDisplay : RoomBase
             Width = Dim.Fill(),
             Height = Dim.Percent(90),
             X = Pos.At(1),
-            Y = Pos.At(1)
+            Y = Pos.At(1),
+            Text = pages.ElementAt(0)
         };
-
-        TextProcessor.FormatText(pages.ElementAt(0)).Render(page);
 
         {
             var button = new Button
@@ -54,7 +48,7 @@ public sealed class TextDisplay : RoomBase
                 if (_index == pages.Count)
                     _onNext(gameManager);
                 else
-                    TextProcessor.FormatText(pages.ElementAt(_index)).Render(page);
+                    page.Text = pages.ElementAt(_index);
             }
         }
     }

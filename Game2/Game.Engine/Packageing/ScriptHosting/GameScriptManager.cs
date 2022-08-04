@@ -29,7 +29,13 @@ public sealed class GameScriptManager
                 "System.Linq",
                 "System.Threading.Tasks",
                 "System.Reactive",
+                "System.Reactive.Linq",
                 "Game.Engine",
+                "Game.Engine.Core.Rooms",
+                "Game.Engine.Core.Rooms.Types",
+                "Game.Engine.Core.Movement",
+                "Game.Engine.Core.Time",
+                "Game.Engine.Screens",
                 "Game.Engine.Packageing.ScriptHosting.Scripts");
 
 

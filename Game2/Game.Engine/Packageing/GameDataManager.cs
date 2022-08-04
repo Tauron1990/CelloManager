@@ -2,6 +2,7 @@
 using Game.Engine.Packageing.Files;
 using Game.Engine.Packageing.ScriptHosting;
 using Game.Engine.Packageing.ScriptHosting.Scripts;
+using Game.Engine.Screens;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 
@@ -22,10 +23,15 @@ public sealed class GameDataManager
 
     public ImmutableList<InternalGamePackage> Packages { get; private set; } = ImmutableList<InternalGamePackage>.Empty;
 
+    public ImmutableList<Func<UiExtensions.MenuItemFactory, IEnumerable<UiExtensions.MenuBarItemBuilder>>> MainMenuRegistrations { get; private set; }
+    
     public GameScriptManager ScriptManager { get; }
 
     public GameContentManager ContentManager { get; } = new();
 
+    public void RegisterMainMenuBuilder(Func<UiExtensions.MenuItemFactory, IEnumerable<UiExtensions.MenuBarItemBuilder>> builder)
+        => MainMenuRegistrations = MainMenuRegistrations.Add(builder);
+    
     public async ValueTask InitManager()
     {
         var toFilter = await LoadFilter();

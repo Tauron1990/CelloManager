@@ -37,17 +37,32 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="GameData\Base\Data" />
-      <Folder Include="GameData\Base\Scripts" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Update="GameData\Base\info.json">
+      <None Remove="GameData\Base\Scripts\init.csx" />
+      <Content Include="GameData\Base\Scripts\init.csx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="GameData\Base\Scripts\scripts.json" />
+      <Content Include="GameData\Base\Scripts\scripts.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="GameData\Base\info.json" />
+      <Content Include="GameData\Base\info.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="GameData\EcludePackages.json" />
+      <Content Include="GameData\EcludePackages.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Update="GameData\Base\Data\prologtext.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="GameData\EcludePackages.json">
+      <None Update="GameData\Base\Data\epilog.txt">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Remove="GameData\Base\Scripts\specialrooms.init.csx" />
+      <Content Include="GameData\Base\Scripts\specialrooms.init.csx">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

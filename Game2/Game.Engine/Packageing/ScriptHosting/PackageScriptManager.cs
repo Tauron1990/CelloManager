@@ -1,5 +1,7 @@
 using System.Collections.Immutable;
+using System.Reactive;
 using Game.Engine.Packageing.ScriptHosting.Scripts;
+using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
 using Newtonsoft.Json;
 
@@ -40,9 +42,32 @@ public sealed class PackageScriptManager
         ).ToImmutableDictionary();
 
 
+        await ProcessInitScripts();
+        
         return this;
     }
 
+    private async ValueTask ProcessInitScripts()
+    {
+        const string initScriptName = "init.csx";
+        var entrys = _scripts.Where(pair => pair.Value.EndsWith(initScriptName)).ToImmutableArray();
+        _scripts = _scripts.RemoveRange(entrys.Select(p => p.Key));
+        if(entrys.IsEmpty) return;
+        
+        var startscript = entrys.Select(p => p.Value).FirstOrDefault(e => Path.GetFileName(e) == initScriptName);
+
+        if (!string.IsNullOrWhiteSpace(startscript))
+            await ProcessScript(async s => await CSharpScript.Create<Unit>(await File.ReadAllTextAsync(startscript)).RunFromAsync(s));
+
+
+        foreach (var script in 
+                 from entry in entrys
+                 where Path.GetFileName(entry.Value) != initScriptName
+                 orderby entry.Key
+                 select entry.Value)
+            await ProcessScript(async s => await CSharpScript.Create<Unit>(await File.ReadAllTextAsync(script)).RunFromAsync(s));
+    }
+    
     private async ValueTask<TResult> ProcessScript<TResult>(Func<ScriptState, ValueTask<ScriptState<TResult>>> processFunc)
     {
         if (_currentState == null) throw new InvalidOperationException("The Script Manager is not Initialized");

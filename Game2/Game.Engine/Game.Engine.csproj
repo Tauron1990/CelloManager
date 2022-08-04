@@ -28,8 +28,4 @@
         <PackageReference Include="Terminal.Gui" Version="1.7.1" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Core\Rooms\Types" />
-    </ItemGroup>
-
 </Project>
