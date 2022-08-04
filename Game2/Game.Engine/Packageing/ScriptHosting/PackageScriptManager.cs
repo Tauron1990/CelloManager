@@ -10,7 +10,7 @@ namespace Game.Engine.Packageing.ScriptHosting;
 public sealed class PackageScriptManager
 {
     private readonly GameScriptManager _gameScriptManager;
-    private readonly SemaphoreSlim _lock = new(0, 1);
+    private readonly SemaphoreSlim _lock = new(1, 1);
 
     private readonly string _scriptDictionary;
 
@@ -57,7 +57,11 @@ public sealed class PackageScriptManager
         var startscript = entrys.Select(p => p.Value).FirstOrDefault(e => Path.GetFileName(e) == initScriptName);
 
         if (!string.IsNullOrWhiteSpace(startscript))
-            await ProcessScript(async s => await CSharpScript.Create<Unit>(await File.ReadAllTextAsync(startscript)).RunFromAsync(s));
+            await ProcessScript(async s =>
+            {
+                var scriptInst = _gameScriptManager.CreateScript<Unit>(await File.ReadAllTextAsync(startscript), s);
+                return await scriptInst.RunFromAsync(s);
+            });
 
 
         foreach (var script in 
@@ -65,7 +69,11 @@ public sealed class PackageScriptManager
                  where Path.GetFileName(entry.Value) != initScriptName
                  orderby entry.Key
                  select entry.Value)
-            await ProcessScript(async s => await CSharpScript.Create<Unit>(await File.ReadAllTextAsync(script)).RunFromAsync(s));
+            await ProcessScript(async s =>
+            {
+                var scriptInst = _gameScriptManager.CreateScript<Unit>(await File.ReadAllTextAsync(script), s);
+                return await scriptInst.RunFromAsync(s);
+            });
     }
     
     private async ValueTask<TResult> ProcessScript<TResult>(Func<ScriptState, ValueTask<ScriptState<TResult>>> processFunc)

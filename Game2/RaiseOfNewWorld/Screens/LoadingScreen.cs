@@ -104,6 +104,11 @@ public sealed class LoadingScreen : ScreenBase, IProgress<int>
                         gameManager,
                         this);
                 }
+                catch (Exception e)
+                {
+                    MessageBox.Query("Schwerer Fehler", e.ToString(), "Beenden");
+                    Application.Shutdown();
+                }
                 finally
                 {
                     cancellationToken.Cancel();

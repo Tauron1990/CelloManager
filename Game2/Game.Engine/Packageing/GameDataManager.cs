@@ -1,10 +1,12 @@
 ﻿using System.Collections.Immutable;
+using Game.Engine.Core;
 using Game.Engine.Packageing.Files;
 using Game.Engine.Packageing.ScriptHosting;
 using Game.Engine.Packageing.ScriptHosting.Scripts;
 using Game.Engine.Screens;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
+using Terminal.Gui;
 
 namespace Game.Engine.Packageing;
 
@@ -24,6 +26,7 @@ public sealed class GameDataManager
     public ImmutableList<InternalGamePackage> Packages { get; private set; } = ImmutableList<InternalGamePackage>.Empty;
 
     public ImmutableList<Func<UiExtensions.MenuItemFactory, IEnumerable<UiExtensions.MenuBarItemBuilder>>> MainMenuRegistrations { get; private set; }
+        = ImmutableList<Func<UiExtensions.MenuItemFactory, IEnumerable<UiExtensions.MenuBarItemBuilder>>>.Empty;
     
     public GameScriptManager ScriptManager { get; }
 
@@ -35,7 +38,8 @@ public sealed class GameDataManager
     public async ValueTask InitManager()
     {
         var toFilter = await LoadFilter();
-
+        var paks = new Dictionary<string, (string Path, GamePackage Pack)>();
+        
         foreach (var directory in Directory.EnumerateDirectories(_loadingRoot))
         {
             var infoFilePath = Path.Combine(directory, "info.json");
@@ -48,12 +52,45 @@ public sealed class GameDataManager
 
             if (pack == null || toFilter.ExcludePackages.Contains(pack.Name))
                 continue;
-
-
-            Packages = Packages.Add(await CreateInternalPackage(directory, pack));
+            
+            paks.Add(pack.Name, (directory, pack));
         }
+
+
+        var cycles = paks.Select(gp => gp.Value.Pack).Select(gp => KeyValuePair.Create(gp.Name, gp.LoadBefore)).ToImmutableDictionary().FindCycles();
+
+        if (cycles.Count != 0)
+        {
+            MessageBox.Query("Zyklische Referenz", string.Join("->", cycles[0]), "Beenden");
+            Application.Shutdown();
+            
+            return;
+        }
+
+
+        await LoadPackages(paks);
+        
+        _gameManager.ScreenManager.Switch("GameScreen");
     }
 
+    private async ValueTask LoadPackages(Dictionary<string, (string Path, GamePackage Pack)> paks)
+    {
+        var loaded = new HashSet<string>();
+
+        foreach (var gamePackage in paks.Values)
+        {
+            foreach (var toLoad in gamePackage.Pack.LoadBefore.Where(toLoad => loaded.Add(toLoad)))
+            {
+                var toLoadPack = paks[toLoad];
+                Packages = Packages.Add(await CreateInternalPackage(toLoadPack.Path, toLoadPack.Pack));
+            }
+            
+            
+            if (loaded.Add(gamePackage.Pack.Name))
+                Packages = Packages.Add(await CreateInternalPackage(gamePackage.Path, gamePackage.Pack));
+        }
+    }
+    
     private async ValueTask<InternalGamePackage> CreateInternalPackage(string sourcePath, GamePackage gamePackage)
     {
         var scriptManager = new PackageScriptManager(Path.Combine(sourcePath, "Scripts"), ScriptManager);
