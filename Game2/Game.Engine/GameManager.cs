@@ -158,7 +158,9 @@ public sealed class GameManager
             var gameInfo = EntityDatabase.GetCollection()
                 .Where(e => e.HasComponent<GameInfo>())
                 .Select(e => e.GetComponent<GameInfo>())
-                .First();
+                .FirstOrDefault();
+            if(gameInfo == null)
+                return;
 
             if (gameInfo.IsNewGame.Value)
             {

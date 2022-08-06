@@ -28,7 +28,7 @@ public sealed class DataFileContentProvider : IContentProvider
         ).ToImmutableDictionary();
     }
 
-    public bool CanOpen(string name) => File.Exists(Path.Combine(_rootDirectory, name));
+    public bool CanOpen(string name) => _entrys.ContainsKey(name);
 
-    public Stream Open(string name) => File.OpenRead(Path.Combine(_rootDirectory, name));
+    public Stream Open(string name) => File.OpenRead(_entrys[name]);
 }

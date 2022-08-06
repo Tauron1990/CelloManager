@@ -49,7 +49,7 @@ public sealed class GameScriptManager
                 "System.Threading.Tasks",
                 "System.Reactive",
                 "System.Reactive.Linq",
-                "EcsRx.Extension",
+                "EcsRx.Extensions",
                 "Game.Engine",
                 "Game.Engine.Core",
                 "Game.Engine.Core.Rooms",

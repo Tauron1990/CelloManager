@@ -13,8 +13,14 @@ public static class EntityManager
     private static readonly Assembly AllowedAssembly = typeof(EntityManager).Assembly;
     private static readonly string SavePath = Path.GetFullPath("Saves");
 
-    public static IEnumerable<string> GetSaveFiles()
-        => Directory.EnumerateFiles(SavePath).Select(Path.GetFileNameWithoutExtension)!;
+    public static IEnumerable<string> GetSaveFiles() =>
+        (Directory.Exists(SavePath)
+            ? 
+            from path in Directory.EnumerateFiles(SavePath)
+            let file = Path.GetFileNameWithoutExtension(path)
+            where !string.IsNullOrWhiteSpace(file)
+            select file
+            : ImmutableArray<string>.Empty)!;
 
     public static void Save(IEntityDatabase database, string name)
     {

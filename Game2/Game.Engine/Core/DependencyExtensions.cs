@@ -1,7 +1,9 @@
 ﻿using System.Diagnostics;
+using JetBrains.Annotations;
 
 namespace Game.Engine.Core;
 
+[PublicAPI]
 public static class DependencyExtensions
 {
     private enum VisitState
@@ -13,7 +15,8 @@ public static class DependencyExtensions
 
     private static TValue ValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue defaultValue) => dictionary.TryGetValue(key, out var value) ? value : defaultValue;
 
-    private static void TryPush<T>(T node, Func<T, IEnumerable<T>> lookup, Stack<KeyValuePair<T, IEnumerator<T>>> stack, Dictionary<T, VisitState> visited, List<List<T>> cycles)
+    private static void TryPush<T>(T node, Func<T, IEnumerable<T>> lookup, Stack<KeyValuePair<T, IEnumerator<T>>> stack, IDictionary<T, VisitState> visited, ICollection<List<T>> cycles)
+        where T : notnull
     {
         var state = visited.ValueOrDefault(node, VisitState.NotVisited);
         switch (state)
@@ -38,7 +41,7 @@ public static class DependencyExtensions
         }
     }
 
-    static List<List<T>> FindCycles<T>(T root, Func<T, IEnumerable<T>> lookup, Dictionary<T, VisitState> visited)
+    private static List<List<T>> FindCycles<T>(T root, Func<T, IEnumerable<T>> lookup, Dictionary<T, VisitState> visited) where T : notnull
     {
         var stack = new Stack<KeyValuePair<T, IEnumerator<T>>>();
         var cycles = new List<List<T>>();
@@ -59,7 +62,8 @@ public static class DependencyExtensions
         return cycles;
     }
 
-    public static List<List<T>> FindCycles<T>(this IEnumerable<T> nodes, Func<T, IEnumerable<T>> edges)
+    public static List<List<T>> FindCycles<T>(this IEnumerable<T> nodes, Func<T, IEnumerable<T>> edges) 
+        where T : notnull
     {
         var cycles = new List<List<T>>();
         var visited = new Dictionary<T, VisitState>();
@@ -69,6 +73,6 @@ public static class DependencyExtensions
     }
 
     public static List<List<T>> FindCycles<T, TValueList>(this IDictionary<T, TValueList> listDictionary)
-        where TValueList : class, IEnumerable<T> =>
+        where TValueList : class, IEnumerable<T> where T : notnull =>
         listDictionary.Keys.FindCycles(key => listDictionary!.ValueOrDefault(key, null) ?? Enumerable.Empty<T>());
 }
