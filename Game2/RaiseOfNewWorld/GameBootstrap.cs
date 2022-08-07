@@ -1,8 +1,10 @@
-﻿using Game.Engine;
+﻿using System.Diagnostics;
+using Game.Engine;
 using Game.Engine.Core;
 using Game.Engine.Core.Player;
 using Game.Engine.Core.Rooms.Maps;
 using Game.Engine.Core.Time;
+using JetBrains.Annotations;
 using RaiseOfNewWorld.Screens;
 using Terminal.Gui;
 
@@ -10,6 +12,12 @@ namespace RaiseOfNewWorld;
 
 public static class GameBootstrap
 {
+    [UsedImplicitly, Conditional("DEBUG")]
+    private static void Test()
+    {
+        
+    }
+    
     public static async ValueTask InitialieGame(GameManager gameManager, IProgress<int> progress)
     {
         await gameManager.InitSystem();
