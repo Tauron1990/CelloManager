@@ -1,4 +1,5 @@
-﻿using Game.Engine.Screens;
+﻿using System.Globalization;
+using Game.Engine.Screens;
 using RaiseOfNewWorld;
 using RaiseOfNewWorld.Screens;
 using Terminal.Gui;

@@ -1,5 +1,6 @@
 {
   "core": "core.json",
   "epilog": "epilog.txt",
-  "prologtext": "prologtext.txt"
+  "prologtext": "prologtext.txt",
+  "chapter1": "chapter1.json"
 }

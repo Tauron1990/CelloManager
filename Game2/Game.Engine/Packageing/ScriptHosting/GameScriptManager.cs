@@ -13,6 +13,7 @@ using Game.Engine.Packageing.ScriptHosting.Scripts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Scripting;
 using Microsoft.CodeAnalysis.Scripting;
+using SystemsRx.Attributes;
 using SystemsRx.Plugins.Computeds;
 
 namespace Game.Engine.Packageing.ScriptHosting;
@@ -24,12 +25,13 @@ public sealed class GameScriptManager
     public GameScriptManager()
     {
         var startPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ?? string.Empty;
+        var scriptsPaths = Path.Combine(startPath, "scripts");
 
         var scriptConfig = ScriptOptions.Default
             .WithMetadataResolver(ScriptMetadataResolver.Default.WithSearchPaths(RuntimeEnvironment.GetRuntimeDirectory(), startPath))
-            .WithSourceResolver(new SourceFileResolver(ImmutableArray<string>.Empty, Path.Combine(startPath, "scripts")))
-            .WithReferences
-            (
+            .WithSourceResolver(
+                new SourceFileResolver(Directory.GetDirectories(scriptsPaths, "*", SearchOption.AllDirectories).ToArray(), scriptsPaths))
+            .WithReferences(
                 typeof(GlobalScriptVariables).Assembly,
                 typeof(Observer).Assembly,
                 typeof(SystemBootstrapPlugin).Assembly,
@@ -38,8 +40,9 @@ public sealed class GameScriptManager
                 typeof(ReactiveSystemsPlugin).Assembly,
                 typeof(ReactiveProperty<>).Assembly,
                 typeof(CollectionAffinityAttribute).Assembly,
-                typeof(EcsRxApplication).Assembly
-                )
+                typeof(EcsRxApplication).Assembly,
+                typeof(MultiThreadAttribute).Assembly
+            )
             .AddReferences(Assembly.GetExecutingAssembly())
             .WithOptimizationLevel(OptimizationLevel.Release)
             .WithImports(
@@ -50,6 +53,9 @@ public sealed class GameScriptManager
                 "System.Reactive",
                 "System.Reactive.Linq",
                 "EcsRx.Extensions",
+                "SystemsRx.Extensions",
+                "SystemsRx.Events.Process",
+                "SystemsRx.Events",
                 "Game.Engine",
                 "Game.Engine.Core",
                 "Game.Engine.Core.Rooms",
@@ -59,7 +65,7 @@ public sealed class GameScriptManager
                 "Game.Engine.Screens",
                 "Game.Engine.Packageing.ScriptHosting.Scripts",
                 "Terminal.Gui"
-                );
+            );
         
 #if DEBUG
         scriptConfig = scriptConfig.WithOptimizationLevel(OptimizationLevel.Debug);

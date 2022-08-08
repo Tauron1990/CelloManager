@@ -27,8 +27,23 @@ public sealed class PackageContentManager : IContentManager
         using var reader = new StreamReader(OpenData(name));
         return JToken.Parse(reader.ReadToEnd());
     }
+
+    private string TranslateJsonString(string? input)
+    {
+        if (string.IsNullOrEmpty(input))
+            return string.Empty;
+
+
+        if (!input.StartsWith('$'))
+            return input;
+
+
+        var path = input[1..];
+        using var reader = new StreamReader(_providers.First(c => c.CanOpenPath(path)).OpenPath(path));
+        return reader.ReadToEnd();
+    }
     
-    public string GetString(string resourceName, string entryName) => GetJson(resourceName).Value<string>(entryName) ?? string.Empty;
+    public string GetString(string resourceName, string entryName) => TranslateJsonString(GetJson(resourceName).Value<string>(entryName));
 
     public int GetInt(string resourceName, string entryName) => GetJson(resourceName).Value<int>(entryName);
     public DateTime GetDateTime(string resourceName, string entryName) => GetJson(resourceName).Value<DateTime>(entryName);
