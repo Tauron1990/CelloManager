@@ -16,11 +16,10 @@
     <dialogHost:DialogHost>
         <Grid RowDefinitions="Auto, *" ColumnDefinitions="*, Auto">
             <TextBox Name="PathTextField" Margin="10" assists:TextFieldAssist.Hints="Asset Ordner"/>
-            <Button Name="BrowseDic" Margin="10" assists:ButtonAssist.CornerRadius="7" assists:ButtonAssist.ClickFeedbackColor="Orange"
-                    Grid.Row="0" Grid.Column="1" Classes="Outline">Suchen</Button>
+            <Button Name="BrowseDic" Margin="10" assists:ButtonAssist.CornerRadius="7" Grid.Row="0" Grid.Column="1" Classes="Outline Accent">Suchen</Button>
             <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
                 <TabItem Header="Start">
-                    <TextBlock TextAlignment="Center">Asset Manager für RiseOfNewWorld</TextBlock>
+                    <TextBlock Margin="0, 100, 0, 20" TextAlignment="Center">Asset Manager für RiseOfNewWorld</TextBlock>
                 </TabItem>
                 <TabItem Header="Scripts" Name="ScriptsTab"/>
                 <TabItem Header="Assets" Name="AssetTab"/>
