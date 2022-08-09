@@ -26,7 +26,7 @@ public class GameDataScriptDevelop : GlobalScriptVariables
                 2,
                 builder =>
                 {
-                    builder.WithRoom("chapter1", b => b.WithFactory((_, manager) => ))
+                    //builder.WithRoom("chapter1", b => b.WithFactory((_, manager) => ))
                 }));
 
 

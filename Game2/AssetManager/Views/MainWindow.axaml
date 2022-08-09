@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:AssetManager.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:dialogHost="clr-namespace:DialogHost;assembly=DialogHost.Avalonia"
+        xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="AssetManager.Views.MainWindow"
+        Icon="/Assets/avalonia-logo.ico" WindowState="Maximized"
+        Title="Asset Manager">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    <dialogHost:DialogHost>
+        <Grid RowDefinitions="Auto, *" ColumnDefinitions="*, Auto">
+            <TextBox Name="PathTextField" Margin="10" assists:TextFieldAssist.Hints="Asset Ordner"/>
+            <Button Name="BrowseDic" Margin="10" assists:ButtonAssist.CornerRadius="7" assists:ButtonAssist.ClickFeedbackColor="Orange"
+                    Grid.Row="0" Grid.Column="1" Classes="Outline">Suchen</Button>
+            <TabControl Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="10">
+                <TabItem Header="Start">
+                    <TextBlock TextAlignment="Center">Asset Manager für RiseOfNewWorld</TextBlock>
+                </TabItem>
+                <TabItem Header="Scripts" Name="ScriptsTab"/>
+                <TabItem Header="Assets" Name="AssetTab"/>
+            </TabControl>
+        </Grid>
+    </dialogHost:DialogHost>
+</Window>
