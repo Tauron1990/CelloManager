@@ -1,17 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Immutable;
+using System.Threading.Tasks;
+using ReactiveUI;
 
 namespace AssetManager.ViewModels;
 
-public sealed record AssetEntry(string RelativeFilePath);
 
-public sealed class AssetsViewModel : ViewModelBase
+
+public sealed class AssetsViewModel : DataEntryViewModel
 {
-    
-    
-    public void Reset(){}
 
-    public ValueTask Load(string path)
-    {
-        return default;
-    }
 }

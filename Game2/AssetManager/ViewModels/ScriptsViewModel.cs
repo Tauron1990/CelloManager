@@ -2,12 +2,6 @@
 
 namespace AssetManager.ViewModels;
 
-public sealed class ScriptsViewModel : ViewModelBase
+public sealed class ScriptsViewModel : DataEntryViewModel
 {
-    public void Reset(){}
-
-    public ValueTask Load(string path)
-    {
-        return default;
-    }
 }
