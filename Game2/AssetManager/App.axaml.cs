@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using AssetManager.ViewModels;
 using AssetManager.Views;
+using Avalonia.Controls;
 using Material.Styles;
 using Material.Styles.Themes.Base;
 using Splat;
@@ -12,6 +13,8 @@ namespace AssetManager
 {
     public partial class App : Application
     {
+        public static Window MainWindow { get; private set; } = null!;
+        
         public override void Initialize()
         {
             AvaloniaXamlLoader.Load(this);
@@ -27,6 +30,8 @@ namespace AssetManager
                 {
                     ViewModel = Locator.Current.GetService<MainWindowViewModel>(),
                 };
+
+                MainWindow = desktop.MainWindow;
             }
 
             base.OnFrameworkInitializationCompleted();

@@ -7,10 +7,14 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using DynamicData;
-using DynamicData.Aggregation;
 using DynamicData.Binding;
 using DynamicData.Kernel;
+using JetBrains.Annotations;
+using Material.Dialog;
+using Material.Dialog.Icons;
+using Material.Dialog.Interfaces;
 using Newtonsoft.Json;
 using ReactiveUI;
 
@@ -56,7 +60,7 @@ public abstract class DataEntryViewModel : ViewModelBase, IDisposable
     private readonly SourceCache<DataEntry, string> _entrys = new(e => e.Name);
     private DataEntry? _currentEntry;
 
-    public ReactiveCommand<Unit, DataEntry> AddItem { get; }
+    public ReactiveCommand<Unit, DataEntry?> AddItem { get; }
 
     public ReactiveCommand<Unit, Unit> RemoveItem { get; }
 
@@ -67,6 +71,7 @@ public abstract class DataEntryViewModel : ViewModelBase, IDisposable
     public DataEntry? CurrentEntry
     {
         get => _currentEntry;
+        [UsedImplicitly]
         set => this.RaiseAndSetIfChanged(ref _currentEntry, value);
     }
 
@@ -80,37 +85,40 @@ public abstract class DataEntryViewModel : ViewModelBase, IDisposable
 
         Entrys = list;
 
-        AddItem = ReactiveCommand.CreateFromObservable<Unit, DataEntry>(
-            _ => 
-            (
-                from indexFile in _currentPath.Take(1)
-                let dicPath = Path.GetDirectoryName(indexFile)
-                where !string.IsNullOrEmpty(dicPath)
-                select AddEntry(dicPath)
-            ).SelectMany(t => t),
-            from basePath in _currentPath
-            select File.Exists(basePath))
+        AddItem = ReactiveCommand.CreateFromObservable<Unit, DataEntry?>(
+                _ =>
+                (
+                    from dicPath in GetRootDic()
+                    from entry in AddEntry(dicPath)
+                    select entry
+                ).CatchAndDisplayError(),
+                from basePath in _currentPath
+                select File.Exists(basePath))
             .DisposeWith(_disposable);
 
-        AddItem.Subscribe(de => _entrys.AddOrUpdate(de)).DisposeWith(_disposable);
+        AddItem.NotNull().Subscribe(de => _entrys.AddOrUpdate(de)).DisposeWith(_disposable);
 
-        RemoveItem = ReactiveCommand.Create(
+        RemoveItem = ReactiveCommand.CreateFromObservable(
             () =>
-            {
-                if(CurrentEntry is null) return;
-
-                _entrys.Remove(CurrentEntry);
-            },
+            (
+                from root in GetRootDic()
+                where CurrentEntry is not null
+                from result in CreateDialog().ShowDialog(App.MainWindow)
+                where result.GetResult == bool.TrueString
+                from del in InternalDeleteEntry(root, CurrentEntry)
+                select del
+            ).CatchAndDisplayError(),
             from ent in this.WhenAny(m => m.CurrentEntry, c => c.Value)
             select ent is not null);
-        
-        EditItem = ReactiveCommand.CreateFromTask(
-            async () =>
-            {
-                if(CurrentEntry is null) return;
 
-                await EditContent(CurrentEntry);
-            },
+        EditItem = ReactiveCommand.CreateFromObservable(
+            () =>
+            (
+                from root in GetRootDic()
+                where CurrentEntry is not null
+                from res in EditContent(root, CurrentEntry)
+                select res
+            ).CatchAndDisplayError(),
             from ent in this.WhenAny(m => m.CurrentEntry, c => c.Value)
             select ent is not null);
         
@@ -140,12 +148,53 @@ public abstract class DataEntryViewModel : ViewModelBase, IDisposable
                     ChangeReason.Remove => dictionary.Remove(change.Key),
                     _ => dictionary
                 });
+
+        IObservable<string> GetRootDic()
+            => from path in _currentPath.Take(1)
+                let dic = Path.GetDirectoryName(path)
+                where !string.IsNullOrEmpty(dic)
+                select dic;
+        
+        IDialogWindow<DialogResult> CreateDialog()
+            => DialogHelper.CreateAlertDialog
+            (
+                new AlertDialogBuilderParams
+                {
+                    ContentHeader = "Confirm action",
+                    SupportingText = "Are you sure to DELETE 20 FILES?",
+                    StartupLocation = WindowStartupLocation.CenterOwner,
+                    NegativeResult = new DialogResult(bool.FalseString),
+                    DialogHeaderIcon = DialogIconKind.Warning,
+                    DialogButtons = new[]
+                    {
+                        new DialogResultButton
+                        {
+                            Content = "Abbrechen",
+                            Result = bool.FalseString
+                        },
+                        new DialogResultButton
+                        {
+                            Content = "Löschen",
+                            Result = bool.TrueString
+                        }
+                    }
+                }
+            );
+
+        async Task<Unit> InternalDeleteEntry(string root, DataEntry entry)
+        {
+            _entrys.Remove(entry.Name);
+            await DeleteEntry(root, entry);
+            return Unit.Default;
+        }
     }
 
     protected abstract Task<DataEntry> AddEntry(string rootDic);
 
-    protected abstract Task EditContent(DataEntry entry);
+    protected abstract Task<Unit> EditContent(string rootDic, DataEntry entry);
 
+    protected abstract Task<Unit> DeleteEntry(string rootPath, DataEntry dataEntry);
+    
     public void Reset()
     {
         CurrentEntry = null;

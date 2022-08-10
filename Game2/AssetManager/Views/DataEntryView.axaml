@@ -5,7 +5,20 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
     <Grid RowDefinitions="Auto, *">
-        <Menu></Menu>
-        <ListBox Grid.Row="1"></ListBox>
+        <Menu>
+            <MenuItem Name="AddItemButton" Header="Hinzufügen"/>
+            <MenuItem Name="RemoveItemButton" Header="Entfernen"/>
+            <MenuItem Name="EditItemButton" Header="Editieren"/>
+        </Menu>
+        <ListBox Name="Entrys" Grid.Row="1">
+            <ListBox.DataTemplates>
+                <DataTemplate DataType="vm:DataEntry">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="{Binding Name}"/>
+                        <TextBlock Text="{Binding Content}" TextWrapping="NoWrap"/>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.DataTemplates>
+        </ListBox>
     </Grid>
 </UserControl>
