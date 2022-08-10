@@ -9,6 +9,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using DynamicData;
 using DynamicData.Aggregation;
+using DynamicData.Binding;
 using DynamicData.Kernel;
 using Newtonsoft.Json;
 using ReactiveUI;
@@ -53,17 +54,73 @@ public abstract class DataEntryViewModel : ViewModelBase, IDisposable
     private readonly CompositeDisposable _disposable = new();
     private readonly BehaviorSubject<string> _currentPath = new(string.Empty);
     private readonly SourceCache<DataEntry, string> _entrys = new(e => e.Name);
+    private DataEntry? _currentEntry;
 
-    protected abstract string IndexFile { get; }
+    public ReactiveCommand<Unit, DataEntry> AddItem { get; }
+
+    public ReactiveCommand<Unit, Unit> RemoveItem { get; }
+
+    public ReactiveCommand<Unit, Unit> EditItem { get; }
+    
+    public IObservableList<DataEntry> Entrys { get; }
+
+    public DataEntry? CurrentEntry
+    {
+        get => _currentEntry;
+        set => this.RaiseAndSetIfChanged(ref _currentEntry, value);
+    }
 
     protected DataEntryViewModel()
     {
+        _entrys.Connect()
+            .ObservOnDispatcher()
+            .BindToObservableList(out var list)
+            .Subscribe()
+            .DisposeWith(_disposable);
+
+        Entrys = list;
+
+        AddItem = ReactiveCommand.CreateFromObservable<Unit, DataEntry>(
+            _ => 
+            (
+                from indexFile in _currentPath.Take(1)
+                let dicPath = Path.GetDirectoryName(indexFile)
+                where !string.IsNullOrEmpty(dicPath)
+                select AddEntry(dicPath)
+            ).SelectMany(t => t),
+            from basePath in _currentPath
+            select File.Exists(basePath))
+            .DisposeWith(_disposable);
+
+        AddItem.Subscribe(de => _entrys.AddOrUpdate(de)).DisposeWith(_disposable);
+
+        RemoveItem = ReactiveCommand.Create(
+            () =>
+            {
+                if(CurrentEntry is null) return;
+
+                _entrys.Remove(CurrentEntry);
+            },
+            from ent in this.WhenAny(m => m.CurrentEntry, c => c.Value)
+            select ent is not null);
+        
+        EditItem = ReactiveCommand.CreateFromTask(
+            async () =>
+            {
+                if(CurrentEntry is null) return;
+
+                await EditContent(CurrentEntry);
+            },
+            from ent in this.WhenAny(m => m.CurrentEntry, c => c.Value)
+            select ent is not null);
+        
         _entrys.Connect()
             .Scan(ImmutableDictionary<string, string>.Empty, UpdateDic)
             .SelectMany(
                 dic =>
                 {
-                    return Observable.Return(Path.Combine(_currentPath.Value, IndexFile))
+                    return _currentPath
+                        .Take(1)
                         .SelectMany(
                             async path =>
                             {
@@ -85,12 +142,20 @@ public abstract class DataEntryViewModel : ViewModelBase, IDisposable
                 });
     }
 
-    public void Reset() => _entrys.Clear();
+    protected abstract Task<DataEntry> AddEntry(string rootDic);
+
+    protected abstract Task EditContent(DataEntry entry);
+
+    public void Reset()
+    {
+        CurrentEntry = null;
+        _entrys.Clear();
+    }
 
     public async ValueTask Load(string path)
     {
-        _currentPath.OnNext(ResolveFilePath(path));
-        var targetFile = Path.Combine(_currentPath.Value, IndexFile);
+        var targetFile = ResolveFilePath(path);
+        _currentPath.OnNext(targetFile);
         if(!File.Exists(targetFile))
             return;
         

@@ -44,5 +44,8 @@
       <Compile Update="Views\AssetsView.cs">
         <DependentUpon>AssetsView.axaml</DependentUpon>
       </Compile>
+      <Compile Update="Views\DataEntryView.cs">
+        <DependentUpon>DataEntryView.axaml</DependentUpon>
+      </Compile>
     </ItemGroup>
 </Project>
