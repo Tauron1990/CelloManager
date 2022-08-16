@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="EcsRx.Infrastructure.Ninject" Version="4.1.97" />
+      <PackageReference Include="EcsRx.Plugins.Batching" Version="6.0.131" />
+      <PackageReference Include="EcsRx.Plugins.Bootstrap" Version="1.0.1" />
+      <PackageReference Include="EcsRx.Plugins.Computeds" Version="6.0.131" />
+      <PackageReference Include="EcsRx.Plugins.GroupBinding" Version="6.0.131" />
+      <PackageReference Include="EcsRx.Plugins.ReactiveSystems" Version="6.0.131" />
+      <PackageReference Include="EcsRx.Plugins.Views" Version="6.0.131" />
+      <PackageReference Include="EcsRx.ReactiveData" Version="4.1.97" />
+      <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+      <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+      <PackageReference Include="Raylib-CsLo" Version="4.0.1" />
+      <PackageReference Include="System.Reactive" Version="5.0.0" />
+    </ItemGroup>
+
+</Project>
