@@ -3,8 +3,8 @@
 namespace CelloManager.Avalonia.Core.Data;
 
 [ServiceProviderModule]
-[Singleton(typeof(SpoolRepository))]
-[Singleton(typeof(ErrorDispatcher))]
+[Singleton<SpoolRepository>]
+[Singleton<ErrorDispatcher>]
 public interface IDataModule
 {
     

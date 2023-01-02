@@ -29,12 +29,12 @@ namespace CelloManager.Avalonia
                 OrderDisplayViewModel orderDisplayViewModel => new OrderDisplayView { ViewModel = orderDisplayViewModel },
                 ImportViewModel importViewModel => new ImportView { ViewModel = importViewModel },
                 OrderDisplayListViewModel orderDisplayListViewModel => new OrderDisplayListView { ViewModel = orderDisplayListViewModel },
-                _ => TryFindByConvertion()
+                _ => TryFindByConvertion(),
             };
 
             IControl TryFindByConvertion()
             {
-                var name = data.GetType().FullName!.Replace("ViewModel", "View");
+                string name = data.GetType().FullName!.Replace("ViewModel", "View");
                 var type = Type.GetType(name);
 
                 if (type != null)

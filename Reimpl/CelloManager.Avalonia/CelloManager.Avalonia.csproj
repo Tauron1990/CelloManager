@@ -45,4 +45,10 @@
         <None Remove="Core\Movere\Views\PrintDialog.xaml" />
         <AvaloniaXaml Include="Core\Movere\Views\PrintDialog.xaml" />
     </ItemGroup>
+    <ItemGroup>
+      <Compile Update="Views\Orders\PendingOrderPrintView.axaml.cs">
+        <DependentUpon>PendingOrderPrintView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

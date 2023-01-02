@@ -2,15 +2,17 @@
 using CelloManager.Avalonia.Core.Data;
 using CelloManager.Avalonia.Core.Logic;
 using CelloManager.Avalonia.ViewModels;
+using CelloManager.Avalonia.Core.Movere;
 using Jab;
 
 namespace CelloManager.Avalonia;
 
 [ServiceProvider]
-[Import(typeof(IDataModule))]
-[Import(typeof(IViewModelModule))]
-[Import(typeof(ILogicModule))]
-[Import(typeof(ICompModule))]
+[Import<IDataModule>]
+[Import<IViewModelModule>]
+[Import<ILogicModule>]
+[Import<ICompModule>]
+[Import<IPrintModule>]
 internal partial class AppServiceProvider
 {
     

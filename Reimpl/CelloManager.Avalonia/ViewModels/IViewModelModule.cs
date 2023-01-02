@@ -7,11 +7,11 @@ using Jab;
 namespace CelloManager.Avalonia.ViewModels;
 
 [ServiceProviderModule]
-[Singleton(typeof(MainWindowViewModel))]
-[Scoped(typeof(SpoolDisplayViewModel))]
-[Scoped(typeof(EditTabViewModel))]
-[Scoped(typeof(OrderDisplayViewModel))]
-[Scoped(typeof(ImportViewModel))]
+[Singleton<MainWindowViewModel>]
+[Scoped<SpoolDisplayViewModel>]
+[Scoped<EditTabViewModel>]
+[Scoped<OrderDisplayViewModel>]
+[Scoped<ImportViewModel>]
 public interface IViewModelModule
 {
     

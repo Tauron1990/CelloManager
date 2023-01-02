@@ -1,3 +1,4 @@
+using CelloManager.Avalonia.Core.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,8 @@ namespace CelloManager.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            DataModule.Add(services);
+            
             services.AddRazorPages();
             services.AddServerSideBlazor();
         }

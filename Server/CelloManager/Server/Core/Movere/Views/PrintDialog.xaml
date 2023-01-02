@@ -1,0 +1,103 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="CelloManager.Avalonia.Core.Movere.Views.PrintDialog"
+        MinWidth="240"
+        MinHeight="160"
+        Width="800"
+        Height="480"
+        Title="Print"
+        WindowStartupLocation="CenterOwner">
+    <!--
+        ShowInTaskbar="False"
+    -->
+
+    <DockPanel Margin="8">
+
+        <DockPanel DockPanel.Dock="Bottom"
+                   LastChildFill="False">
+            <StackPanel DockPanel.Dock="Right"
+                        Orientation="Horizontal"
+                        Spacing="8">
+                <Button Content="Print"
+                        Command="{Binding PrintCommand}" />
+                <Button Content="Cancel"
+                        Command="{Binding CancelCommand}" />
+            </StackPanel>
+        </DockPanel>
+
+        <StackPanel Spacing="8">
+
+            <Grid ColumnDefinitions="Auto,8,*,8,Auto">
+
+                <TextBlock Grid.Column="0"
+                           Text="Printer:" />
+
+                <ComboBox Grid.Column="2"
+                          Items="{Binding AvailablePrinters}"
+                          SelectedItem="{Binding PrinterSettings.PrinterName}" />
+
+                <Button Grid.Column="4"
+                        Content="Refresh"
+                        Command="{Binding RefreshAvailablePrintersCommand}" />
+
+            </Grid>
+
+            <DockPanel>
+
+                <StackPanel DockPanel.Dock="Right"
+                            Spacing="8">
+
+                    <TextBlock Text="Preview:" />
+
+                    <Border BorderBrush="Black"
+                            BorderThickness="1"
+                            Padding="8">
+
+                        <StackPanel Spacing="8">
+
+                            <ItemsControl Items="{Binding PrintPreviewPages}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Image Stretch="Uniform" Width="200" Height="200" Source="{Binding Image}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <StackPanel HorizontalAlignment="Center"
+                                        Orientation="Horizontal"
+                                        Spacing="8">
+                                <Button Content="&lt;" IsEnabled="False" />
+                                <Button Content="&gt;" IsEnabled="False" />
+                            </StackPanel>
+
+                        </StackPanel>
+
+                    </Border>
+
+                </StackPanel>
+
+                <StackPanel>
+
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="8">
+
+                        <TextBlock Text="Copies:" />
+
+                        <NumericUpDown Minimum="1"
+                                       Maximum="{Binding PrinterSettings.MaximumCopies}"
+                                       Value="{Binding PrinterSettings.Copies}" />
+
+                        <CheckBox Content="Collate"
+                                  IsChecked="{Binding PrinterSettings.Collate}" />
+
+                    </StackPanel>
+
+                </StackPanel>
+
+            </DockPanel>
+
+        </StackPanel>
+
+    </DockPanel>
+
+</Window>
