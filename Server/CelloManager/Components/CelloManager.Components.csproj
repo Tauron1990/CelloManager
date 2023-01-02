@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <RootNamespace>CelloManager.Components</RootNamespace>
+        <AssemblyName>CelloManager.Components</AssemblyName>
+    </PropertyGroup>
+    <ItemGroup>
+        <SupportedPlatform Include="browser"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="5.0.9"/>
+    </ItemGroup>
+    <ItemGroup>
+        <Folder Include="build\"/>
+    </ItemGroup>
+</Project>
