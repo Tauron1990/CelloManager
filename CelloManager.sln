@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Server", "Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Wasm", "Server\CelloManager\Wasm\CelloManager.Wasm.csproj", "{55173DC4-9602-495C-9F37-DFB4AB6F9416}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Game4", "Game4", "{E7278AA2-38CA-4419-ABEC-03C713F7FD5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
