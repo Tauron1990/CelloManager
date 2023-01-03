@@ -4,7 +4,7 @@ using System.Drawing.Printing;
 using System.IO;
 using Avalonia.Media.Imaging;
 
-namespace CelloManager.Avalonia.Core.Movere.ViewModels
+namespace CelloManager.Core.Movere.ViewModels
 {
     public sealed class PrintPreviewPageViewModel
     {

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
-using CelloManager.Avalonia.Core.Comp;
+using CelloManager.Core.Comp;
 
 namespace Tauron.Application.CelloManager.Data.Migrations
 {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing.Printing;
 
-namespace CelloManager.Avalonia.Core.Movere.ViewModels
+namespace CelloManager.Core.Movere.ViewModels
 {
     internal static class PrinterSettingsStringCollectionExtensions
     {

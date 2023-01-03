@@ -1,6 +1,6 @@
 ﻿using Jab;
 
-namespace CelloManager.Avalonia.Core.Data;
+namespace CelloManager.Core.Data;
 
 [ServiceProviderModule]
 [Singleton<SpoolRepository>]

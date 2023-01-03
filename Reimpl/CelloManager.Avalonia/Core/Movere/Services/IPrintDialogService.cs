@@ -1,7 +1,7 @@
 ﻿using System.Drawing.Printing;
 using System.Threading.Tasks;
 
-namespace CelloManager.Avalonia.Core.Movere.Services
+namespace CelloManager.Core.Movere.Services
 {
     public interface IPrintDialogService
     {

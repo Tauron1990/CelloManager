@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using Avalonia.ReactiveUI;
-using CelloManager.Avalonia.Core.Comp;
-using CelloManager.Avalonia.ViewModels.Importing;
+using CelloManager.Core.Comp;
+using CelloManager.ViewModels.Importing;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.Views.Importing;
+namespace CelloManager.Views.Importing;
 
 public sealed partial class ImportView : ReactiveUserControl<ImportViewModel>
 {

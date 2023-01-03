@@ -1,6 +1,6 @@
 ﻿using Jab;
 
-namespace CelloManager.Avalonia.Core.Movere;
+namespace CelloManager.Core.Printing;
 
 [ServiceProviderModule]
 [Transient<PrintBuilder>]

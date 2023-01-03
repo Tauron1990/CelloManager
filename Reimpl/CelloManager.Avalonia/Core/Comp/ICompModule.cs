@@ -1,6 +1,6 @@
 ﻿using Jab;
 
-namespace CelloManager.Avalonia.Core.Comp;
+namespace CelloManager.Core.Comp;
 
 [ServiceProviderModule]
 [Transient(typeof(CoreDatabase))]

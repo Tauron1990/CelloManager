@@ -3,10 +3,10 @@ using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Avalonia.Controls;
-using CelloManager.Avalonia.Core.Logic;
+using CelloManager.Core.Logic;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels.Importing;
+namespace CelloManager.ViewModels.Importing;
 
 public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposable
 {

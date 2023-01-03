@@ -3,13 +3,13 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using CelloManager.Avalonia.Core.Logic;
+using CelloManager.Core.Logic;
 using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels.SpoolDisplay;
+namespace CelloManager.ViewModels.SpoolDisplay;
 
 public sealed class SpoolGroupViewModel : ViewModelBase, ITabInfoProvider, IDisposable
 {

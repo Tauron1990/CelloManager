@@ -3,7 +3,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 
-namespace CelloManager.Avalonia.Core.Data;
+namespace CelloManager.Core.Data;
 
 public sealed class ErrorDispatcher : IDisposable
 {

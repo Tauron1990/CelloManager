@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Reactive.Linq;
-using CelloManager.Avalonia.Core.Logic;
-using ReactiveUI;
+using CelloManager.Core.Movere;
+using CelloManager.Core.Logic;
+using CelloManager.Core.Printing;
 
-namespace CelloManager.Avalonia.ViewModels.Orders;
+namespace CelloManager.ViewModels.Orders;
 
 public sealed class OrderDisplayViewModel : ViewModelBase, IDisposable, ITabInfoProvider
 {
@@ -16,7 +16,7 @@ public sealed class OrderDisplayViewModel : ViewModelBase, IDisposable, ITabInfo
     //public ViewModelBase? CurrentContent => _currentContent.Value;
     public OrderDisplayListViewModel CurrentContent { get; }
     
-    public OrderDisplayViewModel(OrderManager manger)
+    public OrderDisplayViewModel(OrderManager manger, PrintBuilder builder)
     {
         // _currentContent = _currentContentSubject
         //     .ObserveOn(RxApp.MainThreadScheduler)
@@ -24,7 +24,7 @@ public sealed class OrderDisplayViewModel : ViewModelBase, IDisposable, ITabInfo
         //
         // _currentContentSubject.OnNext(new OrderDisplayListViewModel(manger.Orders));
 
-        CurrentContent = new OrderDisplayListViewModel(manger.Orders);
+        CurrentContent = new OrderDisplayListViewModel(manger.Orders, builder);
     }
 
     public void Dispose()

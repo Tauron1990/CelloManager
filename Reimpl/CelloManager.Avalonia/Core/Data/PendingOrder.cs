@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 
-namespace CelloManager.Avalonia.Core.Data;
+namespace CelloManager.Core.Data;
 
 public sealed record OrderedSpool(string SpoolId, int Amount);
 

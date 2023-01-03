@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
-using CelloManager.Avalonia.Core.Comp.OldData;
+using CelloManager.Core.Comp.OldData;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore;
 
-namespace CelloManager.Avalonia.Core.Comp
+namespace CelloManager.Core.Comp
 {
     public sealed class CoreDatabase : DbContext
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace CelloManager.Avalonia.Core.DebugHelper;
+namespace CelloManager.Core.DebugHelper;
 
 public class DebugCommand : ICommand
 {

@@ -6,7 +6,7 @@ using Avalonia.Controls;
 using ReactiveMarbles.ObservableEvents;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.Views.Controls;
+namespace CelloManager.Views.Controls;
 
 public class AutoSelectTabControl
 {

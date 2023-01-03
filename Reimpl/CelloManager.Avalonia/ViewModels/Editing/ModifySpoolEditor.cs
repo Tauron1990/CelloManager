@@ -1,9 +1,9 @@
 ﻿using System.Reactive;
 using System.Reactive.Linq;
-using CelloManager.Avalonia.Core.Logic;
+using CelloManager.Core.Logic;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels.Editing;
+namespace CelloManager.ViewModels.Editing;
 
 public class ModifySpoolEditorViewModel : SpoolEditorViewModelBase
 {

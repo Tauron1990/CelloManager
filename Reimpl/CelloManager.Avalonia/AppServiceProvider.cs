@@ -1,11 +1,12 @@
-﻿using CelloManager.Avalonia.Core.Comp;
-using CelloManager.Avalonia.Core.Data;
-using CelloManager.Avalonia.Core.Logic;
-using CelloManager.Avalonia.ViewModels;
-using CelloManager.Avalonia.Core.Movere;
+﻿using CelloManager.Core.Movere;
+using CelloManager.Core.Comp;
+using CelloManager.Core.Data;
+using CelloManager.Core.Logic;
+using CelloManager.Core.Printing;
+using CelloManager.ViewModels;
 using Jab;
 
-namespace CelloManager.Avalonia;
+namespace CelloManager;
 
 [ServiceProvider]
 [Import<IDataModule>]

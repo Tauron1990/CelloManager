@@ -2,7 +2,7 @@
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 
-namespace CelloManager.Avalonia.ViewModels;
+namespace CelloManager.ViewModels;
 
 public sealed class SerialDisposableSubject<TData> : IDisposable, IObservable<TData>, IObserver<TData>
 {

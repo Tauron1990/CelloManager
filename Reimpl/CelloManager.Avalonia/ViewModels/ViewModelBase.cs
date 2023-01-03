@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels
+namespace CelloManager.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

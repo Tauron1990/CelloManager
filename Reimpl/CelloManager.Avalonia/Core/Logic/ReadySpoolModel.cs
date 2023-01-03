@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using CelloManager.Avalonia.Core.Data;
+using CelloManager.Core.Data;
 
-namespace CelloManager.Avalonia.Core.Logic;
+namespace CelloManager.Core.Logic;
 
 public sealed class ReadySpoolModel
 { 

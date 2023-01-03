@@ -5,7 +5,7 @@
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
              xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="CelloManager.Avalonia.Views.Editing.SpoolEditorView">
+             x:Class="CelloManager.Views.Editing.SpoolEditorView">
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, *" ColumnDefinitions="*, Auto, Auto">
         <Popup Name="CategoryPopup" IsLightDismissEnabled="False" PlacementTarget="{Binding ElementName=CategoryTextBox}" PlacementMode="Bottom">
             <styles:ColorZone Mode="PrimaryLight" Padding="10" MinWidth="100">

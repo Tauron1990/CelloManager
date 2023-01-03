@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia.ReactiveUI;
-using CelloManager.Avalonia.ViewModels.Editing;
+using CelloManager.ViewModels.Editing;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.Views.Editing;
+namespace CelloManager.Views.Editing;
 
 public partial class EditTabView : ReactiveUserControl<EditTabViewModel>
 {

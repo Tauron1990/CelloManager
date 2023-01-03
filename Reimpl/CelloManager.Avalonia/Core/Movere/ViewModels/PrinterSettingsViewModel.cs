@@ -2,7 +2,7 @@
 using System.Drawing.Printing;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.Core.Movere.ViewModels
+namespace CelloManager.Core.Movere.ViewModels
 {
     public sealed class PrinterSettingsViewModel : ReactiveObject
     {

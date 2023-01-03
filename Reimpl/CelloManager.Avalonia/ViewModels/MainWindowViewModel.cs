@@ -5,18 +5,18 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using CelloManager.Avalonia.Core.Data;
-using CelloManager.Avalonia.Core.Logic;
-using CelloManager.Avalonia.ViewModels.Editing;
-using CelloManager.Avalonia.ViewModels.Importing;
-using CelloManager.Avalonia.ViewModels.Orders;
-using CelloManager.Avalonia.ViewModels.SpoolDisplay;
+using CelloManager.Core.Data;
+using CelloManager.Core.Logic;
+using CelloManager.ViewModels.Editing;
+using CelloManager.ViewModels.Importing;
+using CelloManager.ViewModels.Orders;
+using CelloManager.ViewModels.SpoolDisplay;
 using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels
+namespace CelloManager.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
     {

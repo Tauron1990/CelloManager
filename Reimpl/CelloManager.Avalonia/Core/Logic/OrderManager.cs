@@ -4,10 +4,10 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using CelloManager.Avalonia.Core.Data;
+using CelloManager.Core.Data;
 using DynamicData;
 
-namespace CelloManager.Avalonia.Core.Logic;
+namespace CelloManager.Core.Logic;
 
 public class OrderManager : IDisposable
 {

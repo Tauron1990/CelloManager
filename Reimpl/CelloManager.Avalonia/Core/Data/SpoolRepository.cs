@@ -10,7 +10,7 @@ using Akavache;
 using DynamicData;
 using DynamicData.Kernel;
 
-namespace CelloManager.Avalonia.Core.Data;
+namespace CelloManager.Core.Data;
 
 public sealed class SpoolRepository : IDisposable
 {

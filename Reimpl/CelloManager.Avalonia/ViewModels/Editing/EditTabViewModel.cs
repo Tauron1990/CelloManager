@@ -4,12 +4,12 @@ using System.Collections.ObjectModel;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
-using CelloManager.Avalonia.Core.Logic;
+using CelloManager.Core.Logic;
 using DynamicData;
 using DynamicData.Alias;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels.Editing;
+namespace CelloManager.ViewModels.Editing;
 
 public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivatableViewModel, IDisposable
 {

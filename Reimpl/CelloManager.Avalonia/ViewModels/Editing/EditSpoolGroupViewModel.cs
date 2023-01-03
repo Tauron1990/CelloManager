@@ -5,11 +5,11 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using CelloManager.Avalonia.Core.Logic;
+using CelloManager.Core.Logic;
 using JetBrains.Annotations;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels.Editing;
+namespace CelloManager.ViewModels.Editing;
 
 public class EditSpoolGroupViewModel : ViewModelBase, IActivatableViewModel, IDisposable
 {

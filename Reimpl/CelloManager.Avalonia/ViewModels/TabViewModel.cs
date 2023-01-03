@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using DynamicData;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels;
+namespace CelloManager.ViewModels;
 
 public sealed class TabViewModel : ViewModelBase, IDisposable
 {

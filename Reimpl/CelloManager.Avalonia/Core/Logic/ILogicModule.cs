@@ -1,6 +1,6 @@
 ﻿using Jab;
 
-namespace CelloManager.Avalonia.Core.Logic;
+namespace CelloManager.Core.Logic;
 
 [ServiceProviderModule]
 [Scoped(typeof(SpoolManager))]

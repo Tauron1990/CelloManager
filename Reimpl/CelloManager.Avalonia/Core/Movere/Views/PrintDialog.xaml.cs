@@ -1,8 +1,8 @@
 ﻿using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
-using CelloManager.Avalonia.Core.Movere.ViewModels;
+using CelloManager.Core.Movere.ViewModels;
 
-namespace CelloManager.Avalonia.Core.Movere.Views
+namespace CelloManager.Core.Movere.Views
 {
     public partial class PrintDialog : ReactiveWindow<PrintDialogViewModel>
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace CelloManager.Avalonia.Core.Logic;
+namespace CelloManager.Core.Logic;
 
 public static class ReadySpoolSorter
 {

@@ -1,18 +1,18 @@
 using System;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using CelloManager.Avalonia.ViewModels;
-using CelloManager.Avalonia.ViewModels.Editing;
-using CelloManager.Avalonia.ViewModels.Importing;
-using CelloManager.Avalonia.ViewModels.Orders;
-using CelloManager.Avalonia.ViewModels.SpoolDisplay;
-using CelloManager.Avalonia.Views.Editing;
-using CelloManager.Avalonia.Views.Importing;
-using CelloManager.Avalonia.Views.Orders;
-using CelloManager.Avalonia.Views.SpoolDisplay;
-using SpoolGroupViewModel = CelloManager.Avalonia.ViewModels.SpoolDisplay.SpoolGroupViewModel;
+using CelloManager.ViewModels;
+using CelloManager.ViewModels.Editing;
+using CelloManager.ViewModels.Importing;
+using CelloManager.ViewModels.Orders;
+using CelloManager.ViewModels.SpoolDisplay;
+using CelloManager.Views.Editing;
+using CelloManager.Views.Importing;
+using CelloManager.Views.Orders;
+using CelloManager.Views.SpoolDisplay;
+using SpoolGroupViewModel = CelloManager.ViewModels.SpoolDisplay.SpoolGroupViewModel;
 
-namespace CelloManager.Avalonia
+namespace CelloManager
 {
     public class ViewLocator : IDataTemplate
     {
@@ -21,7 +21,7 @@ namespace CelloManager.Avalonia
             return data switch
             {
                 SpoolDisplayViewModel spoolDisplayViewModel => new SpoolDisplayView { ViewModel = spoolDisplayViewModel },
-                SpoolGroupViewModel groupViewModel => new SpoolGroupView { ViewModel = groupViewModel },
+                ViewModels.SpoolDisplay.SpoolGroupViewModel groupViewModel => new SpoolGroupView { ViewModel = groupViewModel },
                 EditTabViewModel editTabViewModel => new EditTabView { ViewModel = editTabViewModel },
                 NewSpoolEditorViewModel newSpoolEditorViewModel => new NewSpoolEditorView { ViewModel = newSpoolEditorViewModel },
                 ModifySpoolEditorViewModel modifySpoolEditorViewModel => new SpoolEditorView { ViewModel = modifySpoolEditorViewModel },

@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.ReactiveUI;
-using CelloManager.Avalonia.Core.Data;
-using CelloManager.Avalonia.Core.Movere;
+using CelloManager.Core.Movere;
+using CelloManager.Core.Data;
 
-namespace CelloManager.Avalonia
+namespace CelloManager
 {
     class Program
     {

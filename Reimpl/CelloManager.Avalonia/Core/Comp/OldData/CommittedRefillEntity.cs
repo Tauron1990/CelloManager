@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
-namespace CelloManager.Avalonia.Core.Comp.OldData
+namespace CelloManager.Core.Comp.OldData
 {
     [PublicAPI]
     public sealed class CommittedRefillEntity

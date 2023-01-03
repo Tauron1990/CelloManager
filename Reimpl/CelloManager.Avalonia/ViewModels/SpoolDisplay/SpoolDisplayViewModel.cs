@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
-using CelloManager.Avalonia.Core.Logic;
+using CelloManager.Core.Logic;
 using DynamicData;
 using DynamicData.Alias;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.ViewModels.SpoolDisplay;
+namespace CelloManager.ViewModels.SpoolDisplay;
 
 public sealed class SpoolDisplayViewModel : ViewModelBase, ITabInfoProvider, IDisposable
 {

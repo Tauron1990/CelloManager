@@ -4,11 +4,11 @@ using System.Reactive.Linq;
 using Avalonia.Controls;
 using Avalonia.Data;
 using Avalonia.ReactiveUI;
-using CelloManager.Avalonia.ViewModels;
-using CelloManager.Avalonia.Views.Controls;
+using CelloManager.ViewModels;
+using CelloManager.Views.Controls;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.Views
+namespace CelloManager.Views
 {
     public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
     {

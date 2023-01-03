@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia.ReactiveUI;
-using CelloManager.Avalonia.ViewModels.SpoolDisplay;
+using CelloManager.ViewModels.SpoolDisplay;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.Views.SpoolDisplay;
+namespace CelloManager.Views.SpoolDisplay;
 
 public partial class SpoolGroupView : ReactiveUserControl<SpoolGroupViewModel>
 {

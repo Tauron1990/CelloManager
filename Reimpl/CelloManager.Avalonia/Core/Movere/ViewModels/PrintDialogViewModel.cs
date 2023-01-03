@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using DynamicData.Binding;
 using ReactiveUI;
 using static System.Drawing.Printing.PrinterSettings;
 
-namespace CelloManager.Avalonia.Core.Movere.ViewModels
+namespace CelloManager.Core.Movere.ViewModels
 {
     public sealed class PrintDialogViewModel : ReactiveObject
     {
@@ -38,8 +39,8 @@ namespace CelloManager.Avalonia.Core.Movere.ViewModels
 
             PrintCommand = ReactiveCommand.Create(
                 Print,
-                this.ObservableForProperty(vm => vm.PrinterSettings.PrinterName).Select(x => x != null));
-
+                PrinterSettings.WhenValueChanged(m => m.PrinterName).Select(x => !string.IsNullOrWhiteSpace(x)));
+            
             CancelCommand = ReactiveCommand.Create(Cancel);
 
             RefreshAvailablePrinters();

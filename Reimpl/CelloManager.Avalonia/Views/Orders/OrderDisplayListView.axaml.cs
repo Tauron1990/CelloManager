@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Avalonia.ReactiveUI;
-using CelloManager.Avalonia.ViewModels.Orders;
+using CelloManager.ViewModels.Orders;
 using ReactiveUI;
 
-namespace CelloManager.Avalonia.Views.Orders;
+namespace CelloManager.Views.Orders;
 
 public partial class OrderDisplayListView : ReactiveUserControl<OrderDisplayListViewModel>
 {

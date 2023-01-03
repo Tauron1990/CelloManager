@@ -2,10 +2,10 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using CelloManager.Avalonia.ViewModels;
-using CelloManager.Avalonia.Views;
+using CelloManager.ViewModels;
+using CelloManager.Views;
 
-namespace CelloManager.Avalonia
+namespace CelloManager
 {
     public partial class App : Application
     {

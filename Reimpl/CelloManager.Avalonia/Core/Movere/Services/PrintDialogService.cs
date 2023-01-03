@@ -2,10 +2,10 @@
 using System.Drawing.Printing;
 using System.Threading.Tasks;
 using Avalonia.Controls;
-using CelloManager.Avalonia.Core.Movere.ViewModels;
-using CelloManager.Avalonia.Core.Movere.Views;
+using CelloManager.Core.Movere.ViewModels;
+using CelloManager.Core.Movere.Views;
 
-namespace CelloManager.Avalonia.Core.Movere.Services
+namespace CelloManager.Core.Movere.Services
 {
     public sealed class PrintDialogService : IPrintDialogService
     {

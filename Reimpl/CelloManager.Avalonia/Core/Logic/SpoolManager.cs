@@ -4,14 +4,14 @@ using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using CelloManager.Avalonia.Core.Comp;
-using CelloManager.Avalonia.Core.Data;
+using CelloManager.Core.Comp;
+using CelloManager.Core.Data;
 using DynamicData;
 using DynamicData.Alias;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
-namespace CelloManager.Avalonia.Core.Logic;
+namespace CelloManager.Core.Logic;
 
 public sealed record ValidateNameRequest(string? Name, string? Category);
 

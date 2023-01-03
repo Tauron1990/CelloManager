@@ -2,10 +2,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:editing="clr-namespace:CelloManager.Avalonia.ViewModels.Editing"
-             xmlns:logic="clr-namespace:CelloManager.Avalonia.Core.Logic"
+             xmlns:editing="clr-namespace:CelloManager.ViewModels.Editing"
+             xmlns:logic="clr-namespace:CelloManager.Core.Logic"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="CelloManager.Avalonia.Views.Editing.EditTabView">
+             x:Class="CelloManager.Views.Editing.EditTabView">
     <Grid RowDefinitions="Auto, *" ColumnDefinitions="Auto, *">
         <Button Name="NewSpool" Margin="5" Grid.Row="0" Grid.Column="0">Neue Rolle</Button>
         <TreeView Name="SpoolTreeView" Grid.Row="1" Grid.Column="0" Margin="2" MinWidth="50">

@@ -1,10 +1,10 @@
-﻿using CelloManager.Avalonia.ViewModels.Editing;
-using CelloManager.Avalonia.ViewModels.Importing;
-using CelloManager.Avalonia.ViewModels.Orders;
-using CelloManager.Avalonia.ViewModels.SpoolDisplay;
+﻿using CelloManager.ViewModels.Editing;
+using CelloManager.ViewModels.Importing;
+using CelloManager.ViewModels.Orders;
+using CelloManager.ViewModels.SpoolDisplay;
 using Jab;
 
-namespace CelloManager.Avalonia.ViewModels;
+namespace CelloManager.ViewModels;
 
 [ServiceProviderModule]
 [Singleton<MainWindowViewModel>]
