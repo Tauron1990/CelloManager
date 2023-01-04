@@ -6,6 +6,6 @@
         x:Class="CelloManager.Views.Orders.SelectDocumentTypeWindow"
         Title="SelectDocumentTypeWindow">
     <StackPanel>
-        <Button Name="NewPdF", Margin="5" Padding="5">In PDF</Button>
+        <Button Name="NewPdF" Margin="5" Padding="5">In PDF</Button>
     </StackPanel>
 </Window>
