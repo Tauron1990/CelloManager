@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using Avalonia.Threading;
 using CelloManager.Core.Data;
+using CelloManager.Core.Printing.Data;
 using CelloManager.Core.Printing.Internal;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -16,6 +18,8 @@ public sealed class PrinterContext
 
     public IServiceProvider ServiceProvider { get; set; } = new ServiceContainer();
 
+    public ImmutableArray<PrintPage> Pages { get; set; } = ImmutableArray<PrintPage>.Empty;
+    
     public TempFiles TempFiles => GetOrCreate(ref _tempFiles);
     
     public Dispatcher Dispatcher
@@ -24,8 +28,9 @@ public sealed class PrinterContext
         set => _dispatcher = value;
     }
 
-    public bool NeedSpliting { get; set; }
-
+    public void AddPage(PrintPage page)
+        => Pages = Pages.Add(page);
+    
     private TService GetOrCreate<TService>(ref TService? service) 
         where TService : notnull
     {
