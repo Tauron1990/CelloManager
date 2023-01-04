@@ -8,16 +8,14 @@ namespace CelloManager.Core.Printing.Impl;
 public sealed class PdfDocument : FileSelectingDocument<PdfDocument>
 {
     public override DocumentType Type => DocumentType.PDF;
-    protected override ValueTask RenderTo(Dispatcher dispatcher, string path)
+    protected override async ValueTask RenderTo(Dispatcher dispatcher, string path)
     {
         if(!path.EndsWith(".pdf"))
             path = $"{path}.pdf";
 
         using var doc = SKDocument.CreatePdf(path);
         
-        PrintView.RenderTo(doc);
-        
-        return ValueTask.CompletedTask;
+        await Dispatcher.UIThread.InvokeAsync(() => PrintView.RenderTo(doc));
     }
 
     protected override void ConfigurateDialog(SaveFileDialog dialog)

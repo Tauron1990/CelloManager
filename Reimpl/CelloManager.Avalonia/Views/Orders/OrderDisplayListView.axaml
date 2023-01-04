@@ -14,7 +14,7 @@
         </ItemsControl.ItemsPanel>
         <ItemsControl.DataTemplates>
             <DataTemplate DataType="viewModels:PendingOrderViewModel">
-                <orders:PendingOrderView/>
+                <orders:PendingOrderView Margin="1"/>
             </DataTemplate>
         </ItemsControl.DataTemplates>
     </ItemsControl>

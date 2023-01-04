@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CelloManager.Core.Data;
 using CelloManager.Core.Logic;
+using CelloManager.Core.Printing;
 using CelloManager.ViewModels.Editing;
 using CelloManager.ViewModels.Importing;
 using CelloManager.ViewModels.Orders;
@@ -15,6 +18,7 @@ using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
 using ReactiveUI;
+using ThingLing.Controls;
 
 namespace CelloManager.ViewModels
 {
@@ -25,11 +29,18 @@ namespace CelloManager.ViewModels
         private readonly CompositeDisposable _subscriptions = new();
         private readonly ObservableAsPropertyHelper<string> _errorSimple;
         private readonly ObservableAsPropertyHelper<string> _errorFull;
+        private int _currentTab;
 
         public string ErrorSimple => _errorSimple.Value;
 
         public string ErrorFull => _errorFull.Value;
-        
+
+        public int CurrentTab
+        {
+            get => _currentTab;
+            set => this.RaiseAndSetIfChanged(ref _currentTab, value);
+        }
+
         public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
 
         public ReactiveCommand<Unit, Unit> Edit { get; }
@@ -40,11 +51,44 @@ namespace CelloManager.ViewModels
         
         public ReactiveCommand<Unit, Unit> Orders { get; }
 
+        public ReactiveCommand<Unit, Unit> PrintAll { get; }
 
+        public void DisplayTab<TTab>()
+            where TTab : ViewModelBase
+        {
+            int index = -1;
+
+            for (int i = 0; i < _tabs.Count; i++)
+            {
+                if(_tabs.Items.ElementAt(i) is not TTab)
+                    continue;
+
+                index = i;
+                break;
+            }
+
+            if(index == -1)
+                _tabs.Add(_modelScope.GetService<TTab>());
+            else
+                CurrentTab = index;
+        }
+        
         public MainWindowViewModel(ErrorDispatcher errors)
         {
             var currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
             var orderManager = _modelScope.GetService<OrderManager>();
+            var printer = _modelScope.GetService<PrintBuilder>();
+
+            PrintAll = ReactiveCommand.Create(
+                () =>
+                {
+                    using var model = new PendingOrderViewModel(
+                        orderManager.GetAll(),
+                        printer.StartPrint,
+                        static _ => { });
+                    
+                    model.RunPrint();
+                });
             
             Edit = ReactiveCommand.Create
                 (
@@ -54,7 +98,7 @@ namespace CelloManager.ViewModels
                 .DisposeWith(_subscriptions);
             
             Orders = ReactiveCommand.Create(
-                    () => _tabs.Add(_modelScope.GetService<OrderDisplayViewModel>()),
+                    DisplayTab<OrderDisplayViewModel>,
                     ContainsViewModel<OrderDisplayViewModel>(currentTabs))
                 .DisposeWith(_subscriptions);
             
@@ -90,6 +134,17 @@ namespace CelloManager.ViewModels
                 .DisposeWith(_subscriptions);
 
             _tabs.Add(_modelScope.GetService<SpoolDisplayViewModel>());
+
+            Dispatcher dispatcher = Dispatcher.UIThread;
+            _subscriptions.Add(errors.Errors.SelectMany(
+                ex => dispatcher.InvokeAsync(
+                    async () =>
+                    {
+
+                        await MessageBox.ShowAsync(App.MainWindow, ex.Message, "Fehler", MessageBoxButton.Ok);
+                        return Unit.Default;
+                    }))
+                .Subscribe());
         }
 
         private IObservable<bool> ContainsViewModel<TModel>(IObservable<IReadOnlyCollection<ViewModelBase>> query)

@@ -9,9 +9,6 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using CelloManager.Core.Data;
 using CelloManager.Views.Orders;
-using Material.Colors;
-using Material.Styles.Themes;
-using Material.Styles.Themes.Base;
 using ReactiveUI;
 using ThingLing.Controls;
 
@@ -30,33 +27,45 @@ public sealed class PendingOrderViewModel : ViewModelBase, IDisposable
 
     public ReactiveCommand<Unit,Unit> PrintCommand { get; }
     
-    public PendingOrderViewModel(PendingOrder order, Func<PendingOrderViewModel, PendingOrderPrintView, ValueTask> print)
+    public ReactiveCommand<Unit, Unit> CommitCommand { get; }
+    
+    public PendingOrderViewModel(PendingOrder order, Func<PendingOrderViewModel, PendingOrderPrintView, ValueTask> print, Action<PendingOrder> commit)
     {
         _print = print;
         Order = order;
         TimeOfOrder = order.Time.ToString("f", CultureInfo.CurrentUICulture);
+
+        CommitCommand = ReactiveCommand.Create(() => commit(order));
+        
+
         PrintCommand = ReactiveCommand.Create(
-            () =>
-            {
-                _canPrint.OnNext(false);
-
-                _preview = new Window
-                {
-                    Background = Brushes.White,
-                    Foreground = Brushes.Black,
-                };
-
-                var control = new PendingOrderPrintView();
-                control.Init(order);
-                _preview.Content = control;
-
-                _preview.Show();
-                
-                Task.Run(() => DoPrint(control));
-            },
+            RunPrint,
             _canPrint.ObserveOn(RxApp.MainThreadScheduler));
     }
 
+    public void RunPrint()
+    {
+        _canPrint.OnNext(false);
+
+        _preview = new Window
+        {
+            SizeToContent = SizeToContent.WidthAndHeight,
+            Background = Brushes.White,
+            Foreground = Brushes.Black,
+            Title = "Blid Vorschau",
+            CanResize = false,
+            ShowInTaskbar = false,
+        };
+
+        var control = new PendingOrderPrintView();
+        control.Init(Order);
+        _preview.Content = control;
+
+        _preview.Show();
+
+        Task.Run(() => DoPrint(control));
+    }
+    
     private async  ValueTask DoPrint(PendingOrderPrintView view)
     {
         try
@@ -66,7 +75,8 @@ public sealed class PendingOrderViewModel : ViewModelBase, IDisposable
         }
         catch (Exception ex)
         {
-            await MessageBox.ShowAsync(App.MainWindow, $"Fehler: {ex.Message}", "Fehler", MessageBoxButton.Ok, MessageBoxImage.Error);
+            await Dispatcher.UIThread
+                .InvokeAsync(() => MessageBox.ShowAsync(App.MainWindow, $"Fehler: {ex.Message}", "Fehler", MessageBoxButton.Ok, MessageBoxImage.Error));
             Dispatcher.UIThread.Post(
                 () =>
                 {
@@ -80,8 +90,11 @@ public sealed class PendingOrderViewModel : ViewModelBase, IDisposable
         }
     }
     
-    public void Dispose() 
-        => PrintCommand.Dispose();
+    public void Dispose()
+    {
+        PrintCommand.Dispose();
+        CommitCommand.Dispose();
+    }
 
     public void Close()
     {

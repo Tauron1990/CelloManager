@@ -16,6 +16,9 @@
             <Expander Header="Spulen" Margin="5">
                 <ItemsControl Name="SpoolList">
                     <ItemsControl.DataTemplates>
+                        <DataTemplate DataType="data:OrderedSpoolList">
+                            <ItemsControl Items="{Binding Spools}"/>
+                        </DataTemplate>
                         <DataTemplate DataType="data:OrderedSpool">
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <TextBlock Margin="5" Text="{Binding SpoolId, StringFormat='Name: {0}'}"/>
@@ -25,6 +28,7 @@
                     </ItemsControl.DataTemplates>
                 </ItemsControl>
             </Expander>
+            <Button Name="Commit" Margin="5" Padding="5">Bestätigen</Button>
         </StackPanel>
     </styles:Card>
 </UserControl>

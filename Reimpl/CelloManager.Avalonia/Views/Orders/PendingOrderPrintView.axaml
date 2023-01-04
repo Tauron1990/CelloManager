@@ -2,23 +2,35 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
-             xmlns:data="clr-namespace:CelloManager.Core.Data"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             xmlns:data="clr-namespace:CelloManager.Core.Data" 
+             mc:Ignorable="d" MaxWidth="750"
              HorizontalAlignment="Center" Background="White" Foreground="Black"
              x:Class="CelloManager.Views.Orders.PendingOrderPrintView">
         <StackPanel>
-            <TextBlock Name="Id" FontSize="20" Margin="5, 30" Background="White" Foreground="Black"/>
-            <TextBlock Name="OrderTime" Margin="5" Padding="5" FontSize="20" Background="White" Foreground="Black"/>
+            <TextBlock Name="Id" FontSize="15" Margin="5, 30" Background="White" Foreground="Black"/>
+            <TextBlock Name="OrderTime" FontSize="15" Margin="5" Padding="5" Background="White" Foreground="Black"/>
                 <ItemsControl Name="SpoolList">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
                     <ItemsControl.DataTemplates>
+                        <DataTemplate DataType="data:OrderedSpoolList">
+                            <Border BorderBrush="Black" BorderThickness="2" Margin="2">
+                                <StackPanel>
+                                    <TextBlock FontSize="20" Margin="2" Text="{Binding Category}"/>
+                                    <ItemsControl Items="{Binding Spools}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
                         <DataTemplate DataType="data:OrderedSpool">
-                            <Border BorderBrush="Black" BorderThickness="2">
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <TextBlock Margin="5" Padding="5" Text="{Binding SpoolId, StringFormat='Name: {0}'}" FontSize="20" 
-                                           Background="White" Foreground="Black"/>
-                                <TextBlock Margin="5" Padding="5" Text="{Binding Amount, StringFormat='Menge: {0}'}" FontSize="20" 
-                                           Background="White" Foreground="Black"/>
+                            <Border BorderBrush="Black" BorderThickness="1" Margin="1">
+                            <StackPanel Orientation="Horizontal" Margin="2" MinWidth="230">
+                                <TextBlock Margin="2" Padding="2" Text="{Binding Name, StringFormat='Name: {0}'}"
+                                           Background="White" Foreground="Black" FontSize="17"/>
+                                <TextBlock Margin="2" Padding="2" Text="{Binding Amount, StringFormat='Menge: {0}'}"
+                                           Background="White" Foreground="Black" FontSize="17"/>
                             </StackPanel>
                             </Border>
                         </DataTemplate>

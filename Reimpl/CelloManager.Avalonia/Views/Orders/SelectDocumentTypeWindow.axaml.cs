@@ -4,7 +4,6 @@ using System.Reactive.Linq;
 using Avalonia.ReactiveUI;
 using CelloManager.Core.Printing;
 using CelloManager.ViewModels.Orders;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ReactiveUI;
 
 namespace CelloManager.Views.Orders;

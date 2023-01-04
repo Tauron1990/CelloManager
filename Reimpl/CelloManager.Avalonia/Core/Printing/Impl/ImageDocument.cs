@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using SkiaSharp;
@@ -9,16 +10,15 @@ public sealed class ImageDocument : FileSelectingDocument<ImageDocument>
 {
     public override DocumentType Type => DocumentType.Image;
     
-    protected override ValueTask RenderTo(Dispatcher dispatcher, string path)
+    protected override async ValueTask RenderTo(Dispatcher dispatcher, string path)
     {
         if(!path.EndsWith(".png"))
             path = $"{path}.png";
 
-        using var image = new SKBitmap();
-        using var canvas = new SKCanvas(image);
 
-        PrintView.RenderTo(canvas);
-        return ValueTask.CompletedTask;
+        await using var fileStream = new FileStream(path, FileMode.Create);
+        
+        await Dispatcher.UIThread.InvokeAsync(() => PrintView.RenderTo(fileStream));
     }
 
     protected override void ConfigurateDialog(SaveFileDialog dialog)

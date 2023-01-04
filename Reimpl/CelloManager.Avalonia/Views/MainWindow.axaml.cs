@@ -6,6 +6,7 @@ using Avalonia.Data;
 using Avalonia.ReactiveUI;
 using CelloManager.ViewModels;
 using CelloManager.Views.Controls;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ReactiveUI;
 
 namespace CelloManager.Views
@@ -28,6 +29,8 @@ namespace CelloManager.Views
 
                 
                 yield return this.OneWayBind(ViewModel, m => m.Tabs, v => v.MainContentTabs.Items);
+                yield return this.Bind(ViewModel, m => m.CurrentTab, v => v.MainContentTabs.SelectedIndex);
+                
                 yield return this.OneWayBind(ViewModel, m => m.ErrorSimple, v => v.ErrorDisplay.Content);
                 yield return ErrorDisplay.Bind(
                     ToolTip.TipProperty,
@@ -37,6 +40,7 @@ namespace CelloManager.Views
                 yield return this.BindCommand(ViewModel, m => m.Import, v => v.ImportOld);
                 yield return this.BindCommand(ViewModel, m => m.Order, v => v.StartOrder);
                 yield return this.BindCommand(ViewModel, m => m.Orders, v => v.DisplayOrders);
+                yield return this.BindCommand(ViewModel, m => m.PrintAll, v => v.PrintAll);
             }
         }
     }

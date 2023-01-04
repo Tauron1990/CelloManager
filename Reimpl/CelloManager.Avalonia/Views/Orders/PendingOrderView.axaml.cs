@@ -20,7 +20,9 @@ public partial class PendingOrderView : ReactiveUserControl<PendingOrderViewMode
         if(ViewModel is null) throw new InvalidOperationException($"No ViewModel {nameof(PendingOrderView)}");
         
         yield return this.OneWayBind(ViewModel, m => m.TimeOfOrder, v => v.OrderTime.Text);
-        yield return this.BindCommand(ViewModel, m => m.PrintCommand, v => v.PrintOrder);
         yield return this.OneWayBind(ViewModel, m => m.Order.Spools, v => v.SpoolList.Items);
+        
+        yield return this.BindCommand(ViewModel, m => m.PrintCommand, v => v.PrintOrder);
+        yield return this.BindCommand(ViewModel, m => m.CommitCommand, v => v.Commit);
     }
 }

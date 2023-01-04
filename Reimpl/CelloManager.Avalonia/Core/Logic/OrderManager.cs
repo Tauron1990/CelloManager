@@ -41,23 +41,37 @@ public class OrderManager : IDisposable
     {
         var (data, orders) = arg;
 
-        return data.Select(spoolData => orders.SelectMany(o => o.Spools)
+        SpoolData Selector(SpoolData spoolData) 
+            => orders.SelectMany(o => o.Spools)
+                .SelectMany(l => l.Spools)
                 .Where(os => os.SpoolId == spoolData.Id)
-                .Aggregate(spoolData, (spool, order) => spool with { Amount = spool.Amount + order.Amount }))
+                .Aggregate(
+                    spoolData,
+                    (spool, order) => spool with { Amount = spool.Amount + order.Amount });
+
+        return data
+            .Select(Selector)
             .Any(actualData => actualData.NeedAmount > actualData.Amount);
     }
 
+    public PendingOrder GetAll()
+        => PendingOrder.New(_spools.Items, data => data.Amount);
+    
     public bool PlaceOrder()
     {
         var toOrder = _spools.Items
-            .Select(sd => sd with { Amount = sd.Amount + _orders.Items.SelectMany(o => o.Spools).Where(os => os.SpoolId == sd.Id).Sum(os => os.Amount) })
+            .OrderBy(sd => sd.Id)
+            .Select(
+                sd => sd with { Amount = sd.Amount + _orders.Items
+                    .SelectMany(o => o.Spools)
+                    .SelectMany(l => l.Spools)
+                    .Where(os => os.SpoolId == sd.Id).Sum(os => os.Amount) })
             .Where(sd => sd.Amount < sd.NeedAmount)
-            .Select(sd => new OrderedSpool(sd.Id, sd.NeedAmount - sd.Amount))
             .ToImmutableList();
         
         if(toOrder.Count == 0) return false;
         
-        _repository.AddOrder(PendingOrder.New(toOrder));
+        _repository.AddOrder(PendingOrder.New(toOrder, sd => sd.NeedAmount - sd.Amount));
         
         return true;
     }
@@ -68,7 +82,7 @@ public class OrderManager : IDisposable
     {
         _repository.Delete(order);
 
-        foreach (var orderSpool in order.Spools)
+        foreach (var orderSpool in order.Spools.SelectMany(l => l.Spools))
         {
             var data = _spools.Lookup(orderSpool.SpoolId);
 

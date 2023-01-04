@@ -26,6 +26,8 @@ public sealed class SpoolRepository : IDisposable
     {
         var spools = await _blobCache.GetAllObjects<SpoolData>();
         var orders = await _blobCache.GetAllObjects<PendingOrder>();
+
+
         
         _spools.Edit(e =>
         {
