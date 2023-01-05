@@ -16,7 +16,7 @@ public sealed class OrderDisplayViewModel : ViewModelBase, IDisposable, ITabInfo
     //public ViewModelBase? CurrentContent => _currentContent.Value;
     public OrderDisplayListViewModel CurrentContent { get; }
     
-    public OrderDisplayViewModel(OrderManager manger, PrintBuilder builder, MainWindowViewModel model)
+    public OrderDisplayViewModel(OrderManager manger, IServiceProvider serviceProvider, MainWindowViewModel model)
     {
         // _currentContent = _currentContentSubject
         //     .ObserveOn(RxApp.MainThreadScheduler)
@@ -24,7 +24,7 @@ public sealed class OrderDisplayViewModel : ViewModelBase, IDisposable, ITabInfo
         //
         // _currentContentSubject.OnNext(new OrderDisplayListViewModel(manger.Orders));
 
-        CurrentContent = new OrderDisplayListViewModel(manger.Orders, builder, manger, model);
+        CurrentContent = new OrderDisplayListViewModel(manger.Orders, serviceProvider, manger, model);
     }
 
     public void Dispose()

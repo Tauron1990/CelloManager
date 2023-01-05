@@ -3,16 +3,16 @@ using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using CelloManager.Views.Orders;
-using SQLitePCL;
+using TempFileStream.Abstractions;
 
 namespace CelloManager.Core.Printing.Impl;
 
 public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     where TSelf : FileSelectingDocument<TSelf>, new()
 {
-    private PendingOrderPrintView? _printView;
+    private ITempFile[]? _printView;
 
-    protected PendingOrderPrintView PrintView
+    protected ITempFile[] PrintView
     {
         get
         {
@@ -25,7 +25,7 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     
     public abstract DocumentType Type { get; }
 
-    public static IPrintDocument GenerateDocument(PendingOrderPrintView view)
+    public static IPrintDocument GenerateDocument(ITempFile[] view)
     {
         var doc = new TSelf();
         doc.Init(view);
@@ -55,7 +55,7 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     
     protected abstract void ConfigurateDialog(SaveFileDialog dialog);
 
-    protected virtual void Init(PendingOrderPrintView view) => _printView = view;
+    protected virtual void Init(ITempFile[] view) => _printView = view;
 
     public void Dispose() => _printView = null;
 }

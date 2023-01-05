@@ -18,15 +18,12 @@ public sealed class OrderDisplayListViewModel : ViewModelBase, IDisposable
 
     public ReadOnlyObservableCollection<PendingOrderViewModel> Orders { get; }
 
-    public OrderDisplayListViewModel(IObservable<IChangeSet<PendingOrder, string>> orders, PrintBuilder builder, OrderManager manger, MainWindowViewModel mainWindow)
+    public OrderDisplayListViewModel(IObservable<IChangeSet<PendingOrder, string>> orders, IServiceProvider serviceProvider, OrderManager manger, MainWindowViewModel mainWindow)
     {
         _manger = manger;
         _mainWindow = mainWindow;
         _subscription = orders
-            .Transform(po => new PendingOrderViewModel(
-                po, 
-                builder.StartPrint,
-                DoCompledOrder))
+            .Transform(po => new PendingOrderViewModel(po, serviceProvider, DoCompledOrder))
             .DisposeMany()
             .ObserveOn(RxApp.MainThreadScheduler)
             .Bind(out var list)

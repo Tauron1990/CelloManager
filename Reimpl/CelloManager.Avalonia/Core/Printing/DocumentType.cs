@@ -4,5 +4,5 @@ public enum DocumentType
 {
     Image,
     Print,
-    PDF,
+    Pdf,
 }

@@ -100,7 +100,7 @@ public abstract class Producer<TSelf, TState, TContext>
             await ProgressConditions(rev, context);
         } while (ok);
 
-        return (false, false);
+        return (false, true);
     }
 
     private async ValueTask<bool> ProgressConditions(StepRev<TState, TContext> rev, TContext context)

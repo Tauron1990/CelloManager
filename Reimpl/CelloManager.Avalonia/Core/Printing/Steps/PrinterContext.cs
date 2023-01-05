@@ -14,8 +14,16 @@ public sealed class PrinterContext
     private Dispatcher? _dispatcher;
     private TempFiles? _tempFiles;
     
+    public PrintUiModel PrintUiModel { get; }
+    
     public PendingOrder? Order { get; set; }
 
+    public DocumentType? DocumentType { get; set; }
+
+    public IPrintDocument? PrintDocument { get; set; }
+
+    public Action? End { get; set; }
+    
     public IServiceProvider ServiceProvider { get; set; } = new ServiceContainer();
 
     public ImmutableArray<PrintPage> Pages { get; set; } = ImmutableArray<PrintPage>.Empty;
@@ -27,6 +35,8 @@ public sealed class PrinterContext
         get => _dispatcher ??= Dispatcher.UIThread;
         set => _dispatcher = value;
     }
+
+    public PrinterContext(PrintUiModel printUiModel) => PrintUiModel = printUiModel;
 
     public void AddPage(PrintPage page)
         => Pages = Pages.Add(page);

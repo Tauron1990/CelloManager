@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using TempFileStream.Abstractions;
 
@@ -19,9 +20,13 @@ public sealed class TempFiles : IDisposable
     public ITempFile GetAndCacheTempFile(int indexer)
         => _tempFiles.GetOrAdd(indexer, static (_, f) => f.CreateTempFile(), _fileFactory);
 
+    public IEnumerable<KeyValuePair<int, ITempFile>> GetFiles()
+        => _tempFiles;
+        
+    
     public void Dispose()
     {
-        foreach (var file in _tempFiles.Values)
+        foreach (ITempFile file in _tempFiles.Values)
             file.Dispose();
         _tempFiles.Clear();
     }

@@ -9,26 +9,35 @@ using System.Threading.Tasks;
 using Akavache;
 using DynamicData;
 using DynamicData.Kernel;
+using Microsoft.Extensions.Logging;
 
 namespace CelloManager.Core.Data;
 
-public sealed class SpoolRepository : IDisposable
+public sealed partial class SpoolRepository : IDisposable
 {
     private readonly ErrorDispatcher _errorDispatcher;
+    private readonly ILogger<SpoolRepository> _logger;
     private readonly SourceCache<SpoolData, string> _spools = new(sd => sd.Id);
     private readonly SourceCache<PendingOrder, string> _orders = new(po => po.Id);
     private readonly IBlobCache _blobCache = BlobCache.UserAccount;
     private readonly CompositeDisposable _subscriptions = new();
 
-    public SpoolRepository(ErrorDispatcher errorDispatcher) => _errorDispatcher = errorDispatcher;
+    public SpoolRepository(ErrorDispatcher errorDispatcher, ILogger<SpoolRepository> logger)
+    {
+        _errorDispatcher = errorDispatcher;
+        _logger = logger;
+    }
 
+    [LoggerMessage(Message = "Initializing Spool Repository", Level = LogLevel.Information)]
+    private partial void InitRepository();
+    
     public async Task Init()
     {
+        InitRepository();
+        
         var spools = await _blobCache.GetAllObjects<SpoolData>();
         var orders = await _blobCache.GetAllObjects<PendingOrder>();
 
-
-        
         _spools.Edit(e =>
         {
             foreach (var spoolData in spools) e.AddOrUpdate(spoolData);

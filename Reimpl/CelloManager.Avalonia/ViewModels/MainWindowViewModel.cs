@@ -77,17 +77,20 @@ namespace CelloManager.ViewModels
         {
             var currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
             var orderManager = _modelScope.GetService<OrderManager>();
-            var printer = _modelScope.GetService<PrintBuilder>();
-
-            PrintAll = ReactiveCommand.Create(
-                () =>
+            var builder = _modelScope.GetService<PrintBuilder>();
+            Dispatcher dispatcher = Dispatcher.UIThread;
+            
+            PrintAll = ReactiveCommand.CreateFromTask(
+                async () =>
                 {
-                    using var model = new PendingOrderViewModel(
-                        orderManager.GetAll(),
-                        printer.StartPrint,
-                        static _ => { });
-                    
-                    model.RunPrint();
+                    try
+                    {
+                        await builder.PrintPendingOrder(orderManager.GetAll(), dispatcher, App.ServiceProvider, null);
+                    }
+                    catch (Exception e)
+                    {
+                        errors.Send(e);
+                    }
                 });
             
             Edit = ReactiveCommand.Create
@@ -134,8 +137,7 @@ namespace CelloManager.ViewModels
                 .DisposeWith(_subscriptions);
 
             _tabs.Add(_modelScope.GetService<SpoolDisplayViewModel>());
-
-            Dispatcher dispatcher = Dispatcher.UIThread;
+            
             _subscriptions.Add(errors.Errors.SelectMany(
                 ex => dispatcher.InvokeAsync(
                     async () =>

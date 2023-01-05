@@ -1,8 +1,10 @@
 ﻿using System.IO;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
-using SkiaSharp;
+using ImageMagick;
+using TempFileStream.Abstractions;
 
 namespace CelloManager.Core.Printing.Impl;
 
@@ -16,9 +18,21 @@ public sealed class ImageDocument : FileSelectingDocument<ImageDocument>
             path = $"{path}.png";
 
 
-        await using var fileStream = new FileStream(path, FileMode.Create);
-        
-        await Dispatcher.UIThread.InvokeAsync(() => PrintView.RenderTo(fileStream));
+        MagickNET.Initialize();
+        using var collection = new MagickImageCollection();
+        using CompositeDisposable images = new();
+
+        foreach (ITempFile imageFile in PrintView)
+        {
+            var image = new MagickImage();
+            await image.ReadAsync(imageFile.CreateReadStream());
+            
+            images.Add(image);
+            collection.Add(image);
+        }
+
+        using var merged = collection.AppendVertically();
+        await merged.WriteAsync(path, MagickFormat.Png);
     }
 
     protected override void ConfigurateDialog(SaveFileDialog dialog)

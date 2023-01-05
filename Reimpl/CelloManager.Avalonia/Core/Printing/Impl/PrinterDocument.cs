@@ -7,22 +7,21 @@ using Avalonia.Threading;
 using CelloManager.Core.Movere.ViewModels;
 using CelloManager.Core.Movere.Views;
 using CelloManager.Views.Orders;
+using TempFileStream.Abstractions;
 
 namespace CelloManager.Core.Printing.Impl;
 
 public sealed class PrinterDocument : IInternalDocument
 {
     private readonly PrintDocument _printDocument;
-    private readonly string _fileName = Path.GetTempFileName();
+    private int _currentIndex;
     
-    private Stream? _data;
-
     public DocumentType Type => DocumentType.Print;
 
     private PrinterDocument(PrintDocument printDocument) 
         => _printDocument = printDocument;
 
-    public static IPrintDocument GenerateDocument(PendingOrderPrintView view)
+    public static IPrintDocument GenerateDocument(ITempFile[] view)
     {
         var doc = new PrintDocument();
         
@@ -33,17 +32,15 @@ public sealed class PrinterDocument : IInternalDocument
 
         void DocumentOnPrintPage(object sender, PrintPageEventArgs e)
         {
-            if(printerDoc._data is null)
-            {
-                var stream = new FileStream(printerDoc._fileName, FileMode.Create, FileAccess.ReadWrite);
-                view.RenderTo(stream);
-                printerDoc._data = stream;
-            }
+            using Image? img = Image.FromStream(view[printerDoc._currentIndex].CreateReadStream());
+            e.Graphics.DrawImage(img, 10, 10);
 
-            printerDoc._data.Position = 0;
-            using Image? bitmap = Image.FromStream(printerDoc._data);
+            printerDoc._currentIndex++;
+            e.HasMorePages = printerDoc._currentIndex < view.Length;
+            
+            if(e.HasMorePages) return;
 
-            e.Graphics.DrawImage(bitmap, 10, 10);
+            printerDoc._currentIndex = 0;
         }
     }
 
@@ -82,10 +79,6 @@ public sealed class PrinterDocument : IInternalDocument
     public void Dispose()
     {
         _printDocument.Dispose();
-        _data?.Dispose();
-        _data = null;
-        
-        if(File.Exists(_fileName))
-            File.Delete(_fileName);
+        _currentIndex = -1;
     }
 }
