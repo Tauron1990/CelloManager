@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using CelloManager.Core.Comp;
 using CelloManager.Core.Data;
@@ -86,7 +86,7 @@ public sealed class SpoolManager
         if (needAmount <= 0)
             needAmount = -1;
         
-        var id = SpoolData.CreateId(name ?? string.Empty, category ?? string.Empty);
+        string id = SpoolData.CreateId(name ?? string.Empty, category ?? string.Empty);
 
         if (id == old.Id) 
             _repository.UpdateSpool(old with { Amount = amount, NeedAmount = needAmount });
@@ -98,7 +98,49 @@ public sealed class SpoolManager
             });
     }
 
-    public async Task<Exception?> ImportSpools(string path)
+    public async Task<Exception?> ExportToJson(string path)
+    {
+        try
+        {
+            var array = _repository.SpoolItems.ToArray();
+
+            await using FileStream stream = File.Create(path);
+            await JsonSerializer.SerializeAsync(stream, array);
+
+            return null;
+        }
+        catch (Exception e)
+        {
+            return e;
+        }
+    }
+
+    public async Task<Exception?> ImportFromJson(string path)
+    {
+        try
+        {
+            await using FileStream stream = File.OpenRead(path);
+            var array = await JsonSerializer.DeserializeAsync<SpoolData[]>(stream);
+
+            foreach (SpoolData spool in array)
+            {
+                var old = _repository.LookUp(spool.Name, spool.Category);
+            
+                if(old.HasValue)
+                    UpdateSpool(old.Value, spool.Name, spool.Category, spool.Amount, spool.NeedAmount);
+                else
+                    CreateSpool(spool.Name, spool.Category, spool.Amount, spool.NeedAmount); 
+            }
+            
+            return null;
+        }
+        catch (Exception e)
+        {
+            return e;
+        }
+    }
+
+    public async Task<Exception?> ImportFromLegacy(string path)
     {
         try
         {

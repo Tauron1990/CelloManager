@@ -24,7 +24,7 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
 
     public string? Error => _error.Value;
     
-    public ReactiveCommand<string?, Exception?> Import { get; set; }
+    public ReactiveCommand<string?, Exception?> Import { get; }
     
     public ImportViewModel(SpoolManager manager)
     {
@@ -49,7 +49,7 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
             .SelectMany(l => l ?? Array.Empty<string>())
             .Where(p => !string.IsNullOrWhiteSpace(p))
             .ObserveOn(Scheduler.Default)
-            .SelectMany(_manager.ImportSpools!);
+            .SelectMany(_manager.ImportFromLegacy!);
 
     public void Dispose()
     {
