@@ -56,6 +56,11 @@
                         <StackPanel Spacing="8">
 
                             <ItemsControl Items="{Binding PrintPreviewPages}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <StackPanel Orientation="Horizontal"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <Image Stretch="Uniform" Width="200" Height="200" Source="{Binding Image}" />
@@ -87,7 +92,7 @@
                                        Maximum="{Binding PrinterSettings.MaximumCopies}"
                                        Value="{Binding PrinterSettings.Copies}" />
 
-                        <CheckBox Content="Collate"
+                        <CheckBox Content="Sortiert"
                                   IsChecked="{Binding PrinterSettings.Collate}" />
 
                     </StackPanel>

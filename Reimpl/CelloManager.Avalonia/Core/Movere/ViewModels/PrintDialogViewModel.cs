@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Windows.Input;
+using Avalonia.Threading;
 using DynamicData.Binding;
 using ReactiveUI;
 using static System.Drawing.Printing.PrinterSettings;
@@ -33,6 +35,7 @@ namespace CelloManager.Core.Movere.ViewModels
 
             PrinterSettings
                 .WhenAnyValue(vm => vm.PrinterSettings)
+                .ObserveOn(RxApp.TaskpoolScheduler)
                 .Subscribe(UpdatePrintPreview);
 
             RefreshAvailablePrintersCommand = ReactiveCommand.Create(RefreshAvailablePrinters);
@@ -88,13 +91,10 @@ namespace CelloManager.Core.Movere.ViewModels
 
             var previewPageInfos = _controller.GetPreviewPageInfo();
             var printPreviewPages = new List<PrintPreviewPageViewModel>(previewPageInfos.Length);
+            
+            printPreviewPages.AddRange(previewPageInfos.Select(info => new PrintPreviewPageViewModel(info)));
 
-            foreach (var info in previewPageInfos)
-            {
-                printPreviewPages.Add(new PrintPreviewPageViewModel(info));
-            }
-
-            PrintPreviewPages = printPreviewPages;
+            Dispatcher.UIThread.Post(() => PrintPreviewPages = printPreviewPages);
         }
     }
 }

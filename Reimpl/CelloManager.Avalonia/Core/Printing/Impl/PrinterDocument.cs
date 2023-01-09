@@ -58,15 +58,17 @@ public sealed class PrinterDocument : IInternalDocument
                     b =>
                     {
                         dialog.Close();
-                        result.SetResult(b);
+                        result.TrySetResult(b);
                     });
                 dialog.ViewModel = model;
-
+                dialog.Closed += (_, _) => result.TrySetResult(false);
+                
                 dialogTask = dialog.ShowDialog(App.MainWindow);
             });
 
         await dialogTask;
-
+        
+        
         if(await result.Task)
         {
             _printDocument.EndPrint += (_, _) => end();

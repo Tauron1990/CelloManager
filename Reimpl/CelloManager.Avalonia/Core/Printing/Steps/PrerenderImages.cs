@@ -25,6 +25,8 @@ public sealed class PrerenderImages : PrinterStep
             view.RenderTo(context.TempFiles.GetAndCacheTempFile(count).WriteStream);
         };
         
+        model.Dispose();
+        
         return StepId.None;
     }
 }
