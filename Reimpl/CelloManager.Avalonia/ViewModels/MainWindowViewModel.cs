@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Avalonia.Controls;
 using Avalonia.Threading;
 using CelloManager.Core.Data;
 using CelloManager.Core.Logic;
@@ -29,6 +29,11 @@ namespace CelloManager.ViewModels
         private readonly CompositeDisposable _subscriptions = new();
         private readonly ObservableAsPropertyHelper<string> _errorSimple;
         private readonly ObservableAsPropertyHelper<string> _errorFull;
+        
+        private readonly SpoolManager _spoolManager;
+        private readonly Dispatcher _dispatcher;        
+        private readonly ErrorDispatcher _errors;
+        
         private int _currentTab;
 
         public string ErrorSimple => _errorSimple.Value;
@@ -53,6 +58,8 @@ namespace CelloManager.ViewModels
 
         public ReactiveCommand<Unit, Unit> PrintAll { get; }
 
+        public ReactiveCommand<Unit, Unit> Export { get; }
+
         public void DisplayTab<TTab>()
             where TTab : ViewModelBase
         {
@@ -75,17 +82,22 @@ namespace CelloManager.ViewModels
         
         public MainWindowViewModel(ErrorDispatcher errors)
         {
+            _errors = errors;
+            _spoolManager = _modelScope.GetService<SpoolManager>();
+            _dispatcher = Dispatcher.UIThread;
+            
             var currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
             var orderManager = _modelScope.GetService<OrderManager>();
             var builder = _modelScope.GetService<PrintBuilder>();
-            Dispatcher dispatcher = Dispatcher.UIThread;
+
+            Export = ReactiveCommand.CreateFromTask(ExportToJson, _spoolManager.Count.Select(i => i != 0));
             
             PrintAll = ReactiveCommand.CreateFromTask(
                 async () =>
                 {
                     try
                     {
-                        await builder.PrintPendingOrder(orderManager.GetAll(), dispatcher, App.ServiceProvider, null);
+                        await builder.PrintPendingOrder(orderManager.GetAll(), _dispatcher, App.ServiceProvider, null);
                     }
                     catch (Exception e)
                     {
@@ -139,7 +151,7 @@ namespace CelloManager.ViewModels
             _tabs.Add(_modelScope.GetService<SpoolDisplayViewModel>());
             
             _subscriptions.Add(errors.Errors.SelectMany(
-                ex => dispatcher.InvokeAsync(
+                ex => _dispatcher.InvokeAsync(
                     async () =>
                     {
 
@@ -147,6 +159,41 @@ namespace CelloManager.ViewModels
                         return Unit.Default;
                     }))
                 .Subscribe());
+        }
+
+        private async Task ExportToJson()
+        {
+            try
+            {
+                var filter = new FileDialogFilter();
+                filter.Extensions.Add("json");
+                filter.Name = "Daten";
+
+                var dialog = new SaveFileDialog
+                {
+                    DefaultExtension = "json",
+                    Title = "Daten Exportieren",
+                    Filters = new List<FileDialogFilter> { filter },
+                    InitialFileName = "Spulen.json",
+                };
+
+                string? result = await _dispatcher.InvokeAsync(() => dialog.ShowAsync(App.MainWindow));
+                
+                if(string.IsNullOrWhiteSpace(result)) return;
+
+                if(!result.EndsWith(".json"))
+                    result = $"{result}.json";
+
+                Exception? error = await _spoolManager.ExportToJson(result);
+                
+                if(error is null) return;
+                
+                _errors.Send(error);
+            }
+            catch (Exception e)
+            {
+                _errors.Send(e);
+            }
         }
 
         private IObservable<bool> ContainsViewModel<TModel>(IObservable<IReadOnlyCollection<ViewModelBase>> query)

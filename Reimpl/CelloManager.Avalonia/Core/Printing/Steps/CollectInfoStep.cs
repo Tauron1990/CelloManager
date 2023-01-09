@@ -33,13 +33,9 @@ public sealed class CollectInfoStep : PrinterStep
 
     private static void ProcessGroup(PrinterContext context, List<OrderedSpoolList> toProcess, List<OrderedSpoolList> inProcess, PendingOrder order)
     {
-
         var next = toProcess.Take(3).ToArray();
-        if(inProcess.Count == 0)
-        {
-            inProcess.AddRange(next);
-            return;
-        }
+        foreach (var spoolList in next)
+            toProcess.Remove(spoolList);
 
         for (int i = 0; i < next.Length; i++)
         {

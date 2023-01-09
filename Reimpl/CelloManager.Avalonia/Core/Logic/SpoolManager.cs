@@ -20,8 +20,14 @@ public sealed record OldValidateNameRequest(ReadySpoolModel Old, string? Name, s
 
 public sealed class SpoolManager
 {
+    private readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerOptions.Default)
+    {
+        WriteIndented = true,
+    };
     private readonly SpoolRepository _repository;
     public IObservable<IGroupChangeSet<ReadySpoolModel, string, string>> CurrentSpools { get; }
+
+    public IObservable<int> Count => _repository.SpoolCount;
 
     public IObservable<IChangeSet<string, string>> KnowenCategorys { get; }
 
@@ -105,7 +111,7 @@ public sealed class SpoolManager
             var array = _repository.SpoolItems.ToArray();
 
             await using FileStream stream = File.Create(path);
-            await JsonSerializer.SerializeAsync(stream, array);
+            await JsonSerializer.SerializeAsync(stream, array, _serializerOptions);
 
             return null;
         }
@@ -121,6 +127,9 @@ public sealed class SpoolManager
         {
             await using FileStream stream = File.OpenRead(path);
             var array = await JsonSerializer.DeserializeAsync<SpoolData[]>(stream);
+
+            if(array is null)
+                throw new InvalidOperationException("Lesen der Daten Fehlgeschlagen");
 
             foreach (SpoolData spool in array)
             {

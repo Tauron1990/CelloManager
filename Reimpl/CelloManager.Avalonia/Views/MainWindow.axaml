@@ -15,14 +15,15 @@
     
     <Grid RowDefinitions="Auto, *">
         <styles:ColorZone Mode="PrimaryMid" Padding="10">
-            <Grid RowDefinitions="*" ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, *, Auto" Background="Transparent">
+            <Grid RowDefinitions="*" ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, *, Auto" Background="Transparent">
                 <Button Grid.Column="0" Margin="1" Name="StartOrder">Bestellen</Button>
                 <Button Grid.Column="1" Margin="1" Name="DisplayOrders">Bestellungen</Button>
                 <Button Grid.Column="2" Margin="1" Name="EditSpools">Beabeiten</Button>
                 <Button Grid.Column="3" Margin="1" Name="ImportOld">Importieren</Button>
                 <Button Grid.Column="4" Margin="1" Name="PrintAll">Alles Drucken</Button>
-                <Button Grid.Column="5" Margin="1" IsEnabled="False" Name="ErrorDisplay"></Button>
-                <TextBlock Grid.Column="7" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="25">By Dr. Pixel</TextBlock>
+                <Button Grid.Column="5" Margin="1" Name="ExportData">Daten Exportieren</Button>
+                <Button Grid.Column="6" Margin="1" IsEnabled="False" Name="ErrorDisplay"></Button>
+                <TextBlock Grid.Column="8" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="25">By Dr. Pixel</TextBlock>
             </Grid>
         </styles:ColorZone>
         <TabControl Grid.Row="1" Name="MainContentTabs" TabStripPlacement="Left">

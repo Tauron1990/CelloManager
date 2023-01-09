@@ -41,6 +41,7 @@ namespace CelloManager.Views
                 yield return this.BindCommand(ViewModel, m => m.Order, v => v.StartOrder);
                 yield return this.BindCommand(ViewModel, m => m.Orders, v => v.DisplayOrders);
                 yield return this.BindCommand(ViewModel, m => m.PrintAll, v => v.PrintAll);
+                yield return this.BindCommand(ViewModel, m => m.Export, v => v.ExportData);
             }
         }
     }

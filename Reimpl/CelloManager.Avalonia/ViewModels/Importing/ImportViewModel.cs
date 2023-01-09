@@ -49,7 +49,7 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
             .SelectMany(l => l ?? Array.Empty<string>())
             .Where(p => !string.IsNullOrWhiteSpace(p))
             .ObserveOn(Scheduler.Default)
-            .SelectMany(_manager.ImportFromLegacy!);
+            .SelectMany(s => s.EndsWith(".json", StringComparison.Ordinal) ? _manager.ImportFromJson(s) : _manager.ImportFromLegacy(s));
 
     public void Dispose()
     {
