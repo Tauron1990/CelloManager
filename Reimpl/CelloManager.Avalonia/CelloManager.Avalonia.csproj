@@ -61,4 +61,8 @@
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="ViewModels\Printing" />
+      <Folder Include="Views\Printing" />
+    </ItemGroup>
 </Project>

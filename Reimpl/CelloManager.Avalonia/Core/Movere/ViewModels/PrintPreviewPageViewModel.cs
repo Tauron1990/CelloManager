@@ -30,8 +30,8 @@ namespace CelloManager.Core.Movere.ViewModels
             var image = _pageInfo.Image;
 
             var stream = new MemoryStream();
-            image.Save(stream, ImageFormat.Bmp);
-
+            image.Save(stream, ImageFormat.Png);
+            
             stream.Position = 0;
 
             return new Bitmap(stream);
