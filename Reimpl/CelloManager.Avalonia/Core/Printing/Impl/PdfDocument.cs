@@ -1,4 +1,5 @@
-﻿using System.Reactive.Disposables;
+﻿using System;
+using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Threading;
@@ -43,5 +44,6 @@ public sealed class PdfDocument : FileSelectingDocument<PdfDocument>
         dialog.Filters!.Add(filter);
         dialog.Title = "PDF Datei";
         dialog.InitialFileName = "print.pdf";
+        dialog.Directory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
     }
 }

@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Printing;
-using System.IO;
 using System.Threading.Tasks;
 using Avalonia.Threading;
-using CelloManager.Core.Movere.ViewModels;
-using CelloManager.Core.Movere.Views;
-using CelloManager.Views.Orders;
+using CelloManager.Views.Printing;
 using TempFileStream.Abstractions;
 
 namespace CelloManager.Core.Printing.Impl;
@@ -46,30 +43,9 @@ public sealed class PrinterDocument : IInternalDocument
 
     public async ValueTask Execute(Dispatcher dispatcher, Action end)
     {
-        TaskCompletionSource<bool> result = new();
-        var dialogTask = Task.CompletedTask;
+        bool result = await Dispatcher.UIThread.InvokeAsync(async () => await PrintingDialog.ShowAsync(_printDocument, dispatcher, App.ServiceProvider));
 
-        await Dispatcher.UIThread.InvokeAsync(
-            () =>
-            {
-                var dialog = new PrintDialog();
-                var model = new PrintDialogViewModel(
-                    _printDocument,
-                    b =>
-                    {
-                        dialog.Close();
-                        result.TrySetResult(b);
-                    });
-                dialog.ViewModel = model;
-                dialog.Closed += (_, _) => result.TrySetResult(false);
-                
-                dialogTask = dialog.ShowDialog(App.MainWindow);
-            });
-
-        await dialogTask;
-        
-        
-        if(await result.Task)
+        if(result)
         {
             _printDocument.EndPrint += (_, _) => end();
             _printDocument.Print();

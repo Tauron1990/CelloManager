@@ -22,6 +22,10 @@ namespace CelloManager.Views
             _autoSelectTabControl.Init(MainContentTabs);
             
             this.WhenActivated(Init);
+
+#if DEBUG
+            
+#endif
             
             IEnumerable<IDisposable> Init()
             {

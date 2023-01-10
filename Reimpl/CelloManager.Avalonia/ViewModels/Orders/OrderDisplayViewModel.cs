@@ -1,7 +1,5 @@
 ﻿using System;
-using CelloManager.Core.Movere;
 using CelloManager.Core.Logic;
-using CelloManager.Core.Printing;
 
 namespace CelloManager.ViewModels.Orders;
 

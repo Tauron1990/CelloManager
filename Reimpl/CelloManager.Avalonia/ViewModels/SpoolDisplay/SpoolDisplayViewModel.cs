@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using CelloManager.Core.Logic;
@@ -20,6 +21,7 @@ public sealed class SpoolDisplayViewModel : ViewModelBase, ITabInfoProvider, IDi
     public SpoolDisplayViewModel(SpoolManager manager)
     {
         _subscription = manager.CurrentSpools
+            .Sort(Comparer<IGroup<ReadySpoolModel, string, string>>.Create(CompareCategory))
             .Select(g => new SpoolGroupViewModel(g.Key, g.Cache))
             .DisposeMany()
             .Select(m => TabViewModel.Create(m, null))
@@ -29,6 +31,9 @@ public sealed class SpoolDisplayViewModel : ViewModelBase, ITabInfoProvider, IDi
 
         Groups = observableCollection;
     }
+
+    private static int CompareCategory(IGroup<ReadySpoolModel, string, string> x, IGroup<ReadySpoolModel, string, string> y) 
+        => ReadySpoolSorter.CategorySorter.Compare(x.Key, y.Key);
 
     public void Dispose() 
         => _subscription.Dispose();

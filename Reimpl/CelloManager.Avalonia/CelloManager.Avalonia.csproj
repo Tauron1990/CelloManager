@@ -28,6 +28,7 @@
         <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="0.10.18" />
         <PackageReference Include="Avalonia.ReactiveUI" Version="0.10.18" />
         <PackageReference Include="Avalonia.Xaml.Interactivity" Version="0.10.18" />
+        <PackageReference Include="Be.Vlaanderen.Basisregisters.Generators.Guid.Deterministic" Version="3.0.1" />
         <PackageReference Include="Jab" Version="0.8.6" />
         <PackageReference Include="jp2masa.Avalonia.Flexbox" Version="0.2.0" />
         <PackageReference Include="jp2masa.Avalonia.PropertyGenerator.CSharp" Version="0.10.0-beta3">
@@ -53,16 +54,11 @@
     </ItemGroup>
     <ItemGroup>
         <None Remove="Core\Movere\Views\PrintDialog.xaml" />
-        <AvaloniaXaml Include="Core\Movere\Views\PrintDialog.xaml" />
     </ItemGroup>
     <ItemGroup>
       <Compile Update="Views\Orders\PendingOrderPrintView.axaml.cs">
         <DependentUpon>PendingOrderPrintView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
-    </ItemGroup>
-    <ItemGroup>
-      <Folder Include="ViewModels\Printing" />
-      <Folder Include="Views\Printing" />
     </ItemGroup>
 </Project>

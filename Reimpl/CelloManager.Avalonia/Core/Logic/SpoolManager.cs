@@ -36,7 +36,7 @@ public sealed class SpoolManager
         _repository = repository;
         CurrentSpools = repository.Spools
             .Select(set => new ReadySpoolModel(set, repository))
-            .Sort(ReadySpoolSorter.CategorySorter)
+            .Sort(ReadySpoolSorter.CategoryModelSorter)
             .Group(m => m.Category);
 
         KnowenCategorys = CurrentSpools.Select(g => g.Key);

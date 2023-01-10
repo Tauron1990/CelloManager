@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using CelloManager.Core.Logic;
 using CelloManager.Core.Printing.Data;
 
 namespace CelloManager.Core.Data;
@@ -26,7 +27,7 @@ public sealed record PendingOrder(string Id, ImmutableList<OrderedSpoolList> Spo
                         .Select(
                             g => new OrderedSpoolList(
                                 g.Key,
-                                g.OrderByDescending(d => d.Name)
+                                g.OrderBy(d => d.Name, ReadySpoolSorter.NameSorter)
                                     .Select(sd => new OrderedSpool(sd.Id, sd.Name, amountSelector(sd)))
                                     .ToImmutableList()))),
             DateTimeOffset.Now);

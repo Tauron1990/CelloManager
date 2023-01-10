@@ -4,6 +4,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using CelloManager.ViewModels;
 using CelloManager.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CelloManager
 {

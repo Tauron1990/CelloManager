@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
@@ -46,5 +47,6 @@ public sealed class ImageDocument : FileSelectingDocument<ImageDocument>
         dialog.Filters!.Add(filter);
         dialog.Title = "Bild Datei";
         dialog.InitialFileName = "print.png";
+        dialog.Directory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
     }
 }

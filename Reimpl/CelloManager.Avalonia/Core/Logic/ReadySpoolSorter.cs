@@ -1,28 +1,16 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace CelloManager.Core.Logic;
 
 public static class ReadySpoolSorter
 {
-    private sealed class CategoryComparer : IComparer<ReadySpoolModel>
+    private sealed class NameComparer : IComparer<string>
     {
-        public int Compare(ReadySpoolModel? x, ReadySpoolModel? y)
-        {
-            if (ReferenceEquals(x, y))
-                return 0;
-            if (x == null)
-                return -1;
-
-            // ReSharper disable once StringCompareToIsCultureSpecific
-            return x.Category.CompareTo(y?.Category);
-        }
-    }
-    
-    private sealed class NameComparer : IComparer<ReadySpoolModel>
-    {
-        public int Compare(ReadySpoolModel? x, ReadySpoolModel? y)
+        public int Compare(string? x, string? y)
         {
             if (ReferenceEquals(x, y))
                 return 0;
@@ -31,26 +19,41 @@ public static class ReadySpoolSorter
             if (y is null)
                 return 1;
 
-            var digit1 = ExtractDigit(x.Name);
-            var digit2 = ExtractDigit(y.Name);
+            double digit1 = ExtractDigit(x);
+            double digit2 = ExtractDigit(y);
 
+            // ReSharper disable CompareOfFloatsByEqualityOperator
             if (digit1 != -1 && digit2 != -1)
+                // ReSharper restore CompareOfFloatsByEqualityOperator
                 return digit2.CompareTo(digit1);
 
             // ReSharper disable once StringCompareToIsCultureSpecific
-            return x.Name.CompareTo(y.Name);
+            return x.CompareTo(y);
         }
 
-        private int ExtractDigit(string name)
+        private static double ExtractDigit(string name)
         {
-            var count = name.Count(char.IsDigit);
-            if (count == -1) return -1;
+            int count = name.Count(char.IsDigit);
+            if (count == 0) return -1;
 
-            return int.Parse(name.AsSpan()[..count]);
+            if(double.TryParse(name.AsSpan()[..count], NumberStyles.Any, CultureInfo.CurrentUICulture, out double result))
+                return result;
+
+            return -1;
         }
     }
 
-    public static readonly IComparer<ReadySpoolModel> NameSorter = new NameComparer();
+    public static readonly IComparer<string> NameSorter = new NameComparer();
 
-    public static readonly IComparer<ReadySpoolModel> CategorySorter = new CategoryComparer();
+    public static readonly IComparer<ReadySpoolModel> ModelSorter = Comparer<ReadySpoolModel>.Create(Comparison);
+
+    private static int Comparison(ReadySpoolModel x, ReadySpoolModel y)
+        => NameSorter.Compare(x.Name, y.Name);
+
+    public static readonly IComparer<string> CategorySorter = StringComparer.CurrentCulture;
+    
+    public static readonly IComparer<ReadySpoolModel> CategoryModelSorter = Comparer<ReadySpoolModel>.Create(CatComparison);
+
+    private static int CatComparison(ReadySpoolModel x, ReadySpoolModel y)
+        => CategorySorter.Compare(x.Category, y.Category);
 }

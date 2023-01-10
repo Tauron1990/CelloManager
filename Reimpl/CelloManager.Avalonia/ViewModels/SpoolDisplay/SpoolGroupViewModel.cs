@@ -27,7 +27,7 @@ public sealed class SpoolGroupViewModel : ViewModelBase, ITabInfoProvider, IDisp
         Title = category;
 
         _subscription = spools.Connect()
-            .Sort(ReadySpoolSorter.NameSorter)
+            .Sort(ReadySpoolSorter.ModelSorter)
             .Select(m => new SpoolViewModel(m))
             .DisposeMany()
             .ObserveOn(RxApp.MainThreadScheduler)
@@ -73,7 +73,7 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable
             Observable.Return(model.Amount > 0));
         
         var str = model.Name.AsSpan();
-        var largeCount = model.Name.Count(char.IsDigit);
+        var largeCount = model.Name.Count(char.IsDigit) + model.Name.Count(c => c == ',');
         
         if (largeCount == 0)
         {

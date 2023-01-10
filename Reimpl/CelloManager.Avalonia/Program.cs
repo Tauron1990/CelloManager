@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.ReactiveUI;
-using CelloManager.Core.Movere;
 using CelloManager.Core.Data;
 
 namespace CelloManager
