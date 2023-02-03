@@ -21,7 +21,6 @@ public sealed class SpoolDisplayViewModel : ViewModelBase, ITabInfoProvider, IDi
     public SpoolDisplayViewModel(SpoolManager manager)
     {
         _subscription = manager.CurrentSpools
-            .Sort(Comparer<IGroup<ReadySpoolModel, string, string>>.Create(CompareCategory))
             .Select(g => new SpoolGroupViewModel(g.Key, g.Cache))
             .DisposeMany()
             .Select(m => TabViewModel.Create(m, null))

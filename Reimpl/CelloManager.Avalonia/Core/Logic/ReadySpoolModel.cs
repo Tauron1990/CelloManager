@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Reactive;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using CelloManager.Core.Data;
@@ -38,19 +39,17 @@ public sealed class ReadySpoolModel
     //         .Where(t => t.Data != t.NewData && t.NewData is not null)
     //         .Select(d => d._spools.UpdateSpool(d.NewData!));
 
-    public void RunDecrement()
+    public IObservable<Unit> RunDecrement()
         => Observable.Return((Amount, Data, _spools))
             .ObserveOn(Scheduler.Default)
             .Synchronize(_lock)
             .Where(d => d.Amount > 0)
-            .Select(d => d._spools.UpdateSpool(d.Data with{ Amount = Data.Amount - 1}))
-            .Subscribe();
+            .Select(d => d._spools.UpdateSpool(d.Data with{ Amount = Data.Amount - 1}));
 
-    public void RunIncrement()
+    public IObservable<Unit> RunIncrement()
         => Observable.Return((Amount, Data, _spools))
             .ObserveOn(Scheduler.Default)
             .Synchronize(_lock)
             .Where(d => d.Amount != int.MaxValue)
-            .Select(d => d._spools.UpdateSpool(d.Data with { Amount = Data.Amount + 1 }))
-            .Subscribe();
+            .Select(d => d._spools.UpdateSpool(d.Data with { Amount = Data.Amount + 1 }));
 }
