@@ -22,6 +22,9 @@ public partial class EditSpoolGroupView : ReactiveUserControl<EditSpoolGroupView
         yield return this.OneWayBind(ViewModel, m => m.Spools, v => v.SpoolDataGrid.Items);
         yield return this.Bind(ViewModel, m => m.Selected, v => v.SpoolDataGrid.SelectedItem);
 
+        yield return this.Bind(ViewModel, m => m.Price, v => v.PriceQm.Text);
+        yield return this.Bind(ViewModel, m => m.Lenght, v => v.LenghtM.Text);
+
         yield return this.BindCommand(ViewModel, m => m.DeleteAll, v => v.DeleteAllButton);
     }
 }

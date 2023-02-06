@@ -17,6 +17,7 @@ using CelloManager.ViewModels.SpoolDisplay;
 using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
+using JetBrains.Annotations;
 using ReactiveUI;
 using ThingLing.Controls;
 
@@ -33,7 +34,7 @@ namespace CelloManager.ViewModels
         private readonly SpoolManager _spoolManager;
         private readonly Dispatcher _dispatcher;        
         private readonly ErrorDispatcher _errors;
-        
+
         private int _currentTab;
 
         public string ErrorSimple => _errorSimple.Value;
@@ -43,9 +44,14 @@ namespace CelloManager.ViewModels
         public int CurrentTab
         {
             get => _currentTab;
+            [UsedImplicitly]
             set => this.RaiseAndSetIfChanged(ref _currentTab, value);
         }
 
+        private readonly ObservableAsPropertyHelper<string> _priceValue;
+        [UsedImplicitly]
+        public string PriceValue => _priceValue.Value;
+        
         public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
 
         public ReactiveCommand<Unit, Unit> Edit { get; }
@@ -83,8 +89,15 @@ namespace CelloManager.ViewModels
         public MainWindowViewModel(ErrorDispatcher errors)
         {
             _errors = errors;
+            var priceManager = _modelScope.GetService<SpoolPriceManager>();
             _spoolManager = _modelScope.GetService<SpoolManager>();
             _dispatcher = Dispatcher.UIThread;
+
+            _priceValue = priceManager.CompledPrice
+                .StartWith(0)
+                .Select(p => p > 0 ? $"{p:N} Euro" : "")
+                .ObserveOn(RxApp.MainThreadScheduler)
+                .ToProperty(this, m => m.PriceValue);
             
             var currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
             var orderManager = _modelScope.GetService<OrderManager>();
@@ -201,6 +214,7 @@ namespace CelloManager.ViewModels
 
         public ValueTask DisposeAsync()
         {
+            _priceValue.Dispose();
             _subscriptions.Dispose();
             _tabs.Clear();
             _tabs.Dispose();

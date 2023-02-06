@@ -6,7 +6,6 @@ using Avalonia.Data;
 using Avalonia.ReactiveUI;
 using CelloManager.ViewModels;
 using CelloManager.Views.Controls;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ReactiveUI;
 
 namespace CelloManager.Views
@@ -40,6 +39,8 @@ namespace CelloManager.Views
                     ToolTip.TipProperty,
                     ViewModel.WhenAny(m => m.ErrorFull, c => c.Value).Select(e => new BindingValue<object?>(e)));
 
+                yield return this.OneWayBind(ViewModel, m => m.PriceValue, v => v.PriceDisplay.Text);
+                
                 yield return this.BindCommand(ViewModel, m => m.Edit, v => v.EditSpools);
                 yield return this.BindCommand(ViewModel, m => m.Import, v => v.ImportOld);
                 yield return this.BindCommand(ViewModel, m => m.Order, v => v.StartOrder);

@@ -7,6 +7,7 @@ using System.Reactive.Linq;
 using CelloManager.Core.Logic;
 using DynamicData;
 using DynamicData.Alias;
+using JetBrains.Annotations;
 using ReactiveUI;
 
 namespace CelloManager.ViewModels.Editing;
@@ -33,12 +34,13 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
     public object? CurrentSelected
     {
         get => _currentSelected;
+        [UsedImplicitly]
         set => this.RaiseAndSetIfChanged(ref _currentSelected, value);
     }
 
     public ViewModelBase? CurrentEditorModel => _currentEditorModel.Value;
     
-    public EditTabViewModel(SpoolManager spoolManager)
+    public EditTabViewModel(SpoolManager spoolManager, SpoolPriceManager priceManager)
     {
         this.WhenActivated(Init);
         
@@ -63,7 +65,14 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
             yield return this.WhenAny(m => m.CurrentSelected, c => c.Value)
                 .Select(o => o switch
                 {
-                    EditorSpoolGroup group => EditSpoolGroupViewModel.Create(group.Spools, spoolManager, model => CurrentSelected = model),
+                    EditorSpoolGroup group => 
+                        EditSpoolGroupViewModel.Create(
+                            group.Spools, 
+                            spoolManager, 
+                            model => CurrentSelected = model, 
+                            priceManager, 
+                            group.CategoryName),
+                    
                     ReadySpoolModel spoolModel => ModifySpoolEditorViewModel.Create(spoolModel, spoolManager),
                     _ => null
                 })
@@ -77,7 +86,7 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
 
     public void Dispose()
     {
-        ((IDisposable)_currentEditorModelSubject).Dispose();
+        _currentEditorModelSubject.Dispose();
         _currentEditorModel.Dispose();
         NewSpool.Dispose();
         ((IActivatableViewModel)this).Activator.Dispose();

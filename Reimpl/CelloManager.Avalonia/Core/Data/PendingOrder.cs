@@ -11,7 +11,7 @@ public sealed record OrderedSpoolList(string Category, ImmutableList<OrderedSpoo
 
 public sealed record OrderedSpool(string SpoolId, string Name, int Amount);
 
-public sealed record PendingOrder(string Id, ImmutableList<OrderedSpoolList> Spools, DateTimeOffset Time)
+public sealed record PendingOrder(string Id, ImmutableList<OrderedSpoolList> Spools, DateTimeOffset Time) : IHasId
 {
     public PrintPage ToPrintPage(IEnumerable<OrderedSpoolList> spools) => new(this with { Spools = spools.ToImmutableList() });
     

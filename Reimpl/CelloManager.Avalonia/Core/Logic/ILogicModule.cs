@@ -3,8 +3,9 @@
 namespace CelloManager.Core.Logic;
 
 [ServiceProviderModule]
-[Scoped(typeof(SpoolManager))]
-[Scoped(typeof(OrderManager))]
+[Scoped<SpoolManager>]
+[Scoped<OrderManager>]
+[Scoped<SpoolPriceManager>]
 public interface ILogicModule
 {
     
