@@ -36,13 +36,12 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     {
         try
         {
-            var saveOptions = new FilePickerSaveOptions();
-            await ConfigurateDialog(saveOptions).ConfigureAwait(false);
+            var saveOptions = await ConfigurateDialog().ConfigureAwait(false);
 
-            IStorageFile? result = await App.StorageProvider.SaveFilePickerAsync(saveOptions);
+            var result = await App.StorageProvider.SaveFilePickerAsync(saveOptions).ConfigureAwait(false);
             if(result is null) return;
 
-            await RenderTo(dispatcher, result);
+            await RenderTo(dispatcher, result).ConfigureAwait(false);
         }
         finally
         {
@@ -50,9 +49,12 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
         }
     }
 
+    protected async ValueTask<IStorageFolder?> GetFolder(string path) 
+        => await App.StorageProvider.TryGetFolderFromPathAsync(path).ConfigureAwait(false);
+
     protected abstract ValueTask RenderTo(Dispatcher dispatcher, IStorageFile file);
     
-    protected abstract ValueTask ConfigurateDialog(FilePickerSaveOptions dialog);
+    protected abstract ValueTask<FilePickerSaveOptions> ConfigurateDialog();
 
     protected virtual void Init(IDocument view) => _printView = view;
 

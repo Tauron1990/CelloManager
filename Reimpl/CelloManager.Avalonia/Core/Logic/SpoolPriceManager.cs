@@ -18,7 +18,9 @@ public class SpoolPriceManager
         => _repository.TryFindPrice(name);
 
     public void Update(PriceDefinition? definition)
+#pragma warning disable MA0134
         => Task.Run(() => _repository.UpdatePrice(definition));
+#pragma warning restore MA0134
     
     public SpoolPriceManager(SpoolRepository repository)
     {

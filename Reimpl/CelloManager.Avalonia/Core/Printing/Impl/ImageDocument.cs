@@ -4,12 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Controls;
-using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
-using CelloManager.Views;
 using QuestPDF.Fluent;
 
 namespace CelloManager.Core.Printing.Impl;
@@ -47,8 +44,11 @@ public sealed class ImageDocument : FileSelectingDocument<ImageDocument>
                 offset += (int)image.Size.Height;
             }
 
-            await using var stream = await file.OpenWriteAsync();
-            bitmap.Save(stream);
+            var stream = await file.OpenWriteAsync().ConfigureAwait(false);
+            await using (stream.ConfigureAwait(false))
+            {
+                bitmap.Save(stream);
+            }
         }
         finally
         {
@@ -56,18 +56,19 @@ public sealed class ImageDocument : FileSelectingDocument<ImageDocument>
         }
     }
 
-    protected override ValueTask ConfigurateDialog(FilePickerSaveOptions dialog)
-    {
-        dialog.Title = "Bild Datei";
-
-        var filter = new FilePickerFileType("Bild")
+    protected override async ValueTask<FilePickerSaveOptions> ConfigurateDialog() =>
+        new()
         {
-            Patterns = new[] { "png" }
+            Title = "Bild Datei",
+            FileTypeChoices = new[]
+            {
+                new FilePickerFileType("Bild")
+                {
+                    Patterns = new[] { "png" },
+                },
+            },
+            DefaultExtension = ".png",
+            SuggestedFileName = "print.png",
+            SuggestedStartLocation = await GetFolder(Environment.GetFolderPath(Environment.SpecialFolder.Desktop)).ConfigureAwait(false)
         };
-
-        dialog.SuggestedFileName = "print.png";
-        
-        
-        dialog.Directory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-    }
 }

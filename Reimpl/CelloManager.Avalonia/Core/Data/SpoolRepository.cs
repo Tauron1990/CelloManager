@@ -118,7 +118,7 @@ public sealed partial class SpoolRepository : IDisposable
             return false;
         
         var id = SpoolData.CreateId(name, category);
-        return !_spools.Keys.Contains(id);
+        return !_spools.Keys.Contains(id, StringComparer.Ordinal);
     }
 
     public void AddOrder(PendingOrder order)
@@ -143,9 +143,11 @@ public sealed partial class SpoolRepository : IDisposable
        _priceses.Edit(
            e =>
            {
-               var there = e.Items.FirstOrDefault(pd => pd.Id == definition.Id);
+               var there = e.Items.FirstOrDefault(pd => string.Equals(pd.Id, definition.Id, StringComparison.Ordinal));
                if(there is not null)
+                   // ReSharper disable CompareOfFloatsByEqualityOperator
                    if(there.Price == definition.Price && there.Lenght == definition.Lenght)
+                       // ReSharper restore CompareOfFloatsByEqualityOperator
                        return;
                
                e.AddOrUpdate(definition);

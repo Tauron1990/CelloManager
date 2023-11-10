@@ -1,62 +1,59 @@
 ﻿using System;
-using System.Drawing;
-using System.Drawing.Printing;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
-using CelloManager.Views.Printing;
-using TempFileStream.Abstractions;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 
 namespace CelloManager.Core.Printing.Impl;
 
 public sealed class PrinterDocument : IInternalDocument
 {
-    private readonly PrintDocument _printDocument;
-    private int _currentIndex;
-    
+    private readonly IDocument _printDocument;
+
+
     public DocumentType Type => DocumentType.Print;
 
-    private PrinterDocument(PrintDocument printDocument) 
-        => _printDocument = printDocument;
-
-    public static IPrintDocument GenerateDocument(ITempFile[] view)
+    private PrinterDocument(IDocument printDocument)
     {
-        var doc = new PrintDocument();
-        
-        var printerDoc = new PrinterDocument(doc);
-        doc.PrintPage += DocumentOnPrintPage;
-        
-        return printerDoc;
-
-        void DocumentOnPrintPage(object sender, PrintPageEventArgs e)
-        {
-            using Image? img = Image.FromStream(view[printerDoc._currentIndex].CreateReadStream());
-            e.Graphics.DrawImage(img, 10, 10);
-
-            printerDoc._currentIndex++;
-            e.HasMorePages = printerDoc._currentIndex < view.Length;
-            
-            if(e.HasMorePages) return;
-
-            printerDoc._currentIndex = 0;
-        }
+        _printDocument = printDocument;
     }
+
+    public void Dispose() {}
+
+    public static IPrintDocument GenerateDocument(IDocument pages) 
+        => new PrinterDocument(pages);
 
     public async ValueTask Execute(Dispatcher dispatcher, Action end)
     {
-        bool result = await Dispatcher.UIThread.InvokeAsync(async () => await PrintingDialog.ShowAsync(_printDocument, dispatcher, App.ServiceProvider));
-
-        if(result)
+        try
         {
-            _printDocument.EndPrint += (_, _) => end();
-            _printDocument.Print();
-        }
-        else
-            end();
-    }
+            var appData = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Tauron",
+                "CelloManager");
 
-    public void Dispose()
-    {
-        _printDocument.Dispose();
-        _currentIndex = -1;
+            if (!Directory.Exists(appData))
+                Directory.CreateDirectory(appData);
+
+            var file = Path.Combine(appData, "Temp.pdf");
+            
+            var stream = File.OpenWrite(file);
+            await using (stream.ConfigureAwait(false))
+            {
+                _printDocument.GeneratePdf(stream);
+            }
+
+            using var process = Process.Start(file);
+            using var cancel = new CancellationTokenSource(TimeSpan.FromMinutes(2));
+            
+            await process.WaitForExitAsync(cancel.Token).ConfigureAwait(false);
+        }
+        finally
+        {
+            end();
+        }
     }
 }

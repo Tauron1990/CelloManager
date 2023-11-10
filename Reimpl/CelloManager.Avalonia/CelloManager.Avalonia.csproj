@@ -12,6 +12,10 @@
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
         <None Remove=".gitignore" />
+        <Compile Remove="Core\Printing\Internal\StreamFactory.cs" />
+        <None Include="Core\Printing\Internal\StreamFactory.cs" />
+        <Compile Remove="Core\Printing\Internal\TempFiles.cs" />
+        <None Include="Core\Printing\Internal\TempFiles.cs" />
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.

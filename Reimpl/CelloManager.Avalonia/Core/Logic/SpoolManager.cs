@@ -14,10 +14,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CelloManager.Core.Logic;
 
-public sealed record ValidateNameRequest(string? Name, string? Category);
-
-public sealed record OldValidateNameRequest(ReadySpoolModel Old, string? Name, string? Category);
-
 public sealed class SpoolManager
 {
     private readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerOptions.Default)
@@ -63,14 +59,14 @@ public sealed class SpoolManager
             .Select(r =>
             {
                 var id = SpoolData.CreateId(r.Name ?? string.Empty, r.Category ?? string.Empty);
-                return id == r.Old.Data.Id || _repository.ValidateName(r.Name, r.Category);
+                return string.Equals(id, r.Old.Data.Id, StringComparison.Ordinal) || _repository.ValidateName(r.Name, r.Category);
             });
 
     public bool Exist(string name, string category)
         => _repository.LookUp(name, category).HasValue;
     
     public IObservable<bool> CanDelete(ReadySpoolModel model)
-        => _repository.Spools.QueryWhenChanged().Select(l => l.Keys.Contains(model.Data.Id));
+        => _repository.Spools.QueryWhenChanged().Select(l => l.Keys.Contains(model.Data.Id, StringComparer.Ordinal));
     
 
     public void CreateSpool(string? name, string? category, int amount, int needAmount)
@@ -94,7 +90,7 @@ public sealed class SpoolManager
         
         string id = SpoolData.CreateId(name ?? string.Empty, category ?? string.Empty);
 
-        if (id == old.Id) 
+        if (string.Equals(id, old.Id, StringComparison.Ordinal)) 
             _repository.UpdateSpool(old with { Amount = amount, NeedAmount = needAmount });
         else if(_repository.ValidateName(name, category))
             _repository.Edit(u =>
@@ -110,10 +106,13 @@ public sealed class SpoolManager
         {
             var array = _repository.SpoolItems.ToArray();
 
-            await using FileStream stream = File.Create(path);
-            await JsonSerializer.SerializeAsync(stream, array, _serializerOptions);
+            var stream = File.Create(path);
+            await using (stream.ConfigureAwait(false))
+            {
+                await JsonSerializer.SerializeAsync(stream, array, _serializerOptions).ConfigureAwait(false);
 
             return null;
+            }
         }
         catch (Exception e)
         {
@@ -125,8 +124,10 @@ public sealed class SpoolManager
     {
         try
         {
-            await using FileStream stream = File.OpenRead(path);
-            var array = await JsonSerializer.DeserializeAsync<SpoolData[]>(stream);
+            var stream = File.OpenRead(path);
+            await using (stream.ConfigureAwait(false))
+            {
+                var array = await JsonSerializer.DeserializeAsync<SpoolData[]>(stream).ConfigureAwait(false);
 
             if(array is null)
                 throw new InvalidOperationException("Lesen der Daten Fehlgeschlagen");
@@ -142,6 +143,7 @@ public sealed class SpoolManager
             }
             
             return null;
+            }
         }
         catch (Exception e)
         {
@@ -155,12 +157,12 @@ public sealed class SpoolManager
         {
             if(!File.Exists(path)) return null;
 
-            await using var database = new CoreDatabase();
-        
-        
-            var builder = new SqliteConnectionStringBuilder
+            var database = new CoreDatabase();
+            await using (database.ConfigureAwait(false))
             {
-                DataSource = path
+                var builder = new SqliteConnectionStringBuilder
+            {
+                DataSource = path,
             };
 
             database.Database.SetConnectionString(builder.ConnectionString);
@@ -176,6 +178,7 @@ public sealed class SpoolManager
             }
         
             return null;
+            }
         }
         catch (Exception e)
         {

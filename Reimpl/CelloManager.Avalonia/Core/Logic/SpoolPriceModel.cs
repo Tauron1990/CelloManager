@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
 using CelloManager.Core.Data;
 using DynamicData;
@@ -11,18 +10,18 @@ namespace CelloManager.Core.Logic;
 
 public sealed class SpoolPriceModel : IDisposable
 {
-    public string Key { get; }
+    //public string Key { get; }
     
     public IObservable<double> Price { get; }
 
     public SpoolPriceModel(IGroup<PriceDefinition, string, string> group, IObservable<IChangeSet<SpoolData, string>> spools)
     {
-        Key = group.Key;
+        //Key = group.Key;
         
         Price = spools
             .InvalidateWhen(group.Cache.Connect())
             .Synchronize()
-            .Filter(s => s.Category == group.Key)
+            .Filter(s => string.Equals(s.Category, group.Key, StringComparison.Ordinal))
             .Transform(d => (Data: d, Price: group.Cache.Items.SingleOrDefault()))
             .Filter(p => p.Price is not null && p.Price.Price > 0 && p.Price.Lenght > 0)
             .Transform(p => (p.Data.Amount, Weith:ExtractFromName(p.Data.Name), p.Price))
@@ -34,7 +33,7 @@ public sealed class SpoolPriceModel : IDisposable
     private double ExtractFromName(string name)
     {
         var str = name.AsSpan();
-        int largeCount = name.Count(char.IsDigit) + name.Count(c => c == ',');
+        var largeCount = name.Count(char.IsDigit) + name.Count(c => c == ',');
 
         if(double.TryParse(str[..largeCount], NumberStyles.Any, CultureInfo.CurrentUICulture, out double number))
             return number;

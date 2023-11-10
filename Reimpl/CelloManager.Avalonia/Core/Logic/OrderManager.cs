@@ -44,7 +44,7 @@ public class OrderManager : IDisposable
         SpoolData Selector(SpoolData spoolData) 
             => orders.SelectMany(o => o.Spools)
                 .SelectMany(l => l.Spools)
-                .Where(os => os.SpoolId == spoolData.Id)
+                .Where(os => string.Equals(os.SpoolId, spoolData.Id, StringComparison.Ordinal))
                 .Aggregate(
                     spoolData,
                     (spool, order) => spool with { Amount = spool.Amount + order.Amount });
@@ -60,12 +60,12 @@ public class OrderManager : IDisposable
     public bool PlaceOrder()
     {
         var toOrder = _spools.Items
-            .OrderBy(sd => sd.Id)
+            .OrderBy(sd => sd.Id, StringComparer.Ordinal)
             .Select(
                 sd => sd with { Amount = sd.Amount + _orders.Items
                     .SelectMany(o => o.Spools)
                     .SelectMany(l => l.Spools)
-                    .Where(os => os.SpoolId == sd.Id).Sum(os => os.Amount) })
+                    .Where(os => string.Equals(os.SpoolId, sd.Id, StringComparison.Ordinal)).Sum(os => os.Amount) })
             .Where(sd => sd.Amount < sd.NeedAmount)
             .ToImmutableList();
         
