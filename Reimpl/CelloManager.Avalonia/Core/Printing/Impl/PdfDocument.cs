@@ -2,6 +2,7 @@
 using System.Reactive.Disposables;
 using System.Threading.Tasks;
 using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using ImageMagick;
 using SkiaSharp;
@@ -12,10 +13,10 @@ namespace CelloManager.Core.Printing.Impl;
 public sealed class PdfDocument : FileSelectingDocument<PdfDocument>
 {
     public override DocumentType Type => DocumentType.Pdf;
-    protected override async ValueTask RenderTo(Dispatcher dispatcher, string path)
+    protected override async ValueTask RenderTo(Dispatcher dispatcher, IStorageFile file)
     {
-        if(!path.EndsWith(".pdf"))
-            path = $"{path}.pdf";
+        if(!file.EndsWith(".pdf"))
+            file = $"{file}.pdf";
 
         MagickNET.Initialize();
         using var collection = new MagickImageCollection();
@@ -30,10 +31,10 @@ public sealed class PdfDocument : FileSelectingDocument<PdfDocument>
             collection.Add(image);
         }
 
-        await collection.WriteAsync(path, MagickFormat.Pdf);
+        await collection.WriteAsync(file, MagickFormat.Pdf);
     }
 
-    protected override void ConfigurateDialog(SaveFileDialog dialog)
+    protected override ValueTask ConfigurateDialog(FilePickerSaveOptions dialog)
     {
         var filter = new FileDialogFilter
         {

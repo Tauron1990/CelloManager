@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
-using CelloManager.Views.Orders;
-using TempFileStream.Abstractions;
+using QuestPDF.Infrastructure;
 
 namespace CelloManager.Core.Printing.Impl;
 
 public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     where TSelf : FileSelectingDocument<TSelf>, new()
 {
-    private ITempFile[]? _printView;
+    private IDocument? _printView;
 
-    protected ITempFile[] PrintView
+    protected IDocument PrintView
     {
         get
         {
@@ -25,7 +24,7 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     
     public abstract DocumentType Type { get; }
 
-    public static IPrintDocument GenerateDocument(ITempFile[] view)
+    public static IPrintDocument GenerateDocument(IDocument view)
     {
         var doc = new TSelf();
         doc.Init(view);
@@ -37,11 +36,11 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     {
         try
         {
-            var diag = new SaveFileDialog();
-            ConfigurateDialog(diag);
+            var saveOptions = new FilePickerSaveOptions();
+            await ConfigurateDialog(saveOptions).ConfigureAwait(false);
 
-            string? result = await diag.ShowAsync(App.MainWindow);
-            if(string.IsNullOrWhiteSpace(result)) return;
+            IStorageFile? result = await App.StorageProvider.SaveFilePickerAsync(saveOptions);
+            if(result is null) return;
 
             await RenderTo(dispatcher, result);
         }
@@ -51,11 +50,11 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
         }
     }
 
-    protected abstract ValueTask RenderTo(Dispatcher dispatcher, string path);
+    protected abstract ValueTask RenderTo(Dispatcher dispatcher, IStorageFile file);
     
-    protected abstract void ConfigurateDialog(SaveFileDialog dialog);
+    protected abstract ValueTask ConfigurateDialog(FilePickerSaveOptions dialog);
 
-    protected virtual void Init(ITempFile[] view) => _printView = view;
+    protected virtual void Init(IDocument view) => _printView = view;
 
     public void Dispose() => _printView = null;
 }

@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.ReactiveUI;
 using CelloManager.Core.Data;
+using QuestPDF.Fluent;
+using QuestPDF.Infrastructure;
 
 namespace CelloManager
 {
@@ -14,7 +16,9 @@ namespace CelloManager
         [STAThread]
         public static async Task Main(string[] args)
         {
+            QuestPDF.Settings.License = LicenseType.Community;
             Akavache.Registrations.Start("CelloManager");
+         
             await App.ServiceProvider.GetService<SpoolRepository>().Init();
 
             try

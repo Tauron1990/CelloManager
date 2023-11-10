@@ -7,10 +7,6 @@ using CelloManager.Core.Printing.Data;
 
 namespace CelloManager.Core.Data;
 
-public sealed record OrderedSpoolList(string Category, ImmutableList<OrderedSpool> Spools);
-
-public sealed record OrderedSpool(string SpoolId, string Name, int Amount);
-
 public sealed record PendingOrder(string Id, ImmutableList<OrderedSpoolList> Spools, DateTimeOffset Time) : IHasId
 {
     public PrintPage ToPrintPage(IEnumerable<OrderedSpoolList> spools) => new(this with { Spools = spools.ToImmutableList() });
@@ -23,7 +19,7 @@ public sealed record PendingOrder(string Id, ImmutableList<OrderedSpoolList> Spo
             ImmutableList<OrderedSpoolList>.Empty
                 .AddRange(
                     spools
-                        .GroupBy(s => s.Category)
+                        .GroupBy(s => s.Category, StringComparer.Ordinal)
                         .Select(
                             g => new OrderedSpoolList(
                                 g.Key,
