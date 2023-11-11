@@ -6,11 +6,9 @@ namespace CelloManager.Core.Printing.Workflow;
 [PublicAPI]
 public class SimpleCondition<TContext> : ICondition<TContext>
 {
-    public SimpleCondition() => Target = StepId.None;
-
     public Func<TContext, IStep<TContext>, bool>? Guard { get; set; }
 
-    public StepId Target { get; set; }
+    public StepId Target { get; set; } = StepId.None;
 
     public StepId Select(IStep<TContext> lastStep, TContext context)
     {

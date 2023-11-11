@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
@@ -30,30 +31,44 @@ public sealed class PrinterDocument : IInternalDocument
     {
         try
         {
-            var appData = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "Tauron",
-                "CelloManager");
-
-            if (!Directory.Exists(appData))
-                Directory.CreateDirectory(appData);
-
-            var file = Path.Combine(appData, "Temp.pdf");
-            
-            var stream = File.OpenWrite(file);
-            await using (stream.ConfigureAwait(false))
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                _printDocument.GeneratePdf(stream);
+                var xps = _printDocument.GenerateXps();
+                
+                
             }
-
-            using var process = Process.Start(file);
-            using var cancel = new CancellationTokenSource(TimeSpan.FromMinutes(2));
-            
-            await process.WaitForExitAsync(cancel.Token).ConfigureAwait(false);
+            else
+                await PrintWhenNotWindows().ConfigureAwait(false);
         }
         finally
         {
             end();
         }
+    }
+
+    private ValueTask PrintWhenNotWindows()
+    {
+        _printDocument.GeneratePdfAndShow();
+        return ValueTask.CompletedTask;
+        /*var appData = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "Tauron",
+            "CelloManager");
+
+        if (!Directory.Exists(appData))
+            Directory.CreateDirectory(appData);
+
+        var file = Path.Combine(appData, "Temp.pdf");
+
+        var stream = File.OpenWrite(file);
+        await using (stream.ConfigureAwait(false))
+        {
+            _printDocument.GeneratePdf(stream);
+        }
+
+        using var process = Process.Start(file);
+        using var cancel = new CancellationTokenSource(TimeSpan.FromMinutes(2));
+
+        await process.WaitForExitAsync(cancel.Token).ConfigureAwait(false);*/
     }
 }

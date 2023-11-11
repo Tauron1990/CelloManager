@@ -14,7 +14,7 @@ public abstract class PrinterStep : IStep<PrinterContext>
     protected static TType GetOrThrow<TType>(PrinterContext context, Func<PrinterContext, TType?> accessor, 
         [CallerArgumentExpression(nameof(accessor))] string? expession = null)
     {
-        TType? result = accessor(context);
+        var result = accessor(context);
         if(result is null)
             throw new InvalidOperationException($"Element from \"{expession}\" is null");
 

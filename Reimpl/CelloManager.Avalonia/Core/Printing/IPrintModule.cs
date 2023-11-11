@@ -7,7 +7,7 @@ namespace CelloManager.Core.Printing;
 [ServiceProviderModule]
 
 [Transient<PrintBuilder>]
-[Transient<PrintProgressManager>]
+//[Transient<PrintProgressManager>]
 
 [Singleton<PrinterWorkflow>]
 [Scoped<PrinterContext>]

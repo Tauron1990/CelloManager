@@ -7,8 +7,6 @@ public sealed class CleanUpStep : PrinterStep
 {
     public override ValueTask<StepId> OnExecute(PrinterContext context)
     {
-        context.PrintUiModel.Dispose();
-        context.TempFiles.Dispose();
         context.PrintDocument?.Dispose();
         
         return ValueTask.FromResult(StepId.None);

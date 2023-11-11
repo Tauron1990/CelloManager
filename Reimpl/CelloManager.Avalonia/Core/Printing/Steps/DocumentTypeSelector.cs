@@ -14,7 +14,7 @@ public sealed class DocumentTypeSelector : PrinterStep
                 {
                     var window = new SelectDocumentTypeWindow();
                     return window.ShowDialog<DocumentType?>(App.MainWindow);
-                });
+                }).ConfigureAwait(false);
 
         context.DocumentType = type;
         

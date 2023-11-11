@@ -6,13 +6,13 @@ using CelloManager.Core.Data;
 using CelloManager.Core.Printing.Data;
 using CelloManager.Core.Printing.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using QuestPDF.Infrastructure;
 
 namespace CelloManager.Core.Printing.Steps;
 
 public sealed class PrinterContext
 {
     private Dispatcher? _dispatcher;
-    private TempFiles? _tempFiles;
     
     public PrintUiModel PrintUiModel { get; }
     
@@ -22,13 +22,13 @@ public sealed class PrinterContext
 
     public IPrintDocument? PrintDocument { get; set; }
 
+    public IDocument? Document { get; set; }
+    
     public Action? End { get; set; }
     
     public IServiceProvider ServiceProvider { get; set; } = new ServiceContainer();
 
     public ImmutableArray<PrintPage> Pages { get; set; } = ImmutableArray<PrintPage>.Empty;
-    
-    public TempFiles TempFiles => GetOrCreate(ref _tempFiles);
     
     public Dispatcher Dispatcher
     {
@@ -40,12 +40,4 @@ public sealed class PrinterContext
 
     public void AddPage(PrintPage page)
         => Pages = Pages.Add(page);
-    
-    private TService GetOrCreate<TService>(ref TService? service) 
-        where TService : notnull
-    {
-        if(service is null)
-            service = ServiceProvider.GetRequiredService<TService>();
-        return service;
-    }
 }

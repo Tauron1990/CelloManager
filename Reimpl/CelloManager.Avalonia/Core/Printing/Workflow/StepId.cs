@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 
 namespace CelloManager.Core.Printing.Workflow;
 

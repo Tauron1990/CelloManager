@@ -1,13 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
         <Nullable>enable</Nullable>
         <!--Avalonia doesen't support TrimMode=link currently,but we are working on that https://github.com/AvaloniaUI/Avalonia/issues/6892 -->
         <TrimMode>copyused</TrimMode>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
         <AssemblyName>CelloManager</AssemblyName>
         <RootNamespace>CelloManager</RootNamespace>
+        <TargetFrameworks>net7.0</TargetFrameworks>
     </PropertyGroup>
     <ItemGroup>
         <AvaloniaResource Include="Assets\**" />
@@ -16,6 +16,8 @@
         <None Include="Core\Printing\Internal\StreamFactory.cs" />
         <Compile Remove="Core\Printing\Internal\TempFiles.cs" />
         <None Include="Core\Printing\Internal\TempFiles.cs" />
+        <Compile Remove="Core\Printing\PrintProgressManager.cs" />
+        <None Include="Core\Printing\PrintProgressManager.cs" />
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.

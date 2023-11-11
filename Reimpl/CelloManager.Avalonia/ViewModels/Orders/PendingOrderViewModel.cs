@@ -17,7 +17,7 @@ public sealed class PendingOrderViewModel : ViewModelBase, IDisposable
     private readonly IServiceProvider _serviceProvider;
     private readonly PrintBuilder _print;
     private readonly ErrorDispatcher _errors;
-    private readonly BehaviorSubject<bool> _canPrint = new(true);
+    private readonly BehaviorSubject<bool> _canPrint = new(value: true);
 
     public PendingOrder Order { get; }
 
@@ -46,7 +46,7 @@ public sealed class PendingOrderViewModel : ViewModelBase, IDisposable
     {
         try
         {
-            await _print.PrintPendingOrder(Order, Dispatcher.UIThread, _serviceProvider, null);
+            await _print.PrintPendingOrder(Order, Dispatcher.UIThread, _serviceProvider, null).ConfigureAwait(false);
         }
         catch (Exception e)
         {

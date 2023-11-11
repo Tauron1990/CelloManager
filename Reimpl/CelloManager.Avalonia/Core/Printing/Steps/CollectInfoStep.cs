@@ -11,7 +11,7 @@ public sealed class CollectInfoStep : PrinterStep
 {
     public override ValueTask<StepId> OnExecute(PrinterContext context)
     {
-        PendingOrder order = GetOrThrow(context, static c => c.Order);
+        var order = GetOrThrow(context, static c => c.Order);
         if(order.Spools.Count <= 3)
         {
             context.AddPage(new PrintPage(order));
@@ -31,7 +31,7 @@ public sealed class CollectInfoStep : PrinterStep
         return ValueTask.FromResult(StepId.None);
     }
 
-    private static void ProcessGroup(PrinterContext context, List<OrderedSpoolList> toProcess, List<OrderedSpoolList> inProcess, PendingOrder order)
+    private static void ProcessGroup(PrinterContext context, ICollection<OrderedSpoolList> toProcess, List<OrderedSpoolList> inProcess, PendingOrder order)
     {
         var next = toProcess.Take(3).ToArray();
 
@@ -44,17 +44,16 @@ public sealed class CollectInfoStep : PrinterStep
             return;
         }
         
-        for (int i = 0; i < next.Length; i++)
+        for (var i = 0; i < next.Length; i++)
         {
-            OrderedSpoolList inProcessElement = inProcess[i];
-            OrderedSpoolList nextElement = next[i];
+            var inProcessElement = inProcess[i];
+            var nextElement = next[i];
 
-            if(inProcessElement.Spools.Count + nextElement.Spools.Count > 15)
-            {
-                context.AddPage(order.ToPrintPage(inProcess));
-                inProcess.Clear();
-                break;
-            }
+            if (inProcessElement.Spools.Count + nextElement.Spools.Count <= 15) continue;
+            
+            context.AddPage(order.ToPrintPage(inProcess));
+            inProcess.Clear();
+            break;
         }
 
         foreach (var spoolList in next)

@@ -5,6 +5,7 @@ using System.Reactive;
 using System.Reactive.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Avalonia.Platform.Storage;
 using CelloManager.Core.Comp;
 using CelloManager.Core.Data;
 using DynamicData;
@@ -120,11 +121,11 @@ public sealed class SpoolManager
         }
     }
 
-    public async Task<Exception?> ImportFromJson(string path)
+    public async Task<Exception?> ImportFromJson(IStorageFile path)
     {
         try
         {
-            var stream = File.OpenRead(path);
+            var stream = await path.OpenReadAsync().ConfigureAwait(false);
             await using (stream.ConfigureAwait(false))
             {
                 var array = await JsonSerializer.DeserializeAsync<SpoolData[]>(stream).ConfigureAwait(false);
@@ -151,18 +152,18 @@ public sealed class SpoolManager
         }
     }
 
-    public async Task<Exception?> ImportFromLegacy(string path)
+    public async Task<Exception?> ImportFromLegacy(IStorageFile path)
     {
         try
         {
-            if(!File.Exists(path)) return null;
+            if(!File.Exists(path.Path.LocalPath)) return null;
 
             var database = new CoreDatabase();
             await using (database.ConfigureAwait(false))
             {
                 var builder = new SqliteConnectionStringBuilder
             {
-                DataSource = path,
+                DataSource = path.Path.LocalPath,
             };
 
             database.Database.SetConnectionString(builder.ConnectionString);

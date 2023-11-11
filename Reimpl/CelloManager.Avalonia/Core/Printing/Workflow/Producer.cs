@@ -13,17 +13,15 @@ public abstract class Producer<TSelf, TState, TContext>
     where TContext : notnull
     where TSelf : Producer<TSelf, TState, TContext>
 {
-    private readonly Dictionary<StepId, StepRev<TState, TContext>> _states;
+    private readonly Dictionary<StepId, StepRev<TState, TContext>> _states = new();
 
     private string _errorMessage = string.Empty;
 
     private StepId _lastId;
 
-    protected Producer() => _states = new Dictionary<StepId, StepRev<TState, TContext>>();
-
     public async ValueTask Begin(StepId id, TContext context)
     {
-        if(!await Process(id, context))
+        if(!await Process(id, context).ConfigureAwait(false))
             throw new InvalidOperationException("Procession not Successful");
 
         if(string.Equals(_lastId.Name, StepId.Fail.Name, StringComparison.Ordinal))
@@ -46,7 +44,7 @@ public abstract class Producer<TSelf, TState, TContext>
         if(!_states.TryGetValue(id, out var rev))
             return SetLastId(StepId.Fail);
 
-        StepId sId = await rev.Step.OnExecute(context);
+        StepId sId = await rev.Step.OnExecute(context).ConfigureAwait(false);
         var result = false;
 
         switch (sId.Name)
@@ -56,11 +54,11 @@ public abstract class Producer<TSelf, TState, TContext>
 
                 return SetLastId(sId);
             case "None":
-                result = await ProgressConditions(rev, context);
+                result = await ProgressConditions(rev, context).ConfigureAwait(false);
 
                 break;
             case "Loop":
-                (bool isOk, bool loopResult) = await ProcessLoop(context, rev);
+                (bool isOk, bool loopResult) = await ProcessLoop(context, rev).ConfigureAwait(false);
                 if(isOk)
                     return loopResult;
 
@@ -75,7 +73,7 @@ public abstract class Producer<TSelf, TState, TContext>
         }
 
         if(!result)
-            await rev.Step.OnExecuteFinish(context);
+            await rev.Step.OnExecuteFinish(context).ConfigureAwait(false);
 
         return result;
     }
@@ -86,7 +84,7 @@ public abstract class Producer<TSelf, TState, TContext>
 
         do
         {
-            StepId loopId = await rev.Step.NextElement(context);
+            StepId loopId = await rev.Step.NextElement(context).ConfigureAwait(false);
             if(string.Equals(loopId.Name, StepId.LoopEnd.Name, StringComparison.Ordinal))
             {
                 ok = false;
@@ -97,7 +95,7 @@ public abstract class Producer<TSelf, TState, TContext>
             if(string.Equals(loopId.Name, StepId.Fail.Name, StringComparison.Ordinal))
                 return (true, SetLastId(StepId.Fail));
 
-            await ProgressConditions(rev, context);
+            await ProgressConditions(rev, context).ConfigureAwait(false);
         } while (ok);
 
         return (false, true);
@@ -114,7 +112,7 @@ public abstract class Producer<TSelf, TState, TContext>
         {
             foreach (StepId stepId in std)
             {
-                if(await Process(stepId, context))
+                if(await Process(stepId, context).ConfigureAwait(false))
                     return true;
             }
             return false;
@@ -124,7 +122,7 @@ public abstract class Producer<TSelf, TState, TContext>
 
         StepId cid = rev.GenericCondition.Select(rev.Step, context);
 
-        return !string.Equals(cid.Name, StepId.None.Name, StringComparison.Ordinal) && await Process(cid, context);
+        return !string.Equals(cid.Name, StepId.None.Name, StringComparison.Ordinal) && await Process(cid, context).ConfigureAwait(false);
     }
 
     

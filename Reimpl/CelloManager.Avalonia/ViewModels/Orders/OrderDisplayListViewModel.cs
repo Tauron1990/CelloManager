@@ -3,7 +3,6 @@ using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using CelloManager.Core.Data;
 using CelloManager.Core.Logic;
-using CelloManager.Core.Printing;
 using CelloManager.ViewModels.SpoolDisplay;
 using DynamicData;
 using ReactiveUI;
@@ -18,7 +17,11 @@ public sealed class OrderDisplayListViewModel : ViewModelBase, IDisposable
 
     public ReadOnlyObservableCollection<PendingOrderViewModel> Orders { get; }
 
-    public OrderDisplayListViewModel(IObservable<IChangeSet<PendingOrder, string>> orders, IServiceProvider serviceProvider, OrderManager manger, MainWindowViewModel mainWindow)
+    public OrderDisplayListViewModel(
+        IObservable<IChangeSet<PendingOrder, string>> orders, 
+        IServiceProvider serviceProvider, 
+        OrderManager manger, 
+        MainWindowViewModel mainWindow)
     {
         _manger = manger;
         _mainWindow = mainWindow;

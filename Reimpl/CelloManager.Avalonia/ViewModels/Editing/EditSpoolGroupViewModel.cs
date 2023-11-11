@@ -96,10 +96,12 @@ public class EditSpoolGroupViewModel : ViewModelBase, IActivatableViewModel, IDi
         
         void DeleteAllImpl()
         {
+            #pragma warning disable MA0134
             Task.Run(() =>
-            {
-                foreach (var model in spools.ToArray()) spoolManager.Delete(model);
-            });
+                     {
+                         foreach (var model in spools.ToArray()) spoolManager.Delete(model);
+                     });
+            #pragma warning restore MA0134
         }
     }
 

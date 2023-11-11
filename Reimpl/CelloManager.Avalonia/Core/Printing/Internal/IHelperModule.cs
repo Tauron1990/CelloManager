@@ -3,7 +3,7 @@
 namespace CelloManager.Core.Printing.Internal;
 
 [ServiceProviderModule]
-[Singleton<StreamFactory>]
+//[Singleton<StreamFactory>]
 
 // [Transient<TempFileDependencies>]
 // [Singleton<IIOExceptionHandler, NullIOExceptionHandler>]
@@ -16,7 +16,7 @@ namespace CelloManager.Core.Printing.Internal;
 // [Singleton<ITempFolderNamer, TempFolderNamer>]
 // [Singleton<ITempFileDeleter, BackgroundTempFileDeleter>]
 
-[Scoped<TempFiles>]
+//[Scoped<TempFiles>]
 [Scoped<PrintUiModel>]
 public interface IHelperModule
 {

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using CelloManager.Core.Printing.Impl;
 using CelloManager.Core.Printing.Workflow;
-using TempFileStream.Abstractions;
+using QuestPDF.Infrastructure;
 
 namespace CelloManager.Core.Printing.Steps;
 
@@ -17,19 +16,16 @@ public class DoPrint : PrinterStep
             return StepId.Fail;
         }
 
-        using IInternalDocument document = GenerateDocument(
+        using var document = GenerateDocument(
             context.DocumentType.Value,
-            context.TempFiles.GetFiles()
-                .OrderBy(p => p.Key)
-                .Select(p => p.Value)
-                .ToArray());
+            GetOrThrow(context, static c => c.Document));
 
-        await document.Execute(context.Dispatcher, context.End ?? (static () => { }));
+        await document.Execute(context.Dispatcher, context.End ?? (static () => { })).ConfigureAwait(false);
         
         return StepId.None;
     }
     
-    private static IInternalDocument GenerateDocument(DocumentType documentType, ITempFile[] pages)
+    private static IInternalDocument GenerateDocument(DocumentType documentType, IDocument pages)
     {
         return (IInternalDocument)
         (

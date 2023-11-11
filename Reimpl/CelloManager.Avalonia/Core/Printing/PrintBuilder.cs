@@ -16,23 +16,25 @@ public sealed class PrintBuilder
     public async ValueTask PrintPendingOrder(PendingOrder order, Dispatcher dispatcher, IServiceProvider serviceProvider, Action? end)
     {
         var errors = serviceProvider.GetRequiredService<ErrorDispatcher>();
-        await using AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
-        
-        try
+        var scope = serviceProvider.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false))
         {
-            var workflow = scope.ServiceProvider.GetRequiredService<PrinterWorkflow>();
-            var printerContext = scope.ServiceProvider.GetRequiredService<PrinterContext>();
+            try
+            {
+                var workflow = scope.ServiceProvider.GetRequiredService<PrinterWorkflow>();
+                var printerContext = scope.ServiceProvider.GetRequiredService<PrinterContext>();
 
-            printerContext.Dispatcher = dispatcher;
-            printerContext.ServiceProvider = scope.ServiceProvider;
-            printerContext.Order = order;
-            printerContext.End = end;
+                printerContext.Dispatcher = dispatcher;
+                printerContext.ServiceProvider = scope.ServiceProvider;
+                printerContext.Order = order;
+                printerContext.End = end;
             
-            await workflow.Begin(StepId.Start, printerContext);
-        }
-        catch (Exception e)
-        {
-            errors.Send(e);
+                await workflow.Begin(StepId.Start, printerContext).ConfigureAwait(false);
+            }
+            catch (Exception e)
+            {
+                errors.Send(e);
+            }
         }
     }
 }

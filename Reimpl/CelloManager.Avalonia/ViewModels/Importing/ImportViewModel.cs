@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Reactive;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using CelloManager.Core.Logic;
 using ReactiveUI;
 
@@ -38,18 +38,35 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
 
     private IObservable<Exception?> ExecuteImport(string? path)
         => Observable.Return(path)
-            .SelectMany(async p =>
-            {
-                if (!string.IsNullOrWhiteSpace(p))
-                    return new[] { p };
+                     .SelectMany<string?, IStorageFile?>(
+                          async p =>
+                          {
+                              if (!string.IsNullOrWhiteSpace(p))
+                              {
+                                  var provided = await App.StorageProvider
+                                                          .TryGetFileFromPathAsync(p)
+                                                          .ConfigureAwait(false);
+                                  if(provided is not null)
+                                    return provided;
+                              }
 
-                var browser = new OpenFileDialog { Directory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) };
-                return await browser.ShowAsync(App.MainWindow);
-            })
-            .SelectMany(l => l ?? Array.Empty<string>())
-            .Where(p => !string.IsNullOrWhiteSpace(p))
-            .ObserveOn(Scheduler.Default)
-            .SelectMany(s => s.EndsWith(".json", StringComparison.Ordinal) ? _manager.ImportFromJson(s) : _manager.ImportFromLegacy(s));
+                              var folder = await App.StorageProvider
+                                                    .TryGetFolderFromPathAsync(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
+                                                    .ConfigureAwait(false);
+
+                              var list = await App.StorageProvider
+                                                  .OpenFilePickerAsync(new FilePickerOpenOptions { SuggestedStartLocation = folder })
+                                                  .ConfigureAwait(false);
+
+                              #pragma warning disable CA1826
+                              return list.FirstOrDefault();
+                              #pragma warning restore CA1826
+                          })
+                     .Where(sel => sel is not null)
+                     .ObserveOn(Scheduler.Default)
+                     .SelectMany(s => s!.Name.EndsWith(".json", StringComparison.Ordinal) 
+                                     ? _manager.ImportFromJson(s) 
+                                     : _manager.ImportFromLegacy(s));
 
     public void Dispose()
     {

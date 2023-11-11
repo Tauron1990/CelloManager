@@ -66,8 +66,8 @@ public class SpoolEditorViewModelBase : ViewModelBase, IDisposable
         this.WhenAnyValue(m => m.Category)
             .Subscribe(nc =>
             {
-                if (!string.IsNullOrWhiteSpace(nc) && KnowenCategorys?.Contains(nc) == true)
-                    PopupSelection = KnowenCategorys.IndexOf(nc);
+                if (!string.IsNullOrWhiteSpace(nc) && KnowenCategorys?.Contains(nc, StringComparer.Ordinal) == true)
+                    PopupSelection = KnowenCategorys.IndexOf(nc, StringComparer.Ordinal);
                 else
                     PopupSelection = null;
             })

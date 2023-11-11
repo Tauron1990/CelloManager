@@ -15,15 +15,16 @@ public sealed class SelectDocumentTypeViewMiodel : ViewModelBase
 
     public SelectDocumentTypeViewMiodel(Action<DocumentType?> close)
     {
+        SelectCommand = ReactiveCommand.Create<DocumentType?, Unit>(Execute);
+
+        WindowsSelectCommand = ReactiveCommand.Create<DocumentType?, Unit>(
+            Execute, Observable.Return(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)));
+        return;
+
         Unit Execute(DocumentType? dt)
         {
             close(dt);
             return Unit.Default;
         }
-
-        SelectCommand = ReactiveCommand.Create<DocumentType?, Unit>(Execute);
-
-        WindowsSelectCommand = ReactiveCommand.Create<DocumentType?, Unit>(
-            Execute, Observable.Return(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)));
     }
 }
