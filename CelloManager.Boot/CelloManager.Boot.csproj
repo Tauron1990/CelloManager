@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <AssemblyName>CelloManager</AssemblyName>
+        <TargetFrameworks>net7.0;net7.0-windows</TargetFrameworks>
+        <OutputType>WinExe</OutputType>
+    </PropertyGroup>
+
+</Project>
