@@ -30,8 +30,8 @@ namespace CelloManager
             }
             finally
             {
-                await App.ServiceProvider.DisposeAsync().ConfigureAwait(false);
                 await DataOperationManager.Manager.Shutdown().ConfigureAwait(false);
+                await App.ServiceProvider.DisposeAsync().ConfigureAwait(false);
             }
         }
 

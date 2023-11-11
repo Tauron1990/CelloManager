@@ -7,8 +7,11 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using CelloManager.Core.Data.Converter;
+using CelloManager.Data;
 using DynamicData;
 using DynamicData.Kernel;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SQLitePCL;
 
@@ -38,58 +41,69 @@ public sealed partial class SpoolRepository : IDisposable
     public async Task Init()
     {
         Batteries_V2.Init();
+        var db = DataOperationManager.Manager;
         
         InitRepository();
-        
-        var spools = await _blobCache.GetAllObjects<SpoolData>();
-        var orders = await _blobCache.GetAllObjects<PendingOrder>();
-        var prices = await _blobCache.GetAllObjects<PriceDefinition>();
+
+        var spools = await db.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
+        var orders = await db.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
+        var prices = await db.Query(
+            context => context.Prices, 
+            sel => sel.Select(d => d.FromDatabase()))
+                             .ConfigureAwait(false);
         
         _spools.Edit(e =>
         {
-            foreach (SpoolData spoolData in spools) e.AddOrUpdate(spoolData);
+            foreach (var spoolData in spools) e.AddOrUpdate(spoolData);
         });
         
         _orders.Edit(e =>
         {
-            foreach (PendingOrder order in orders) e.AddOrUpdate(order);
+            foreach (var order in orders) e.AddOrUpdate(order);
         });
 
         _priceses.Edit(
             e =>
             {
-                foreach (PriceDefinition price in prices) e.AddOrUpdate(price);
+                foreach (var price in prices) e.AddOrUpdate(price);
             });
         
-        StartVacoumTimer();
-        
-        CreateSavePipeLine(_spools);
-        CreateSavePipeLine(_orders);
-        CreateSavePipeLine(_priceses);
+        CreateSavePipeLine(_spools, sdb => sdb.Spools, data => data.ToDatabase());
+        CreateSavePipeLine(_orders, sdb => sdb.Orders, order => order.ToDatabase());
+        CreateSavePipeLine(_priceses, sdb => sdb.Prices, definition => definition.ToDatabase());
     }
 
-    private void CreateSavePipeLine<TData>(SourceCache<TData, string> cache)
-        where TData : IHasId
+    private void CreateSavePipeLine<TData, TDatabase>(
+        SourceCache<TData, string> cache,
+        Func<SpoolDataBase, DbSet<TDatabase>> setSelector,
+        Func<TData, TDatabase> converter)
+        where TData : IHasId 
+        where TDatabase : class
     {
         var data = cache.Connect();
         if(cache.Count != 0)
             data = data.SkipInitial();
 
         data
-            .OnItemRemoved(r => ReportError(_blobCache.Invalidate(r.Id)))
-            .OnItemAdded(a => ReportError(_blobCache.InsertObject(a.Id, a)))
-            .OnItemUpdated((u, _) => ReportError(_blobCache.InsertObject(u.Id, u)))
+            .OnItemRemoved(r => EnqueueWorkItme(set => set.Remove(converter(r))))
+            .OnItemAdded(a => EnqueueWorkItme(set => set.Add(converter(a))))
+            .OnItemUpdated((u, _) => EnqueueWorkItme(set => set.Update(converter(u))))
             .Subscribe().DisposeWith(_subscriptions);
-    }
+        return;
 
-    private void StartVacoumTimer()
-    {
-        Observable.Timer(DateTimeOffset.Now, TimeSpan.FromHours(24))
-            .SelectMany(_ => _blobCache.Vacuum().OnErrorResumeNext(Observable.Empty<Unit>()))
-            .Subscribe().DisposeWith(_subscriptions);
+        void EnqueueWorkItme(Action<DbSet<TDatabase>> op)
+        {
+            var item = new DatabaseWorkitem(
+                db =>
+                {
+                    var set = setSelector(db);
+                    op(set);
+                    return ValueTask.CompletedTask;
+                },
+                _errorDispatcher.Send);
+            DataOperationManager.Manager.RunItem(item);
+        }
     }
-
-    private void ReportError(IObservable<Unit> toReport) => toReport.Subscribe(_ => { }, e => _errorDispatcher.Send(e));
 
     public IEnumerable<SpoolData> SpoolItems => _spools.Items;
 

@@ -87,7 +87,7 @@ public sealed class PrerenderImages : PrinterStep
             cd =>
             {
                 cd.Item().Text(
-                    td => { td.Span($"Bestellung: {page.Id} - {page.Time:D}").Bold().FontSize(20); });
+                    td => { td.Span($"Bestellung: {page.Id} - {page.Time:D}").Bold().FontSize(15); });
             });
     }
 }

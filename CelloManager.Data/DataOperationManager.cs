@@ -19,6 +19,34 @@ public sealed class DataOperationManager
         _workitems.CompleteAdding();
         await _workerThread.ConfigureAwait(false);
     }
+
+    public void RunItem(DatabaseWorkitem item)
+    {
+        if(_workitems.IsAddingCompleted) return;
+        _workitems.Add(item);
+    }
+
+    public Task<List<TSelector>> Query<TData, TSelector>(
+        Func<SpoolDataBase, DbSet<TData>> setSelector,
+        Func<IQueryable<TData>, IQueryable<TSelector>> converter)
+        where TData : class
+    {
+        var source = new TaskCompletionSource<List<TSelector>>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+        var workItem = new DatabaseWorkitem(
+            async db =>
+            {
+                var set = setSelector(db);
+                var selector = converter(set);
+                var result = await selector.ToListAsync();
+                source.SetResult(result);
+            },
+            ex => source.SetException(ex));
+        
+        RunItem(workItem);
+        
+        return source.Task;
+    }
     
     private async Task ProcessItems()
     {
