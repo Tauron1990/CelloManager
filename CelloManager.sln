@@ -9,9 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Avalonia", "Re
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{6007B427-F4CA-4523-8D46-13ACCEA9B448}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WIndowsPrinter", "WIndowsPrinter\WIndowsPrinter.csproj", "{F199976C-D7BE-4576-9C5D-6759D30400AA}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Boot", "CelloManager.Boot\CelloManager.Boot.csproj", "{2B9C73B6-FDF3-4926-8827-5CBE60D4B224}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Windows", "CelloManager.Windows\CelloManager.Windows.csproj", "{4E0CB46B-6DAE-485B-AD36-6004335F3038}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,26 +24,19 @@ Global
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F199976C-D7BE-4576-9C5D-6759D30400AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F199976C-D7BE-4576-9C5D-6759D30400AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F199976C-D7BE-4576-9C5D-6759D30400AA}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F199976C-D7BE-4576-9C5D-6759D30400AA}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F199976C-D7BE-4576-9C5D-6759D30400AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F199976C-D7BE-4576-9C5D-6759D30400AA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2B9C73B6-FDF3-4926-8827-5CBE60D4B224}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B9C73B6-FDF3-4926-8827-5CBE60D4B224}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B9C73B6-FDF3-4926-8827-5CBE60D4B224}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2B9C73B6-FDF3-4926-8827-5CBE60D4B224}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2B9C73B6-FDF3-4926-8827-5CBE60D4B224}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2B9C73B6-FDF3-4926-8827-5CBE60D4B224}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
-		{F199976C-D7BE-4576-9C5D-6759D30400AA} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
-		{2B9C73B6-FDF3-4926-8827-5CBE60D4B224} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
+		{4E0CB46B-6DAE-485B-AD36-6004335F3038} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}
