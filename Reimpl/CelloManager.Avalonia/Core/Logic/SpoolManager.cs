@@ -101,13 +101,13 @@ public sealed class SpoolManager
             });
     }
 
-    public async Task<Exception?> ExportToJson(string path)
+    public async Task<Exception?> ExportToJson(IStorageFile path)
     {
         try
         {
             var array = _repository.SpoolItems.ToArray();
 
-            var stream = File.Create(path);
+            var stream = await path.OpenWriteAsync().ConfigureAwait(false);
             await using (stream.ConfigureAwait(false))
             {
                 await JsonSerializer.SerializeAsync(stream, array, _serializerOptions).ConfigureAwait(false);

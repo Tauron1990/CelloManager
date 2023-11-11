@@ -3,12 +3,15 @@ using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.ReactiveUI;
 using CelloManager.Core.Data;
+using CelloManager.Core.Printing;
 using QuestPDF.Infrastructure;
 
 namespace CelloManager
 {
-    class Program
+    public static class Bootstrapper
     {
+        public static IPrintProvider? PrintProvider { get; set; }
+        
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
         // yet and stuff might break.

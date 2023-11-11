@@ -43,8 +43,10 @@ public partial class SpoolEditorView : ReactiveUserControl<ModifySpoolEditorView
         yield return this.Bind(ViewModel, m => m.Amount, v => v.AmountTextBox.Text);
         yield return this.Bind(ViewModel, m => m.NeedAmount, v => v.NeedAmountTextBox.Text);
 
-        yield return this.OneWayBind(ViewModel, m => m.KnowenCategorys, v => v.PopupCategoryList.Items);
-        yield return this.Bind(ViewModel, m => m.PopupSelection, v => v.PopupCategoryList.SelectedIndex);
+        yield return this.OneWayBind(ViewModel, m => m.KnowenCategorys, v => v.PopupCategoryList.ItemsSource);
+        yield return this.Bind(ViewModel, m => m.PopupSelection, v => v.PopupCategoryList.SelectedIndex, 
+            i => i ?? 0,
+            i => i);
         
         CategoryTextBox.AddHandler(TextInputEvent, CategoryTextBox_OnTextInput, RoutingStrategies.Tunnel);
         yield return Disposable.Create(this, el => el.CategoryTextBox.RemoveHandler(TextInputEvent, el.CategoryTextBox_OnTextInput));

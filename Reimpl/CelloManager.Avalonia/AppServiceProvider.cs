@@ -6,15 +6,11 @@ using CelloManager.Core.Printing.Internal;
 using CelloManager.ViewModels;
 using Jab;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Serilog;
-using Serilog.Core.Enrichers;
 using Serilog.Exceptions;
-using Serilog.Exceptions.Core;
 using Serilog.Extensions.Logging;
 using Splat;
 using Splat.Serilog;
-using TempFileStream;
 
 namespace CelloManager;
 
@@ -27,7 +23,7 @@ namespace CelloManager;
 [Import<IHelperModule>]
 
 [Transient(typeof(ILogger<>), Factory = nameof(CreateLogger))]
-[Singleton<IOptions<TempFileStreamConfig>>(Factory = nameof(CreateOpens))]
+//[Singleton<IOptions<TempFileStreamConfig>>(Factory = nameof(CreateOpens))]
 [Singleton<ILoggerFactory>(Factory = nameof(ConfigurateLogger))]
 
 internal partial class AppServiceProvider
@@ -51,6 +47,6 @@ internal partial class AppServiceProvider
     private ILogger<TCategory> CreateLogger<TCategory>(ILoggerFactory factory)
         => factory.CreateLogger<TCategory>();
 
-    private IOptions<TempFileStreamConfig> CreateOpens()
-        => new OptionsWrapper<TempFileStreamConfig>(new TempFileStreamConfig());
+//    private IOptions<TempFileStreamConfig> CreateOpens()
+//        => new OptionsWrapper<TempFileStreamConfig>(new TempFileStreamConfig());
 }

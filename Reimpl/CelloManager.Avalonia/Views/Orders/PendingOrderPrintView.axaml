@@ -20,7 +20,7 @@
                             <Border BorderBrush="Black" BorderThickness="2" Margin="2">
                                 <StackPanel>
                                     <TextBlock FontSize="20" Margin="2" Text="{Binding Category}"/>
-                                    <ItemsControl Items="{Binding Spools}"/>
+                                    <ItemsControl ItemsSource="{Binding Spools}"/>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

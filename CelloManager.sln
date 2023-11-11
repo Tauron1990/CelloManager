@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Server", "Server", "{6007B4
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Windows", "CelloManager.Windows\CelloManager.Windows.csproj", "{4E0CB46B-6DAE-485B-AD36-6004335F3038}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CelloManager.Data", "CelloManager.Data\CelloManager.Data.csproj", "{09D196DA-BA8E-46DB-BFBD-B353352F021E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,12 @@ Global
 		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E0CB46B-6DAE-485B-AD36-6004335F3038}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09D196DA-BA8E-46DB-BFBD-B353352F021E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09D196DA-BA8E-46DB-BFBD-B353352F021E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09D196DA-BA8E-46DB-BFBD-B353352F021E}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09D196DA-BA8E-46DB-BFBD-B353352F021E}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09D196DA-BA8E-46DB-BFBD-B353352F021E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09D196DA-BA8E-46DB-BFBD-B353352F021E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,6 +45,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7EC19921-64DB-494A-B815-F8CBEDF238E5} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
 		{4E0CB46B-6DAE-485B-AD36-6004335F3038} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
+		{09D196DA-BA8E-46DB-BFBD-B353352F021E} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}

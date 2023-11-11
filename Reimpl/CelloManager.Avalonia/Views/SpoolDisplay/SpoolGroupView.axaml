@@ -3,8 +3,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:spoolDisplay="clr-namespace:CelloManager.ViewModels.SpoolDisplay"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CelloManager.Views.SpoolDisplay.SpoolGroupView">
     <ItemsControl Name="SpoolList">
@@ -16,7 +16,7 @@
         <ItemsControl.ItemTemplate>
             <DataTemplate DataType="spoolDisplay:SpoolViewModel">
                 <Grid VerticalAlignment="Top" HorizontalAlignment="Center">
-                    <styles:Card Margin="5" Padding="5">
+                    <controls:Card Margin="5" Padding="5">
                         <Grid RowDefinitions="Auto, Auto, Auto">
                             <Grid ColumnDefinitions="Auto, Auto" HorizontalAlignment="Center">
                                 <TextBlock Text="{Binding LargeName}" FontSize="35" Grid.Column="0" VerticalAlignment="Bottom"/>
@@ -28,15 +28,15 @@
                                 <TextBlock Text="{Binding NeedAmount}" IsVisible="{Binding NeedAmountSet}" FontSize="15" Grid.Column="2" Margin="5,0,0,0"/>
                             </Grid>
                             <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
-                                <styles:FloatingButton Command="{Binding Increment}" Classes="Mini" Margin="3">
+                                <controls:FloatingButton Command="{Binding Increment}" Classes="Mini" Margin="3">
                                     <avalonia:MaterialIcon Kind="Increment" Width="20" Height="20"/>
-                                </styles:FloatingButton>
-                                <styles:FloatingButton Grid.Column="1" Command="{Binding Decrement}" Classes="Mini" Margin="3">
+                                </controls:FloatingButton>
+                                <controls:FloatingButton Grid.Column="1" Command="{Binding Decrement}" Classes="Mini" Margin="3">
                                     <avalonia:MaterialIcon Kind="Decrement" Width="20" Height="20"/>
-                                </styles:FloatingButton>
+                                </controls:FloatingButton>
                             </Grid>
                         </Grid>
-                    </styles:Card>
+                    </controls:Card>
                 </Grid>
             </DataTemplate>
         </ItemsControl.ItemTemplate>

@@ -17,6 +17,6 @@ public partial class SpoolDisplayView : ReactiveUserControl<SpoolDisplayViewMode
 
     private IEnumerable<IDisposable> Init()
     {
-        yield return this.OneWayBind(ViewModel, m => m.Groups, v => v.CategoryDisplay.Items);
+        yield return this.OneWayBind(ViewModel, m => m.Groups, v => v.CategoryDisplay.ItemsSource);
     }
 }

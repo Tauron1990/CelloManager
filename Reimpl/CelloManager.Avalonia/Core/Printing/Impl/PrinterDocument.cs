@@ -31,14 +31,10 @@ public sealed class PrinterDocument : IInternalDocument
     {
         try
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                var xps = _printDocument.GenerateXps();
-                
-                
-            }
+            if (Bootstrapper.PrintProvider is not null)
+                await Bootstrapper.PrintProvider.RunPinting(_printDocument, dispatcher).ConfigureAwait(false);
             else
-                await PrintWhenNotWindows().ConfigureAwait(false);
+                await NoProvider().ConfigureAwait(false);
         }
         finally
         {
@@ -46,7 +42,7 @@ public sealed class PrinterDocument : IInternalDocument
         }
     }
 
-    private ValueTask PrintWhenNotWindows()
+    private ValueTask NoProvider()
     {
         _printDocument.GeneratePdfAndShow();
         return ValueTask.CompletedTask;

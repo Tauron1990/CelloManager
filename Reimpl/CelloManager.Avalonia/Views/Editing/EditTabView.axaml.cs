@@ -22,7 +22,7 @@ public partial class EditTabView : ReactiveUserControl<EditTabViewModel>
         yield return this.BindCommand(ViewModel, m => m.NewSpool, v => v.NewSpool);
 
         yield return this.Bind(ViewModel, m => m.CurrentSelected, v => v.SpoolTreeView.SelectedItem);
-        yield return this.OneWayBind(ViewModel, m => m.SpoolGroups, v => v.SpoolTreeView.Items);
+        yield return this.OneWayBind(ViewModel, m => m.SpoolGroups, v => v.SpoolTreeView.ItemsSource);
 
         yield return this.OneWayBind(ViewModel, m => m.CurrentEditorModel, v => v.EditorField.Content);
     }

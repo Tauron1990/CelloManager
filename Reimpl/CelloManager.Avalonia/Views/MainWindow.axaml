@@ -3,7 +3,7 @@
         xmlns:vm="using:CelloManager.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+        xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="CelloManager.Views.MainWindow"
         Icon="/Assets/avalonia-logo.ico" WindowState="Maximized"
@@ -14,7 +14,7 @@
     </Design.DataContext>-->
     
     <Grid RowDefinitions="Auto, *">
-        <styles:ColorZone Mode="PrimaryMid" Padding="10">
+        <controls:ColorZone Mode="PrimaryMid" Padding="10">
             <Grid RowDefinitions="*" ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, Auto, Auto, Auto, *, Auto" Background="Transparent">
                 <Button Grid.Column="0" Margin="1" Name="StartOrder">Bestellen</Button>
                 <Button Grid.Column="1" Margin="1" Name="DisplayOrders">Bestellungen</Button>
@@ -26,7 +26,7 @@
                 <TextBlock Name="PriceDisplay" Grid.Column="7" Margin="1" VerticalAlignment="Center" FontSize="25"/>
                 <TextBlock Grid.Column="9" VerticalAlignment="Center" HorizontalAlignment="Right" FontSize="25">By Dr. Pixel</TextBlock>
             </Grid>
-        </styles:ColorZone>
+        </controls:ColorZone>
         <TabControl Grid.Row="1" Name="MainContentTabs" TabStripPlacement="Left">
             <TabControl.ItemTemplate>
                 <DataTemplate DataType="vm:TabViewModel">

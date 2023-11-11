@@ -2,12 +2,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
              xmlns:data="clr-namespace:CelloManager.Core.Data"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              HorizontalAlignment="Center"
              x:Class="CelloManager.Views.Orders.PendingOrderView">
-    <styles:Card>
+    <controls:Card>
         <StackPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Name="OrderTime" Margin="5" Padding="5"/>
@@ -17,7 +17,7 @@
                 <ItemsControl Name="SpoolList">
                     <ItemsControl.DataTemplates>
                         <DataTemplate DataType="data:OrderedSpoolList">
-                            <ItemsControl Items="{Binding Spools}"/>
+                            <ItemsControl ItemsSource="{Binding Spools}"/>
                         </DataTemplate>
                         <DataTemplate DataType="data:OrderedSpool">
                             <StackPanel Orientation="Horizontal" Margin="5">
@@ -30,5 +30,5 @@
             </Expander>
             <Button Name="Commit" Margin="5" Padding="5">Bestätigen</Button>
         </StackPanel>
-    </styles:Card>
+    </controls:Card>
 </UserControl>

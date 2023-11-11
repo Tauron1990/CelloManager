@@ -10,18 +10,17 @@ using CelloManager.Views.Editing;
 using CelloManager.Views.Importing;
 using CelloManager.Views.Orders;
 using CelloManager.Views.SpoolDisplay;
-using SpoolGroupViewModel = CelloManager.ViewModels.SpoolDisplay.SpoolGroupViewModel;
 
 namespace CelloManager
 {
     public class ViewLocator : IDataTemplate
     {
-        public IControl Build(object data)
+        public Control Build(object? data)
         {
             return data switch
             {
                 SpoolDisplayViewModel spoolDisplayViewModel => new SpoolDisplayView { ViewModel = spoolDisplayViewModel },
-                ViewModels.SpoolDisplay.SpoolGroupViewModel groupViewModel => new SpoolGroupView { ViewModel = groupViewModel },
+                SpoolGroupViewModel groupViewModel => new SpoolGroupView { ViewModel = groupViewModel },
                 EditTabViewModel editTabViewModel => new EditTabView { ViewModel = editTabViewModel },
                 NewSpoolEditorViewModel newSpoolEditorViewModel => new NewSpoolEditorView { ViewModel = newSpoolEditorViewModel },
                 ModifySpoolEditorViewModel modifySpoolEditorViewModel => new SpoolEditorView { ViewModel = modifySpoolEditorViewModel },
@@ -32,23 +31,24 @@ namespace CelloManager
                 _ => TryFindByConvertion(),
             };
 
-            IControl TryFindByConvertion()
+            Control TryFindByConvertion()
             {
-                string name = data.GetType().FullName!.Replace("ViewModel", "View");
-                var type = Type.GetType(name);
+                var name = data?.GetType().FullName?.Replace("ViewModel", "View", StringComparison.Ordinal);
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    var type = Type.GetType(name);
 
-                if (type != null)
-                {
-                    return (Control)Activator.CreateInstance(type)!;
+                    if (type != null)
+                    {
+                        return (Control)Activator.CreateInstance(type)!;
+                    }
                 }
-                else
-                {
-                    return new TextBlock { Text = "Not Found: " + name };
-                }
+
+                return new TextBlock { Text = "Not Found: " + name };
             }
         }
 
-        public bool Match(object data)
+        public bool Match(object? data)
         {
             return data is ViewModelBase;
         }

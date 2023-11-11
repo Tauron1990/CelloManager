@@ -3,12 +3,12 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:assists="clr-namespace:Material.Styles.Assists;assembly=Material.Styles"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CelloManager.Views.Editing.SpoolEditorView">
     <Grid RowDefinitions="Auto, Auto, Auto, Auto, *" ColumnDefinitions="*, Auto, Auto">
-        <Popup Name="CategoryPopup" IsLightDismissEnabled="False" PlacementTarget="{Binding ElementName=CategoryTextBox}" PlacementMode="Bottom">
-            <styles:ColorZone Mode="PrimaryLight" Padding="10" MinWidth="100">
+        <Popup Name="CategoryPopup" IsLightDismissEnabled="False" PlacementTarget="{Binding ElementName=CategoryTextBox}" Placement="Bottom">
+            <controls:ColorZone Mode="PrimaryLight" Padding="10" MinWidth="100">
                 <ListBox Name="PopupCategoryList" SelectionMode="Single">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -16,7 +16,7 @@
                         </DataTemplate>
                     </ListBox.ItemTemplate>
                 </ListBox>
-            </styles:ColorZone>
+            </controls:ColorZone>
         </Popup>
         <TextBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Name" Name="NameTextBox"/>
         <TextBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Margin="5" UseFloatingWatermark="True" assists:TextFieldAssist.Label="Kategorie" Name="CategoryTextBox"/>

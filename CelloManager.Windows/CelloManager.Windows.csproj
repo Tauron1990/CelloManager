@@ -1,10 +1,24 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <UseWpf>true</UseWpf>
         <TargetFramework>net7.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>WinExe</OutputType>
     </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
+      <PackageReference Include="Meziantou.Analyzer" Version="2.0.106">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+      <PackageReference Include="QuestPDF" Version="2023.10.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Reimpl\CelloManager.Avalonia\CelloManager.Avalonia.csproj" />
+    </ItemGroup>
 
 </Project>

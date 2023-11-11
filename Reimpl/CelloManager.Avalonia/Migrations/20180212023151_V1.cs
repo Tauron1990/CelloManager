@@ -4,9 +4,13 @@ using System.Collections.Generic;
 
 namespace Tauron.Application.CelloManager.Data.Migrations
 {
+    #pragma warning disable MA0048
     public partial class V1 : Migration
+        #pragma warning restore MA0048
     {
+        #pragma warning disable MA0051
         protected override void Up(MigrationBuilder migrationBuilder)
+            #pragma warning restore MA0051
         {
             migrationBuilder.CreateTable(
                 name: "CelloSpools",

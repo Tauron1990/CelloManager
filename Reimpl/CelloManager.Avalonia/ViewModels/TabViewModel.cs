@@ -53,14 +53,8 @@ public sealed class TabViewModel : ViewModelBase, IDisposable
             _ => Observable.Return(false)
         };
 
+        #pragma warning disable MA0134
         return new TabViewModel(() => Task.Run(() => tabs?.Remove(viewModelBase)), title, canclose) {Content = viewModelBase};
+        #pragma warning restore MA0134
     }
 }
-
-public interface ITabInfoProvider : IReactiveObject
-{
-    public string Title { get; }
-    
-    public bool CanClose { get; }
-}
-

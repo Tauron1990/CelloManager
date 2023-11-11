@@ -31,7 +31,7 @@ namespace CelloManager.Views
                 if(ViewModel is null) yield break;
 
                 
-                yield return this.OneWayBind(ViewModel, m => m.Tabs, v => v.MainContentTabs.Items);
+                yield return this.OneWayBind(ViewModel, m => m.Tabs, v => v.MainContentTabs.ItemsSource);
                 yield return this.Bind(ViewModel, m => m.CurrentTab, v => v.MainContentTabs.SelectedIndex);
                 
                 yield return this.OneWayBind(ViewModel, m => m.ErrorSimple, v => v.ErrorDisplay.Content);

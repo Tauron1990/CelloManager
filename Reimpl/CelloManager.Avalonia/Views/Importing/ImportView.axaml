@@ -2,14 +2,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:styles="clr-namespace:Material.Styles;assembly=Material.Styles"
+             xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="CelloManager.Views.Importing.ImportView">
    <Grid RowDefinitions="*, Auto, Auto, Auto, *" ColumnDefinitions="*, Auto, Auto, *">
-       <styles:Card Name="ProgressBarControl" CornerRadius="24" Padding="4" Margin="4" HorizontalAlignment="Center"
+       <controls:Card Name="ProgressBarControl" CornerRadius="24" Padding="4" Margin="4" HorizontalAlignment="Center"
                     VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2">
            <ProgressBar Classes="Circle" IsIndeterminate="True" />
-       </styles:Card>
+       </controls:Card>
        <Button Name="ImportDefault" Grid.Row="2" Grid.Column="1" Margin="5" 
                VerticalAlignment="Center" HorizontalAlignment="Right">Importieren</Button>
        <Button Name="ImportFrom" Grid.Row="2" Grid.Column="2" Margin="5"

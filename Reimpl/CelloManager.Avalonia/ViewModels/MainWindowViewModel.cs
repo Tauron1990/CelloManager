@@ -5,7 +5,7 @@ using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Avalonia.Controls;
+using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CelloManager.Core.Data;
 using CelloManager.Core.Logic;
@@ -32,7 +32,6 @@ namespace CelloManager.ViewModels
         private readonly ObservableAsPropertyHelper<string> _errorFull;
         
         private readonly SpoolManager _spoolManager;
-        private readonly Dispatcher _dispatcher;        
         private readonly ErrorDispatcher _errors;
 
         private int _currentTab;
@@ -86,12 +85,14 @@ namespace CelloManager.ViewModels
                 CurrentTab = index;
         }
         
+        #pragma warning disable MA0051
         public MainWindowViewModel(ErrorDispatcher errors)
+            #pragma warning restore MA0051
         {
             _errors = errors;
             var priceManager = _modelScope.GetService<SpoolPriceManager>();
             _spoolManager = _modelScope.GetService<SpoolManager>();
-            _dispatcher = Dispatcher.UIThread;
+            var dispatcher = Dispatcher.UIThread;
 
             _priceValue = priceManager.CompledPrice
                 .StartWith(0)
@@ -110,7 +111,7 @@ namespace CelloManager.ViewModels
                 {
                     try
                     {
-                        await builder.PrintPendingOrder(orderManager.GetAll(), _dispatcher, App.ServiceProvider, null);
+                        await builder.PrintPendingOrder(orderManager.GetAll(), dispatcher, App.ServiceProvider, null).ConfigureAwait(false);
                     }
                     catch (Exception e)
                     {
@@ -164,11 +165,11 @@ namespace CelloManager.ViewModels
             _tabs.Add(_modelScope.GetService<SpoolDisplayViewModel>());
             
             _subscriptions.Add(errors.Errors.SelectMany(
-                ex => _dispatcher.InvokeAsync(
+                ex => dispatcher.InvokeAsync(
                     async () =>
                     {
 
-                        await MessageBox.ShowAsync(App.MainWindow, ex.Message, "Fehler", MessageBoxButton.Ok);
+                        await MessageBox.ShowAsync(App.MainWindow, ex.Message, "Fehler", MessageBoxButton.Ok).ConfigureAwait(false);
                         return Unit.Default;
                     }))
                 .Subscribe());
@@ -178,26 +179,26 @@ namespace CelloManager.ViewModels
         {
             try
             {
-                var filter = new FileDialogFilter();
-                filter.Extensions.Add("json");
-                filter.Name = "Daten";
-
-                var dialog = new SaveFileDialog
-                {
-                    DefaultExtension = "json",
-                    Title = "Daten Exportieren",
-                    Filters = new List<FileDialogFilter> { filter },
-                    InitialFileName = "Spulen.json",
-                };
-
-                string? result = await _dispatcher.InvokeAsync(() => dialog.ShowAsync(App.MainWindow));
+                var file = await App.StorageProvider
+                                    .SaveFilePickerAsync(
+                                         new FilePickerSaveOptions
+                                         {
+                                             Title = "Daten Exportieren",
+                                             SuggestedFileName = "Spulen.json",
+                                             DefaultExtension = "json",
+                                             FileTypeChoices = new[]
+                                                               {
+                                                                   new FilePickerFileType("Json Daten")
+                                                                   {
+                                                                       Patterns = new[] { "json" },
+                                                                   },
+                                                               },
+                                         })
+                                    .ConfigureAwait(false);
                 
-                if(string.IsNullOrWhiteSpace(result)) return;
+                if(file is null) return;
 
-                if(!result.EndsWith(".json"))
-                    result = $"{result}.json";
-
-                Exception? error = await _spoolManager.ExportToJson(result);
+                var error = await _spoolManager.ExportToJson(file).ConfigureAwait(false);
                 
                 if(error is null) return;
                 

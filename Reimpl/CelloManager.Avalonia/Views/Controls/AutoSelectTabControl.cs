@@ -22,7 +22,7 @@ public class AutoSelectTabControl
         _subscription = tab.Events().DetachedFromLogicalTree.Subscribe(_ => _disposable.Disposable = Disposable.Empty);
             
         tab.Events().PropertyChanged
-            .Where(e => e.Property == ItemsControl.ItemsProperty)
+            .Where(e => e.Property == ItemsControl.ItemsSourceProperty)
             .Select(e => e.NewValue as INotifyCollectionChanged)
             .Where(e => e is not null)
             .Subscribe(NewCollection!);

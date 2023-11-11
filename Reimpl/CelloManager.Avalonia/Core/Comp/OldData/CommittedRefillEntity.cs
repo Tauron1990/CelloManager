@@ -11,7 +11,9 @@ namespace CelloManager.Core.Comp.OldData
         [Key]
         public int Id { get; set; }
         
+        #pragma warning disable MA0016
         public List<CommittedSpoolEntity> CommitedSpools { get; } = new();
+        #pragma warning restore MA0016
 
         public DateTime SentTime { get; set; }
 

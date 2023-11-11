@@ -16,6 +16,18 @@
         <None Include="Core\Printing\Internal\TempFiles.cs" />
         <Compile Remove="Core\Printing\PrintProgressManager.cs" />
         <None Include="Core\Printing\PrintProgressManager.cs" />
+        <Compile Remove="ViewModels\Printing\ImageConverter.cs" />
+        <None Include="ViewModels\Printing\ImageConverter.cs" />
+        <Compile Remove="ViewModels\Printing\ImagePreViewModel.cs" />
+        <None Include="ViewModels\Printing\ImagePreViewModel.cs" />
+        <Compile Remove="ViewModels\Printing\PreviewManagerModel.cs" />
+        <None Include="ViewModels\Printing\PreviewManagerModel.cs" />
+        <Compile Remove="ViewModels\Printing\PrintDialogViewModel.cs" />
+        <None Include="ViewModels\Printing\PrintDialogViewModel.cs" />
+        <Compile Remove="ViewModels\Printing\PrinterSettingModel.cs" />
+        <None Include="ViewModels\Printing\PrinterSettingModel.cs" />
+        <AvaloniaXaml Remove="Views\Printing\PrintingDialog.axaml" />
+        <Compile Remove="Views\Printing\PrintingDialog.axaml.cs" />
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.
@@ -41,6 +53,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Material.Avalonia" Version="3.0.2" />
+        <PackageReference Include="Material.Icons.Avalonia" Version="2.0.1" />
         <PackageReference Include="Meziantou.Analyzer" Version="2.0.106">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

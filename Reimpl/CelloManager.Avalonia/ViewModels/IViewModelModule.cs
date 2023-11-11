@@ -1,7 +1,6 @@
 ﻿using CelloManager.ViewModels.Editing;
 using CelloManager.ViewModels.Importing;
 using CelloManager.ViewModels.Orders;
-using CelloManager.ViewModels.Printing;
 using CelloManager.ViewModels.SpoolDisplay;
 using Jab;
 
@@ -13,7 +12,7 @@ namespace CelloManager.ViewModels;
 [Scoped<EditTabViewModel>]
 [Scoped<OrderDisplayViewModel>]
 [Scoped<ImportViewModel>]
-[Transient<PrintDialogViewModel>]
+//[Transient<PrintDialogViewModel>]
 public interface IViewModelModule
 {
     

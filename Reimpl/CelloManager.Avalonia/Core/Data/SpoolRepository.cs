@@ -22,7 +22,7 @@ public sealed partial class SpoolRepository : IDisposable
 
     private readonly ErrorDispatcher _errorDispatcher;
     private readonly ILogger<SpoolRepository> _logger;
-    private readonly IBlobCache _blobCache = BlobCache.UserAccount;
+    private readonly IBlobCache _blobCache = BlobCache.LocalMachine;
     private readonly CompositeDisposable _subscriptions = new();
 
     public IObservable<int> SpoolCount => _spools.CountChanged;
