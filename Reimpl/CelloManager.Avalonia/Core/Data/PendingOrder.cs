@@ -14,7 +14,7 @@ public sealed record PendingOrder(string Id, ImmutableList<OrderedSpoolList> Spo
     public static PendingOrder New(IEnumerable<SpoolData> spools, Func<SpoolData, int> amountSelector)
     {
 
-        return new(
+        return new PendingOrder(
             Guid.NewGuid().ToString("N"),
             ImmutableList<OrderedSpoolList>.Empty
                 .AddRange(

@@ -37,7 +37,6 @@
         <TrimmableAssembly Include="Avalonia.Themes.Default" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="akavache" Version="9.1.20" />
         <PackageReference Include="Avalonia" Version="11.0.5" />
         <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
         <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
@@ -80,5 +79,8 @@
         <DependentUpon>PendingOrderPrintView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\..\CelloManager.Data\CelloManager.Data.csproj" />
     </ItemGroup>
 </Project>

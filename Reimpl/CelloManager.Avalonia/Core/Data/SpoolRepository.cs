@@ -7,10 +7,10 @@ using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
-using Akavache;
 using DynamicData;
 using DynamicData.Kernel;
 using Microsoft.Extensions.Logging;
+using SQLitePCL;
 
 namespace CelloManager.Core.Data;
 
@@ -22,7 +22,6 @@ public sealed partial class SpoolRepository : IDisposable
 
     private readonly ErrorDispatcher _errorDispatcher;
     private readonly ILogger<SpoolRepository> _logger;
-    private readonly IBlobCache _blobCache = BlobCache.LocalMachine;
     private readonly CompositeDisposable _subscriptions = new();
 
     public IObservable<int> SpoolCount => _spools.CountChanged;
@@ -38,6 +37,8 @@ public sealed partial class SpoolRepository : IDisposable
     
     public async Task Init()
     {
+        Batteries_V2.Init();
+        
         InitRepository();
         
         var spools = await _blobCache.GetAllObjects<SpoolData>();

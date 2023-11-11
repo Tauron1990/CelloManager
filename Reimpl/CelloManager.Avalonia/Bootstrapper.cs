@@ -4,6 +4,7 @@ using Avalonia;
 using Avalonia.ReactiveUI;
 using CelloManager.Core.Data;
 using CelloManager.Core.Printing;
+using CelloManager.Data;
 using QuestPDF.Infrastructure;
 
 namespace CelloManager
@@ -19,8 +20,7 @@ namespace CelloManager
         public static async ValueTask StartApp(string[] args)
         {
             QuestPDF.Settings.License = LicenseType.Community;
-            Akavache.Registrations.Start("CelloManager");
-         
+            
             await App.ServiceProvider.GetService<SpoolRepository>().Init().ConfigureAwait(true);
 
             try
@@ -31,7 +31,7 @@ namespace CelloManager
             finally
             {
                 await App.ServiceProvider.DisposeAsync().ConfigureAwait(false);
-                await Akavache.BlobCache.Shutdown().ConfigureAwait(false);
+                await DataOperationManager.Manager.Shutdown().ConfigureAwait(false);
             }
         }
 
