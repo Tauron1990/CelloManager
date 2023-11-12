@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading.Tasks;
 using CelloManager.Core.Data;
-using CelloManager.Core.Printing.Data;
 using CelloManager.Core.Printing.Workflow;
-using DynamicData;
 
 namespace CelloManager.Core.Printing.Steps;
 
@@ -14,18 +13,12 @@ public sealed class CollectInfoStep : PrinterStep
     {
         var order = GetOrThrow(context, static c => c.Order);
 
-        List<OrderedSpoolList> pageSpools = new List<OrderedSpoolList>();
+        var pageSpools = new List<OrderedSpoolList>();
         
         foreach (var orderedSpoolList in order.Spools)
         {
             if (orderedSpoolList.Spools.Count > 20)
-            {
-                var spools = orderedSpoolList.Spools;
-                while (spools)
-                {
-                    
-                }
-            }
+                SplitList(orderedSpoolList, pageSpools);
             else
                 pageSpools.Add(orderedSpoolList);
 
@@ -33,7 +26,6 @@ public sealed class CollectInfoStep : PrinterStep
             {
                 context.Pages = context.Pages.Add(order.ToPrintPage(pageSpools.Take(2)));
                 pageSpools.RemoveRange(0, 2);
-                pageSpools.Clear();
             }
         }
 
@@ -41,6 +33,19 @@ public sealed class CollectInfoStep : PrinterStep
             context.Pages = context.Pages.Add(order.ToPrintPage(pageSpools));
 
         return ValueTask.FromResult(StepId.None);
+    }
+
+    private static void SplitList(OrderedSpoolList orderedSpoolList, ICollection<OrderedSpoolList> pageSpools)
+    {
+        var spools = orderedSpoolList.Spools;
+        while (spools.Count > 20)
+        {
+            pageSpools.Add(orderedSpoolList with { Spools = spools.Take(20).ToImmutableList() });
+            spools = spools.RemoveRange(0, 20);
+        }
+
+        if (spools.Count != 0)
+            pageSpools.Add(orderedSpoolList with { Spools = spools });
     }
 
     //OLD System
