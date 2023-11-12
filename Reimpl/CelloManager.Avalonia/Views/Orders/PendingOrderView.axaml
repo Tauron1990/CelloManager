@@ -17,11 +17,14 @@
                 <ItemsControl Name="SpoolList">
                     <ItemsControl.DataTemplates>
                         <DataTemplate DataType="data:OrderedSpoolList">
-                            <ItemsControl ItemsSource="{Binding Spools}"/>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Category}"/>
+                                <ItemsControl ItemsSource="{Binding Spools}"/>
+                            </StackPanel>
                         </DataTemplate>
                         <DataTemplate DataType="data:OrderedSpool">
                             <StackPanel Orientation="Horizontal" Margin="5">
-                                <TextBlock Margin="5" Text="{Binding SpoolId, StringFormat='Name: {0}'}"/>
+                                <TextBlock Margin="5" Text="{Binding Name, StringFormat='Name: {0}'}"/>
                                 <TextBlock Margin="5" Text="{Binding Amount, StringFormat='Menge: {0}'}"/>
                             </StackPanel>
                         </DataTemplate>

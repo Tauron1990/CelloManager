@@ -23,7 +23,7 @@ public sealed class PrerenderImages : PrinterStep
                     c.Page(
                         pd =>
                         {
-                            pd.Margin(0.5f, Unit.Centimetre);
+                            pd.Margin(0.7f, Unit.Centimetre);
                             
                             CreateHeader(pd, page);
                             
@@ -41,6 +41,8 @@ public sealed class PrerenderImages : PrinterStep
 
     private static void TableBuilder(PendingOrder page, IContainer container)
     {
+        bool lineSet = false;
+        
         foreach (var spoolList in page.Spools)
         {
             container.Column(
@@ -63,11 +65,15 @@ public sealed class PrerenderImages : PrinterStep
 
                             foreach (var spool in spoolList.Spools)
                             {
+                                td.Cell().ColumnSpan(2).BorderBottom(5);
                                 td.Cell().Text(spool.Name);
                                 td.Cell().Text(spool.Amount.ToString(CultureInfo.CurrentUICulture));
                             }
                         });
                 });
+            
+            if(lineSet && page.Spools.Count == 1) continue;
+            container.Column(cd => cd.Item().BorderRight(5));
         }
     }
 
