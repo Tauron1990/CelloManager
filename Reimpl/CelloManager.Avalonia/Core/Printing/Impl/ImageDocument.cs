@@ -29,12 +29,10 @@ public sealed class ImageDocument : FileSelectingDocument<ImageDocument>
             var newHeight = images.Select(i => i.Size).Sum(size => size.Height);
 
             var pixelSize = new PixelSize((int)newWidth, (int)newHeight);
-            using var newImage =
-                new WriteableBitmap(pixelSize, new Vector(288, 288));
 
             var offset = 0;
 
-            using RenderTargetBitmap bitmap = new(pixelSize, new Vector(288, 288));
+            using RenderTargetBitmap bitmap = new(pixelSize, new Vector(96, 96));
             using var ctx = bitmap.CreateDrawingContext();
 
             foreach (var image in images)

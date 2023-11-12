@@ -11,7 +11,7 @@ public partial class EditSpoolGroupView : ReactiveUserControl<EditSpoolGroupView
     public EditSpoolGroupView()
     {
         InitializeComponent();
-
+        
         this.WhenActivated(Init);
     }
 

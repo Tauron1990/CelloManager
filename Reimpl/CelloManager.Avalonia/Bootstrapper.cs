@@ -31,6 +31,8 @@ namespace CelloManager
             finally
             {
                 await DataOperationManager.Manager.Shutdown().ConfigureAwait(false);
+                if (PrintProvider is not null)
+                    await PrintProvider.Shutdown().ConfigureAwait(false);
                 await App.ServiceProvider.DisposeAsync().ConfigureAwait(false);
             }
         }

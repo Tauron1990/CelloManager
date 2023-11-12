@@ -32,7 +32,7 @@ public sealed class PrinterDocument : IInternalDocument
         try
         {
             if (Bootstrapper.PrintProvider is not null)
-                await Bootstrapper.PrintProvider.RunPinting(_printDocument, dispatcher).ConfigureAwait(false);
+                await Bootstrapper.PrintProvider.RunPinting(_printDocument).ConfigureAwait(false);
             else
                 await NoProvider().ConfigureAwait(false);
         }

@@ -27,7 +27,7 @@ public sealed class PrerenderImages : PrinterStep
                             
                             CreateHeader(pd, page);
                             
-                            pd.Content().Column(cd => TableBuilder(page, cd));
+                            TableBuilder(page, pd.Content());
                             
                             CreateFooter(pd);
                         });
@@ -39,30 +39,34 @@ public sealed class PrerenderImages : PrinterStep
         return StepId.None;
     }
 
-    private static void TableBuilder(PendingOrder page, ColumnDescriptor cd)
+    private static void TableBuilder(PendingOrder page, IContainer container)
     {
         foreach (var spoolList in page.Spools)
         {
-            cd.Item().Table(
-                td =>
+            container.Column(
+                cd =>
                 {
-                    td.Header(tcd =>
-                              {
-                                  tcd.Cell().RowSpan(2).Text(spoolList.Category);
-                                  tcd.Cell().Text("Name");
-                                  tcd.Cell().Text("Menge");
-                              });
-                    td.ColumnsDefinition(tcdd =>
-                                         {
-                                             tcdd.RelativeColumn();
-                                             tcdd.RelativeColumn();
-                                         });
+                    cd.Item().Table(
+                        td =>
+                        {
+                            td.Header(tcd =>
+                                      {
+                                          tcd.Cell().ColumnSpan(2).Text(spoolList.Category);
+                                          tcd.Cell().Text("Name");
+                                          tcd.Cell().Text("Menge");
+                                      });
+                            td.ColumnsDefinition(tcdd =>
+                                                 {
+                                                     tcdd.RelativeColumn();
+                                                     tcdd.RelativeColumn();
+                                                 });
 
-                    foreach (var spool in spoolList.Spools)
-                    {
-                        td.Cell().Text(spool.Name);
-                        td.Cell().Text(spool.Amount.ToString(CultureInfo.CurrentUICulture));
-                    }
+                            foreach (var spool in spoolList.Spools)
+                            {
+                                td.Cell().Text(spool.Name);
+                                td.Cell().Text(spool.Amount.ToString(CultureInfo.CurrentUICulture));
+                            }
+                        });
                 });
         }
     }

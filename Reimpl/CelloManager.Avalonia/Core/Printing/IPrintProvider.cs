@@ -6,5 +6,7 @@ namespace CelloManager.Core.Printing;
 
 public interface IPrintProvider
 {
-    ValueTask RunPinting(IDocument document, Dispatcher dispatcher);
+    ValueTask RunPinting(IDocument document);
+
+    ValueTask Shutdown();
 }

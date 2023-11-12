@@ -10,6 +10,8 @@ public sealed class DataOperationManager
 
     private readonly BlockingCollection<DatabaseWorkitem> _workitems = new();
     private readonly Task _workerThread;
+
+    private bool _needMigration = true;
     private SpoolDataBase? _dataBase;
     
     private DataOperationManager() => _workerThread = Task.Run(ProcessItems);
@@ -74,7 +76,7 @@ public sealed class DataOperationManager
         }
     }
 
-    private static async ValueTask<SpoolDataBase> CreateDatabase()
+    private async ValueTask<SpoolDataBase> CreateDatabase()
     {
         var databaseDic = Path.Combine(
             Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -87,11 +89,16 @@ public sealed class DataOperationManager
             new DbContextOptionsBuilder<SpoolDataBase>()
                .UseSqlite(new SqliteConnectionStringBuilder
                           {
+                              Pooling = true,
                               DataSource = Path.Combine(databaseDic, "spools.db"),
                           }.ConnectionString)
                .Options);
 
-        await dataBase.Database.MigrateAsync();
+        if (_needMigration)
+        {
+            await dataBase.Database.MigrateAsync();
+            _needMigration = false;
+        }
         await dataBase.Database.ExecuteSqlAsync($"VACUUM;");
 
         return dataBase;
