@@ -28,6 +28,7 @@
         <None Include="ViewModels\Printing\PrinterSettingModel.cs" />
         <AvaloniaXaml Remove="Views\Printing\PrintingDialog.axaml" />
         <Compile Remove="Views\Printing\PrintingDialog.axaml.cs" />
+        <AvaloniaResource Include="Assets\4945342_document_documents_files_folder_format_icon.png" />
     </ItemGroup>
     <ItemGroup>
         <!--This helps with theme dll-s trimming.

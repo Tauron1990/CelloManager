@@ -6,7 +6,7 @@
         xmlns:controls="clr-namespace:Material.Styles.Controls;assembly=Material.Styles"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="CelloManager.Views.MainWindow"
-        Icon="/Assets/avalonia-logo.ico" WindowState="Maximized"
+        Icon="/Assets/4945342_document_documents_files_folder_format_icon.png" WindowState="Maximized"
         Title="Cello Manager">
 
     <!--<Design.DataContext>
