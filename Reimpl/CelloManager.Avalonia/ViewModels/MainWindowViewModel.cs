@@ -104,7 +104,7 @@ namespace CelloManager.ViewModels
             var orderManager = _modelScope.GetService<OrderManager>();
             var builder = _modelScope.GetService<PrintBuilder>();
 
-            Export = ReactiveCommand.CreateFromTask(ExportToJson, _spoolManager.Count.Select(i => i != 0));
+            Export = ReactiveCommand.CreateFromTask(ExportToJson, _spoolManager.Count.Select(i => i != 0).ObserveOn(RxApp.MainThreadScheduler));
             
             PrintAll = ReactiveCommand.CreateFromTask(
                 async () =>

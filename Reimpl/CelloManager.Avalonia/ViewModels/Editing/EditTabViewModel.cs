@@ -63,20 +63,21 @@ public sealed class EditTabViewModel : ViewModelBase, ITabInfoProvider, IActivat
             SpoolGroups = groups;
 
             yield return this.WhenAny(m => m.CurrentSelected, c => c.Value)
-                .Select(o => o switch
-                {
-                    EditorSpoolGroup group => 
-                        EditSpoolGroupViewModel.Create(
-                            group.Spools, 
-                            spoolManager, 
-                            model => CurrentSelected = model, 
-                            priceManager, 
-                            group.CategoryName),
-                    
-                    ReadySpoolModel spoolModel => ModifySpoolEditorViewModel.Create(spoolModel, spoolManager),
-                    _ => null
-                })
-                .Subscribe(_currentEditorModelSubject);
+                             .Select(o => o switch
+                              {
+                                  EditorSpoolGroup group =>
+                                      EditSpoolGroupViewModel.Create(
+                                          group.Spools,
+                                          spoolManager,
+                                          model => CurrentSelected = model,
+                                          priceManager,
+                                          group.CategoryName),
+
+                                  ReadySpoolModel spoolModel => ModifySpoolEditorViewModel.Create(spoolModel, spoolManager),
+                                  _ => null
+                              })
+                             .ObserveOn(RxApp.MainThreadScheduler)
+                             .Subscribe(_currentEditorModelSubject);
             
             yield return Disposable.Create(this, self => self._currentEditorModelSubject.OnNext(null));
         }

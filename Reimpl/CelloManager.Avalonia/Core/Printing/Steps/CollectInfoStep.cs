@@ -38,10 +38,10 @@ public sealed class CollectInfoStep : PrinterStep
     private static void SplitList(OrderedSpoolList orderedSpoolList, ICollection<OrderedSpoolList> pageSpools)
     {
         var spools = orderedSpoolList.Spools;
-        while (spools.Count > 20)
+        while (spools.Count > 30)
         {
-            pageSpools.Add(orderedSpoolList with { Spools = spools.Take(20).ToImmutableList() });
-            spools = spools.RemoveRange(0, 20);
+            pageSpools.Add(orderedSpoolList with { Spools = spools.Take(30).ToImmutableList() });
+            spools = spools.RemoveRange(0, 30);
         }
 
         if (spools.Count != 0)

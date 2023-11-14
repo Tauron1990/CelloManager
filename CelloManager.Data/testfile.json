@@ -1,0 +1,625 @@
+﻿[
+  {
+    "Id": "fcf872c75a9253c18eaf3965889bc2cf",
+    "Name": "43,5cm",
+    "Category": "Glanz",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "aa4d2598d77c5900845320ca3c866b7c",
+    "Name": "24cm",
+    "Category": "Glanz",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "0b180b6749e258e285e6569df0184d01",
+    "Name": "100cm",
+    "Category": "KF",
+    "Amount": 7,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "57d1ff64e7e45059aeb6ae689d10ac42",
+    "Name": "43cm",
+    "Category": "Glanz",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "8dd545f17f1f52c09597e95e35c74fbc",
+    "Name": "54cm",
+    "Category": "Glanz",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "d66298ec7e835323a2fd274b2b8d946f",
+    "Name": "45cm",
+    "Category": "Matt",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "94a42e56728c59cb9329f8c773c0a2d7",
+    "Name": "34cm",
+    "Category": "Matt",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "55b6f380ee995740b76f9b9015b44f93",
+    "Name": "52cm",
+    "Category": "Matt",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "d159bbca2c3a589bb81a440256252543",
+    "Name": "100cm",
+    "Category": "Glanz",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "d35f705a6a5c509b9c3aa69055e1d259",
+    "Name": "94cm",
+    "Category": "Matt",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "e4466c20460550c09ad9c2e753f43888",
+    "Name": "24cm",
+    "Category": "Soft",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "744dd5f322475434bc4ca4d898563ca3",
+    "Name": "43,5cm",
+    "Category": "Soft",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "e5a2dded5f97526c98cc0365c7e82730",
+    "Name": "100cm",
+    "Category": "Matt",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "742df7b7edea5948bd18febb1cfa7a18",
+    "Name": "24cm",
+    "Category": "KF",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "17d23eff27525fbab1f9cac331f92952",
+    "Name": "52cm",
+    "Category": "Soft",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "785f17309a2059a08bc48fa8b86eff32",
+    "Name": "65cm",
+    "Category": "Matt",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "49e661f8a10a5795baff8a937e3bd06f",
+    "Name": "62cm",
+    "Category": "Soft",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "50ef552fd74f52fe9083db38e9eb7eb9",
+    "Name": "92cm",
+    "Category": "Soft",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "019b2624d1b75c08865e78766797f4dc",
+    "Name": "45cm",
+    "Category": "Glanz",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "3bdab37903075f2ab62bf1513de78a0f",
+    "Name": "50cm",
+    "Category": "Sandy",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "98be9c7ebf0d5a5f9765d513977c347c",
+    "Name": "45cm",
+    "Category": "Leder",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "731c8558d9ba5c78a465502f2ce50bda",
+    "Name": "88cm",
+    "Category": "KF",
+    "Amount": 7,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "930f98477ab95c789a53e8525d6aad71",
+    "Name": "71cm",
+    "Category": "Soft",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "32d77bf630cc5266969d18b594243b0d",
+    "Name": "88 KF DIGI - CLARUS",
+    "Category": "TESTFOLIE",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "10ab02f247ac541aba6259b6ee1e2d3b",
+    "Name": "45cm",
+    "Category": "KF",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "d23cd18c270e527b80296fd480fc210c",
+    "Name": "88cm",
+    "Category": "Digi",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "5eccd9789915551b80426ce81a596e1c",
+    "Name": "88cm",
+    "Category": "Paperseal KF AVD",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "2ac8f0f9ec175ee180572b846579f8e3",
+    "Name": "69cm",
+    "Category": "Glanz",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "f38b93777c415095819c39f0cd0a87e2",
+    "Name": "64cm",
+    "Category": "BioX",
+    "Amount": 0,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "bbf2dc177a56512489a980813cf9610a",
+    "Name": "88cm",
+    "Category": "Digi GLANZ",
+    "Amount": 0,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "ce29891f99e75a779f9aedb0a18343d0",
+    "Name": "62cm",
+    "Category": "Glanz",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "44fa5b361a045948837d9b6aa9aa230f",
+    "Name": "88cm",
+    "Category": "4films Shield Steel",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "a39ba400fffe510f9b9d97c1f3cd7bf7",
+    "Name": "34cm",
+    "Category": "Soft",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "9846ac2a6b0e5c7c944835560fd7eef1",
+    "Name": "105cm",
+    "Category": "Matt",
+    "Amount": 8,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "ad11a48995ef5dcf815c89406763edef",
+    "Name": "64cm",
+    "Category": "Soft",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "f6daecd3190e532a8753f18de70f043b",
+    "Name": "32cm",
+    "Category": "Soft",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "796ed1bc456752e1a26e315192c1bc14",
+    "Name": "102cm",
+    "Category": "Matt",
+    "Amount": 8,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "6df0df195d325d0b8e9f2cbaf7e75e11",
+    "Name": "32cm",
+    "Category": "KF",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "dfdee0a1e12a57e49798ca8312f666ab",
+    "Name": "32cm",
+    "Category": "Matt",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "1224c1b8c778552e83f96f17d4b32c07",
+    "Name": "72cm",
+    "Category": "Matt",
+    "Amount": 8,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "684880952495513b98881d142f23c215",
+    "Name": "71cm",
+    "Category": "Digi",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "c097b3b54abf5666894cb5bf99d4707c",
+    "Name": "62cm",
+    "Category": "Digi",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "7de0eae8e153516ca396c9a7eb411b51",
+    "Name": "69cm",
+    "Category": "Matt",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "23065aafecd35269af41ee6fafbd0080",
+    "Name": "64cm",
+    "Category": "Matt",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "1964e57fbc7c53e4b8c89a780c596de9",
+    "Name": "88cm",
+    "Category": "Soft",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "a4aa37b419045129bef9a292035c7d91",
+    "Name": "63cm",
+    "Category": "Matt",
+    "Amount": 8,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "5db5995e2e22595ca8391c4c4a846a84",
+    "Name": "52cm",
+    "Category": "Glanz",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "f468c62d697c5e81865a899173713bbc",
+    "Name": "34cm",
+    "Category": "Glanz",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "9ff086728cdc54e7a5c5ebefc0e68449",
+    "Name": "44cm",
+    "Category": "Matt",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "58da3d34b8cf5e8ab7d0712d76974ee4",
+    "Name": "69cm",
+    "Category": "Digi",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "507ef186cdc056ac8ef2765783456ade",
+    "Name": "104cm",
+    "Category": "KF",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "541742662b305d238fa2e32d51da897d",
+    "Name": "43cm",
+    "Category": "Matt",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "2a902bfc226b5b128bb6e273de3af6d0",
+    "Name": "71cm",
+    "Category": "Matt",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "0e77113257065bd69ab91a076f24a13f",
+    "Name": "92cm",
+    "Category": "Glanz",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "8d788d5c52e751c389eb3f333a6d1a22",
+    "Name": "24cm",
+    "Category": "Matt",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "42249554ec3257b2b5bb398ee64115d6",
+    "Name": "44cm",
+    "Category": "Glanz",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "9b8ec5f399f350d3b1e66ee273070e02",
+    "Name": "102cm",
+    "Category": "Soft",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "08b173ddab985d5d8a57ccfe14c4f3e2",
+    "Name": "88cm",
+    "Category": "Matt",
+    "Amount": 8,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "47d52909987d587caa2d5ea4b20851f0",
+    "Name": "49cm",
+    "Category": "Soft",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "cfdb723983d35756b1b72903361a9e8e",
+    "Name": "64cm",
+    "Category": "Glanz",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "9ecd300a998955d9aa0e7228dc33b103",
+    "Name": "102cm",
+    "Category": "KF",
+    "Amount": 3,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "58157272d8dd5261a587b75f412b9249",
+    "Name": "63cm",
+    "Category": "KF",
+    "Amount": 8,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "7bad14b090ec5f32a78490fdb0c6ccc4",
+    "Name": "88cm",
+    "Category": "Glanz",
+    "Amount": 7,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "a24cb69120795ae2b0c430146bf80323",
+    "Name": "34cm",
+    "Category": "KF",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "f8ca37115fe4546b8984e5a0ee161f3c",
+    "Name": "72cm",
+    "Category": "Glanz",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "28f4b085901b5e86acccbb8b53dbc061",
+    "Name": "100cm",
+    "Category": "Soft",
+    "Amount": 3,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "775739a0b9d95971bfe19a1d28247e02",
+    "Name": "105cm",
+    "Category": "KF",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "53a360590fe7533291156103fa35ebe0",
+    "Name": "45cm",
+    "Category": "Soft",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "a6bf116a92845dbc80a7dee51fc58c75",
+    "Name": "71cm",
+    "Category": "Glanz",
+    "Amount": 2,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "3ecd5cf87acf5ca3b86df5606b0ef03f",
+    "Name": "102cm",
+    "Category": "Glanz",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "062ce8ab5a0c54efb3094fab6d4e3250",
+    "Name": "49cm",
+    "Category": "Glanz",
+    "Amount": 7,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "f06deb6c0c1d5eb0808dccd655a88570",
+    "Name": "75cm",
+    "Category": "KF",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "6ae9f61ce9f656f190758961a69f9bde",
+    "Name": "69cm",
+    "Category": "Soft",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "be945ffa76c15cf8ab78bba0fd1fa969",
+    "Name": "43,5cm",
+    "Category": "KF",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "a41900fe8ee15e49b0013f4e38ffb88c",
+    "Name": "43cm",
+    "Category": "KF",
+    "Amount": 3,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "7cbec8e4f13650b58cd8510d869bbd25",
+    "Name": "49cm",
+    "Category": "KF",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "30c94c79d1365c2e8dcaa4994a62f1a3",
+    "Name": "92cm",
+    "Category": "KF",
+    "Amount": 7,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "84fdab29ae4150dca5cbfb21a1d70772",
+    "Name": "64cm",
+    "Category": "KF",
+    "Amount": 4,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "9b55e5538bb55e19930aeb4a7e2ef2c3",
+    "Name": "62cm",
+    "Category": "KF",
+    "Amount": 7,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "8165ee728a785408bd25403a11c02bb8",
+    "Name": "72cm",
+    "Category": "KF",
+    "Amount": 8,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "3cf1c147c13b592ba3cd844634eab63c",
+    "Name": "65cm",
+    "Category": "KF",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "3694ddfea2dd58b7ab2c791b5f43326c",
+    "Name": "69cm",
+    "Category": "KF",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "8b3b02c71f7f59e7a082ec89c374d1e9",
+    "Name": "105cm",
+    "Category": "Glanz",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "76810090848d5fdf8f2148d257a60aa6",
+    "Name": "65cm",
+    "Category": "Glanz",
+    "Amount": 1,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "f6f3124f19e95635989c22bdf0fa6105",
+    "Name": "70cm",
+    "Category": "KF",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "d60da86062a45f9c92c2b2c61b4d64f9",
+    "Name": "32cm",
+    "Category": "Glanz",
+    "Amount": 6,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "2c805c927895504aa709b552267a056d",
+    "Name": "92cm",
+    "Category": "Matt",
+    "Amount": 5,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "4edf842b421e53df89a55c720ba4bcff",
+    "Name": "71cm",
+    "Category": "KF",
+    "Amount": 10,
+    "NeedAmount": -1
+  },
+  {
+    "Id": "bba9b1a2a26559dba75c7a6ae943fa44",
+    "Name": "49cm",
+    "Category": "Matt",
+    "Amount": 6,
+    "NeedAmount": -1
+  }
+]

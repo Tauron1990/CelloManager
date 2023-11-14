@@ -23,6 +23,7 @@ public sealed class PrerenderImages : PrinterStep
                     c.Page(
                         pd =>
                         {
+                            pd.DefaultTextStyle(ts => ts.Bold().FontSize(15));
                             pd.Margin(0.7f, Unit.Centimetre);
                             
                             CreateHeader(pd, page);
@@ -43,19 +44,19 @@ public sealed class PrerenderImages : PrinterStep
     {
         bool lineSet = false;
         
-        foreach (var spoolList in page.Spools)
-        {
-            container.Column(
-                cd =>
+        container.Row(
+            cd =>
+            {
+                foreach (var spoolList in page.Spools)
                 {
-                    cd.Item().Table(
+                    cd.RelativeItem().Table(
                         td =>
                         {
                             td.Header(tcd =>
                                       {
-                                          tcd.Cell().ColumnSpan(2).Text(spoolList.Category);
-                                          tcd.Cell().Text("Name");
-                                          tcd.Cell().Text("Menge");
+                                          tcd.Cell().ColumnSpan(2).Padding(3).Text(spoolList.Category);
+                                          tcd.Cell().Padding(3).Text("Name");
+                                          tcd.Cell().Padding(3).Text("Menge");
                                       });
                             td.ColumnsDefinition(tcdd =>
                                                  {
@@ -65,16 +66,16 @@ public sealed class PrerenderImages : PrinterStep
 
                             foreach (var spool in spoolList.Spools)
                             {
-                                td.Cell().ColumnSpan(2).BorderBottom(5);
-                                td.Cell().Text(spool.Name);
-                                td.Cell().Text(spool.Amount.ToString(CultureInfo.CurrentUICulture));
+                                td.Cell().ColumnSpan(2).BorderBottom(0.5f);
+                                td.Cell().Padding(3).Text(spool.Name);
+                                td.Cell().Padding(3).Text(spool.Amount.ToString(CultureInfo.CurrentUICulture));
                             }
                         });
-                });
-            
-            if(lineSet && page.Spools.Count == 1) continue;
-            container.Column(cd => cd.Item().BorderRight(5));
-        }
+
+                    if (lineSet && page.Spools.Count == 1) continue;
+                    cd.AutoItem().BorderRight(0.5f);
+                }
+            });
     }
 
     private static void CreateFooter(PageDescriptor pd)
@@ -93,11 +94,13 @@ public sealed class PrerenderImages : PrinterStep
 
     private static void CreateHeader(PageDescriptor pd, PendingOrder page)
     {
-        pd.Header().Column(
+        pd.Header()
+          .PaddingBottom(1, Unit.Centimetre)
+          .Column(
             cd =>
             {
                 cd.Item().Text(
-                    td => { td.Span($"Bestellung: {page.Id} - {page.Time:D}").Bold().FontSize(15); });
+                    td => { td.Span($"Bestellung: {page.Id} - {page.Time:D}").Bold().FontSize(10); });
             });
     }
 }
