@@ -25,7 +25,7 @@ public partial class SelectDocumentTypeWindow : ReactiveWindow<SelectDocumentTyp
 
         yield return this.BindCommand(ViewModel, m => m.SelectCommand, v => v.NewPdF, WithType(DocumentType.Pdf));
         yield return this.BindCommand(ViewModel, m => m.SelectCommand, v => v.NewImage, WithType(DocumentType.Image));
-        yield return this.BindCommand(ViewModel, m => m.WindowsSelectCommand, v => v.NewPrint, WithType(DocumentType.Print));
+        yield return this.BindCommand(ViewModel, m => m.SelectCommand, v => v.NewPrint, WithType(DocumentType.Print));
         yield return this.BindCommand(ViewModel, m => m.SelectCommand, v => v.Cancel, WithType(null));
     }
     

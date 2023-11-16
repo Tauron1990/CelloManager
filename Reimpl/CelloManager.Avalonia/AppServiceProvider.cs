@@ -25,9 +25,11 @@ namespace CelloManager;
 [Transient(typeof(ILogger<>), Factory = nameof(CreateLogger))]
 //[Singleton<IOptions<TempFileStreamConfig>>(Factory = nameof(CreateOpens))]
 [Singleton<ILoggerFactory>(Factory = nameof(ConfigurateLogger))]
-
+[Singleton<AppManager>(Factory = nameof(GetManager))]
 internal partial class AppServiceProvider
 {
+    private AppManager GetManager() => AppManager.Instance;
+    
     private ILoggerFactory ConfigurateLogger()
     {
         var config = new LoggerConfiguration();
