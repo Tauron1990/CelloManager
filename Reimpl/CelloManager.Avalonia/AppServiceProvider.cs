@@ -7,6 +7,7 @@ using CelloManager.ViewModels;
 using Jab;
 using Microsoft.Extensions.Logging;
 using Serilog;
+using Serilog.Events;
 using Serilog.Exceptions;
 using Serilog.Extensions.Logging;
 using Splat;
@@ -35,6 +36,11 @@ internal partial class AppServiceProvider
         var config = new LoggerConfiguration();
 
         config.Enrich.WithExceptionDetails();
+        config.WriteTo.Async(c => c.File(
+                                 "Log/log.txt", 
+                                 LogEventLevel.Information,
+                                 rollingInterval: RollingInterval.Day,
+                                 retainedFileCountLimit: 3));
 #if DEBUG
         config.WriteTo.Async(c => c.Console());
 #endif

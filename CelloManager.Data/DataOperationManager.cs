@@ -76,21 +76,28 @@ public sealed class DataOperationManager
         }
     }
 
+    public static string DatabaseDic
+    {
+        get
+        {
+            var databaseDic = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Tauron", "CelloManager");
+            if (!Directory.Exists(databaseDic))
+                Directory.CreateDirectory(databaseDic);
+
+            return databaseDic;
+        }
+    }
+    
     private async ValueTask<SpoolDataBase> CreateDatabase()
     {
-        var databaseDic = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "Tauron", "CelloManager");
-        if (!Directory.Exists(databaseDic))
-            Directory.CreateDirectory(databaseDic);
-
-
         var dataBase = new SpoolDataBase(
             new DbContextOptionsBuilder<SpoolDataBase>()
                .UseSqlite(new SqliteConnectionStringBuilder
                           {
                               Pooling = true,
-                              DataSource = Path.Combine(databaseDic, "spools.db"),
+                              DataSource = Path.Combine(DatabaseDic, "spools.db"),
                           }.ConnectionString)
                .Options);
 

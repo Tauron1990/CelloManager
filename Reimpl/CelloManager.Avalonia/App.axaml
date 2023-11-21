@@ -1,16 +1,16 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="using:CelloManager"
-             xmlns:themes="clr-namespace:Material.Styles.Themes;assembly=Material.Styles"
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
-             x:Class="CelloManager.App" DataContext="{x:Static local:AppManager.Instance}">
+             x:Class="CelloManager.App">
     <Application.DataTemplates>
         <local:ViewLocator/>
     </Application.DataTemplates>
     
     <Application.Styles>
         <avalonia:MaterialIconStyles />
-        <themes:MaterialTheme BaseTheme="{Binding ThemeMode}" PrimaryColor="BlueGrey" SecondaryColor="Amber"/>
+        <!--<themes:MaterialTheme BaseTheme="Dark" PrimaryColor="BlueGrey" SecondaryColor="Amber"/>-->
+        <local:AppTheme/>
         
         <Style Selector="TransitioningContentControl">
             <Setter Property="PageTransition">
