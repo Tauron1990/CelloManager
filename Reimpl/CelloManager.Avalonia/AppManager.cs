@@ -25,7 +25,7 @@ public partial class AppManager : ReactiveObject
 
     private string _themeFile = Path.Combine(DataOperationManager.DatabaseDic, "theme.json");
     
-    public static AppManager Instance { get; } = new();
+    public static AppManager Instance { get; set; } = new();
 
     private readonly ILogger<AppManager> _logger = App.ServiceProvider.GetService<ILogger<AppManager>>();
     
@@ -81,67 +81,95 @@ public partial class AppManager : ReactiveObject
         set => SetColor(t => t.PrimaryDark = value);
     }
 
-    public ColorPair SecondaryLight { get; }
+    public ColorPair SecondaryLight
+    {
+        get => _currentTheme.SecondaryLight;
+        set => SetColor(t => t.SecondaryLight = value);
+    }
 
-    public ColorPair SecondaryMid { get; }
+    public ColorPair SecondaryMid
+    {
+        get => _currentTheme.SecondaryMid;
+        set => SetColor(t => t.SecondaryMid = value);
+    }
 
-    public ColorPair SecondaryDark { get; }
+    public ColorPair SecondaryDark
+    {
+        get => _currentTheme.SecondaryMid;
+        set => SetColor(t => t.SecondaryDark = value);
+    }
 
-    public Color ValidationError { get; }
+    public Color ValidationError
+    {
+        get => _currentTheme.ValidationError;
+        set => SetColor(t => t.ValidationError = value);
+    }
 
-    public Color Background { get; }
+    public Color Background
+    {
+        get => _currentTheme.Background;
+        set => SetColor(t => t.Background = value);
+    }
 
-    public Color Paper { get; }
+    public Color Paper
+    {
+        get => _currentTheme.Paper;
+        set => SetColor(t => t.Paper = value);
+    }
 
-    public Color CardBackground { get; }
+    public Color CardBackground
+    {
+        get => _currentTheme.CardBackground;
+        set => SetColor(t => t.CardBackground = value);
+    }
 
-    public Color ToolBarBackground { get; }
+    public Color ToolBarBackground { get; set; }
 
-    public Color Body { get; }
+    public Color Body { get; set; }
 
-    public Color BodyLight { get; }
+    public Color BodyLight { get; set; }
 
-    public Color ColumnHeader { get; }
+    public Color ColumnHeader { get; set; }
 
-    public Color CheckBoxOff { get; }
+    public Color CheckBoxOff { get; set; }
 
-    public Color CheckBoxDisabled { get; }
+    public Color CheckBoxDisabled { get; set; }
 
-    public Color Divider { get; }
+    public Color Divider { get; set; }
 
-    public Color Selection { get; }
+    public Color Selection { get; set; }
 
-    public Color ToolForeground { get; }
+    public Color ToolForeground { get; set; }
 
-    public Color ToolBackground { get; }
+    public Color ToolBackground { get; set; }
 
-    public Color FlatButtonClick { get; }
+    public Color FlatButtonClick { get; set; }
 
-    public Color FlatButtonRipple { get; }
+    public Color FlatButtonRipple { get; set; }
 
-    public Color ToolTipBackground { get; }
+    public Color ToolTipBackground { get; set; }
 
-    public Color ChipBackground { get; }
+    public Color ChipBackground { get; set; }
 
-    public Color SnackbarBackground { get; }
+    public Color SnackbarBackground { get; set; }
 
-    public Color SnackbarMouseOver { get; }
+    public Color SnackbarMouseOver { get; set; }
 
-    public Color SnackbarRipple { get; }
+    public Color SnackbarRipple { get; set; }
 
-    public Color TextBoxBorder { get; }
+    public Color TextBoxBorder { get; set; }
 
-    public Color TextFieldBoxBackground { get; }
+    public Color TextFieldBoxBackground { get; set; }
 
-    public Color TextFieldBoxHoverBackground { get; }
+    public Color TextFieldBoxHoverBackground { get; set; }
 
-    public Color TextFieldBoxDisabledBackground { get; }
+    public Color TextFieldBoxDisabledBackground { get; set; }
 
-    public Color TextAreaBorder { get; }
+    public Color TextAreaBorder { get; set; }
 
-    public Color TextAreaInactiveBorder { get; }
+    public Color TextAreaInactiveBorder { get; set; }
 
-    public Color DataGridRowHoverBackground { get; }
+    public Color DataGridRowHoverBackground { get; set; }
 
     private void SetColor(Action<ITheme> setter, [CallerMemberName] string? propertyName = null)
     {
