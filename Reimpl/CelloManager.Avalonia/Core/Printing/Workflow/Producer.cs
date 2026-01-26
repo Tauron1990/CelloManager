@@ -21,11 +21,15 @@ public abstract class Producer<TSelf, TState, TContext>
 
     public async ValueTask Begin(StepId id, TContext context)
     {
-        if(!await Process(id, context).ConfigureAwait(false))
+        if (!await Process(id, context).ConfigureAwait(false))
+        {
             throw new InvalidOperationException("Procession not Successful");
+        }
 
-        if(string.Equals(_lastId.Name, StepId.Fail.Name, StringComparison.Ordinal))
+        if (string.Equals(_lastId.Name, StepId.Fail.Name, StringComparison.Ordinal))
+        {
             throw new InvalidOperationException(_errorMessage);
+        }
     }
 
     [DebuggerStepThrough]
@@ -39,10 +43,15 @@ public abstract class Producer<TSelf, TState, TContext>
 
     protected virtual async ValueTask<bool> Process(StepId id, TContext context)
     {
-        if(SetLastId(id)) return true;
+        if (SetLastId(id))
+        {
+            return true;
+        }
 
-        if(!_states.TryGetValue(id, out var rev))
+        if (!_states.TryGetValue(id, out StepRev<TState, TContext>? rev))
+        {
             return SetLastId(StepId.Fail);
+        }
 
         StepId sId = await rev.Step.OnExecute(context).ConfigureAwait(false);
         var result = false;
@@ -59,8 +68,10 @@ public abstract class Producer<TSelf, TState, TContext>
                 break;
             case "Loop":
                 (bool isOk, bool loopResult) = await ProcessLoop(context, rev).ConfigureAwait(false);
-                if(isOk)
+                if (isOk)
+                {
                     return loopResult;
+                }
 
                 break;
             case "Finish":
@@ -72,8 +83,10 @@ public abstract class Producer<TSelf, TState, TContext>
                 return SetLastId(StepId.Fail);
         }
 
-        if(!result)
+        if (!result)
+        {
             await rev.Step.OnExecuteFinish(context).ConfigureAwait(false);
+        }
 
         return result;
     }
@@ -85,15 +98,17 @@ public abstract class Producer<TSelf, TState, TContext>
         do
         {
             StepId loopId = await rev.Step.NextElement(context).ConfigureAwait(false);
-            if(string.Equals(loopId.Name, StepId.LoopEnd.Name, StringComparison.Ordinal))
+            if (string.Equals(loopId.Name, StepId.LoopEnd.Name, StringComparison.Ordinal))
             {
                 ok = false;
 
                 continue;
             }
 
-            if(string.Equals(loopId.Name, StepId.Fail.Name, StringComparison.Ordinal))
+            if (string.Equals(loopId.Name, StepId.Fail.Name, StringComparison.Ordinal))
+            {
                 return (true, SetLastId(StepId.Fail));
+            }
 
             await ProgressConditions(rev, context).ConfigureAwait(false);
         } while (ok);
@@ -103,29 +118,35 @@ public abstract class Producer<TSelf, TState, TContext>
 
     private async ValueTask<bool> ProgressConditions(StepRev<TState, TContext> rev, TContext context)
     {
-        var std = (from con in rev.Conditions
-                   let stateId = con.Select(rev.Step, context)
-                   where !string.Equals(stateId.Name, StepId.None.Name, StringComparison.Ordinal)
-                   select stateId).ToArray();
+        StepId[] std = (from con in rev.Conditions
+                        let stateId = con.Select(rev.Step, context)
+                        where !string.Equals(stateId.Name, StepId.None.Name, StringComparison.Ordinal)
+                        select stateId).ToArray();
 
-        if(std.Length != 0)
+        if (std.Length != 0)
         {
             foreach (StepId stepId in std)
             {
-                if(await Process(stepId, context).ConfigureAwait(false))
+                if (await Process(stepId, context).ConfigureAwait(false))
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
-        if(rev.GenericCondition is null) return false;
+        if (rev.GenericCondition is null)
+        {
+            return false;
+        }
 
         StepId cid = rev.GenericCondition.Select(rev.Step, context);
 
         return !string.Equals(cid.Name, StepId.None.Name, StringComparison.Ordinal) && await Process(cid, context).ConfigureAwait(false);
     }
 
-    
+
     protected TSelf SetStep(StepId id, TState stade, Action<StepConfiguration<TState, TContext>> config)
     {
         var rev = new StepRev<TState, TContext>(stade);

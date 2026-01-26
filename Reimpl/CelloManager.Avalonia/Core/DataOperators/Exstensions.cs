@@ -6,7 +6,8 @@ namespace CelloManager.Core.DataOperators;
 public static class Exstensions
 {
     public static IObservable<IChangeSet<TDestination, TKey>> SelectUpdate<TDestination, TSource, TKey>(
-        this IObservable<IChangeSet<TSource, TKey>> input, Func<TSource, TDestination> transform) 
-        where TDestination : IUpdateAware<TSource> where TKey : notnull =>
+        this IObservable<IChangeSet<TSource, TKey>> input, Func<TSource, TDestination> transform)
+        where TDestination : IUpdateAware<TSource> where TKey : notnull where TSource : notnull
+        =>
         new TransformUpdate<TDestination, TSource, TKey>(input, transform).Run();
 }

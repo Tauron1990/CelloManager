@@ -2,22 +2,23 @@
 using System.ComponentModel.DataAnnotations;
 using JetBrains.Annotations;
 
-namespace CelloManager.Core.Comp.OldData
+namespace CelloManager.Core.Comp.OldData;
+
+[UsedImplicitly]
+public sealed class CelloSpoolEntity
 {
-    [UsedImplicitly]
-    public sealed class CelloSpoolEntity
-    {
-        [Key]
-        public int Id { get; set; }
-        
-        public DateTime Timestamp { get; set; }
+    [Key] 
+    public int Id { get; set; }
 
-        public string Name { get; set; } = string.Empty;
+    public DateTime Timestamp { get; set; }
 
-        public string Type { get; set; } = string.Empty;
+    [MaxLength(100)]
+    public string Name { get; set; } = string.Empty;
 
-        public int Amount { get; set; }
+    [MaxLength(100)]
+    public string Type { get; set; } = string.Empty;
 
-        public int Neededamount { get; set; }
-    }
+    public int Amount { get; set; }
+
+    public int Neededamount { get; set; }
 }

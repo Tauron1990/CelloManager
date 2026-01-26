@@ -33,8 +33,11 @@ public partial class SpoolEditorView : ReactiveUserControl<ModifySpoolEditorView
 
     private IEnumerable<IDisposable> Init()
     {
-        if(ViewModel is null) yield break;
-        
+        if (ViewModel is null)
+        {
+            yield break;
+        }
+
         yield return this.BindCommand(ViewModel, m => m.Save, v => v.SaveButton);
         yield return this.BindCommand(ViewModel, m => m.Delete, v => v.DeleteButton);
 
@@ -44,16 +47,19 @@ public partial class SpoolEditorView : ReactiveUserControl<ModifySpoolEditorView
         yield return this.Bind(ViewModel, m => m.NeedAmount, v => v.NeedAmountTextBox.Text);
 
         yield return this.OneWayBind(ViewModel, m => m.KnowenCategorys, v => v.PopupCategoryList.ItemsSource);
-        yield return this.Bind(ViewModel, m => m.PopupSelection, v => v.PopupCategoryList.SelectedIndex, 
+        yield return this.Bind(ViewModel, m => m.PopupSelection, v => v.PopupCategoryList.SelectedIndex,
             i => i ?? 0,
             i => i);
-        
+
         CategoryTextBox.AddHandler(TextInputEvent, CategoryTextBox_OnTextInput, RoutingStrategies.Tunnel);
         yield return Disposable.Create(this, el => el.CategoryTextBox.RemoveHandler(TextInputEvent, el.CategoryTextBox_OnTextInput));
     }
 
     private void CategoryTextBox_OnTextInput(object? sender, TextInputEventArgs e)
     {
-        if (ViewModel?.KnowenCategorys.Count != 0) CategoryPopup.IsOpen = true;
+        if (ViewModel?.KnowenCategorys.Count != 0)
+        {
+            CategoryPopup.IsOpen = true;
+        }
     }
 }

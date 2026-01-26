@@ -5,7 +5,7 @@ using QuestPDF.Infrastructure;
 
 namespace CelloManager.Core.Printing.Impl;
 
-public interface IInternalDocument : IPrintDocument, IDisposable
+public interface IInternalDocument : IPrintDocument
 {
     public static abstract IPrintDocument GenerateDocument(IDocument pages);
 

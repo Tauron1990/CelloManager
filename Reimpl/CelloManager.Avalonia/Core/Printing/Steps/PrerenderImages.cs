@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Threading.Tasks;
 using CelloManager.Core.Data;
+using CelloManager.Core.Printing.Internal;
 using CelloManager.Core.Printing.Workflow;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -12,42 +13,42 @@ public sealed class PrerenderImages : PrinterStep
     public override async ValueTask<StepId> OnExecute(PrinterContext context)
     {
         await context.PrintUiModel.Init(context).ConfigureAwait(false);
-        
-        var model = context.PrintUiModel;
+
+        PrintUiModel model = context.PrintUiModel;
         // ReSharper disable AccessToDisposedClosure
-        var document = Document.Create(
+        Document document = Document.Create(
             c =>
             {
-                foreach (var page in model)
+                foreach (PendingOrder page in model)
                 {
                     c.Page(
                         pd =>
                         {
                             pd.DefaultTextStyle(ts => ts.Bold().FontSize(15));
                             pd.Margin(0.7f, Unit.Centimetre);
-                            
+
                             CreateHeader(pd, page);
-                            
+
                             TableBuilder(page, pd.Content());
-                            
+
                             CreateFooter(pd);
                         });
                 }
             });
         // ReSharper restore AccessToDisposedClosure
         context.Document = document;
-        
+
         return StepId.None;
     }
 
     private static void TableBuilder(PendingOrder page, IContainer container)
     {
-        bool lineSet = false;
-        
+        var lineSet = false;
+
         container.Row(
             cd =>
             {
-                foreach (var spoolList in page.Spools)
+                foreach (OrderedSpoolList spoolList in page.Spools)
                 {
                     cd.RelativeItem().Table(
                         td =>
@@ -64,7 +65,7 @@ public sealed class PrerenderImages : PrinterStep
                                                      tcdd.RelativeColumn();
                                                  });
 
-                            foreach (var spool in spoolList.Spools)
+                            foreach (OrderedSpool spool in spoolList.Spools)
                             {
                                 td.Cell().ColumnSpan(2).BorderBottom(0.5f);
                                 td.Cell().Padding(3).Text(spool.Name);
@@ -72,7 +73,11 @@ public sealed class PrerenderImages : PrinterStep
                             }
                         });
 
-                    if (lineSet && page.Spools.Count == 1) continue;
+                    if (lineSet && page.Spools.Count == 1)
+                    {
+                        continue;
+                    }
+
                     cd.AutoItem().BorderRight(0.5f);
                 }
             });
@@ -97,10 +102,10 @@ public sealed class PrerenderImages : PrinterStep
         pd.Header()
           .PaddingBottom(1, Unit.Centimetre)
           .Column(
-            cd =>
-            {
-                cd.Item().Text(
-                    td => { td.Span($"Bestellung: {page.Id} - {page.Time:D}").Bold().FontSize(10); });
-            });
+               cd =>
+               {
+                   cd.Item().Text(
+                       td => { td.Span($"Bestellung: {page.Id} - {page.Time:D}").Bold().FontSize(10); });
+               });
     }
 }

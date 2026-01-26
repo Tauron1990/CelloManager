@@ -13,10 +13,10 @@ public static class Mapper
                Name = data.Name,
                Category = data.Category,
                Amount = data.Amount,
-               NeedAmount = data.NeedAmount,
+               NeedAmount = data.NeedAmount
            };
 
-    public static SpoolData FromDatabase(this SpoolDataDb data) 
+    public static SpoolData FromDatabase(this SpoolDataDb data)
         => new(data.Id, data.Name, data.Category, data.Amount, data.NeedAmount);
 
     public static PendingOrderDb ToDatabase(this PendingOrder order)
@@ -24,7 +24,7 @@ public static class Mapper
            {
                Id = order.Id,
                Time = order.Time,
-               Spools = JsonConvert.SerializeObject(order.Spools),
+               Spools = JsonConvert.SerializeObject(order.Spools)
            };
 
     public static PendingOrder FromDatabase(this PendingOrderDb data)
@@ -36,7 +36,7 @@ public static class Mapper
                Id = data.Id,
                Name = data.Name,
                Lenght = data.Lenght,
-               Price = data.Price,
+               Price = data.Price
            };
 
     public static PriceDefinition FromDatabase(this PriceDefinitionDb data)

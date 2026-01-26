@@ -1,5 +1,4 @@
-﻿using System.Collections.Immutable;
-using CelloManager.Core.Data;
+﻿using CelloManager.Core.Data;
 
 namespace CelloManager.Core.Printing.Data;
 

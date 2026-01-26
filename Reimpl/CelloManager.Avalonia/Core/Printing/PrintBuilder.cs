@@ -9,26 +9,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CelloManager.Core.Printing;
 
-public sealed class PrintBuilder
+public static class PrintBuilder
 {
-   
-
-    public async ValueTask PrintPendingOrder(PendingOrder order, Dispatcher dispatcher, IServiceProvider serviceProvider, Action? end)
+    public static async ValueTask PrintPendingOrder(PendingOrder order, Dispatcher dispatcher, IServiceProvider serviceProvider, Action? end)
     {
-        var errors = serviceProvider.GetRequiredService<ErrorDispatcher>();
-        var scope = serviceProvider.CreateAsyncScope();
+        ErrorDispatcher errors = serviceProvider.GetRequiredService<ErrorDispatcher>();
+        AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
         await using (scope.ConfigureAwait(false))
         {
             try
             {
-                var workflow = scope.ServiceProvider.GetRequiredService<PrinterWorkflow>();
-                var printerContext = scope.ServiceProvider.GetRequiredService<PrinterContext>();
+                PrinterWorkflow workflow = scope.ServiceProvider.GetRequiredService<PrinterWorkflow>();
+                PrinterContext printerContext = scope.ServiceProvider.GetRequiredService<PrinterContext>();
 
                 printerContext.Dispatcher = dispatcher;
                 printerContext.ServiceProvider = scope.ServiceProvider;
                 printerContext.Order = order;
                 printerContext.End = end;
-            
+
                 await workflow.Begin(StepId.Start, printerContext).ConfigureAwait(false);
             }
             catch (Exception e)

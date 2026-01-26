@@ -2,26 +2,33 @@
 
     <PropertyGroup>
         <UseWpf>true</UseWpf>
-        <TargetFramework>net7.0-windows</TargetFramework>
+        <TargetFramework>net10.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>WinExe</OutputType>
         <AssemblyName>CelloManager</AssemblyName>
         <ApplicationIcon>4945342_document_documents_files_folder_format_icon.ico</ApplicationIcon>
+        <LangVersion>default</LangVersion>
+
+        <PublishTrimmed>true</PublishTrimmed>
+        <IsTrimmable>false</IsTrimmable>
+        <TrimMode>partial</TrimMode>
+        <_SuppressWpfTrimError>true</_SuppressWpfTrimError>
+        <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.0.5" />
-      <PackageReference Include="Avalonia.Desktop" Version="11.0.5" />
-      <PackageReference Include="Meziantou.Analyzer" Version="2.0.109">
-        <PrivateAssets>all</PrivateAssets>
-        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-      </PackageReference>
-      <PackageReference Include="QuestPDF" Version="2023.10.2" />
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.11"/>
+        <PackageReference Include="Avalonia.Desktop" Version="11.3.11"/>
+        <PackageReference Include="Meziantou.Analyzer" Version="2.0.286">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="QuestPDF" Version="2025.12.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Reimpl\CelloManager.Avalonia\CelloManager.Avalonia.csproj" />
+        <ProjectReference Include="..\Reimpl\CelloManager.Avalonia\CelloManager.Avalonia.csproj"/>
     </ItemGroup>
 
 </Project>

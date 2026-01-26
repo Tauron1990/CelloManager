@@ -4,17 +4,17 @@
              xmlns:avalonia="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
              x:Class="CelloManager.App">
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
-    
+
     <Application.Styles>
         <avalonia:MaterialIconStyles />
         <!--<themes:MaterialTheme BaseTheme="Dark" PrimaryColor="BlueGrey" SecondaryColor="Amber"/>-->
-        <local:AppTheme/>
-        
+        <local:AppTheme />
+
         <Style Selector="TransitioningContentControl">
             <Setter Property="PageTransition">
-                <PageSlide Duration="1"/>
+                <PageSlide Duration="1" />
             </Setter>
         </Style>
     </Application.Styles>

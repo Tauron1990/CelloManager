@@ -6,8 +6,8 @@ namespace CelloManager.ViewModels;
 
 public sealed class SerialDisposableSubject<TData> : IDisposable, IObservable<TData>, IObserver<TData>
 {
-    private readonly SerialDisposable _disposer = new();
     private readonly BehaviorSubject<TData> _dataHolder;
+    private readonly SerialDisposable _disposer = new();
 
     public SerialDisposableSubject(TData initial)
     {

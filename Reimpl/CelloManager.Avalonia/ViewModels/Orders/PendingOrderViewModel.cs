@@ -14,49 +14,47 @@ namespace CelloManager.ViewModels.Orders;
 
 public sealed class PendingOrderViewModel : ViewModelBase, IDisposable
 {
-    private readonly IServiceProvider _serviceProvider;
-    private readonly PrintBuilder _print;
+    private readonly BehaviorSubject<bool> _canPrint = new(true);
     private readonly ErrorDispatcher _errors;
-    private readonly BehaviorSubject<bool> _canPrint = new(value: true);
+    private readonly IServiceProvider _serviceProvider;
 
-    public PendingOrder Order { get; }
-
-    public string TimeOfOrder { get; }
-
-    public ReactiveCommand<Unit,Unit> PrintCommand { get; }
-    
-    public ReactiveCommand<Unit, Unit> CommitCommand { get; }
-    
     public PendingOrderViewModel(PendingOrder order, IServiceProvider serviceProvider, Action<PendingOrder> commit)
     {
         _serviceProvider = serviceProvider;
-        _print = serviceProvider.GetRequiredService<PrintBuilder>();
         _errors = serviceProvider.GetRequiredService<ErrorDispatcher>();
         Order = order;
         TimeOfOrder = order.Time.ToString("f", CultureInfo.CurrentUICulture);
 
         CommitCommand = ReactiveCommand.Create(() => commit(order));
-        
+
 
         PrintCommand = ReactiveCommand.CreateFromTask(RunPrint,
             _canPrint.ObserveOn(RxApp.MainThreadScheduler));
+    }
+
+    public PendingOrder Order { get; }
+
+    public string TimeOfOrder { get; }
+
+    public ReactiveCommand<Unit, Unit> PrintCommand { get; }
+
+    public ReactiveCommand<Unit, Unit> CommitCommand { get; }
+
+    public void Dispose()
+    {
+        PrintCommand.Dispose();
+        CommitCommand.Dispose();
     }
 
     private async Task RunPrint()
     {
         try
         {
-            await _print.PrintPendingOrder(Order, Dispatcher.UIThread, _serviceProvider, null).ConfigureAwait(false);
+            await PrintBuilder.PrintPendingOrder(Order, Dispatcher.UIThread, _serviceProvider, null).ConfigureAwait(false);
         }
         catch (Exception e)
         {
             _errors.Send(e);
         }
-    }
-
-    public void Dispose()
-    {
-        PrintCommand.Dispose();
-        CommitCommand.Dispose();
     }
 }

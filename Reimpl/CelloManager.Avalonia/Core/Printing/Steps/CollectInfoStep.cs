@@ -11,16 +11,20 @@ public sealed class CollectInfoStep : PrinterStep
 {
     public override ValueTask<StepId> OnExecute(PrinterContext context)
     {
-        var order = GetOrThrow(context, static c => c.Order);
+        PendingOrder order = GetOrThrow(context, static c => c.Order);
 
         var pageSpools = new List<OrderedSpoolList>();
-        
-        foreach (var orderedSpoolList in order.Spools)
+
+        foreach (OrderedSpoolList orderedSpoolList in order.Spools)
         {
             if (orderedSpoolList.Spools.Count > 20)
+            {
                 SplitList(orderedSpoolList, pageSpools);
+            }
             else
+            {
                 pageSpools.Add(orderedSpoolList);
+            }
 
             while (pageSpools.Count >= 2)
             {
@@ -30,14 +34,16 @@ public sealed class CollectInfoStep : PrinterStep
         }
 
         if (pageSpools.Count != 0)
+        {
             context.Pages = context.Pages.Add(order.ToPrintPage(pageSpools));
+        }
 
         return ValueTask.FromResult(StepId.None);
     }
 
-    private static void SplitList(OrderedSpoolList orderedSpoolList, ICollection<OrderedSpoolList> pageSpools)
+    private static void SplitList(OrderedSpoolList orderedSpoolList, List<OrderedSpoolList> pageSpools)
     {
-        var spools = orderedSpoolList.Spools;
+        ImmutableList<OrderedSpool> spools = orderedSpoolList.Spools;
         while (spools.Count > 30)
         {
             pageSpools.Add(orderedSpoolList with { Spools = spools.Take(30).ToImmutableList() });
@@ -45,7 +51,9 @@ public sealed class CollectInfoStep : PrinterStep
         }
 
         if (spools.Count != 0)
+        {
             pageSpools.Add(orderedSpoolList with { Spools = spools });
+        }
     }
 
     //OLD System
@@ -67,7 +75,7 @@ else
 }
 
 return ValueTask.FromResult(StepId.None);*/
-    
+
     /*private static void ProcessGroup(PrinterContext context, ICollection<OrderedSpoolList> toProcess, List<OrderedSpoolList> inProcess, PendingOrder order)
     {
         var next = toProcess.Take(2).ToArray();
@@ -77,17 +85,17 @@ return ValueTask.FromResult(StepId.None);*/
             inProcess.AddRange(next);
             foreach (var spoolList in next)
                 toProcess.Remove(spoolList);
-            
+
             return;
         }
-        
+
         for (var i = 0; i < next.Length; i++)
         {
             var inProcessElement = inProcess[i];
             var nextElement = next[i];
 
             if (inProcessElement.Spools.Count + nextElement.Spools.Count <= 15) continue;
-            
+
             context.AddPage(order.ToPrintPage(inProcess));
             inProcess.Clear();
             break;

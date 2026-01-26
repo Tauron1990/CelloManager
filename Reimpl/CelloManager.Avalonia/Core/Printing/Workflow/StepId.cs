@@ -3,7 +3,7 @@
 namespace CelloManager.Core.Printing.Workflow;
 
 [PublicAPI]
-public readonly record struct StepId(string Name )
+public readonly record struct StepId(string Name)
 {
     //public static readonly StepId Null = new StepId();
 

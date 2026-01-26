@@ -12,7 +12,10 @@ public class SimpleCondition<TContext> : ICondition<TContext>
 
     public StepId Select(IStep<TContext> lastStep, TContext context)
     {
-        if(Guard is null || Guard(context, lastStep)) return Target;
+        if (Guard is null || Guard(context, lastStep))
+        {
+            return Target;
+        }
 
         return StepId.None;
     }

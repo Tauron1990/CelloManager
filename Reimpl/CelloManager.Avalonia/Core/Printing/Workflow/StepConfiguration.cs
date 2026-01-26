@@ -4,15 +4,11 @@ using JetBrains.Annotations;
 namespace CelloManager.Core.Printing.Workflow;
 
 [PublicAPI]
-public class StepConfiguration<TState, TContext>
+public class StepConfiguration<TState, TContext>(StepRev<TState, TContext> context)
 {
-    private readonly StepRev<TState, TContext> _context;
-
-    public StepConfiguration(StepRev<TState, TContext> context) => _context = context;
-
     public StepConfiguration<TState, TContext> WithCondition(ICondition<TContext> condition)
     {
-        _context.Conditions.Add(condition);
+        context.Conditions.Add(condition);
 
         return this;
     }
@@ -21,19 +17,18 @@ public class StepConfiguration<TState, TContext>
     {
         var con = new SimpleCondition<TContext> { Guard = guard };
 
-        if(guard != null)
+        if (guard != null)
         {
             config(new ConditionConfiguration<TState, TContext>(WithCondition(con), con));
             return this;
         }
 
-        _context.GenericCondition = con;
+        context.GenericCondition = con;
 
         config(new ConditionConfiguration<TState, TContext>(this, con));
         return this;
     }
 
     public StepConfiguration<TState, TContext> WithCondition(Action<ConditionConfiguration<TState, TContext>> config)
-        => WithCondition(null, config);
-
+        => WithCondition(guard: null, config);
 }

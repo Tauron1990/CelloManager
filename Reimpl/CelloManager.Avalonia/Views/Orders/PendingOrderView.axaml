@@ -10,7 +10,7 @@
     <controls:Card>
         <StackPanel>
             <StackPanel Orientation="Horizontal">
-                <TextBlock Name="OrderTime" Margin="5" Padding="5"/>
+                <TextBlock Name="OrderTime" Margin="5" Padding="5" />
                 <Button Name="PrintOrder" Margin="5" Padding="5">Drucken</Button>
             </StackPanel>
             <Expander Header="Spulen" Margin="5">
@@ -18,14 +18,14 @@
                     <ItemsControl.DataTemplates>
                         <DataTemplate DataType="data:OrderedSpoolList">
                             <StackPanel>
-                                <TextBlock Text="{Binding Category}"/>
-                                <ItemsControl ItemsSource="{Binding Spools}"/>
+                                <TextBlock Text="{Binding Category}" />
+                                <ItemsControl ItemsSource="{Binding Spools}" />
                             </StackPanel>
                         </DataTemplate>
                         <DataTemplate DataType="data:OrderedSpool">
                             <StackPanel Orientation="Horizontal" Margin="5">
-                                <TextBlock Margin="5" Text="{Binding Name, StringFormat='Name: {0}'}"/>
-                                <TextBlock Margin="5" Text="{Binding Amount, StringFormat='Menge: {0}'}"/>
+                                <TextBlock Margin="5" Text="{Binding Name, StringFormat='Name: {0}'}" />
+                                <TextBlock Margin="5" Text="{Binding Amount, StringFormat='Menge: {0}'}" />
                             </StackPanel>
                         </DataTemplate>
                     </ItemsControl.DataTemplates>

@@ -3,28 +3,28 @@ using System.Text;
 
 namespace CelloManager.Core.Printing.Workflow;
 
-public sealed class StepRev<TState, TContext>
+public sealed class StepRev<TState, TContext>(TState step)
 {
-    public StepRev(TState step)
-    {
-        Step = step;
-        Conditions = new List<ICondition<TContext>>();
-    }
+    public TState Step { get; } = step;
 
-    public TState Step { get; }
-
-    public IList<ICondition<TContext>> Conditions { get; }
+    public IList<ICondition<TContext>> Conditions { get; } = new List<ICondition<TContext>>();
 
     public ICondition<TContext>? GenericCondition { get; set; }
 
     public override string ToString()
     {
-        var stringBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new();
         stringBuilder.Append(Step);
 
-        foreach (var condition in Conditions) stringBuilder.AppendLine($"->{condition};");
+        foreach (ICondition<TContext> condition in Conditions)
+        {
+            stringBuilder.AppendLine($"->{condition};");
+        }
 
-        if(GenericCondition != null) stringBuilder.Append($"Generic->{GenericCondition};");
+        if (GenericCondition != null)
+        {
+            stringBuilder.Append($"Generic->{GenericCondition};");
+        }
 
         return stringBuilder.ToString();
     }

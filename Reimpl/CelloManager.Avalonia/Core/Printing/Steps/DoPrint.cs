@@ -10,21 +10,21 @@ public class DoPrint : PrinterStep
 {
     public override async ValueTask<StepId> OnExecute(PrinterContext context)
     {
-        if(context.DocumentType is null)
+        if (context.DocumentType is null)
         {
             ErrorMessage = "No Document Type Selected";
             return StepId.Fail;
         }
 
-        using var document = GenerateDocument(
+        using IInternalDocument document = GenerateDocument(
             context.DocumentType.Value,
             GetOrThrow(context, static c => c.Document));
 
         await document.Execute(context.Dispatcher, context.End ?? (static () => { })).ConfigureAwait(false);
-        
+
         return StepId.None;
     }
-    
+
     private static IInternalDocument GenerateDocument(DocumentType documentType, IDocument pages)
     {
         return (IInternalDocument)

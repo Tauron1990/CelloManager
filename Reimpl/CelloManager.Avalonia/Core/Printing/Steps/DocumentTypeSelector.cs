@@ -8,17 +8,16 @@ public sealed class DocumentTypeSelector : PrinterStep
 {
     public override async ValueTask<StepId> OnExecute(PrinterContext context)
     {
-        var type = await context.Dispatcher
-            .InvokeAsync(
-                () =>
-                {
-                    var window = new SelectDocumentTypeWindow();
-                    return window.ShowDialog<DocumentType?>(App.MainWindow);
-                }).ConfigureAwait(false);
+        DocumentType? type = await context.Dispatcher
+                                          .InvokeAsync(
+                                               () =>
+                                               {
+                                                   SelectDocumentTypeWindow window = new();
+                                                   return window.ShowDialog<DocumentType?>(App.MainWindow);
+                                               }).ConfigureAwait(false);
 
         context.DocumentType = type;
-        
-        return type is null ? StepId.Finish : StepId.None;
 
+        return type is null ? StepId.Finish : StepId.None;
     }
 }

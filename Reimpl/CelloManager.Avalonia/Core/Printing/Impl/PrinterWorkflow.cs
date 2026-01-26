@@ -26,7 +26,7 @@ public class PrinterWorkflow : Producer<PrinterWorkflow, PrinterStep, PrinterCon
             RenderSteps.DoPrint,
             new DoPrint(),
             c => c.WithCondition(cc => cc.GoesTo(RenderSteps.CleanUp)));
-        
+
         SetStep(
             RenderSteps.CleanUp,
             new CleanUpStep(),

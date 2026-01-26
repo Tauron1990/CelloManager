@@ -10,11 +10,11 @@ public partial class PendingOrderPrintView : UserControl
     {
         InitializeComponent();
     }
-    
+
     public void Init(PendingOrder order)
     {
         Id.Text = $"Bestellung: {order.Id}";
-        OrderTime.Text =  order.Time.ToString("f", CultureInfo.CurrentUICulture);
+        OrderTime.Text = order.Time.ToString("f", CultureInfo.CurrentUICulture);
         SpoolList.ItemsSource = order.Spools;
     }
 }

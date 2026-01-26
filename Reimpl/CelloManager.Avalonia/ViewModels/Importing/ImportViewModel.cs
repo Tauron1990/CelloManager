@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -10,22 +11,11 @@ namespace CelloManager.ViewModels.Importing;
 
 public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposable
 {
-    private readonly SpoolManager _manager;
-    
     private readonly ObservableAsPropertyHelper<bool> _canClose;
-    private readonly ObservableAsPropertyHelper<bool> _isRunning;
     private readonly ObservableAsPropertyHelper<string?> _error;
+    private readonly ObservableAsPropertyHelper<bool> _isRunning;
+    private readonly SpoolManager _manager;
 
-    public string Title => "Importieren";
-
-    public bool CanClose => _canClose.Value;
-
-    public bool IsRunning => _isRunning.Value;
-
-    public string? Error => _error.Value;
-    
-    public ReactiveCommand<string?, Exception?> Import { get; }
-    
     public ImportViewModel(SpoolManager manager)
     {
         _manager = manager;
@@ -36,37 +26,11 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
         _isRunning = Import.IsExecuting.ToProperty(this, m => m.IsRunning, scheduler: RxApp.MainThreadScheduler);
     }
 
-    private IObservable<Exception?> ExecuteImport(string? path)
-        => Observable.Return(path)
-                     .SelectMany<string?, IStorageFile?>(
-                          async p =>
-                          {
-                              if (!string.IsNullOrWhiteSpace(p))
-                              {
-                                  var provided = await App.StorageProvider
-                                                          .TryGetFileFromPathAsync(p)
-                                                          .ConfigureAwait(false);
-                                  if(provided is not null)
-                                    return provided;
-                              }
+    public bool IsRunning => _isRunning.Value;
 
-                              var folder = await App.StorageProvider
-                                                    .TryGetFolderFromPathAsync(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
-                                                    .ConfigureAwait(false);
+    public string? Error => _error.Value;
 
-                              var list = await App.StorageProvider
-                                                  .OpenFilePickerAsync(new FilePickerOpenOptions { SuggestedStartLocation = folder })
-                                                  .ConfigureAwait(false);
-
-                              #pragma warning disable CA1826
-                              return list.FirstOrDefault();
-                              #pragma warning restore CA1826
-                          })
-                     .Where(sel => sel is not null)
-                     .ObserveOn(Scheduler.Default)
-                     .SelectMany(s => s!.Name.EndsWith(".json", StringComparison.Ordinal) 
-                                     ? _manager.ImportFromJson(s) 
-                                     : _manager.ImportFromLegacy(s));
+    public ReactiveCommand<string?, Exception?> Import { get; }
 
     public void Dispose()
     {
@@ -75,4 +39,42 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
         _canClose.Dispose();
         Import.Dispose();
     }
+
+    public string Title => "Importieren";
+
+    public bool CanClose => _canClose.Value;
+
+    private IObservable<Exception?> ExecuteImport(string? path)
+        => Observable.Return(path)
+                     .SelectMany<string?, IStorageFile?>(
+                          async p =>
+                          {
+                              if (!string.IsNullOrWhiteSpace(p))
+                              {
+                                  IStorageFile? provided = await App.StorageProvider
+                                                                    .TryGetFileFromPathAsync(p)
+                                                                    .ConfigureAwait(false);
+                                  if (provided is not null)
+                                  {
+                                      return provided;
+                                  }
+                              }
+
+                              IStorageFolder? folder = await App.StorageProvider
+                                                                .TryGetFolderFromPathAsync(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
+                                                                .ConfigureAwait(false);
+
+                              IReadOnlyList<IStorageFile> list = await App.StorageProvider
+                                                                          .OpenFilePickerAsync(new FilePickerOpenOptions { SuggestedStartLocation = folder })
+                                                                          .ConfigureAwait(false);
+
+                              #pragma warning disable CA1826
+                              return list.FirstOrDefault();
+                              #pragma warning restore CA1826
+                          })
+                     .Where(sel => sel is not null)
+                     .ObserveOn(Scheduler.Default)
+                     .SelectMany(s => s!.Name.EndsWith(".json", StringComparison.Ordinal)
+                                     ? _manager.ImportFromJson(s)
+                                     : _manager.ImportFromLegacy(s));
 }

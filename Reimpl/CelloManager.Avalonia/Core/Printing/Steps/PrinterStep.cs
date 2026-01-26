@@ -11,21 +11,20 @@ public abstract class PrinterStep : IStep<PrinterContext>
 {
     public string ErrorMessage { get; protected set; } = string.Empty;
 
-    protected static TType GetOrThrow<TType>(PrinterContext context, Func<PrinterContext, TType?> accessor, 
-        [CallerArgumentExpression(nameof(accessor))] string? expession = null)
-    {
-        var result = accessor(context);
-        if(result is null)
-            throw new InvalidOperationException($"Element from \"{expession}\" is null");
-
-        return result;
-    }
-    
-    public virtual ValueTask<StepId> OnExecute(PrinterContext context) 
+    public virtual ValueTask<StepId> OnExecute(PrinterContext context)
         => ValueTask.FromResult(StepId.Fail);
 
-    public virtual ValueTask<StepId> NextElement(PrinterContext context) 
+    public virtual ValueTask<StepId> NextElement(PrinterContext context)
         => ValueTask.FromResult(StepId.Fail);
 
     public virtual ValueTask OnExecuteFinish(PrinterContext context) => ValueTask.CompletedTask;
+
+    protected static TType GetOrThrow<TType>(
+        PrinterContext context, Func<PrinterContext, TType?> accessor,
+        [CallerArgumentExpression(nameof(accessor))]
+        string? expession = null)
+    {
+        TType? result = accessor(context);
+        return result ?? throw new InvalidOperationException($"Element from \"{expession}\" is null");
+    }
 }

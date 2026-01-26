@@ -7,14 +7,6 @@ namespace CelloManager.ViewModels.Editing;
 
 public class ModifySpoolEditorViewModel : SpoolEditorViewModelBase
 {
-    public static ViewModelBase Create(ReadySpoolModel model, SpoolManager manager)
-        => new ModifySpoolEditorViewModel(model, manager);
-
-
-    public ReactiveCommand<Unit, Unit> Save { get; }
-
-    public ReactiveCommand<Unit, Unit> Delete { get; }
-
     private ModifySpoolEditorViewModel(ReadySpoolModel model, SpoolManager manager)
         : base(manager)
     {
@@ -22,17 +14,25 @@ public class ModifySpoolEditorViewModel : SpoolEditorViewModelBase
         Category = model.Category;
         Amount = model.Amount;
         NeedAmount = model.NeedAmount;
-        
+
         Save = ReactiveCommand.Create(
             () => manager.UpdateSpool(model, Name, Category, Amount, NeedAmount),
             manager.ValidateModifyName(
-                    this.WhenAnyValue(m => m.Name, m => m.Category)
-                    .Select(p => new OldValidateNameRequest(model, p.Item1, p.Item2)))
-                .ObserveOn(RxApp.MainThreadScheduler));
-        
+                        this.WhenAnyValue(m => m.Name, m => m.Category)
+                            .Select(p => new OldValidateNameRequest(model, p.Item1, p.Item2)))
+                   .ObserveOn(RxApp.MainThreadScheduler));
+
         Delete = ReactiveCommand.Create(
             () => manager.Delete(model),
             manager.CanDelete(model)
-                .ObserveOn(RxApp.MainThreadScheduler));
+                   .ObserveOn(RxApp.MainThreadScheduler));
     }
+
+
+    public ReactiveCommand<Unit, Unit> Save { get; }
+
+    public ReactiveCommand<Unit, Unit> Delete { get; }
+
+    public static ViewModelBase Create(ReadySpoolModel model, SpoolManager manager)
+        => new ModifySpoolEditorViewModel(model, manager);
 }

@@ -11,8 +11,8 @@ public sealed class ErrorDispatcher : IDisposable
 
     public IObservable<Exception> Errors => _errors.ObserveOn(Scheduler.Default).AsObservable();
 
+    public void Dispose() => _errors.Dispose();
+
     public void Send(Exception error)
         => _errors.OnNext(error);
-
-    public void Dispose() => _errors.Dispose();
 }

@@ -11,10 +11,10 @@
         <TreeView Name="SpoolTreeView" Grid.Row="1" Grid.Column="0" Margin="2" MinWidth="50">
             <TreeView.DataTemplates>
                 <TreeDataTemplate DataType="editing:EditorSpoolGroup" ItemsSource="{Binding Spools}">
-                    <TextBlock Text="{Binding CategoryName}"/>
+                    <TextBlock Text="{Binding CategoryName}" />
                 </TreeDataTemplate>
                 <DataTemplate DataType="logic:ReadySpoolModel">
-                    <TextBlock Text="{Binding Name}"/>
+                    <TextBlock Text="{Binding Name}" />
                 </DataTemplate>
             </TreeView.DataTemplates>
         </TreeView>

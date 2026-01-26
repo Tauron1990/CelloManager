@@ -1,30 +1,25 @@
 ﻿using System;
 using System.Windows.Input;
+using JetBrains.Annotations;
 
 namespace CelloManager.Core.DebugHelper;
 
-public class DebugCommand : ICommand
+[PublicAPI]
+public class DebugCommand(ICommand command) : ICommand
 {
-    public static ICommand Wrap(ICommand command)
-        => new DebugCommand(command);
-    
-    private readonly ICommand _command;
-
-    public DebugCommand(ICommand command) => _command = command;
-
-    public bool CanExecute(object? parameter)
-    {
-        return _command.CanExecute(parameter);
-    }
+    public bool CanExecute(object? parameter) => command.CanExecute(parameter);
 
     public void Execute(object? parameter)
     {
-        _command.Execute(parameter);
+        command.Execute(parameter);
     }
 
     public event EventHandler? CanExecuteChanged
     {
-        add => _command.CanExecuteChanged += value;
-        remove => _command.CanExecuteChanged -= value;
+        add => command.CanExecuteChanged += value;
+        remove => command.CanExecuteChanged -= value;
     }
+
+    public static ICommand Wrap(ICommand command)
+        => new DebugCommand(command);
 }

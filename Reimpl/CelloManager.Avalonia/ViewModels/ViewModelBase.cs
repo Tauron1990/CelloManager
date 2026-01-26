@@ -1,10 +1,5 @@
-﻿using System.Reactive.Linq;
-using ReactiveUI;
+﻿using ReactiveUI;
 
-namespace CelloManager.ViewModels
-{
-    public class ViewModelBase : ReactiveObject
-    {
+namespace CelloManager.ViewModels;
 
-    }
-}
+public class ViewModelBase : ReactiveObject;

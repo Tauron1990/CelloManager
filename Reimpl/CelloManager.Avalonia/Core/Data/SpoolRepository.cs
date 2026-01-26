@@ -17,57 +17,73 @@ using SQLitePCL;
 
 namespace CelloManager.Core.Data;
 
-public sealed partial class SpoolRepository : IDisposable
+public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, ILogger<SpoolRepository> logger) : IDisposable
 {
-    private readonly SourceCache<SpoolData, string> _spools = new(sd => sd.Id);
     private readonly SourceCache<PendingOrder, string> _orders = new(po => po.Id);
     private readonly SourceCache<PriceDefinition, string> _priceses = new(pd => pd.Id);
-
-    private readonly ErrorDispatcher _errorDispatcher;
-    private readonly ILogger<SpoolRepository> _logger;
+    private readonly SourceCache<SpoolData, string> _spools = new(sd => sd.Id);
     private readonly CompositeDisposable _subscriptions = new();
 
     public IObservable<int> SpoolCount => _spools.CountChanged;
 
-    public SpoolRepository(ErrorDispatcher errorDispatcher, ILogger<SpoolRepository> logger)
+    public IEnumerable<SpoolData> SpoolItems => _spools.Items;
+
+    public IObservable<IChangeSet<SpoolData, string>> Spools => _spools.Connect().ObserveOn(Scheduler.Default);
+
+    public IObservable<IChangeSet<PendingOrder, string>> Orders => _orders.Connect().ObserveOn(Scheduler.Default);
+
+    public IObservable<IChangeSet<PriceDefinition, string>> Prices => _priceses.Connect().ObserveOn(Scheduler.Default);
+
+    public void Dispose()
     {
-        _errorDispatcher = errorDispatcher;
-        _logger = logger;
+        _subscriptions.Dispose();
+        _spools.Dispose();
+        _orders.Dispose();
+        _priceses.Dispose();
     }
 
     [LoggerMessage(Message = "Initializing Spool Repository", Level = LogLevel.Information)]
     private partial void InitRepository();
-    
+
     public async Task Init()
     {
         Batteries_V2.Init();
-        var db = DataOperationManager.Manager;
-        
+        DataOperationManager db = DataOperationManager.Manager;
+
         InitRepository();
 
-        var spools = await db.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
-        var orders = await db.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
-        var prices = await db.Query(
-            context => context.Prices, 
-            sel => sel.Select(d => d.FromDatabase()))
-                             .ConfigureAwait(false);
-        
+        List<SpoolData> spools = await db.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
+        List<PendingOrder> orders = await db.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
+        List<PriceDefinition> prices = await db.Query(
+                                                    context => context.Prices,
+                                                    sel => sel.Select(d => d.FromDatabase()))
+                                               .ConfigureAwait(false);
+
         _spools.Edit(e =>
-        {
-            foreach (var spoolData in spools) e.AddOrUpdate(spoolData);
-        });
-        
+                     {
+                         foreach (SpoolData spoolData in spools)
+                         {
+                             e.AddOrUpdate(spoolData);
+                         }
+                     });
+
         _orders.Edit(e =>
-        {
-            foreach (var order in orders) e.AddOrUpdate(order);
-        });
+                     {
+                         foreach (PendingOrder order in orders)
+                         {
+                             e.AddOrUpdate(order);
+                         }
+                     });
 
         _priceses.Edit(
             e =>
             {
-                foreach (var price in prices) e.AddOrUpdate(price);
+                foreach (PriceDefinition price in prices)
+                {
+                    e.AddOrUpdate(price);
+                }
             });
-        
+
         CreateSavePipeLine(_spools, sdb => sdb.Spools, data => data.ToDatabase());
         CreateSavePipeLine(_orders, sdb => sdb.Orders, order => order.ToDatabase());
         CreateSavePipeLine(_priceses, sdb => sdb.Prices, definition => definition.ToDatabase());
@@ -77,41 +93,37 @@ public sealed partial class SpoolRepository : IDisposable
         SourceCache<TData, string> cache,
         Func<SpoolDataBase, DbSet<TDatabase>> setSelector,
         Func<TData, TDatabase> converter)
-        where TData : IHasId 
+        where TData : IHasId
         where TDatabase : class
     {
-        var data = cache.Connect();
-        if(cache.Count != 0)
+        IObservable<IChangeSet<TData, string>> data = cache.Connect();
+        if (cache.Count != 0)
+        {
             data = data.SkipInitial();
+        }
 
-        data
-            .OnItemRemoved(r => EnqueueWorkItme(set => set.Remove(converter(r))))
-            .OnItemAdded(a => EnqueueWorkItme(set => set.Add(converter(a))))
-            .OnItemUpdated((u, _) => EnqueueWorkItme(set => set.Update(converter(u))))
-            .Subscribe().DisposeWith(_subscriptions);
+        _subscriptions.Add(
+            data
+           .OnItemRemoved(r => EnqueueWorkItme(set => set.Remove(converter(r))))
+           .OnItemAdded(a => EnqueueWorkItme(set => set.Add(converter(a))))
+           .OnItemUpdated((u, _) => EnqueueWorkItme(set => set.Update(converter(u))))
+           .Subscribe()
+            );
         return;
 
         void EnqueueWorkItme(Action<DbSet<TDatabase>> op)
         {
-            var item = new DatabaseWorkitem(
+            DatabaseWorkitem item = new(
                 db =>
                 {
-                    var set = setSelector(db);
+                    DbSet<TDatabase> set = setSelector(db);
                     op(set);
                     return ValueTask.CompletedTask;
                 },
-                _errorDispatcher.Send);
+                errorDispatcher.Send);
             DataOperationManager.Manager.RunItem(item);
         }
     }
-
-    public IEnumerable<SpoolData> SpoolItems => _spools.Items;
-
-    public IObservable<IChangeSet<SpoolData, string>> Spools => _spools.Connect().ObserveOn(Scheduler.Default);
-
-    public IObservable<IChangeSet<PendingOrder, string>> Orders => _orders.Connect().ObserveOn(Scheduler.Default);
-
-    public IObservable<IChangeSet<PriceDefinition, string>> Prices => _priceses.Connect().ObserveOn(Scheduler.Default);
 
     public Optional<PriceDefinition> TryFindPrice(string name)
         => _priceses.Lookup(PriceDefinition.CreateId(name));
@@ -127,25 +139,19 @@ public sealed partial class SpoolRepository : IDisposable
 
     public void Edit(Action<ISourceUpdater<SpoolData, string>> editor) => _spools.Edit(editor);
 
-    public bool ValidateName([NotNullWhen(true)]string? name, [NotNullWhen(true)]string? category)
+    public bool ValidateName([NotNullWhen(true)] string? name, [NotNullWhen(true)] string? category)
     {
         if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(category))
+        {
             return false;
-        
-        var id = SpoolData.CreateId(name, category);
+        }
+
+        string id = SpoolData.CreateId(name, category);
         return !_spools.Keys.Contains(id, StringComparer.Ordinal);
     }
 
     public void AddOrder(PendingOrder order)
         => _orders.AddOrUpdate(order);
-    
-    public void Dispose()
-    {
-        _subscriptions.Dispose();
-        _spools.Dispose();
-        _orders.Dispose();
-        _priceses.Dispose();
-    }
 
     public void Delete(SpoolData data) => _spools.Remove(data);
 
@@ -153,19 +159,26 @@ public sealed partial class SpoolRepository : IDisposable
 
     public void UpdatePrice(PriceDefinition? definition)
     {
-       if(definition is null) return;
+        if (definition is null)
+        {
+            return;
+        }
 
-       _priceses.Edit(
-           e =>
-           {
-               var there = e.Items.FirstOrDefault(pd => string.Equals(pd.Id, definition.Id, StringComparison.Ordinal));
-               if(there is not null)
-                   // ReSharper disable CompareOfFloatsByEqualityOperator
-                   if(there.Price == definition.Price && there.Lenght == definition.Lenght)
-                       // ReSharper restore CompareOfFloatsByEqualityOperator
-                       return;
-               
-               e.AddOrUpdate(definition);
-           });
+        _priceses.Edit(
+            e =>
+            {
+                PriceDefinition? there = e.Items.FirstOrDefault(pd => string.Equals(pd.Id, definition.Id, StringComparison.Ordinal));
+                if (there is not null)
+                    // ReSharper disable CompareOfFloatsByEqualityOperator
+                {
+                    if (there.Price == definition.Price && there.Lenght == definition.Lenght)
+                        // ReSharper restore CompareOfFloatsByEqualityOperator
+                    {
+                        return;
+                    }
+                }
+
+                e.AddOrUpdate(definition);
+            });
     }
 }

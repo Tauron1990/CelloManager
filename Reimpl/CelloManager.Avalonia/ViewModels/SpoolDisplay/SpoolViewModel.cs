@@ -11,12 +11,22 @@ namespace CelloManager.ViewModels.SpoolDisplay;
 
 public sealed class SpoolViewModel : ViewModelBase, IDisposable, IUpdateAware<ReadySpoolModel>
 {
-    private ReadySpoolModel _model;
     private string _largeName;
+    private ReadySpoolModel _model;
     private string _smallName;
-    private int _amount;
-    private int _needAmount;
-    private bool _needAmountSet;
+
+    public SpoolViewModel(ReadySpoolModel model)
+    {
+        UpdateModel(model);
+
+        Increment = ReactiveCommand.CreateFromObservable(
+            () => Model.RunIncrement(),
+            Observable.Return(model.Amount != int.MaxValue));
+
+        Decrement = ReactiveCommand.CreateFromObservable(
+            () => Model.RunDecrement(),
+            Observable.Return(model.Amount > 0));
+    }
 
     public ReadySpoolModel Model
     {
@@ -38,38 +48,25 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable, IUpdateAware<Re
 
     public int Amount
     {
-        get => _amount;
-        private set => this.RaiseAndSetIfChanged(ref _amount, value);
+        get;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public int NeedAmount
     {
-        get => _needAmount;
-        private set => this.RaiseAndSetIfChanged(ref _needAmount, value);
+        get;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public bool NeedAmountSet
     {
-        get => _needAmountSet;
-        private set => this.RaiseAndSetIfChanged(ref _needAmountSet, value);
+        get;
+        private set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public ReactiveCommand<Unit, Unit> Increment { get; }
-    
+
     public ReactiveCommand<Unit, Unit> Decrement { get; }
-
-    public SpoolViewModel(ReadySpoolModel model)
-    {
-        UpdateModel(model);
-
-        Increment = ReactiveCommand.CreateFromObservable(
-            () => Model.RunIncrement(),
-            Observable.Return(model.Amount != int.MaxValue));
-
-        Decrement = ReactiveCommand.CreateFromObservable(
-            () => Model.RunDecrement(),
-            Observable.Return(model.Amount > 0));
-    }
 
     public void Dispose()
     {
@@ -82,14 +79,11 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable, IUpdateAware<Re
     [MemberNotNull(nameof(LargeName))]
     [MemberNotNull(nameof(SmallName))]
     [MemberNotNull(nameof(Model))]
-    
     [MemberNotNull(nameof(_largeName))]
     [MemberNotNull(nameof(_smallName))]
     [MemberNotNull(nameof(_model))]
-    
     private void UpdateModel(ReadySpoolModel model)
     {
-
         Model = model;
 
         Model = model;
@@ -97,10 +91,10 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable, IUpdateAware<Re
         NeedAmount = model.NeedAmount;
         NeedAmountSet = model.NeedAmountSet;
 
-        var str = model.Name.AsSpan();
+        ReadOnlySpan<char> str = model.Name.AsSpan();
         int largeCount = model.Name.Count(char.IsDigit) + model.Name.Count(c => c == ',');
 
-        if(largeCount == 0)
+        if (largeCount == 0)
         {
             LargeName = model.Name;
             SmallName = string.Empty;

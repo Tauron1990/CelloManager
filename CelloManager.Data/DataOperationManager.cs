@@ -7,14 +7,30 @@ namespace CelloManager.Data;
 public sealed class DataOperationManager
 {
     public static readonly DataOperationManager Manager = new();
-
-    private readonly BlockingCollection<DatabaseWorkitem> _workitems = new();
     private readonly Task _workerThread;
 
-    private bool _needMigration = true;
+    private readonly BlockingCollection<DatabaseWorkitem> _workitems = new();
     private SpoolDataBase? _dataBase;
-    
+
+    private bool _needMigration = true;
+
     private DataOperationManager() => _workerThread = Task.Run(ProcessItems);
+
+    public static string DatabaseDic
+    {
+        get
+        {
+            string databaseDic = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                "Tauron", "CelloManager");
+            if (!Directory.Exists(databaseDic))
+            {
+                Directory.CreateDirectory(databaseDic);
+            }
+
+            return databaseDic;
+        }
+    }
 
     public async ValueTask Shutdown()
     {
@@ -24,7 +40,11 @@ public sealed class DataOperationManager
 
     public void RunItem(DatabaseWorkitem item)
     {
-        if(_workitems.IsAddingCompleted) return;
+        if (_workitems.IsAddingCompleted)
+        {
+            return;
+        }
+
         _workitems.Add(item);
     }
 
@@ -35,26 +55,26 @@ public sealed class DataOperationManager
     {
         var source = new TaskCompletionSource<List<TSelector>>(TaskCreationOptions.RunContinuationsAsynchronously);
 
-        var workItem = new DatabaseWorkitem(
+        DatabaseWorkitem workItem = new(
             async db =>
             {
-                var set = setSelector(db);
-                var selector = converter(set);
-                var result = await selector.ToListAsync();
+                DbSet<TData> set = setSelector(db);
+                IQueryable<TSelector> selector = converter(set);
+                List<TSelector> result = await selector.ToListAsync();
                 source.SetResult(result);
             },
             ex => source.SetException(ex));
-        
+
         RunItem(workItem);
-        
+
         return source.Task;
     }
-    
+
     private async Task ProcessItems()
     {
         await Task.Yield();
 
-        foreach (var workitem in _workitems.GetConsumingEnumerable())
+        foreach (DatabaseWorkitem workitem in _workitems.GetConsumingEnumerable())
         {
             try
             {
@@ -68,36 +88,25 @@ public sealed class DataOperationManager
             {
                 workitem.ErrorReporter(e);
             }
-            
-            if (_dataBase is null || _workitems.Count != 0) continue;
-                
+
+            if (_dataBase is null || _workitems.Count != 0)
+            {
+                continue;
+            }
+
             await _dataBase.DisposeAsync().ConfigureAwait(false);
             _dataBase = null;
         }
     }
 
-    public static string DatabaseDic
-    {
-        get
-        {
-            var databaseDic = Path.Combine(
-                Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "Tauron", "CelloManager");
-            if (!Directory.Exists(databaseDic))
-                Directory.CreateDirectory(databaseDic);
-
-            return databaseDic;
-        }
-    }
-    
     private async ValueTask<SpoolDataBase> CreateDatabase()
     {
-        var dataBase = new SpoolDataBase(
+        SpoolDataBase dataBase = new(
             new DbContextOptionsBuilder<SpoolDataBase>()
                .UseSqlite(new SqliteConnectionStringBuilder
                           {
                               Pooling = true,
-                              DataSource = Path.Combine(DatabaseDic, "spools.db"),
+                              DataSource = Path.Combine(DatabaseDic, "spools.db")
                           }.ConnectionString)
                .Options);
 
@@ -106,6 +115,7 @@ public sealed class DataOperationManager
             await dataBase.Database.MigrateAsync();
             _needMigration = false;
         }
+
         await dataBase.Database.ExecuteSqlAsync($"VACUUM;");
 
         return dataBase;

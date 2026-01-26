@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using QuestPDF.Fluent;
@@ -14,17 +10,16 @@ public sealed class PrinterDocument : IInternalDocument
 {
     private readonly IDocument _printDocument;
 
+    private PrinterDocument(IDocument printDocument) => _printDocument = printDocument;
+
 
     public DocumentType Type => DocumentType.Print;
 
-    private PrinterDocument(IDocument printDocument)
+    public void Dispose()
     {
-        _printDocument = printDocument;
     }
 
-    public void Dispose() {}
-
-    public static IPrintDocument GenerateDocument(IDocument pages) 
+    public static IPrintDocument GenerateDocument(IDocument pages)
         => new PrinterDocument(pages);
 
     public async ValueTask Execute(Dispatcher dispatcher, Action end)
@@ -32,9 +27,13 @@ public sealed class PrinterDocument : IInternalDocument
         try
         {
             if (Bootstrapper.PrintProvider is not null)
+            {
                 await Bootstrapper.PrintProvider.RunPinting(_printDocument).ConfigureAwait(false);
+            }
             else
+            {
                 await NoProvider().ConfigureAwait(false);
+            }
         }
         finally
         {

@@ -6,7 +6,7 @@ namespace CelloManager;
 
 public sealed class AppTheme : MaterialThemeBase
 {
-    public AppTheme(IServiceProvider? serviceProvider) 
+    public AppTheme(IServiceProvider? serviceProvider)
         : base(serviceProvider)
     {
         AppManager.Instance

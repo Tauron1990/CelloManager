@@ -18,209 +18,218 @@ using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
 using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 using ReactiveUI;
 using ThingLing.Controls;
 
-namespace CelloManager.ViewModels
+namespace CelloManager.ViewModels;
+
+public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
 {
-    public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
+    private readonly ObservableAsPropertyHelper<string> _errorFull;
+    private readonly ErrorDispatcher _errors;
+    private readonly ObservableAsPropertyHelper<string> _errorSimple;
+    private readonly IServiceScope _modelScope = App.ServiceProvider.CreateScope();
+
+    private readonly ObservableAsPropertyHelper<string> _priceValue;
+
+    private readonly SpoolManager _spoolManager;
+    private readonly CompositeDisposable _subscriptions = new();
+    private readonly SourceList<ViewModelBase> _tabs = new();
+
+    #pragma warning disable MA0051
+    public MainWindowViewModel(ErrorDispatcher errors)
+        #pragma warning restore MA0051
     {
-        private readonly AppServiceProvider.Scope _modelScope = App.ServiceProvider.CreateScope();
-        private readonly SourceList<ViewModelBase> _tabs = new();
-        private readonly CompositeDisposable _subscriptions = new();
-        private readonly ObservableAsPropertyHelper<string> _errorSimple;
-        private readonly ObservableAsPropertyHelper<string> _errorFull;
-        
-        private readonly SpoolManager _spoolManager;
-        private readonly ErrorDispatcher _errors;
+        _errors = errors;
+        SpoolPriceManager priceManager = _modelScope.ServiceProvider.GetRequiredService<SpoolPriceManager>();
+        _spoolManager = _modelScope.ServiceProvider.GetRequiredService<SpoolManager>();
+        Dispatcher dispatcher = Dispatcher.UIThread;
 
-        private int _currentTab;
+        _priceValue = priceManager.CompledPrice
+                                  .StartWith(0)
+                                  .Select(p => p > 0 ? $"{p:N} Euro" : "")
+                                  .ObserveOn(RxApp.MainThreadScheduler)
+                                  .ToProperty(this, m => m.PriceValue);
 
-        public string ErrorSimple => _errorSimple.Value;
+        IObservable<IReadOnlyCollection<ViewModelBase>> currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
+        OrderManager orderManager = _modelScope.ServiceProvider.GetRequiredService<OrderManager>();
 
-        public string ErrorFull => _errorFull.Value;
+        Export = ReactiveCommand.CreateFromTask(ExportToJson, _spoolManager.Count.Select(i => i != 0).ObserveOn(RxApp.MainThreadScheduler));
 
-        public int CurrentTab
-        {
-            get => _currentTab;
-            [UsedImplicitly]
-            set => this.RaiseAndSetIfChanged(ref _currentTab, value);
-        }
-
-        private readonly ObservableAsPropertyHelper<string> _priceValue;
-        [UsedImplicitly]
-        public string PriceValue => _priceValue.Value;
-        
-        public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
-
-        public ReactiveCommand<Unit, Unit> Edit { get; }
-        
-        public ReactiveCommand<Unit, Unit> Import { get; }
-        
-        public ReactiveCommand<Unit, Unit> Order { get; }
-        
-        public ReactiveCommand<Unit, Unit> Orders { get; }
-
-        public ReactiveCommand<Unit, Unit> PrintAll { get; }
-
-        public ReactiveCommand<Unit, Unit> Export { get; }
-
-        public void DisplayTab<TTab>()
-            where TTab : ViewModelBase
-        {
-            int index = -1;
-
-            for (int i = 0; i < _tabs.Count; i++)
+        PrintAll = ReactiveCommand.CreateFromTask(
+            async () =>
             {
-                if(_tabs.Items.ElementAt(i) is not TTab)
-                    continue;
-
-                index = i;
-                break;
-            }
-
-            if(index == -1)
-                _tabs.Add(_modelScope.GetService<TTab>());
-            else
-                CurrentTab = index;
-        }
-        
-        #pragma warning disable MA0051
-        public MainWindowViewModel(ErrorDispatcher errors)
-            #pragma warning restore MA0051
-        {
-            _errors = errors;
-            var priceManager = _modelScope.GetService<SpoolPriceManager>();
-            _spoolManager = _modelScope.GetService<SpoolManager>();
-            var dispatcher = Dispatcher.UIThread;
-
-            _priceValue = priceManager.CompledPrice
-                .StartWith(0)
-                .Select(p => p > 0 ? $"{p:N} Euro" : "")
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .ToProperty(this, m => m.PriceValue);
-            
-            var currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
-            var orderManager = _modelScope.GetService<OrderManager>();
-            var builder = _modelScope.GetService<PrintBuilder>();
-
-            Export = ReactiveCommand.CreateFromTask(ExportToJson, _spoolManager.Count.Select(i => i != 0).ObserveOn(RxApp.MainThreadScheduler));
-            
-            PrintAll = ReactiveCommand.CreateFromTask(
-                async () =>
+                try
                 {
-                    try
-                    {
-                        await builder.PrintPendingOrder(orderManager.GetAll(), dispatcher, App.ServiceProvider, null).ConfigureAwait(false);
-                    }
-                    catch (Exception e)
-                    {
-                        errors.Send(e);
-                    }
-                });
-            
-            Edit = ReactiveCommand.Create
-                (
-                    () => _tabs.Add(_modelScope.GetService<EditTabViewModel>()),
-                    ContainsViewModel<EditTabViewModel>(currentTabs)
-                )
-                .DisposeWith(_subscriptions);
-            
-            Orders = ReactiveCommand.Create(
-                    DisplayTab<OrderDisplayViewModel>,
-                    ContainsViewModel<OrderDisplayViewModel>(currentTabs))
-                .DisposeWith(_subscriptions);
-            
-            Import = ReactiveCommand.Create(
-                () => _tabs.Add(_modelScope.GetService<ImportViewModel>()),
-                ContainsViewModel<ImportViewModel>(currentTabs)).DisposeWith(_subscriptions);
-            
-            Order = ReactiveCommand.CreateFromObservable(
-                    () => Observable.Return(orderManager.PlaceOrder())
-                        .Where(isPlaced => isPlaced)
-                        .SelectMany(_ => Orders.Execute()),
-                    orderManager.CanOrder.ObserveOn(RxApp.MainThreadScheduler))
-                .DisposeWith(_subscriptions);
+                    await PrintBuilder.PrintPendingOrder(orderManager.GetAll(), dispatcher, App.ServiceProvider, null).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    errors.Send(e);
+                }
+            });
 
-            _errorFull = errors.Errors
-                .Select(e => e.ToString())
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .ToProperty(this, m => m.ErrorFull)
-                .DisposeWith(_subscriptions);
+        Edit = ReactiveCommand.Create
+                               (
+                                   () => _tabs.Add(_modelScope.ServiceProvider.GetRequiredService<EditTabViewModel>()),
+                                   ContainsViewModel<EditTabViewModel>(currentTabs)
+                               )
+                              .DisposeWith(_subscriptions);
 
-            _errorSimple = errors.Errors
-                .Select(e => e.Message)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .ToProperty(this, m => m.ErrorSimple)
-                .DisposeWith(_subscriptions);
+        Orders = ReactiveCommand.Create(
+                                     DisplayTab<OrderDisplayViewModel>,
+                                     ContainsViewModel<OrderDisplayViewModel>(currentTabs))
+                                .DisposeWith(_subscriptions);
 
-            _tabs.Connect()
-                .Select(t => TabViewModel.Create(t, _tabs))
-                .DisposeMany()
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Bind(Tabs)
-                .Subscribe()
-                .DisposeWith(_subscriptions);
+        Import = ReactiveCommand.Create(
+            () => _tabs.Add(_modelScope.ServiceProvider.GetRequiredService<ImportViewModel>()),
+            ContainsViewModel<ImportViewModel>(currentTabs)).DisposeWith(_subscriptions);
 
-            _tabs.Add(_modelScope.GetService<SpoolDisplayViewModel>());
-            
-            _subscriptions.Add(errors.Errors.SelectMany(
-                ex => dispatcher.InvokeAsync(
-                    async () =>
-                    {
+        Order = ReactiveCommand.CreateFromObservable(
+                                    () => Observable.Return(orderManager.PlaceOrder())
+                                                    .Where(isPlaced => isPlaced)
+                                                    .SelectMany(_ => Orders.Execute()),
+                                    orderManager.CanOrder.ObserveOn(RxApp.MainThreadScheduler))
+                               .DisposeWith(_subscriptions);
 
-                        await MessageBox.ShowAsync(App.MainWindow, ex.Message, "Fehler", MessageBoxButton.Ok).ConfigureAwait(false);
-                        return Unit.Default;
-                    }))
-                .Subscribe());
+        _errorFull = errors.Errors
+                           .Select(e => e.ToString())
+                           .ObserveOn(RxApp.MainThreadScheduler)
+                           .ToProperty(this, m => m.ErrorFull)
+                           .DisposeWith(_subscriptions);
+
+        _errorSimple = errors.Errors
+                             .Select(e => e.Message)
+                             .ObserveOn(RxApp.MainThreadScheduler)
+                             .ToProperty(this, m => m.ErrorSimple)
+                             .DisposeWith(_subscriptions);
+
+        _tabs.Connect()
+             .Select(t => TabViewModel.Create(t, _tabs))
+             .DisposeMany()
+             .ObserveOn(RxApp.MainThreadScheduler)
+             .Bind(Tabs)
+             .Subscribe()
+             .DisposeWith(_subscriptions);
+
+        _tabs.Add(_modelScope.ServiceProvider.GetRequiredService<SpoolDisplayViewModel>());
+
+        _subscriptions.Add(errors.Errors.SelectMany(
+                                      ex => dispatcher.InvokeAsync(
+                                          async () =>
+                                          {
+                                              await MessageBox.ShowAsync(App.MainWindow, ex.Message, "Fehler", MessageBoxButton.Ok).ConfigureAwait(false);
+                                              return Unit.Default;
+                                          }))
+                                 .Subscribe());
+    }
+
+    public string ErrorSimple => _errorSimple.Value;
+
+    public string ErrorFull => _errorFull.Value;
+
+    public int CurrentTab
+    {
+        get;
+        [UsedImplicitly] set => this.RaiseAndSetIfChanged(ref field, value);
+    }
+
+    [UsedImplicitly] public string PriceValue => _priceValue.Value;
+
+    public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
+
+    public ReactiveCommand<Unit, Unit> Edit { get; }
+
+    public ReactiveCommand<Unit, Unit> Import { get; }
+
+    public ReactiveCommand<Unit, Unit> Order { get; }
+
+    public ReactiveCommand<Unit, Unit> Orders { get; }
+
+    public ReactiveCommand<Unit, Unit> PrintAll { get; }
+
+    public ReactiveCommand<Unit, Unit> Export { get; }
+
+    public ValueTask DisposeAsync()
+    {
+        _priceValue.Dispose();
+        _subscriptions.Dispose();
+        _tabs.Clear();
+        _tabs.Dispose();
+        GC.SuppressFinalize(this);
+        _modelScope.Dispose();
+
+        return ValueTask.CompletedTask;
+    }
+
+    public void DisplayTab<TTab>()
+        where TTab : ViewModelBase
+    {
+        int index = -1;
+
+        for (var i = 0; i < _tabs.Count; i++)
+        {
+            if (_tabs.Items.ElementAt(i) is not TTab)
+            {
+                continue;
+            }
+
+            index = i;
+            break;
         }
 
-        private async Task ExportToJson()
+        if (index == -1)
         {
-            try
-            {
-                var file = await App.StorageProvider
-                                    .SaveFilePickerAsync(
-                                         new FilePickerSaveOptions
-                                         {
-                                             Title = "Daten Exportieren",
-                                             SuggestedFileName = "Spulen.json",
-                                             DefaultExtension = "json",
-                                             FileTypeChoices = new[]
-                                                               {
-                                                                   new FilePickerFileType("Json Daten")
-                                                                   {
-                                                                       Patterns = new[] { "json" },
-                                                                   },
-                                                               },
-                                         })
-                                    .ConfigureAwait(false);
-                
-                if(file is null) return;
-
-                var error = await _spoolManager.ExportToJson(file).ConfigureAwait(false);
-                
-                if(error is null) return;
-                
-                _errors.Send(error);
-            }
-            catch (Exception e)
-            {
-                _errors.Send(e);
-            }
+            _tabs.Add(_modelScope.ServiceProvider.GetRequiredService<TTab>());
         }
-
-        private IObservable<bool> ContainsViewModel<TModel>(IObservable<IReadOnlyCollection<ViewModelBase>> query)
-            => query.Select(l => l.All(vm => vm.GetType() != typeof(TModel))).ObserveOn(RxApp.MainThreadScheduler);
-
-        public ValueTask DisposeAsync()
+        else
         {
-            _priceValue.Dispose();
-            _subscriptions.Dispose();
-            _tabs.Clear();
-            _tabs.Dispose();
-            GC.SuppressFinalize(this);
-            return _modelScope.DisposeAsync();
+            CurrentTab = index;
         }
     }
+
+    private async Task ExportToJson()
+    {
+        try
+        {
+            IStorageFile? file = await App.StorageProvider
+                                          .SaveFilePickerAsync(
+                                               new FilePickerSaveOptions
+                                               {
+                                                   Title = "Daten Exportieren",
+                                                   SuggestedFileName = "Spulen.json",
+                                                   DefaultExtension = "json",
+                                                   FileTypeChoices =
+                                                   [
+                                                       new FilePickerFileType("Json Daten")
+                                                                         {
+                                                                             Patterns = ["json"],
+                                                                         },
+                                                   ],
+                                               })
+                                          .ConfigureAwait(false);
+
+            if (file is null)
+            {
+                return;
+            }
+
+            Exception? error = await _spoolManager.ExportToJson(file).ConfigureAwait(false);
+
+            if (error is null)
+            {
+                return;
+            }
+
+            _errors.Send(error);
+        }
+        catch (Exception e)
+        {
+            _errors.Send(e);
+        }
+    }
+
+    private IObservable<bool> ContainsViewModel<TModel>(IObservable<IReadOnlyCollection<ViewModelBase>> query)
+        => query.Select(l => l.All(vm => vm.GetType() != typeof(TModel))).ObserveOn(RxApp.MainThreadScheduler);
 }

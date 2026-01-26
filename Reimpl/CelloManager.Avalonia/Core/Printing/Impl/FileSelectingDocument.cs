@@ -11,22 +11,13 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
 {
     private IDocument? _printView;
 
-    protected IDocument PrintView
-    {
-        get
-        {
-            if(_printView is null)
-                throw new InvalidOperationException("Print Document not Initialized");
+    protected IDocument PrintView => _printView ?? throw new InvalidOperationException("Print Document not Initialized");
 
-            return _printView;
-        }
-    }
-    
     public abstract DocumentType Type { get; }
 
     public static IPrintDocument GenerateDocument(IDocument view)
     {
-        var doc = new TSelf();
+        TSelf doc = new();
         doc.Init(view);
 
         return doc;
@@ -36,10 +27,13 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
     {
         try
         {
-            var saveOptions = await ConfigurateDialog().ConfigureAwait(false);
+            FilePickerSaveOptions saveOptions = await ConfigurateDialog().ConfigureAwait(false);
 
-            var result = await App.StorageProvider.SaveFilePickerAsync(saveOptions).ConfigureAwait(false);
-            if(result is null) return;
+            IStorageFile? result = await App.StorageProvider.SaveFilePickerAsync(saveOptions).ConfigureAwait(false);
+            if (result is null)
+            {
+                return;
+            }
 
             await RenderTo(dispatcher, result).ConfigureAwait(false);
         }
@@ -49,14 +43,14 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
         }
     }
 
-    protected async ValueTask<IStorageFolder?> GetFolder(string path) 
+    public void Dispose() => _printView = null;
+
+    protected async ValueTask<IStorageFolder?> GetFolder(string path)
         => await App.StorageProvider.TryGetFolderFromPathAsync(path).ConfigureAwait(false);
 
     protected abstract ValueTask RenderTo(Dispatcher dispatcher, IStorageFile file);
-    
+
     protected abstract ValueTask<FilePickerSaveOptions> ConfigurateDialog();
 
     protected virtual void Init(IDocument view) => _printView = view;
-
-    public void Dispose() => _printView = null;
 }

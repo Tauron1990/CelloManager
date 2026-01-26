@@ -9,12 +9,12 @@
     <ItemsControl Name="OrdersDisplay" HorizontalAlignment="Center">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <WrapPanel HorizontalAlignment="Center"/>
+                <WrapPanel HorizontalAlignment="Center" />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.DataTemplates>
             <DataTemplate DataType="viewModels:PendingOrderViewModel">
-                <orders:PendingOrderView Margin="1"/>
+                <orders:PendingOrderView Margin="1" />
             </DataTemplate>
         </ItemsControl.DataTemplates>
     </ItemsControl>

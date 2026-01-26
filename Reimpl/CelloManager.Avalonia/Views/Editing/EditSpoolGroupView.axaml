@@ -6,17 +6,21 @@
              x:Class="CelloManager.Views.Editing.EditSpoolGroupView">
     <Grid RowDefinitions="Auto, *" ColumnDefinitions="Auto, Auto, Auto, Auto, Auto, *, Auto">
         <TextBlock Margin="5, 30" HorizontalAlignment="Center" TextAlignment="Center">Preise:</TextBlock>
-        <TextBox Name="PriceQm" Margin="5" Grid.Row="0" Grid.Column="1" MinWidth="100" MaxWidth="100"/>
-        <TextBlock Margin="5, 30"  HorizontalAlignment="Center" Grid.Row="0" Grid.Column="2" TextAlignment="Center">Euro pro qm</TextBlock>
-        <TextBox Name="LenghtM" Margin="5" Grid.Row="0" Grid.Column="3" MinWidth="100" MaxWidth="100"/>
+        <TextBox Name="PriceQm" Margin="5" Grid.Row="0" Grid.Column="1" MinWidth="100" MaxWidth="100" />
+        <TextBlock Margin="5, 30" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="2" TextAlignment="Center">Euro pro qm</TextBlock>
+        <TextBox Name="LenghtM" Margin="5" Grid.Row="0" Grid.Column="3" MinWidth="100" MaxWidth="100" />
         <TextBlock Margin="5, 30" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="4" TextAlignment="Center">Länge in Metern</TextBlock>
-        <Button Grid.Row="0" Grid.Column="6" Name="DeleteAllButton" VerticalAlignment="Center" HorizontalAlignment="Center">Alle Löschen</Button>
-        <DataGrid Margin="10" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" AutoGenerateColumns="False" Name="SpoolDataGrid">
+        <Button Grid.Row="0" Grid.Column="6" Name="DeleteAllButton" VerticalAlignment="Center"
+                HorizontalAlignment="Center">
+            Alle Löschen
+        </Button>
+        <DataGrid Margin="10" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" AutoGenerateColumns="False"
+                  Name="SpoolDataGrid">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Menge" Binding="{Binding Amount}" IsReadOnly="True"/>
-                <DataGridTextColumn Header="Benötigte Menge" Binding="{Binding NeedAmount}" IsReadOnly="True"/>
+                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Menge" Binding="{Binding Amount}" IsReadOnly="True" />
+                <DataGridTextColumn Header="Benötigte Menge" Binding="{Binding NeedAmount}" IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

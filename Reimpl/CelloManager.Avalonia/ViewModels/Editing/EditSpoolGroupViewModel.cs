@@ -16,15 +16,63 @@ namespace CelloManager.ViewModels.Editing;
 
 public class EditSpoolGroupViewModel : ViewModelBase, IActivatableViewModel, IDisposable
 {
-    public static ViewModelBase Create(ReadOnlyObservableCollection<ReadySpoolModel> spools, SpoolManager manager, 
-        Action<ReadySpoolModel> modelSelected, SpoolPriceManager priceManager, string category)
-        => new EditSpoolGroupViewModel(spools, modelSelected, manager, priceManager, category);
-
     private PriceDefinition? _start;
-    
-    private ReadySpoolModel? _selected;
-    private double _price;
-    private double _lenght;
+
+    private EditSpoolGroupViewModel(
+        ReadOnlyObservableCollection<ReadySpoolModel> spools, Action<ReadySpoolModel> modelSelected,
+        SpoolManager spoolManager, SpoolPriceManager priceManager, string category)
+    {
+        Spools = spools;
+
+        this.WhenActivated(Init);
+
+        Optional<PriceDefinition> potentialPrice = priceManager.Find(category);
+        potentialPrice.IfHasValue(
+                           def =>
+                           {
+                               _start = def;
+                               Lenght = def.Lenght;
+                               Price = def.Price;
+                           })
+                      .Else(
+                           () =>
+                           {
+                               _start = null;
+                               Lenght = -1;
+                               Price = -1;
+                           });
+
+
+        DeleteAll = ReactiveCommand.Create(DeleteAllImpl);
+
+        IEnumerable<IDisposable> Init()
+        {
+            Selected = null;
+
+            yield return this.WhenAnyValue(m => m.Selected).Where(m => m is not null).Subscribe(modelSelected!);
+
+            yield return this.WhenAny(
+                                  m => m.Lenght,
+                                  m => m.Price,
+                                  (lenght, price) => PriceDefinition.New(category, price.Value, lenght.Value))
+                             .StartWith(_start)
+                             .DistinctUntilChanged()
+                             .Subscribe(priceManager.Update);
+        }
+
+        void DeleteAllImpl()
+        {
+            #pragma warning disable MA0134
+            Task.Run(() =>
+                     {
+                         foreach (ReadySpoolModel model in spools.ToArray())
+                         {
+                             spoolManager.Delete(model);
+                         }
+                     });
+            #pragma warning restore MA0134
+        }
+    }
 
     public IEnumerable<ReadySpoolModel> Spools { get; }
 
@@ -32,77 +80,24 @@ public class EditSpoolGroupViewModel : ViewModelBase, IActivatableViewModel, IDi
 
     public double Price
     {
-        get => _price;
+        get;
         [UsedImplicitly]
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-        set => this.RaiseAndSetIfChanged(ref _price, value);
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public double Lenght
     {
-        get => _lenght;
+        get;
         [UsedImplicitly]
         [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
-        set => this.RaiseAndSetIfChanged(ref _lenght, value);
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public ReadySpoolModel? Selected
     {
-        get => _selected;
-        [UsedImplicitly]
-        set => this.RaiseAndSetIfChanged(ref _selected, value);
-    }
-
-    private EditSpoolGroupViewModel(ReadOnlyObservableCollection<ReadySpoolModel> spools, Action<ReadySpoolModel> modelSelected, 
-        SpoolManager spoolManager, SpoolPriceManager priceManager, string category)
-    {
-        Spools = spools;
-        
-        this.WhenActivated(Init);
-
-        var potentialPrice = priceManager.Find(category);
-        potentialPrice.IfHasValue(
-            def =>
-            {
-                _start = def;
-                Lenght = def.Lenght;
-                Price = def.Price;
-            })
-            .Else(
-                () =>
-                {
-                    _start = null;
-                    Lenght = -1;
-                    Price = -1;
-                });
-
-
-        DeleteAll = ReactiveCommand.Create(DeleteAllImpl);
-        
-        IEnumerable<IDisposable> Init()
-        {
-            Selected = null;
-            
-            yield return this.WhenAnyValue(m => m.Selected).Where(m => m is not null).Subscribe(modelSelected!);
-            
-            yield return this.WhenAny(
-                    m => m.Lenght,
-                    m => m.Price, 
-                    (lenght, price) => PriceDefinition.New(category, price.Value, lenght.Value))
-                .StartWith(_start)
-                .DistinctUntilChanged()
-                .Subscribe(priceManager.Update);
-        }
-        
-        void DeleteAllImpl()
-        {
-            #pragma warning disable MA0134
-            Task.Run(() =>
-                     {
-                         foreach (var model in spools.ToArray()) spoolManager.Delete(model);
-                     });
-            #pragma warning restore MA0134
-        }
+        get;
+        [UsedImplicitly] set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public ViewModelActivator Activator { get; } = new();
@@ -112,4 +107,9 @@ public class EditSpoolGroupViewModel : ViewModelBase, IActivatableViewModel, IDi
         DeleteAll.Dispose();
         GC.SuppressFinalize(this);
     }
+
+    public static ViewModelBase Create(
+        ReadOnlyObservableCollection<ReadySpoolModel> spools, SpoolManager manager,
+        Action<ReadySpoolModel> modelSelected, SpoolPriceManager priceManager, string category)
+        => new EditSpoolGroupViewModel(spools, modelSelected, manager, priceManager, category);
 }

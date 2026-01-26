@@ -11,22 +11,24 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CelloManager.Data.Migrations
 {
     [DbContext(typeof(SpoolDataBase))]
-    [Migration("20231111154603_V1")]
-    partial class V1
+    [Migration("20260126154656_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.13");
+            modelBuilder.HasAnnotation("ProductVersion", "10.0.2");
 
             modelBuilder.Entity("CelloManager.Data.PendingOrderDb", b =>
                 {
                     b.Property<string>("Id")
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Spools")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("Time")
@@ -40,6 +42,7 @@ namespace CelloManager.Data.Migrations
             modelBuilder.Entity("CelloManager.Data.PriceDefinitionDb", b =>
                 {
                     b.Property<string>("Id")
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Lenght")
@@ -47,6 +50,7 @@ namespace CelloManager.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<double>("Price")
@@ -60,6 +64,7 @@ namespace CelloManager.Data.Migrations
             modelBuilder.Entity("CelloManager.Data.SpoolDataDb", b =>
                 {
                     b.Property<string>("Id")
+                        .HasMaxLength(36)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("Amount")
@@ -67,10 +72,12 @@ namespace CelloManager.Data.Migrations
 
                     b.Property<string>("Category")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("NeedAmount")

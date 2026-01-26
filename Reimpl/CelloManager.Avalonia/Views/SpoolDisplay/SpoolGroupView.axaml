@@ -10,7 +10,7 @@
     <ItemsControl Name="SpoolList">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
-                <UniformGrid/>
+                <UniformGrid />
             </ItemsPanelTemplate>
         </ItemsControl.ItemsPanel>
         <ItemsControl.ItemTemplate>
@@ -19,20 +19,24 @@
                     <controls:Card Margin="5" Padding="5">
                         <Grid RowDefinitions="Auto, Auto, Auto">
                             <Grid ColumnDefinitions="Auto, Auto" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding LargeName}" FontSize="35" Grid.Column="0" VerticalAlignment="Bottom"/>
-                                <TextBlock Text="{Binding SmallName}" FontSize="25" Grid.Column="1" VerticalAlignment="Bottom"/>
+                                <TextBlock Text="{Binding LargeName}" FontSize="35" Grid.Column="0"
+                                           VerticalAlignment="Bottom" />
+                                <TextBlock Text="{Binding SmallName}" FontSize="25" Grid.Column="1"
+                                           VerticalAlignment="Bottom" />
                             </Grid>
                             <Grid Grid.Row="1" ColumnDefinitions="Auto, Auto, Auto" HorizontalAlignment="Center">
-                                <TextBlock Text="{Binding Amount}" FontSize="15" Margin="0,0,5,0"/>
-                                <TextBlock Text="von" IsVisible="{Binding NeedAmountSet}" FontSize="13" Grid.Column="1"/>
-                                <TextBlock Text="{Binding NeedAmount}" IsVisible="{Binding NeedAmountSet}" FontSize="15" Grid.Column="2" Margin="5,0,0,0"/>
+                                <TextBlock Text="{Binding Amount}" FontSize="15" Margin="0,0,5,0" />
+                                <TextBlock Text="von" IsVisible="{Binding NeedAmountSet}" FontSize="13" Grid.Column="1" />
+                                <TextBlock Text="{Binding NeedAmount}" IsVisible="{Binding NeedAmountSet}"
+                                           FontSize="15" Grid.Column="2" Margin="5,0,0,0" />
                             </Grid>
                             <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
                                 <controls:FloatingButton Command="{Binding Increment}" Classes="Mini" Margin="3">
-                                    <avalonia:MaterialIcon Kind="Increment" Width="20" Height="20"/>
+                                    <avalonia:MaterialIcon Kind="Increment" Width="20" Height="20" />
                                 </controls:FloatingButton>
-                                <controls:FloatingButton Grid.Column="1" Command="{Binding Decrement}" Classes="Mini" Margin="3">
-                                    <avalonia:MaterialIcon Kind="Decrement" Width="20" Height="20"/>
+                                <controls:FloatingButton Grid.Column="1" Command="{Binding Decrement}" Classes="Mini"
+                                                         Margin="3">
+                                    <avalonia:MaterialIcon Kind="Decrement" Width="20" Height="20" />
                                 </controls:FloatingButton>
                             </Grid>
                         </Grid>

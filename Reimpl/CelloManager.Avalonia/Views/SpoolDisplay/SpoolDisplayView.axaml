@@ -8,12 +8,12 @@
     <TabControl Name="CategoryDisplay">
         <TabControl.ItemTemplate>
             <DataTemplate DataType="viewModels:TabViewModel">
-                <TextBlock Text="{Binding Title}"/>
+                <TextBlock Text="{Binding Title}" />
             </DataTemplate>
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>
             <DataTemplate DataType="viewModels:TabViewModel">
-                <ContentControl Content="{Binding Content}"/>
+                <ContentControl Content="{Binding Content}" />
             </DataTemplate>
         </TabControl.ContentTemplate>
     </TabControl>

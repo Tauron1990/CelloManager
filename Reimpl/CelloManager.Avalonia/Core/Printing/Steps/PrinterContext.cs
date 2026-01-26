@@ -5,17 +5,14 @@ using Avalonia.Threading;
 using CelloManager.Core.Data;
 using CelloManager.Core.Printing.Data;
 using CelloManager.Core.Printing.Internal;
-using Microsoft.Extensions.DependencyInjection;
 using QuestPDF.Infrastructure;
 
 namespace CelloManager.Core.Printing.Steps;
 
-public sealed class PrinterContext
+public sealed class PrinterContext(PrintUiModel printUiModel)
 {
-    private Dispatcher? _dispatcher;
-    
-    public PrintUiModel PrintUiModel { get; }
-    
+    public PrintUiModel PrintUiModel { get; } = printUiModel;
+
     public PendingOrder? Order { get; set; }
 
     public DocumentType? DocumentType { get; set; }
@@ -23,20 +20,18 @@ public sealed class PrinterContext
     public IPrintDocument? PrintDocument { get; set; }
 
     public IDocument? Document { get; set; }
-    
+
     public Action? End { get; set; }
-    
+
     public IServiceProvider ServiceProvider { get; set; } = new ServiceContainer();
 
     public ImmutableArray<PrintPage> Pages { get; set; } = ImmutableArray<PrintPage>.Empty;
-    
+
     public Dispatcher Dispatcher
     {
-        get => _dispatcher ??= Dispatcher.UIThread;
-        set => _dispatcher = value;
+        get => field ??= Dispatcher.UIThread;
+        set;
     }
-
-    public PrinterContext(PrintUiModel printUiModel) => PrintUiModel = printUiModel;
 
     public void AddPage(PrintPage page)
         => Pages = Pages.Add(page);

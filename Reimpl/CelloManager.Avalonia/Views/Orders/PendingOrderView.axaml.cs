@@ -17,11 +17,14 @@ public partial class PendingOrderView : ReactiveUserControl<PendingOrderViewMode
 
     private IEnumerable<IDisposable> Init()
     {
-        if(ViewModel is null) throw new InvalidOperationException($"No ViewModel {nameof(PendingOrderView)}");
-        
+        if (ViewModel is null)
+        {
+            throw new InvalidOperationException($"No ViewModel {nameof(PendingOrderView)}");
+        }
+
         yield return this.OneWayBind(ViewModel, m => m.TimeOfOrder, v => v.OrderTime.Text);
         yield return this.OneWayBind(ViewModel, m => m.Order.Spools, v => v.SpoolList.ItemsSource);
-        
+
         yield return this.BindCommand(ViewModel, m => m.PrintCommand, v => v.PrintOrder);
         yield return this.BindCommand(ViewModel, m => m.CommitCommand, v => v.Commit);
     }
