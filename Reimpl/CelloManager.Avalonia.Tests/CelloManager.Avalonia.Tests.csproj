@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Compile Include="..\CelloManager.Avalonia\Core\ColorPairSerializer.cs" Link="Core\ColorPairSerializer.cs"/>
+        <ProjectReference Include="..\..\CelloManager.Data\CelloManager.Data.csproj"/>
+        <ProjectReference Include="..\CelloManager.Avalonia\CelloManager.Avalonia.csproj"/>
     </ItemGroup>
 </Project>

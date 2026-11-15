@@ -7,19 +7,22 @@ using System.Reactive.Linq;
 using CelloManager.Core.Data;
 using DynamicData;
 using DynamicData.Kernel;
+using Microsoft.Extensions.Logging;
 
 namespace CelloManager.Core.Logic;
 
 public class OrderManager : IDisposable
 {
     private readonly CompositeDisposable _disposer = new();
+    private readonly ILogger<OrderManager> _logger;
     private readonly IObservableCache<PendingOrder, string> _orders;
     private readonly SpoolRepository _repository;
     private readonly IObservableCache<SpoolData, string> _spools;
 
-    public OrderManager(SpoolRepository repository)
+    public OrderManager(SpoolRepository repository, ILogger<OrderManager> logger)
     {
         _repository = repository;
+        _logger = logger;
 
         _orders = repository.Orders.AsObservableCache().DisposeWith(_disposer);
         _spools = repository.Spools.AsObservableCache().DisposeWith(_disposer);
@@ -76,10 +79,12 @@ public class OrderManager : IDisposable
 
         if (toOrder.Count == 0)
         {
+            _logger.LogDebug(new EventId(3001, "OrderNotPlaced"), "No order was placed because no inventory items require ordering");
             return false;
         }
 
         _repository.AddOrder(PendingOrder.New(toOrder, sd => sd.NeedAmount - sd.Amount));
+        _logger.LogInformation(new EventId(3000, "OrderPlaced"), "Order added to the order cache for {SpoolCount} spools", toOrder.Count);
 
         return true;
     }
@@ -97,5 +102,7 @@ public class OrderManager : IDisposable
                 _repository.UpdateSpool(data.Value with { Amount = data.Value.Amount + orderSpool.Amount });
             }
         }
+
+        _logger.LogInformation(new EventId(3002, "OrderCompleted"), "Order completed in inventory cache for {SpoolCount} spools", order.Spools.SelectMany(l => l.Spools).Count());
     }
 }

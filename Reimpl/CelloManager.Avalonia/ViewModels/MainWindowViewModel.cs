@@ -20,6 +20,7 @@ using DynamicData.Alias;
 using DynamicData.Binding;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using ReactiveUI;
 using ThingLing.Controls;
 
@@ -29,6 +30,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
 {
     private readonly ObservableAsPropertyHelper<string> _errorFull;
     private readonly ErrorDispatcher _errors;
+    private readonly ILogger<MainWindowViewModel> _logger;
     private readonly ObservableAsPropertyHelper<string> _errorSimple;
     private readonly IServiceScope _modelScope = Bootstrapper.ServiceProvider.CreateScope();
 
@@ -40,10 +42,11 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
 
     [RequiresUnreferencedCode("Database (EF Core)")]
     #pragma warning disable MA0051
-    public MainWindowViewModel(ErrorDispatcher errors)
+    public MainWindowViewModel(ErrorDispatcher errors, ILogger<MainWindowViewModel> logger)
         #pragma warning restore MA0051
     {
         _errors = errors;
+        _logger = logger;
         SpoolPriceManager priceManager = _modelScope.ServiceProvider.GetRequiredService<SpoolPriceManager>();
         _spoolManager = _modelScope.ServiceProvider.GetRequiredService<SpoolManager>();
         Dispatcher dispatcher = Dispatcher.UIThread;
@@ -68,6 +71,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
                 }
                 catch (Exception e)
                 {
+                    _logger.LogError(new EventId(5000, "PrintAllFailed"), e, "Printing the inventory failed before the print workflow handled the error");
                     errors.Send(e);
                 }
             });
@@ -206,9 +210,9 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
                                                    FileTypeChoices =
                                                    [
                                                        new FilePickerFileType("Json Daten")
-                                                                         {
-                                                                             Patterns = ["json"],
-                                                                         },
+                                                       {
+                                                           Patterns = ["json"],
+                                                       },
                                                    ],
                                                })
                                           .ConfigureAwait(false);
@@ -229,6 +233,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
         }
         catch (Exception e)
         {
+            _logger.LogError(new EventId(5001, "ExportCommandFailed"), e, "Inventory export command failed");
             _errors.Send(e);
         }
     }

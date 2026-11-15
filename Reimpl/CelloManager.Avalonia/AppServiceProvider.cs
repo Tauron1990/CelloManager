@@ -52,7 +52,8 @@ internal sealed class AppServiceProvider : IServiceProvider, IDisposable, IAsync
                                  "Log/log.txt",
                                  LogEventLevel.Information,
                                  rollingInterval: RollingInterval.Day,
-                                 retainedFileCountLimit: 3));
+                                 retainedFileCountLimit: 3,
+                                 outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {SourceContext} {Message:lj}{NewLine}{Exception}"));
         #if DEBUG
         config.WriteTo.Async(c => c.Console());
         #endif

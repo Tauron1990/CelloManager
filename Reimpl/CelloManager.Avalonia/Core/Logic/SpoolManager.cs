@@ -15,16 +15,19 @@ using DynamicData.Alias;
 using DynamicData.Kernel;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace CelloManager.Core.Logic;
 
 public sealed class SpoolManager
 {
+    private readonly ILogger<SpoolManager> _logger;
     private readonly SpoolRepository _repository;
-    
-    public SpoolManager(SpoolRepository repository)
+
+    public SpoolManager(SpoolRepository repository, ILogger<SpoolManager> logger)
     {
         _repository = repository;
+        _logger = logger;
         CurrentSpools = repository.Spools
                                   .Select(set => new ReadySpoolModel(set, repository))
                                   .Sort(ReadySpoolSorter.CategoryModelSorter)
@@ -74,6 +77,7 @@ public sealed class SpoolManager
     {
         if (!_repository.ValidateName(name, category))
         {
+            _logger.LogDebug(new EventId(2001, "SpoolCreationRejected"), "Spool creation was ignored because the name was not accepted");
             return;
         }
 
@@ -89,6 +93,7 @@ public sealed class SpoolManager
         }
 
         _repository.UpdateSpool(data);
+        _logger.LogInformation(new EventId(2000, "SpoolCreated"), "Spool added to the inventory cache");
     }
 
     public void UpdateSpool(SpoolData old, string? name, string? category, int amount, int needAmount)
@@ -103,6 +108,7 @@ public sealed class SpoolManager
         if (string.Equals(id, old.Id, StringComparison.Ordinal))
         {
             _repository.UpdateSpool(old with { Amount = amount, NeedAmount = needAmount });
+            _logger.LogInformation(new EventId(2002, "SpoolUpdated"), "Spool updated in the inventory cache");
         }
         else if (_repository.ValidateName(name, category))
         {
@@ -111,6 +117,11 @@ public sealed class SpoolManager
                                  u.Remove(old);
                                  u.AddOrUpdate(SpoolData.New(name, category, amount) with { NeedAmount = needAmount });
                              });
+            _logger.LogInformation(new EventId(2003, "SpoolRenamed"), "Spool renamed in the inventory cache");
+        }
+        else
+        {
+            _logger.LogDebug(new EventId(2004, "SpoolUpdateRejected"), "Spool update was ignored because the new name was not accepted");
         }
     }
 
@@ -125,12 +136,14 @@ public sealed class SpoolManager
             await using (stream.ConfigureAwait(false))
             {
                 await JsonSerializer.SerializeAsync(stream, array, SerializerContext.Default.Options).ConfigureAwait(false);
-
-                return null;
             }
+
+            _logger.LogInformation(new EventId(2010, "InventoryExportCompleted"), "Inventory export completed for {SpoolCount} spools", array.Length);
+            return null;
         }
         catch (Exception e)
         {
+            _logger.LogError(new EventId(2011, "InventoryExportFailed"), e, "Inventory export failed");
             return e;
         }
     }
@@ -140,6 +153,7 @@ public sealed class SpoolManager
     {
         try
         {
+            int recordCount;
             Stream stream = await path.OpenReadAsync().ConfigureAwait(false);
             await using (stream.ConfigureAwait(false))
             {
@@ -164,11 +178,15 @@ public sealed class SpoolManager
                     }
                 }
 
-                return null;
+                recordCount = array.Length;
             }
+
+            _logger.LogInformation(new EventId(2012, "JsonImportCompleted"), "JSON inventory import processed {SpoolCount} records", recordCount);
+            return null;
         }
         catch (Exception e)
         {
+            _logger.LogError(new EventId(2013, "JsonImportFailed"), e, "JSON inventory import failed");
             return e;
         }
     }
@@ -180,9 +198,11 @@ public sealed class SpoolManager
         {
             if (!File.Exists(path.Path.LocalPath))
             {
+                _logger.LogWarning(new EventId(2014, "LegacyImportFileMissing"), "Legacy inventory import skipped because the selected file is missing");
                 return null;
             }
 
+            int recordCount = 0;
             CoreDatabase database = new();
             await using (database.ConfigureAwait(false))
             {
@@ -195,6 +215,7 @@ public sealed class SpoolManager
 
                 await foreach (CelloSpoolEntity spool in database.CelloSpools)
                 {
+                    recordCount++;
                     Optional<SpoolData> old = _repository.LookUp(spool.Name, spool.Type);
 
                     if (old.HasValue)
@@ -206,16 +227,21 @@ public sealed class SpoolManager
                         CreateSpool(spool.Name, spool.Type, spool.Amount, spool.Neededamount);
                     }
                 }
-
-                return null;
             }
+
+            _logger.LogInformation(new EventId(2015, "LegacyImportCompleted"), "Legacy inventory import processed {SpoolCount} records", recordCount);
+            return null;
         }
         catch (Exception e)
         {
+            _logger.LogError(new EventId(2016, "LegacyImportFailed"), e, "Legacy inventory import failed");
             return e;
         }
     }
 
     public void Delete(ReadySpoolModel model)
-        => _repository.Delete(model.Data);
+    {
+        _repository.Delete(model.Data);
+        _logger.LogInformation(new EventId(2005, "SpoolDeleted"), "Spool removed from the inventory cache");
+    }
 }

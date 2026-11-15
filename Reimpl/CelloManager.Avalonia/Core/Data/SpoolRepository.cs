@@ -42,8 +42,14 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, Dat
         _priceses.Dispose();
     }
 
-    [LoggerMessage(Message = "Initializing Spool Repository", Level = LogLevel.Information)]
+    [LoggerMessage(EventId = 100, Message = "Initializing spool repository", Level = LogLevel.Information)]
     private partial void InitRepository();
+
+    [LoggerMessage(EventId = 101, Message = "Spool repository loaded {SpoolCount} spools, {OrderCount} orders, and {PriceCount} price definitions", Level = LogLevel.Information)]
+    private partial void RepositoryLoaded(int spoolCount, int orderCount, int priceCount);
+
+    [LoggerMessage(EventId = 102, Message = "Queued a {EntityType} cache change for persistence", Level = LogLevel.Debug)]
+    private partial void CacheChangeQueued(string entityType);
 
     [RequiresUnreferencedCode("Access to Database (EF Core)")]
     public async Task Init()
@@ -52,12 +58,12 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, Dat
 
         InitRepository();
 
-        IEnumerable<SpoolData> spools = await manager.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
-        IEnumerable<PendingOrder> orders = await manager.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
-        IEnumerable<PriceDefinition> prices = await manager.Query(
-                                                                context => context.Prices,
-                                                                sel => sel.Select(d => d.FromDatabase()))
-                                                           .ConfigureAwait(false);
+        SpoolData[] spools = (await manager.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false)).ToArray();
+        PendingOrder[] orders = (await manager.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false)).ToArray();
+        PriceDefinition[] prices = (await manager.Query(
+                                                      context => context.Prices,
+                                                      sel => sel.Select(d => d.FromDatabase()))
+                                                 .ConfigureAwait(false)).ToArray();
 
         _spools.Edit(e =>
                      {
@@ -84,6 +90,8 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, Dat
                 }
             });
 
+        RepositoryLoaded(spools.Length, orders.Length, prices.Length);
+
         CreateSavePipeLine(_spools, sdb => sdb.Spools, data => data.ToDatabase());
         CreateSavePipeLine(_orders, sdb => sdb.Orders, order => order.ToDatabase());
         CreateSavePipeLine(_priceses, sdb => sdb.Prices, definition => definition.ToDatabase());
@@ -104,11 +112,11 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, Dat
 
         _subscriptions.Add(
             data
-           .OnItemRemoved(r => EnqueueWorkItme(set => set.Remove(converter(r))))
-           .OnItemAdded(a => EnqueueWorkItme(set => set.Add(converter(a))))
-           .OnItemUpdated((u, _) => EnqueueWorkItme(set => set.Update(converter(u))))
-           .Subscribe()
-            );
+               .OnItemRemoved(r => EnqueueWorkItme(set => set.Remove(converter(r))))
+               .OnItemAdded(a => EnqueueWorkItme(set => set.Add(converter(a))))
+               .OnItemUpdated((u, _) => EnqueueWorkItme(set => set.Update(converter(u))))
+               .Subscribe()
+        );
         return;
 
         void EnqueueWorkItme(Action<DbSet<TDatabase>> op)
@@ -122,6 +130,7 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, Dat
                 },
                 errorDispatcher.Send);
             manager.RunItem(item);
+            CacheChangeQueued(typeof(TDatabase).Name);
         }
     }
 
