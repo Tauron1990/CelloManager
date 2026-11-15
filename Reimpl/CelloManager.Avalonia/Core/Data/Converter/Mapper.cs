@@ -1,6 +1,6 @@
 ﻿using System.Collections.Immutable;
+using System.Text.Json;
 using CelloManager.Data;
-using Newtonsoft.Json;
 
 namespace CelloManager.Core.Data.Converter;
 
@@ -24,11 +24,12 @@ public static class Mapper
            {
                Id = order.Id,
                Time = order.Time,
-               Spools = JsonConvert.SerializeObject(order.Spools)
+               Spools = JsonSerializer.Serialize(order.Spools, SerializerContext.Default.OrderedSpoolList),
            };
 
     public static PendingOrder FromDatabase(this PendingOrderDb data)
-        => new(data.Id, JsonConvert.DeserializeObject<ImmutableList<OrderedSpoolList>>(data.Spools) ?? ImmutableList<OrderedSpoolList>.Empty, data.Time);
+        => new(data.Id, JsonSerializer.Deserialize<ImmutableList<OrderedSpoolList>>(data.Spools, SerializerContext.Default.ImmutableListOrderedSpoolList) 
+                     ?? ImmutableList<OrderedSpoolList>.Empty, data.Time);
 
     public static PriceDefinitionDb ToDatabase(this PriceDefinition data)
         => new()
@@ -36,7 +37,7 @@ public static class Mapper
                Id = data.Id,
                Name = data.Name,
                Lenght = data.Lenght,
-               Price = data.Price
+               Price = data.Price,
            };
 
     public static PriceDefinition FromDatabase(this PriceDefinitionDb data)
