@@ -10,6 +10,7 @@ namespace CelloManager.Core;
 [JsonSerializable(typeof(ColorPair))]
 [JsonSerializable(typeof(Color))]
 [JsonSerializable(typeof(Theme))]
+[JsonSerializable(typeof(SpoolData[]))]
 [JsonSourceGenerationOptions(WriteIndented = true)]
 [JsonSerializable(typeof(OrderedSpoolList))]
 [JsonSerializable(typeof(ImmutableList<OrderedSpoolList>))]
