@@ -1,5 +1,6 @@
 ﻿<UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:data="using:CelloManager.Core.Logic"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
@@ -17,10 +18,10 @@
         <DataGrid Margin="10" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="6" AutoGenerateColumns="False"
                   Name="SpoolDataGrid">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Kategorie" Binding="{Binding Category}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Menge" Binding="{Binding Amount}" IsReadOnly="True" />
-                <DataGridTextColumn Header="Benötigte Menge" Binding="{Binding NeedAmount}" IsReadOnly="True" />
+                <DataGridTextColumn x:DataType="data:ReadySpoolModel" Header="Name" Binding="{Binding Name}" IsReadOnly="True" />
+                <DataGridTextColumn x:DataType="data:ReadySpoolModel" Header="Kategorie" Binding="{Binding Category}" IsReadOnly="True" />
+                <DataGridTextColumn x:DataType="data:ReadySpoolModel" Header="Menge" Binding="{Binding Amount}" IsReadOnly="True" />
+                <DataGridTextColumn x:DataType="data:ReadySpoolModel" Header="Benötigte Menge" Binding="{Binding NeedAmount}" IsReadOnly="True" />
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

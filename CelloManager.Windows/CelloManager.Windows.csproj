@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <UseWpf>true</UseWpf>
-        <TargetFramework>net10.0-windows</TargetFramework>
+        <TargetFramework>net11.0-windows</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <OutputType>WinExe</OutputType>
@@ -18,13 +18,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Avalonia.Controls.DataGrid" Version="11.3.11"/>
-        <PackageReference Include="Avalonia.Desktop" Version="11.3.11"/>
-        <PackageReference Include="Meziantou.Analyzer" Version="2.0.286">
+        <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2"/>
+        <PackageReference Include="Avalonia.Desktop" Version="12.1.6"/>
+        <PackageReference Include="Meziantou.Analyzer" Version="3.0.340">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="QuestPDF" Version="2025.12.3"/>
+        <PackageReference Include="QuestPDF" Version="2026.7.3"/>
     </ItemGroup>
 
     <ItemGroup>

@@ -16,7 +16,7 @@ public partial class NewSpoolEditorView : ReactiveUserControl<NewSpoolEditorView
     {
         InitializeComponent();
 
-        void OnAthorGotFocus(object? sender, GotFocusEventArgs args) => CategoryPopup.IsOpen = false;
+        void OnAthorGotFocus(object? sender, FocusChangedEventArgs args) => CategoryPopup.IsOpen = false;
 
         NameTextBox.GotFocus += OnAthorGotFocus;
         SaveButton.GotFocus += OnAthorGotFocus;
