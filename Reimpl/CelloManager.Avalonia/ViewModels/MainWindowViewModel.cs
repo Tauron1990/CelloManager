@@ -30,7 +30,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
     private readonly ObservableAsPropertyHelper<string> _errorFull;
     private readonly ErrorDispatcher _errors;
     private readonly ObservableAsPropertyHelper<string> _errorSimple;
-    private readonly IServiceScope _modelScope = App.ServiceProvider.CreateScope();
+    private readonly IServiceScope _modelScope = Bootstrapper.ServiceProvider.CreateScope();
 
     private readonly ObservableAsPropertyHelper<string> _priceValue;
 
@@ -64,7 +64,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
             {
                 try
                 {
-                    await PrintBuilder.PrintPendingOrder(orderManager.GetAll(), dispatcher, App.ServiceProvider, null).ConfigureAwait(false);
+                    await PrintBuilder.PrintPendingOrder(orderManager.GetAll(), dispatcher, Bootstrapper.ServiceProvider, null).ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {

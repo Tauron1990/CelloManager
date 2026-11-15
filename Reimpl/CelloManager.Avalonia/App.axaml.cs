@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
@@ -9,10 +10,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CelloManager;
 
+
 public sealed class App : Application
 {
-    internal static readonly AppServiceProvider ServiceProvider = new();
-
     internal static Window MainWindow = null!;
     internal static IStorageProvider StorageProvider => MainWindow.StorageProvider;
 
@@ -24,7 +24,7 @@ public sealed class App : Application
         {
             desktop.MainWindow = new MainWindow
                                  {
-                                     ViewModel = ServiceProvider.GetRequiredService<MainWindowViewModel>(),
+                                     ViewModel = Bootstrapper.ServiceProvider.GetRequiredService<MainWindowViewModel>(),
                                  };
 
             MainWindow = desktop.MainWindow;

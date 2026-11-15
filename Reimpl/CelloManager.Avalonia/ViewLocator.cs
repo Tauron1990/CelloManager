@@ -32,7 +32,7 @@ public class ViewLocator : IDataTemplate
             OrderDisplayListViewModel orderDisplayListViewModel => new OrderDisplayListView { ViewModel = orderDisplayListViewModel },
             // Should not end Here 
             #pragma warning disable MA0025 
-            _ => throw new NotImplementedException("The Implementenion of the Requested Model is not Found"),
+            _ => throw new InvalidOperationException("The Implementenion of the Requested Model is not Found"),
             #pragma warning restore MA0025
         };
 

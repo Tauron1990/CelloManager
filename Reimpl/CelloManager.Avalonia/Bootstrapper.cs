@@ -21,8 +21,8 @@ public static class Bootstrapper
     {
         Settings.License = LicenseType.Community;
 
-        DataOperationManager manager = App.ServiceProvider.GetRequiredService<DataOperationManager>();
-        await App.ServiceProvider.GetRequiredService<SpoolRepository>().Init().ConfigureAwait(true);
+        DataOperationManager manager = ServiceProvider.GetRequiredService<DataOperationManager>();
+        await ServiceProvider.GetRequiredService<SpoolRepository>().Init().ConfigureAwait(true);
 
         try
         {
@@ -32,7 +32,7 @@ public static class Bootstrapper
         finally
         {
             await manager.Shutdown().ConfigureAwait(false);
-            await App.ServiceProvider.DisposeAsync().ConfigureAwait(false);
+            await ServiceProvider.DisposeAsync().ConfigureAwait(false);
         }
     }
 
@@ -42,4 +42,6 @@ public static class Bootstrapper
                      .UsePlatformDetect()
                      .LogToTrace()
                      .UseReactiveUI();
+
+    internal static readonly AppServiceProvider ServiceProvider = new();
 }

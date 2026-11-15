@@ -17,7 +17,7 @@ namespace CelloManager;
 
 public partial class AppManager : ReactiveObject
 {
-    private readonly ILogger<AppManager> _logger = App.ServiceProvider.GetRequiredService<ILogger<AppManager>>();
+    private readonly ILogger<AppManager> _logger = Bootstrapper.ServiceProvider.GetRequiredService<ILogger<AppManager>>();
 
     private readonly string _themeFile = Path.Combine(DataOperationManager.DatabaseDic, "theme.json");
 
