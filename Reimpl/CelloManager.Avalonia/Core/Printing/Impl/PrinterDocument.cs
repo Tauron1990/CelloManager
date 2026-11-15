@@ -26,14 +26,7 @@ public sealed class PrinterDocument : IInternalDocument
     {
         try
         {
-            if (Bootstrapper.PrintProvider is not null)
-            {
-                await Bootstrapper.PrintProvider.RunPinting(_printDocument).ConfigureAwait(false);
-            }
-            else
-            {
-                await NoProvider().ConfigureAwait(false);
-            }
+            await NoProvider().ConfigureAwait(false);
         }
         finally
         {
@@ -45,25 +38,5 @@ public sealed class PrinterDocument : IInternalDocument
     {
         _printDocument.GeneratePdfAndShow();
         return ValueTask.CompletedTask;
-        /*var appData = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "Tauron",
-            "CelloManager");
-
-        if (!Directory.Exists(appData))
-            Directory.CreateDirectory(appData);
-
-        var file = Path.Combine(appData, "Temp.pdf");
-
-        var stream = File.OpenWrite(file);
-        await using (stream.ConfigureAwait(false))
-        {
-            _printDocument.GeneratePdf(stream);
-        }
-
-        using var process = Process.Start(file);
-        using var cancel = new CancellationTokenSource(TimeSpan.FromMinutes(2));
-
-        await process.WaitForExitAsync(cancel.Token).ConfigureAwait(false);*/
     }
 }

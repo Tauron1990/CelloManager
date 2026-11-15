@@ -13,8 +13,6 @@ namespace CelloManager;
 
 public static class Bootstrapper
 {
-    public static IPrintProvider? PrintProvider { get; set; }
-
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
@@ -33,11 +31,6 @@ public static class Bootstrapper
         finally
         {
             await DataOperationManager.Manager.Shutdown().ConfigureAwait(false);
-            if (PrintProvider is not null)
-            {
-                await PrintProvider.Shutdown().ConfigureAwait(false);
-            }
-
             await App.ServiceProvider.DisposeAsync().ConfigureAwait(false);
         }
     }
