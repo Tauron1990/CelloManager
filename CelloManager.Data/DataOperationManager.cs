@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
@@ -6,7 +7,6 @@ namespace CelloManager.Data;
 
 public sealed class DataOperationManager
 {
-    public static readonly DataOperationManager Manager = new();
     private readonly Task _workerThread;
 
     private readonly BlockingCollection<DatabaseWorkitem> _workitems = new();
@@ -14,7 +14,8 @@ public sealed class DataOperationManager
 
     private bool _needMigration = true;
 
-    private DataOperationManager() => _workerThread = Task.Run(ProcessItems);
+    [RequiresUnreferencedCode("Calls CelloManager.Data.DataOperationManager.ProcessItems()")]
+    public DataOperationManager() => _workerThread = Task.Run(ProcessItems);
 
     public static string DatabaseDic
     {
@@ -48,28 +49,29 @@ public sealed class DataOperationManager
         _workitems.Add(item);
     }
 
-    public Task<List<TSelector>> Query<TData, TSelector>(
+    public Task<IEnumerable<TSelector>> Query<TData, TSelector>(
         Func<SpoolDataBase, DbSet<TData>> setSelector,
         Func<IQueryable<TData>, IQueryable<TSelector>> converter)
         where TData : class
     {
-        var source = new TaskCompletionSource<List<TSelector>>(TaskCreationOptions.RunContinuationsAsynchronously);
+        var source = new TaskCompletionSource<IEnumerable<TSelector>>(TaskCreationOptions.RunContinuationsAsynchronously);
 
         DatabaseWorkitem workItem = new(
             async db =>
             {
                 DbSet<TData> set = setSelector(db);
                 IQueryable<TSelector> selector = converter(set);
-                List<TSelector> result = await selector.ToListAsync();
+                List<TSelector> result = await selector.ToListAsync().ConfigureAwait(false);
                 source.SetResult(result);
             },
-            ex => source.SetException(ex));
+            source.SetException);
 
         RunItem(workItem);
 
         return source.Task;
     }
 
+    [RequiresUnreferencedCode("Calls CelloManager.Data.DataOperationManager.CreateDatabase()")]
     private async Task ProcessItems()
     {
         await Task.Yield();
@@ -78,11 +80,11 @@ public sealed class DataOperationManager
         {
             try
             {
-                _dataBase ??= await CreateDatabase();
+                _dataBase ??= await CreateDatabase().ConfigureAwait(false);
 
                 await workitem.Worker(_dataBase).ConfigureAwait(false);
 
-                await _dataBase.SaveChangesAsync();
+                await _dataBase.SaveChangesAsync().ConfigureAwait(false);
             }
             catch (Exception e)
             {
@@ -99,6 +101,7 @@ public sealed class DataOperationManager
         }
     }
 
+    [RequiresUnreferencedCode("Calls CelloManager.Data.SpoolDataBase.SpoolDataBase(DbContextOptions<SpoolDataBase>)")]
     private async ValueTask<SpoolDataBase> CreateDatabase()
     {
         SpoolDataBase dataBase = new(
@@ -106,17 +109,17 @@ public sealed class DataOperationManager
                .UseSqlite(new SqliteConnectionStringBuilder
                           {
                               Pooling = true,
-                              DataSource = Path.Combine(DatabaseDic, "spools.db")
+                              DataSource = Path.Combine(DatabaseDic, "spools.db"),
                           }.ConnectionString)
                .Options);
 
         if (_needMigration)
         {
-            await dataBase.Database.MigrateAsync();
+            await dataBase.Database.MigrateAsync().ConfigureAwait(false);
             _needMigration = false;
         }
 
-        await dataBase.Database.ExecuteSqlAsync($"VACUUM;");
+        await dataBase.Database.ExecuteSqlAsync($"VACUUM;").ConfigureAwait(false);
 
         return dataBase;
     }

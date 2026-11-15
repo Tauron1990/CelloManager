@@ -14,5 +14,5 @@ public sealed class AppTheme : MaterialThemeBase
                   .Subscribe(t => CurrentTheme = t);
     }
 
-    protected override ITheme? ProvideInitialTheme() => AppManager.Instance.CurrentTheme;
+    protected override ITheme ProvideInitialTheme() => AppManager.Instance.CurrentTheme;
 }

@@ -6,12 +6,14 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CelloManager.Core.Comp;
 
 namespace Tauron.Application.CelloManager.Data.Migrations
 {
     [DbContext(typeof(CoreDatabase))]
     [Migration("20180212023151_V1")]
+    [RequiresUnreferencedCode("EF Core")]
     partial class V1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

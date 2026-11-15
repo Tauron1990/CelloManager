@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Reactive;
@@ -20,12 +21,7 @@ namespace CelloManager.Core.Logic;
 public sealed class SpoolManager
 {
     private readonly SpoolRepository _repository;
-
-    private readonly JsonSerializerOptions _serializerOptions = new(JsonSerializerOptions.Default)
-                                                                {
-                                                                    WriteIndented = true
-                                                                };
-
+    
     public SpoolManager(SpoolRepository repository)
     {
         _repository = repository;
@@ -118,16 +114,17 @@ public sealed class SpoolManager
         }
     }
 
+    [RequiresUnreferencedCode("The serializer options are not known at compile time.")]
     public async Task<Exception?> ExportToJson(IStorageFile path)
     {
         try
         {
-            SpoolData[] array = _repository.SpoolItems.ToArray();
+            SpoolData[] array = [.. _repository.SpoolItems];
 
             Stream stream = await path.OpenWriteAsync().ConfigureAwait(false);
             await using (stream.ConfigureAwait(false))
             {
-                await JsonSerializer.SerializeAsync(stream, array, _serializerOptions).ConfigureAwait(false);
+                await JsonSerializer.SerializeAsync(stream, array, SerializerContext.Default.Options).ConfigureAwait(false);
 
                 return null;
             }
@@ -138,6 +135,7 @@ public sealed class SpoolManager
         }
     }
 
+    [RequiresUnreferencedCode("The serializer options are not known at compile time.")]
     public async Task<Exception?> ImportFromJson(IStorageFile path)
     {
         try
@@ -145,7 +143,7 @@ public sealed class SpoolManager
             Stream stream = await path.OpenReadAsync().ConfigureAwait(false);
             await using (stream.ConfigureAwait(false))
             {
-                SpoolData[]? array = await JsonSerializer.DeserializeAsync<SpoolData[]>(stream).ConfigureAwait(false);
+                SpoolData[]? array = await JsonSerializer.DeserializeAsync<SpoolData[]>(stream, SerializerContext.Default.Options).ConfigureAwait(false);
 
                 if (array is null)
                 {
@@ -175,6 +173,7 @@ public sealed class SpoolManager
         }
     }
 
+    [RequiresUnreferencedCode("EF Core")]
     public async Task<Exception?> ImportFromLegacy(IStorageFile path)
     {
         try
@@ -189,7 +188,7 @@ public sealed class SpoolManager
             {
                 SqliteConnectionStringBuilder builder = new()
                                                         {
-                                                            DataSource = path.Path.LocalPath
+                                                            DataSource = path.Path.LocalPath,
                                                         };
 
                 database.Database.SetConnectionString(builder.ConnectionString);

@@ -45,7 +45,7 @@ public partial class AppManager : ReactiveObject
             .Subscribe();
     }
 
-    public static AppManager Instance { get; set; } = new();
+    public static AppManager Instance { get; } = new();
 
     public Theme CurrentTheme
     {

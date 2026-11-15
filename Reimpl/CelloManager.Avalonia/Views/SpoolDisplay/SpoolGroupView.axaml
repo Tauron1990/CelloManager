@@ -31,9 +31,11 @@
                                            FontSize="15" Grid.Column="2" Margin="5,0,0,0" />
                             </Grid>
                             <Grid Grid.Row="2" ColumnDefinitions="Auto,Auto">
+                                <!-- ReSharper disable once Xaml.StyleClassNotFound -->
                                 <controls:FloatingButton Command="{Binding Increment}" Classes="Mini" Margin="3">
                                     <avalonia:MaterialIcon Kind="Increment" Width="20" Height="20" />
                                 </controls:FloatingButton>
+                                <!-- ReSharper disable once Xaml.StyleClassNotFound -->
                                 <controls:FloatingButton Grid.Column="1" Command="{Binding Decrement}" Classes="Mini"
                                                          Margin="3">
                                     <avalonia:MaterialIcon Kind="Decrement" Width="20" Height="20" />

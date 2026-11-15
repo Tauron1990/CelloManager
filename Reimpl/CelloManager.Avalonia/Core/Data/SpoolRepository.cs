@@ -17,7 +17,7 @@ using SQLitePCL;
 
 namespace CelloManager.Core.Data;
 
-public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, ILogger<SpoolRepository> logger) : IDisposable
+public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, DataOperationManager manager, ILogger<SpoolRepository> logger) : IDisposable
 {
     private readonly SourceCache<PendingOrder, string> _orders = new(po => po.Id);
     private readonly SourceCache<PriceDefinition, string> _priceses = new(pd => pd.Id);
@@ -45,19 +45,19 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, ILo
     [LoggerMessage(Message = "Initializing Spool Repository", Level = LogLevel.Information)]
     private partial void InitRepository();
 
+    [RequiresUnreferencedCode("Access to Database (EF Core)")]
     public async Task Init()
     {
         Batteries_V2.Init();
-        DataOperationManager db = DataOperationManager.Manager;
 
         InitRepository();
 
-        List<SpoolData> spools = await db.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
-        List<PendingOrder> orders = await db.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
-        List<PriceDefinition> prices = await db.Query(
-                                                    context => context.Prices,
-                                                    sel => sel.Select(d => d.FromDatabase()))
-                                               .ConfigureAwait(false);
+        IEnumerable<SpoolData> spools = await manager.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
+        IEnumerable<PendingOrder> orders = await manager.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false);
+        IEnumerable<PriceDefinition> prices = await manager.Query(
+                                                                context => context.Prices,
+                                                                sel => sel.Select(d => d.FromDatabase()))
+                                                           .ConfigureAwait(false);
 
         _spools.Edit(e =>
                      {
@@ -121,7 +121,7 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, ILo
                     return ValueTask.CompletedTask;
                 },
                 errorDispatcher.Send);
-            DataOperationManager.Manager.RunItem(item);
+            manager.RunItem(item);
         }
     }
 

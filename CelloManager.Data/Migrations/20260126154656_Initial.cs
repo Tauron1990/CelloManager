@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CelloManager.Data.Migrations
 {
     /// <inheritdoc />
+    #pragma warning disable MA0048
     public partial class Initial : Migration
+    #pragma warning restore MA0048
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

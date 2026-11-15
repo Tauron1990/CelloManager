@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -16,6 +17,7 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
     private readonly ObservableAsPropertyHelper<bool> _isRunning;
     private readonly SpoolManager _manager;
 
+    [RequiresUnreferencedCode("EF Core")]
     public ImportViewModel(SpoolManager manager)
     {
         _manager = manager;
@@ -44,6 +46,7 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
 
     public bool CanClose => _canClose.Value;
 
+    [RequiresUnreferencedCode("EF Core")]
     private IObservable<Exception?> ExecuteImport(string? path)
         => Observable.Return(path)
                      .SelectMany<string?, IStorageFile?>(

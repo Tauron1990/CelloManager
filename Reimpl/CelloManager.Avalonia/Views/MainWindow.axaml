@@ -33,6 +33,7 @@
                 <DataTemplate DataType="vm:TabViewModel">
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="{Binding Title}" Margin="2" />
+                        <!-- ReSharper disable once Xaml.StyleClassNotFound -->
                         <Button Classes="Outline" Padding="1" IsVisible="{Binding CanClose}" Command="{Binding Close}"
                                 Margin="2">
                             X

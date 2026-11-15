@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
 using CelloManager.ViewModels;
@@ -13,6 +14,7 @@ using CelloManager.Views.SpoolDisplay;
 
 namespace CelloManager;
 
+[RequiresUnreferencedCode("Database (EF Core)")]
 public class ViewLocator : IDataTemplate
 {
     public Control Build(object? data)
@@ -28,10 +30,13 @@ public class ViewLocator : IDataTemplate
             OrderDisplayViewModel orderDisplayViewModel => new OrderDisplayView { ViewModel = orderDisplayViewModel },
             ImportViewModel importViewModel => new ImportView { ViewModel = importViewModel },
             OrderDisplayListViewModel orderDisplayListViewModel => new OrderDisplayListView { ViewModel = orderDisplayListViewModel },
-            _ => TryFindByConvertion()
+            // Should not end Here 
+            #pragma warning disable MA0025 
+            _ => throw new NotImplementedException("The Implementenion of the Requested Model is not Found"),
+            #pragma warning restore MA0025
         };
 
-        Control TryFindByConvertion()
+        /*Control TryFindByConvertion()
         {
             string? name = data?.GetType().FullName?.Replace("ViewModel", "View", StringComparison.Ordinal);
             if (!string.IsNullOrWhiteSpace(name))
@@ -45,7 +50,7 @@ public class ViewLocator : IDataTemplate
             }
 
             return new TextBlock { Text = "Not Found: " + name };
-        }
+        }*/
     }
 
     public bool Match(object? data) => data is ViewModelBase;

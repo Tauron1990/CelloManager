@@ -1,10 +1,12 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using JetBrains.Annotations;
 
 namespace CelloManager.Core.Comp.OldData;
 
 [UsedImplicitly]
+[RequiresUnreferencedCode("EF Core requires unreferenced code to perform reflection operations.")]
 public sealed class CelloSpoolEntity
 {
     [Key] 

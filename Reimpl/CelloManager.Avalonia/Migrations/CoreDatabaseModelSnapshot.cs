@@ -6,11 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using CelloManager.Core.Comp;
 
 namespace Tauron.Application.CelloManager.Data.Migrations
 {
     [DbContext(typeof(CoreDatabase))]
+    [RequiresUnreferencedCode("EF Core")]
     partial class CoreDatabaseModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

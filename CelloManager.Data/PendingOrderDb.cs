@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CelloManager.Data;
 
+[RequiresUnreferencedCode("EF Core")]
 public sealed class PendingOrderDb
 {
     [Key, MaxLength(36)] 

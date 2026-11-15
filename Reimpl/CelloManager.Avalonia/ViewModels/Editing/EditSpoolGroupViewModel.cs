@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
@@ -82,7 +81,6 @@ public class EditSpoolGroupViewModel : ViewModelBase, IActivatableViewModel, IDi
     {
         get;
         [UsedImplicitly]
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
@@ -90,14 +88,14 @@ public class EditSpoolGroupViewModel : ViewModelBase, IActivatableViewModel, IDi
     {
         get;
         [UsedImplicitly]
-        [DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.All)]
         set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public ReadySpoolModel? Selected
     {
         get;
-        [UsedImplicitly] set => this.RaiseAndSetIfChanged(ref field, value);
+        [UsedImplicitly]
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
     public ViewModelActivator Activator { get; } = new();

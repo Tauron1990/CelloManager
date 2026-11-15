@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using CelloManager.Core.Comp.OldData;
 using JetBrains.Annotations;
@@ -6,13 +7,16 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CelloManager.Core.Comp;
 
+[RequiresUnreferencedCode("EF Core requires unreferenced code to perform reflection operations.")]
 public sealed class CoreDatabase : DbContext
 {
-    [UsedImplicitly] public DbSet<CommittedRefillEntity> CommittedRefills { get; set; } = null!;
+    [UsedImplicitly]
+    public DbSet<CommittedRefillEntity> CommittedRefills { get; set; } = null!;
 
     public DbSet<CelloSpoolEntity> CelloSpools { get; set; } = null!;
 
-    [UsedImplicitly] public DbSet<OptionEntity> OptionEntries { get; set; } = null!;
+    [UsedImplicitly] 
+    public DbSet<OptionEntity> OptionEntries { get; set; } = null!;
 
     public static string DefaultPath()
         => Path.Combine(

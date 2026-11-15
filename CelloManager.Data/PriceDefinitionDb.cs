@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace CelloManager.Data;
 
+[RequiresUnreferencedCode("Database (EF Core)")]
 public record PriceDefinitionDb
 {
     [Key, MaxLength(36)]

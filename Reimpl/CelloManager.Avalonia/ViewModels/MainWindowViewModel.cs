@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Disposables;
@@ -37,6 +38,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
     private readonly CompositeDisposable _subscriptions = new();
     private readonly SourceList<ViewModelBase> _tabs = new();
 
+    [RequiresUnreferencedCode("Database (EF Core)")]
     #pragma warning disable MA0051
     public MainWindowViewModel(ErrorDispatcher errors)
         #pragma warning restore MA0051
@@ -189,6 +191,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
         }
     }
 
+    [RequiresUnreferencedCode("Database (EF Core)")]
     private async Task ExportToJson()
     {
         try

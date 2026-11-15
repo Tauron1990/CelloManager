@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using CelloManager.Core.Comp;
 using CelloManager.Core.Data;
@@ -18,6 +19,7 @@ internal sealed class AppServiceProvider : IServiceProvider, IDisposable, IAsync
 {
     private readonly ServiceProvider _serviceProvider;
 
+    [RequiresUnreferencedCode("Database (EF Core)")]
     public AppServiceProvider()
     {
         ServiceCollection collection = new();
@@ -30,7 +32,7 @@ internal sealed class AppServiceProvider : IServiceProvider, IDisposable, IAsync
         HelperModule.Config(collection);
 
         collection.AddLogging(ConfigurateLogger);
-        collection.AddSingleton(() => AppManager.Instance);
+        collection.AddSingleton<AppManager>(_ => AppManager.Instance);
 
         _serviceProvider = collection.BuildServiceProvider();
     }

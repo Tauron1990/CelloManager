@@ -1,9 +1,11 @@
 ﻿using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 using CelloManager.Data;
 
 namespace CelloManager.Core.Data.Converter;
 
+[RequiresUnreferencedCode("Database (EF Core)")]
 public static class Mapper
 {
     public static SpoolDataDb ToDatabase(this SpoolData data)
@@ -19,6 +21,7 @@ public static class Mapper
     public static SpoolData FromDatabase(this SpoolDataDb data)
         => new(data.Id, data.Name, data.Category, data.Amount, data.NeedAmount);
 
+    [RequiresUnreferencedCode("Access to Database (EF Core)")]
     public static PendingOrderDb ToDatabase(this PendingOrder order)
         => new()
            {

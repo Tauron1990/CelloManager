@@ -46,7 +46,7 @@ public sealed class ImageDocument : FileSelectingDocument<ImageDocument>
             Stream stream = await file.OpenWriteAsync().ConfigureAwait(false);
             await using (stream.ConfigureAwait(false))
             {
-                bitmap.Save(stream);
+                bitmap.Save(stream, new PngBitmapEncoderOptions());
             }
         }
         finally

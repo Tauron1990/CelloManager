@@ -1,4 +1,5 @@
-﻿using CelloManager.ViewModels.Editing;
+﻿using System.Diagnostics.CodeAnalysis;
+using CelloManager.ViewModels.Editing;
 using CelloManager.ViewModels.Importing;
 using CelloManager.ViewModels.Orders;
 using CelloManager.ViewModels.SpoolDisplay;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace CelloManager.ViewModels;
 
+[RequiresUnreferencedCode("Database (EF Core)")]
 public static class ViewModelModule
 {
     public static void Config(IServiceCollection collection)

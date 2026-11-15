@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Linq;
 using Avalonia.ReactiveUI;
 using CelloManager.Core.Comp;
@@ -10,6 +11,7 @@ namespace CelloManager.Views.Importing;
 
 public sealed partial class ImportView : ReactiveUserControl<ImportViewModel>
 {
+    [RequiresUnreferencedCode("Database (EF Core)")]
     public ImportView()
     {
         InitializeComponent();
@@ -17,6 +19,7 @@ public sealed partial class ImportView : ReactiveUserControl<ImportViewModel>
         this.WhenActivated(Init);
     }
 
+    [RequiresUnreferencedCode("Database (EF Core)")]
     private IEnumerable<IDisposable> Init()
     {
         if (ViewModel is null)
