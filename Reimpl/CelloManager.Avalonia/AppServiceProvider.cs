@@ -32,7 +32,7 @@ internal sealed class AppServiceProvider : IServiceProvider, IDisposable, IAsync
         HelperModule.Config(collection);
 
         collection.AddLogging(ConfigurateLogger);
-        collection.AddSingleton<AppManager>(_ => AppManager.Instance);
+        collection.AddSingleton<AppManager>();
 
         _serviceProvider = collection.BuildServiceProvider();
     }

@@ -7,15 +7,18 @@ using CelloManager.ViewModels;
 using CelloManager.Views;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace CelloManager;
+#pragma warning disable IL2026
 
+namespace CelloManager;
 
 public sealed class App : Application
 {
     internal static Window MainWindow = null!;
     internal static IStorageProvider StorageProvider => MainWindow.StorageProvider;
 
-    public override void Initialize() => AvaloniaXamlLoader.Load(this);
+    
+    
+    public override void Initialize() => AvaloniaXamlLoader.Load(Bootstrapper.ServiceProvider, this);
 
     public override void OnFrameworkInitializationCompleted()
     {

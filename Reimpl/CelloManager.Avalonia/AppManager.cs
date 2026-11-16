@@ -9,7 +9,6 @@ using CelloManager.Core;
 using CelloManager.Data;
 using Material.Colors;
 using Material.Styles.Themes;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using ReactiveUI;
 
@@ -17,19 +16,25 @@ namespace CelloManager;
 
 public partial class AppManager : ReactiveObject
 {
-    private readonly ILogger<AppManager> _logger = Bootstrapper.ServiceProvider.GetRequiredService<ILogger<AppManager>>();
+    private readonly ILogger<AppManager> _logger;
 
     private readonly string _themeFile = Path.Combine(DataOperationManager.DatabaseDic, "theme.json");
 
     private Theme _currentTheme;
 
-    private AppManager()
+    public AppManager(ILogger<AppManager> logger)
     {
+        _logger = logger;
+        
         try
         {
             if (File.Exists(_themeFile))
             {
-                _currentTheme = JsonSerializer.Deserialize<Theme>(File.ReadAllText(_themeFile), SerializerContext.Default.Theme)!;
+                Theme theme = JsonSerializer.Deserialize<Theme>(File.ReadAllText(_themeFile), SerializerContext.Default.Theme)!;
+                if (theme.Background == default)
+                {
+                    _currentTheme = CreateDefaultTheme();
+                }
             }
 
             _currentTheme ??= CreateDefaultTheme();
@@ -44,8 +49,6 @@ public partial class AppManager : ReactiveObject
             .SelectMany(async d => await SaveTheme(d).ConfigureAwait(false))
             .Subscribe();
     }
-
-    public static AppManager Instance { get; } = new();
 
     public Theme CurrentTheme
     {

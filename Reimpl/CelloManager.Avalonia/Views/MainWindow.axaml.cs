@@ -22,10 +22,6 @@ public partial class MainWindow : ReactiveWindow<MainWindowViewModel>
 
         this.WhenActivated(Init);
 
-        #if DEBUG
-
-        #endif
-
         IEnumerable<IDisposable> Init()
         {
             if (ViewModel is null)

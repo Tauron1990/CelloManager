@@ -18,8 +18,8 @@ public sealed class SpoolGroupViewModel : ViewModelBase, ITabInfoProvider, IDisp
 
         _subscription = spools.Connect()
                               .Sort(ReadySpoolSorter.ModelSorter)
-                              .ObserveOn(RxApp.MainThreadScheduler)
                               .SelectUpdate(m => new SpoolViewModel(m))
+                              .ObserveOn(RxApp.MainThreadScheduler)
                               .DisposeMany()
                               .Bind(Spools)
                               .Subscribe();

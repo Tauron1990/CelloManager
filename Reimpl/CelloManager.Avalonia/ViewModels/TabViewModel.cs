@@ -43,7 +43,7 @@ public sealed class TabViewModel : ViewModelBase, IDisposable
         IObservable<string> title = viewModelBase switch
         {
             ITabInfoProvider provider => provider.WhenAny(tp => tp.Title, change => change.Value),
-            _ => Observable.Return("Unbekannt")
+            _ => Observable.Return("Unbekannt"),
         };
 
         IObservable<bool> canclose = viewModelBase switch

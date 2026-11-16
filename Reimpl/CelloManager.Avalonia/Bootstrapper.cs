@@ -12,12 +12,13 @@ using QuestPDF.Infrastructure;
 
 namespace CelloManager;
 
+[RequiresUnreferencedCode("Access to Database (EF Core)")]
 public static class Bootstrapper
 {
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
-    [STAThread, RequiresUnreferencedCode("Access to Database (EF Core)")]
+    [STAThread]
     public static async ValueTask StartApp(string[] args)
     {
         ILogger logger = ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger(nameof(Bootstrapper));

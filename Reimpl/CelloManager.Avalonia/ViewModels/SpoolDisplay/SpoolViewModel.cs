@@ -21,11 +21,15 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable, IUpdateAware<Re
 
         Increment = ReactiveCommand.CreateFromObservable(
             () => Model.RunIncrement(),
-            Observable.Return(model.Amount != int.MaxValue));
+            this.WhenAnyValue(m => m.Amount)
+                .Select(amount => amount < 1000)
+                .ObserveOn(RxApp.MainThreadScheduler));
 
         Decrement = ReactiveCommand.CreateFromObservable(
             () => Model.RunDecrement(),
-            Observable.Return(model.Amount > 0));
+            this.WhenAnyValue(m => m.Amount)
+                .Select(amount => amount > 0)
+                .ObserveOn(RxApp.MainThreadScheduler));
     }
 
     public ReadySpoolModel Model
@@ -104,6 +108,7 @@ public sealed class SpoolViewModel : ViewModelBase, IDisposable, IUpdateAware<Re
             LargeName = new string(str[..largeCount]);
             SmallName = new string(str[largeCount..]);
         }
+        
         #pragma warning disable CS8774
     }
     #pragma warning restore CS8774
