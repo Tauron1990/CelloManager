@@ -3,6 +3,8 @@
 public enum DocumentType
 {
     Image,
-    Print,
+    Text,
     Pdf,
+    Print,
+    Mail,
 }

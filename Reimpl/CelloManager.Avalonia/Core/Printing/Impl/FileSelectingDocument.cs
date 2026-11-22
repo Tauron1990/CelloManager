@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
+using CelloManager.Core.Printing.Steps;
 using QuestPDF.Infrastructure;
 
 namespace CelloManager.Core.Printing.Impl;
@@ -15,10 +16,10 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
 
     public abstract DocumentType Type { get; }
 
-    public static IPrintDocument GenerateDocument(IDocument view)
+    public static IPrintDocument GenerateDocument(IDocument view, PrinterContext context)
     {
         TSelf doc = new();
-        doc.Init(view);
+        doc.Init(view, context);
 
         return doc;
     }
@@ -52,5 +53,5 @@ public abstract class FileSelectingDocument<TSelf> : IInternalDocument
 
     protected abstract ValueTask<FilePickerSaveOptions> ConfigurateDialog();
 
-    protected virtual void Init(IDocument view) => _printView = view;
+    protected virtual void Init(IDocument view, PrinterContext context) => _printView = view;
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
+using Avalonia.Logging;
 using CelloManager.Core.Comp;
 using CelloManager.Core.Data;
 using CelloManager.Core.Logic;
@@ -10,8 +11,8 @@ using CelloManager.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
-using Serilog.Events;
 using Serilog.Exceptions;
+using LogEventLevel = Serilog.Events.LogEventLevel;
 
 namespace CelloManager;
 
@@ -35,6 +36,8 @@ internal sealed class AppServiceProvider : IServiceProvider, IDisposable, IAsync
         collection.AddSingleton<AppManager>();
 
         _serviceProvider = collection.BuildServiceProvider();
+        
+        Logger.Sink = new AvaloniaLogSink(_serviceProvider.GetRequiredService<ILoggerFactory>());
     }
 
     public ValueTask DisposeAsync() => _serviceProvider.DisposeAsync();

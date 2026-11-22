@@ -6,9 +6,11 @@
         x:Class="CelloManager.Views.Orders.SelectDocumentTypeWindow"
         Title="Dokument Type" Icon="/Assets/avalonia-logo.ico">
     <StackPanel>
+        <Button Name="NewEmail" Margin="5" Padding="5">E-Mail</Button>
         <Button Name="NewPdF" Margin="5" Padding="5">PDF</Button>
         <Button Name="NewImage" Margin="5" Padding="5">Bild</Button>
-        <Button Name="NewPrint" Margin="5" Padding="5">Drucker</Button>
+        <Button Name="NewPrint" Margin="5" Padding="5">Anzeigen</Button>
+        <Button Name="NewText" Margin="5" Padding="5">Text</Button>
         <Button Name="Cancel" Margin="5" Padding="5">Abbrechen</Button>
     </StackPanel>
 </Window>

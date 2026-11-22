@@ -116,7 +116,7 @@ public partial class AppManager : ReactiveObject
         set => SetColor(t => t.CardBackground = value);
     }
 
-    public Color ToolBarBackground { get; set; }
+    /*public Color ToolBarBackground { get; set; }
 
     public Color Body { get; set; }
 
@@ -162,7 +162,7 @@ public partial class AppManager : ReactiveObject
 
     public Color TextAreaInactiveBorder { get; set; }
 
-    public Color DataGridRowHoverBackground { get; set; }
+    public Color DataGridRowHoverBackground { get; set; }*/
 
     [LoggerMessage(Level = LogLevel.Warning, EventId = 1, Message = "Error on Deserialize Theme")]
     private partial void ThemeDeserialitionError(Exception e);

@@ -15,7 +15,6 @@
         <Compile Remove="Core\Printing\Internal\StreamFactory.cs"/>
         <Compile Remove="Core\Printing\Internal\TempFiles.cs"/>
         <Compile Remove="Core\Printing\PrintProgressManager.cs"/>
-        <None Include="Core\Printing\PrintProgressManager.cs"/>
         <Compile Remove="ViewModels\Printing\ImageConverter.cs"/>
         <None Include="ViewModels\Printing\ImageConverter.cs"/>
         <Compile Remove="ViewModels\Printing\ImagePreViewModel.cs"/>
@@ -51,17 +50,19 @@
         <PackageReference Include="Material.Avalonia.DataGrid" Version="3.21.0"/>
         <PackageReference Include="Material.Avalonia.Dialogs" Version="3.21.0"/>
         <PackageReference Include="Material.Icons.Avalonia" Version="3.0.2"/>
-        <PackageReference Include="Meziantou.Analyzer" Version="3.0.340">
+        <PackageReference Include="Meziantou.Analyzer" Version="3.0.341">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="obo.MailtoBuilder" Version="1.1.0" />
         <PackageReference Include="QuestPDF" Version="2026.9.2" />
         <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+        <PackageReference Include="Scriban" Version="7.6.1" />
         <PackageReference Include="Serilog.Exceptions" Version="8.4.0"/>
-        <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0"/>
+        <PackageReference Include="Serilog.Extensions.Logging" Version="11.0.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>

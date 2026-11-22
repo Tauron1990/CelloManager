@@ -35,7 +35,7 @@ public sealed class CollectInfoStep : PrinterStep
 
         if (pageSpools.Count != 0)
         {
-            context.Pages = context.Pages.Add(order.ToPrintPage(pageSpools));
+            context.AddPage(order.ToPrintPage(pageSpools));
         }
 
         return ValueTask.FromResult(StepId.None);

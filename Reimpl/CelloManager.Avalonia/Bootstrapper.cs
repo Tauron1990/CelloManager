@@ -78,7 +78,6 @@ public static class Bootstrapper
     private static AppBuilder BuildAvaloniaApp()
         => AppBuilder.Configure<App>()
                      .UsePlatformDetect()
-                     .LogToTrace()
                      .UseReactiveUI();
 
     internal static readonly AppServiceProvider ServiceProvider = new();

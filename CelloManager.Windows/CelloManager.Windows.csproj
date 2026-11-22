@@ -20,7 +20,7 @@
     <ItemGroup>
         <PackageReference Include="Avalonia.Controls.DataGrid" Version="12.1.2"/>
         <PackageReference Include="Avalonia.Desktop" Version="12.1.6"/>
-        <PackageReference Include="Meziantou.Analyzer" Version="3.0.340">
+        <PackageReference Include="Meziantou.Analyzer" Version="3.0.341">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

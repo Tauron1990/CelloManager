@@ -72,7 +72,7 @@ public class OrderManager : IDisposable
                                                                  Amount = sd.Amount + _orders.Items
                                                                                              .SelectMany(o => o.Spools)
                                                                                              .SelectMany(l => l.Spools)
-                                                                                             .Where(os => string.Equals(os.SpoolId, sd.Id, StringComparison.Ordinal)).Sum(os => os.Amount)
+                                                                                             .Where(os => string.Equals(os.SpoolId, sd.Id, StringComparison.Ordinal)).Sum(os => os.Amount),
                                                              })
                                                   .Where(sd => sd.Amount < sd.NeedAmount)
                                                   .ToImmutableList();

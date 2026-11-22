@@ -58,12 +58,9 @@ public sealed partial class SpoolRepository(ErrorDispatcher errorDispatcher, Dat
 
         InitRepository();
 
-        SpoolData[] spools = (await manager.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false)).ToArray();
-        PendingOrder[] orders = (await manager.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false)).ToArray();
-        PriceDefinition[] prices = (await manager.Query(
-                                                      context => context.Prices,
-                                                      sel => sel.Select(d => d.FromDatabase()))
-                                                 .ConfigureAwait(false)).ToArray();
+        SpoolData[] spools = [.. await manager.Query(context => context.Spools, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false)];
+        PendingOrder[] orders = [.. await manager.Query(context => context.Orders, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false)];
+        PriceDefinition[] prices = [.. await manager.Query(context => context.Prices, sel => sel.Select(d => d.FromDatabase())).ConfigureAwait(false)];
 
         _spools.Edit(e =>
                      {

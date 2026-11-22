@@ -27,7 +27,7 @@ public static class Mapper
            {
                Id = order.Id,
                Time = order.Time,
-               Spools = JsonSerializer.Serialize(order.Spools, SerializerContext.Default.OrderedSpoolList),
+               Spools = JsonSerializer.Serialize(order.Spools, SerializerContext.Default.ImmutableListOrderedSpoolList),
            };
 
     public static PendingOrder FromDatabase(this PendingOrderDb data)
