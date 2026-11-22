@@ -1,0 +1,11 @@
+﻿<ContentPage xmlns:local="clr-namespace:ScanHelper"
+             xmlns:components="clr-namespace:ScanHelper.Components"
+             x:Class="ScanHelper.MainPage">
+
+    <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html">
+        <BlazorWebView.RootComponents>
+            <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />
+        </BlazorWebView.RootComponents>
+    </BlazorWebView>
+
+</ContentPage>

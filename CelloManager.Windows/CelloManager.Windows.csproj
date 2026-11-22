@@ -10,8 +10,6 @@
         <ApplicationIcon>4945342_document_documents_files_folder_format_icon.ico</ApplicationIcon>
         <LangVersion>default</LangVersion>
 
-        <PublishTrimmed>true</PublishTrimmed>
-        <IsTrimmable>false</IsTrimmable>
         <TrimMode>partial</TrimMode>
         <_SuppressWpfTrimError>true</_SuppressWpfTrimError>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>

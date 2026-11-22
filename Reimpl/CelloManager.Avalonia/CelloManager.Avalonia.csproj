@@ -7,7 +7,6 @@
         <RootNamespace>CelloManager</RootNamespace>
         <TargetFramework>net11.0</TargetFramework>
         <LangVersion>default</LangVersion>
-        <PublishTrimmed>true</PublishTrimmed>
     </PropertyGroup>
     <ItemGroup>
         <AvaloniaResource Include="Assets\**"/>
