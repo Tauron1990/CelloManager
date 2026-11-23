@@ -56,7 +56,7 @@ public class OrderManager : IDisposable
 
         return data
               .Select(Selector)
-              .Any(actualData => actualData.NeedAmount > actualData.Amount);
+              .Any(CanSpoolOrderd);
     }
 
     public PendingOrder GetAll()
@@ -64,18 +64,20 @@ public class OrderManager : IDisposable
 
     public bool PlaceOrder()
     {
-        ImmutableList<SpoolData> toOrder = _spools.Items
-                                                  .OrderBy(sd => sd.Id, StringComparer.Ordinal)
-                                                  .Select(
-                                                       sd => sd with
-                                                             {
-                                                                 Amount = sd.Amount + _orders.Items
-                                                                                             .SelectMany(o => o.Spools)
-                                                                                             .SelectMany(l => l.Spools)
-                                                                                             .Where(os => string.Equals(os.SpoolId, sd.Id, StringComparison.Ordinal)).Sum(os => os.Amount),
-                                                             })
-                                                  .Where(sd => sd.Amount < sd.NeedAmount)
-                                                  .ToImmutableList();
+        ImmutableList<SpoolData> toOrder =
+        [
+            .. _spools.Items
+                      .OrderBy(sd => sd.Id, StringComparer.Ordinal)
+                      .Select(
+                           sd => sd with
+                                 {
+                                     Amount = sd.Amount + _orders.Items
+                                                                 .SelectMany(o => o.Spools)
+                                                                 .SelectMany(l => l.Spools)
+                                                                 .Where(os => string.Equals(os.SpoolId, sd.Id, StringComparison.Ordinal)).Sum(os => os.Amount),
+                                 })
+                      .Where(CanSpoolOrderd),
+        ];
 
         if (toOrder.Count == 0)
         {
@@ -89,6 +91,18 @@ public class OrderManager : IDisposable
         return true;
     }
 
+    private bool CanSpoolOrderd(SpoolData spoolData)
+    {
+        return spoolData.NeedAmount switch
+        {
+            <= 0 => false,
+            <= 5 => spoolData.NeedAmount - 2 > spoolData.Amount,  
+            <= 7 => spoolData.NeedAmount - 3 > spoolData.Amount,
+            <= 10 => spoolData.NeedAmount - 4 > spoolData.Amount,
+            _ => spoolData.Amount < spoolData.NeedAmount,
+        };
+    }
+    
     public void CompledOrder(PendingOrder order)
     {
         _repository.Delete(order);

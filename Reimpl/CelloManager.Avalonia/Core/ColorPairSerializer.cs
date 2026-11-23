@@ -106,7 +106,7 @@ public sealed class ColorPairSerializer : JsonConverter<ColorPair>
             return;
         }
 
-        writer.WriteStringValue(color.ToString());
+        writer.WriteStringValue(color.ToString(null, System.Globalization.CultureInfo.InvariantCulture));
     }
 
     private static JsonConverter<Color>? GetColorConverter(JsonSerializerOptions options)
