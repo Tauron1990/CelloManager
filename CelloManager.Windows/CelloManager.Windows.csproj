@@ -13,6 +13,7 @@
         <TrimMode>partial</TrimMode>
         <_SuppressWpfTrimError>true</_SuppressWpfTrimError>
         <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+        <AssemblyVersion>1.6</AssemblyVersion>
     </PropertyGroup>
 
     <ItemGroup>

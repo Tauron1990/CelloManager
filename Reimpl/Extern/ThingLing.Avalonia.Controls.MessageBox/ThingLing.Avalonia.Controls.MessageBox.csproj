@@ -10,8 +10,8 @@
     <RepositoryUrl>https://github.com/Bil97/ThingLing/tree/main/MessageBox</RepositoryUrl>
     <RootNamespace>ThingLing.Controls</RootNamespace>
     <Company>ThingLing</Company>
-    <AssemblyVersion>2.0.0</AssemblyVersion>
-    <FileVersion>2.0.0</FileVersion>
+    <AssemblyVersion>2.1.0</AssemblyVersion>
+    <FileVersion>2.1.0</FileVersion>
     <PackageLicenseFile>LICENSE.TXT</PackageLicenseFile>
     <AssemblyName>ThingLing.Controls.MessageBox</AssemblyName>
     <PackageId>ThingLing.Avalonia.Controls.MessageBox</PackageId>
