@@ -15,6 +15,7 @@ using CelloManager.ViewModels.Editing;
 using CelloManager.ViewModels.Importing;
 using CelloManager.ViewModels.Orders;
 using CelloManager.ViewModels.SpoolDisplay;
+using CelloManager.Views;
 using DynamicData;
 using DynamicData.Alias;
 using DynamicData.Binding;
@@ -40,13 +41,16 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
     private readonly CompositeDisposable _subscriptions = new();
     private readonly SourceList<ViewModelBase> _tabs = new();
 
-    [RequiresUnreferencedCode("Database (EF Core)")]
+    public MainWindowProvider WindowProvider { get; }
+
     #pragma warning disable MA0051
-    public MainWindowViewModel(ErrorDispatcher errors, ILogger<MainWindowViewModel> logger)
+    public MainWindowViewModel(ErrorDispatcher errors, ILogger<MainWindowViewModel> logger, MainWindowProvider mainWindowProvider)
         #pragma warning restore MA0051
     {
         _errors = errors;
         _logger = logger;
+        WindowProvider = mainWindowProvider;
+        
         SpoolPriceManager priceManager = _modelScope.ServiceProvider.GetRequiredService<SpoolPriceManager>();
         _spoolManager = _modelScope.ServiceProvider.GetRequiredService<SpoolManager>();
         Dispatcher dispatcher = Dispatcher.UIThread;
@@ -125,7 +129,7 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
                                       ex => dispatcher.InvokeAsync(
                                           async () =>
                                           {
-                                              await MessageBox.ShowAsync(App.MainWindow, ex.Message, "Fehler", MessageBoxButton.Ok).ConfigureAwait(false);
+                                              await MessageBox.ShowAsync(WindowProvider.MainWindow, ex.Message, "Fehler", MessageBoxButton.Ok).ConfigureAwait(false);
                                               return Unit.Default;
                                           }))
                                  .Subscribe());
@@ -200,22 +204,23 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
     {
         try
         {
-            IStorageFile? file = await App.StorageProvider
-                                          .SaveFilePickerAsync(
-                                               new FilePickerSaveOptions
-                                               {
-                                                   Title = "Daten Exportieren",
-                                                   SuggestedFileName = "Spulen.json",
-                                                   DefaultExtension = "json",
-                                                   FileTypeChoices =
-                                                   [
-                                                       new FilePickerFileType("Json Daten")
-                                                       {
-                                                           Patterns = ["json"],
-                                                       },
-                                                   ],
-                                               })
-                                          .ConfigureAwait(false);
+            IStorageFile? file = await WindowProvider
+                                      .StorageProvider
+                                      .SaveFilePickerAsync(
+                                           new FilePickerSaveOptions
+                                           {
+                                               Title = "Daten Exportieren",
+                                               SuggestedFileName = "Spulen.json",
+                                               DefaultExtension = "json",
+                                               FileTypeChoices =
+                                               [
+                                                   new FilePickerFileType("Json Daten")
+                                                   {
+                                                       Patterns = ["json"],
+                                                   },
+                                               ],
+                                           })
+                                      .ConfigureAwait(false);
 
             if (file is null)
             {

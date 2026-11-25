@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Avalonia.Platform.Storage;
 using Avalonia.Threading;
 using CelloManager.Core.Printing.Steps;
+using CelloManager.Views;
+using Microsoft.Extensions.DependencyInjection;
 using obo.MailtoBuilder;
 
 namespace CelloManager.Core.Printing.Impl;
@@ -34,7 +36,7 @@ public sealed class MailDocument(PrinterContext context) : IInternalDocument
             await dispatcher.InvokeAsync(
                 async () =>
                 {
-                    ILauncher launer = App.MainWindow.Launcher;
+                    ILauncher launer = context.ServiceProvider.GetRequiredService<MainWindowProvider>().Launcher;
                     await launer.LaunchUriAsync(builder.ToUri()).ConfigureAwait(true);
                 }).ConfigureAwait(false);
         }

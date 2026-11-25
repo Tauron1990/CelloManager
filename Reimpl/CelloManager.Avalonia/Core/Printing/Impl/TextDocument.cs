@@ -3,6 +3,8 @@ using System.Threading.Tasks;
 using Avalonia.Input.Platform;
 using Avalonia.Threading;
 using CelloManager.Core.Printing.Steps;
+using CelloManager.Views;
+using Microsoft.Extensions.DependencyInjection;
 using ThingLing.Controls;
 
 namespace CelloManager.Core.Printing.Impl;
@@ -24,11 +26,13 @@ public sealed class TextDocument(PrinterContext context) : IInternalDocument
         try
         {
             string result = TextGenerator.RenderOrder(context);
-
+            
             await dispatcher.InvokeAsync(
                 async () =>
                 {
-                    IClipboard? clipboard = App.MainWindow.Clipboard;
+                    MainWindowProvider provider = context.ServiceProvider.GetRequiredService<MainWindowProvider>();
+                    
+                    IClipboard? clipboard = provider.Clipboard;
                     string message;
                     
                     if (clipboard is not null)
@@ -41,7 +45,7 @@ public sealed class TextDocument(PrinterContext context) : IInternalDocument
                         message = "Keine Zwischenablage verfügbar";
                     }
                     
-                    await MessageBox.ShowAsync(App.MainWindow, message).ConfigureAwait(false);
+                    await MessageBox.ShowAsync(provider.MainWindow, message).ConfigureAwait(false);
 
                 }).ConfigureAwait(false);
         }

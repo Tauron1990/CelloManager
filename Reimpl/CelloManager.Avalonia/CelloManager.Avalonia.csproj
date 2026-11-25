@@ -45,9 +45,9 @@
         <PackageReference Include="Avalonia.Xaml.Interactivity" Version="11.3.0.6"/>
         <PackageReference Include="Be.Vlaanderen.Basisregisters.Generators.Guid.Deterministic" Version="5.1.0"/>
         <PackageReference Include="JetBrains.Annotations" Version="2026.2.0"/>
-        <PackageReference Include="Material.Avalonia" Version="3.21.0"/>
-        <PackageReference Include="Material.Avalonia.DataGrid" Version="3.21.0"/>
-        <PackageReference Include="Material.Avalonia.Dialogs" Version="3.21.0"/>
+        <PackageReference Include="Material.Avalonia" Version="3.22.0" />
+        <PackageReference Include="Material.Avalonia.DataGrid" Version="3.22.0" />
+        <PackageReference Include="Material.Avalonia.Dialogs" Version="3.22.0" />
         <PackageReference Include="Material.Icons.Avalonia" Version="3.0.2"/>
         <PackageReference Include="Meziantou.Analyzer" Version="3.0.342">
             <PrivateAssets>all</PrivateAssets>
@@ -65,7 +65,6 @@
         <PackageReference Include="Serilog.Sinks.Async" Version="2.1.0"/>
         <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1"/>
         <PackageReference Include="Serilog.Sinks.File" Version="7.0.0"/>
-        <PackageReference Include="ThingLing.Avalonia.Controls.MessageBox" Version="2.0.0"/>
     </ItemGroup>
     <ItemGroup>
         <None Remove="Core\Movere\Views\PrintDialog.xaml"/>
@@ -78,5 +77,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\CelloManager.Data\CelloManager.Data.csproj"/>
+        <ProjectReference Include="..\Extern\ThingLing.Avalonia.Controls.MessageBox\ThingLing.Avalonia.Controls.MessageBox.csproj" />
     </ItemGroup>
 </Project>

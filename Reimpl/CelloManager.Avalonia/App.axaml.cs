@@ -2,7 +2,6 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
-using Avalonia.Platform.Storage;
 using CelloManager.ViewModels;
 using CelloManager.Views;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,11 +12,6 @@ namespace CelloManager;
 
 public sealed class App : Application
 {
-    internal static Window MainWindow = null!;
-    internal static IStorageProvider StorageProvider => MainWindow.StorageProvider;
-
-    
-    
     public override void Initialize() => AvaloniaXamlLoader.Load(Bootstrapper.ServiceProvider, this);
 
     public override void OnFrameworkInitializationCompleted()
@@ -29,8 +23,9 @@ public sealed class App : Application
                                      ViewModel = Bootstrapper.ServiceProvider.GetRequiredService<MainWindowViewModel>(),
                                  };
 
-            MainWindow = desktop.MainWindow;
-            MainWindow.Closed += (_, _) => desktop.Shutdown();
+            Window window = desktop.MainWindow;
+            window.Closed += (_, _) => desktop.Shutdown();
+            Bootstrapper.ServiceProvider.GetRequiredService<MainWindowProvider>().SetMainWindow(window);
         }
 
         base.OnFrameworkInitializationCompleted();

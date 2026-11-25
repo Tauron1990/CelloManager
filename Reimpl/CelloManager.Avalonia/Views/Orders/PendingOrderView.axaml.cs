@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reactive.Linq;
 using Avalonia.ReactiveUI;
 using CelloManager.ViewModels.Orders;
 using ReactiveUI;
@@ -26,6 +27,7 @@ public partial class PendingOrderView : ReactiveUserControl<PendingOrderViewMode
         yield return this.OneWayBind(ViewModel, m => m.Order.Spools, v => v.SpoolList.ItemsSource);
 
         yield return this.BindCommand(ViewModel, m => m.PrintCommand, v => v.PrintOrder);
-        yield return this.BindCommand(ViewModel, m => m.CommitCommand, v => v.Commit);
+        yield return this.BindCommand(ViewModel, m => m.CommitCommand, v => v.Commit, Observable.Return(value: false));
+        yield return this.BindCommand(ViewModel, m => m.CommitCommand, v => v.Delete, Observable.Return(value: true));
     }
 }

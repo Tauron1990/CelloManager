@@ -103,17 +103,20 @@ public class OrderManager : IDisposable
         };
     }
     
-    public void CompledOrder(PendingOrder order)
+    public void CompledOrder(PendingOrder order, bool skipApplying)
     {
         _repository.Delete(order);
 
-        foreach (OrderedSpool orderSpool in order.Spools.SelectMany(l => l.Spools))
+        if (!skipApplying)
         {
-            Optional<SpoolData> data = _spools.Lookup(orderSpool.SpoolId);
-
-            if (data.HasValue)
+            foreach (OrderedSpool orderSpool in order.Spools.SelectMany(l => l.Spools))
             {
-                _repository.UpdateSpool(data.Value with { Amount = data.Value.Amount + orderSpool.Amount });
+                Optional<SpoolData> data = _spools.Lookup(orderSpool.SpoolId);
+
+                if (data.HasValue)
+                {
+                    _repository.UpdateSpool(data.Value with { Amount = data.Value.Amount + orderSpool.Amount });
+                }
             }
         }
 

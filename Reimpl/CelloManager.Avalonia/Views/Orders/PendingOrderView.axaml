@@ -8,12 +8,10 @@
              HorizontalAlignment="Center"
              x:Class="CelloManager.Views.Orders.PendingOrderView">
     <controls:Card>
-        <StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Name="OrderTime" Margin="5" Padding="5" />
-                <Button Name="PrintOrder" Margin="5" Padding="5">Drucken</Button>
-            </StackPanel>
-            <Expander Header="Spulen" Margin="5">
+        <Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto,*,Auto">
+            <TextBlock Name="OrderTime" Margin="5" Padding="5" Grid.Row="0" Grid.ColumnSpan="3" />
+            <Button Name="PrintOrder" Margin="5" Padding="5" Grid.Row="0" Grid.Column="3">Drucken</Button>
+            <Expander Header="Spulen" Margin="5" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
                 <ItemsControl Name="SpoolList">
                     <ItemsControl.DataTemplates>
                         <DataTemplate DataType="data:OrderedSpoolList">
@@ -31,7 +29,8 @@
                     </ItemsControl.DataTemplates>
                 </ItemsControl>
             </Expander>
-            <Button Name="Commit" Margin="5" Padding="5">Bestätigen</Button>
-        </StackPanel>
+            <Button Name="Delete" Margin="5,5,0,5" Padding="5" CornerRadius="5,0,0,5" Grid.Row="2" Grid.Column="0">Löschen</Button>
+            <Button Name="Commit" Margin="0,5,5,5" Padding="5" CornerRadius="0,5,5,0" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3">Bestätigen</Button>
+        </Grid>
     </controls:Card>
 </UserControl>

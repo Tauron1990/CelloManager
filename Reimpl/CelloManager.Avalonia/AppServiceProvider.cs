@@ -8,6 +8,7 @@ using CelloManager.Core.Logic;
 using CelloManager.Core.Printing;
 using CelloManager.Core.Printing.Internal;
 using CelloManager.ViewModels;
+using CelloManager.Views;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Serilog;
@@ -34,6 +35,7 @@ internal sealed class AppServiceProvider : IServiceProvider, IDisposable, IAsync
 
         collection.AddLogging(ConfigurateLogger);
         collection.AddSingleton<AppManager>();
+        collection.AddSingleton<MainWindowProvider>();
 
         _serviceProvider = collection.BuildServiceProvider();
         

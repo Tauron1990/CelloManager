@@ -24,7 +24,7 @@ public sealed class OrderDisplayListViewModel : ViewModelBase, IDisposable
         _manger = manger;
         _mainWindow = mainWindow;
         _subscription = orders
-                       .Transform(po => new PendingOrderViewModel(po, serviceProvider, DoCompledOrder))
+                       .Transform(po => new PendingOrderViewModel(po, serviceProvider, DoCompledOrder, mainWindow.WindowProvider))
                        .DisposeMany()
                        .ObserveOn(RxApp.MainThreadScheduler)
                        .Bind(out ReadOnlyObservableCollection<PendingOrderViewModel> list)
@@ -38,9 +38,9 @@ public sealed class OrderDisplayListViewModel : ViewModelBase, IDisposable
 
     public void Dispose() => _subscription.Dispose();
 
-    private void DoCompledOrder(PendingOrder order)
+    private void DoCompledOrder(PendingOrder order, bool skipApplying)
     {
-        _manger.CompledOrder(order);
+        _manger.CompledOrder(order, skipApplying);
         _mainWindow.DisplayTab<SpoolDisplayViewModel>();
     }
 }

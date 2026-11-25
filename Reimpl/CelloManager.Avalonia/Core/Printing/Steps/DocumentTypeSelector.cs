@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using CelloManager.Core.Printing.Workflow;
+using CelloManager.Views;
 using CelloManager.Views.Orders;
 
 namespace CelloManager.Core.Printing.Steps;
@@ -14,8 +15,9 @@ public sealed class DocumentTypeSelector : PrinterStep
                                           .InvokeAsync(
                                                () =>
                                                {
+                                                   MainWindowProvider provider = context.ServiceProvider.GetRequiredService<MainWindowProvider>();
                                                    SelectDocumentTypeWindow window = new();
-                                                   return window.ShowDialog<DocumentType?>(App.MainWindow);
+                                                   return window.ShowDialog<DocumentType?>(provider.MainWindow);
                                                }).ConfigureAwait(false);
 
         context.DocumentType = type;

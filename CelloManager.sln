@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SideApp", "SideApp", "{8499
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScanHelper", "SideApp\ScanHelper\ScanHelper.csproj", "{BFB76E91-F1F9-4079-8B9B-E70207EDB0B1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extern", "Extern", "{BFD83188-1F04-469F-8E51-D2D34096BC1E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ThingLing.Avalonia.Controls.MessageBox", "Reimpl\Extern\ThingLing.Avalonia.Controls.MessageBox\ThingLing.Avalonia.Controls.MessageBox.csproj", "{581E77BC-50EB-4D7F-99F2-565F4961AEA8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +60,12 @@ Global
 		{BFB76E91-F1F9-4079-8B9B-E70207EDB0B1}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFB76E91-F1F9-4079-8B9B-E70207EDB0B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFB76E91-F1F9-4079-8B9B-E70207EDB0B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{581E77BC-50EB-4D7F-99F2-565F4961AEA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{581E77BC-50EB-4D7F-99F2-565F4961AEA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{581E77BC-50EB-4D7F-99F2-565F4961AEA8}.Release Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{581E77BC-50EB-4D7F-99F2-565F4961AEA8}.Release Debug|Any CPU.Build.0 = Debug|Any CPU
+		{581E77BC-50EB-4D7F-99F2-565F4961AEA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{581E77BC-50EB-4D7F-99F2-565F4961AEA8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,6 +76,7 @@ Global
 		{09D196DA-BA8E-46DB-BFBD-B353352F021E} = {A548DD45-CD92-4710-BBED-761610B4BE2E}
 		{576AB761-A815-4CDB-98E3-68D0C16C85E6} = {F5BC9C5A-D2E4-4BDB-81B2-2F32177DB431}
 		{BFB76E91-F1F9-4079-8B9B-E70207EDB0B1} = {8499E31B-6C3B-420D-AC66-148A8984B1D2}
+		{581E77BC-50EB-4D7F-99F2-565F4961AEA8} = {BFD83188-1F04-469F-8E51-D2D34096BC1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {EE385BCC-1C50-4463-920E-165FB25D3F8D}

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using Avalonia.Platform.Storage;
 using CelloManager.Core.Logic;
+using CelloManager.Views;
 using ReactiveUI;
 
 namespace CelloManager.ViewModels.Importing;
@@ -16,11 +16,13 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
     private readonly ObservableAsPropertyHelper<string?> _error;
     private readonly ObservableAsPropertyHelper<bool> _isRunning;
     private readonly SpoolManager _manager;
+    private readonly IStorageProvider _storageProvider;
 
-    [RequiresUnreferencedCode("EF Core")]
-    public ImportViewModel(SpoolManager manager)
+    public ImportViewModel(SpoolManager manager, MainWindowProvider provider)
     {
+        _storageProvider = provider.StorageProvider;
         _manager = manager;
+        
         Import = ReactiveCommand.CreateFromObservable<string?, Exception?>(ExecuteImport);
 
         _error = Import.Select(e => e?.Message).ToProperty(this, m => m.Error, scheduler: RxApp.MainThreadScheduler);
@@ -46,7 +48,6 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
 
     public bool CanClose => _canClose.Value;
 
-    [RequiresUnreferencedCode("EF Core")]
     private IObservable<Exception?> ExecuteImport(string? path)
         => Observable.Return(path)
                      .SelectMany<string?, IStorageFile?>(
@@ -54,22 +55,22 @@ public sealed class ImportViewModel : ViewModelBase, ITabInfoProvider, IDisposab
                           {
                               if (!string.IsNullOrWhiteSpace(p))
                               {
-                                  IStorageFile? provided = await App.StorageProvider
-                                                                    .TryGetFileFromPathAsync(p)
-                                                                    .ConfigureAwait(false);
+                                  IStorageFile? provided = await _storageProvider
+                                                                .TryGetFileFromPathAsync(p)
+                                                                .ConfigureAwait(false);
                                   if (provided is not null)
                                   {
                                       return provided;
                                   }
                               }
 
-                              IStorageFolder? folder = await App.StorageProvider
-                                                                .TryGetFolderFromPathAsync(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
-                                                                .ConfigureAwait(false);
+                              IStorageFolder? folder = await _storageProvider
+                                                            .TryGetFolderFromPathAsync(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments))
+                                                            .ConfigureAwait(false);
 
-                              IReadOnlyList<IStorageFile> list = await App.StorageProvider
-                                                                          .OpenFilePickerAsync(new FilePickerOpenOptions { SuggestedStartLocation = folder })
-                                                                          .ConfigureAwait(false);
+                              IReadOnlyList<IStorageFile> list = await _storageProvider
+                                                                      .OpenFilePickerAsync(new FilePickerOpenOptions { SuggestedStartLocation = folder })
+                                                                      .ConfigureAwait(false);
 
                               #pragma warning disable CA1826
                               return list.FirstOrDefault();

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net11.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <Title>ThingLing.Controls.MessageBox</Title>
+    <Authors>Bil Ly</Authors>
+    <Description>Displays a message box. It is a normal Avalonia window customized to be used as a simple dialog to accept Yes, No, Ok, Cancel and None responses from the user.</Description>
+    <Copyright>Copyright © 2021</Copyright>
+    <PackageProjectUrl>https://github.com/Bil97/ThingLing/tree/main/MessageBox</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Bil97/ThingLing/tree/main/MessageBox</RepositoryUrl>
+    <RootNamespace>ThingLing.Controls</RootNamespace>
+    <Company>ThingLing</Company>
+    <AssemblyVersion>2.0.0</AssemblyVersion>
+    <FileVersion>2.0.0</FileVersion>
+    <PackageLicenseFile>LICENSE.TXT</PackageLicenseFile>
+    <AssemblyName>ThingLing.Controls.MessageBox</AssemblyName>
+    <PackageId>ThingLing.Avalonia.Controls.MessageBox</PackageId>
+    <Version>2.0.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Desktop" Version="12.2.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2026.2.0" />
+   </ItemGroup>
+  <ItemGroup>
+    <AvaloniaResource Include="Images\*" />
+  </ItemGroup>
+</Project>
