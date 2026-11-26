@@ -18,7 +18,7 @@ public sealed class SpoolGroupViewModel : ViewModelBase, ITabInfoProvider, IDisp
 
         _subscription = spools.Connect()
                               .Sort(ReadySpoolSorter.ModelSorter)
-                              .Filter(rsm => rsm.Amount > 0 || rsm.NeedAmountSet)
+                              //.Filter(rsm => rsm.Amount > 0 || rsm.NeedAmountSet)
                               .SelectUpdate(m => new SpoolViewModel(m))
                               .ObserveOn(RxApp.MainThreadScheduler)
                               .DisposeMany()
