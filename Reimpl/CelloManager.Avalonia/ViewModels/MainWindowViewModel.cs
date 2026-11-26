@@ -64,6 +64,8 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
         IObservable<IReadOnlyCollection<ViewModelBase>> currentTabs = _tabs.Connect().QueryWhenChanged().Publish().RefCount();
         OrderManager orderManager = _modelScope.ServiceProvider.GetRequiredService<OrderManager>();
 
+        Options = ReactiveCommand.CreateFromTask(async () => { await MessageBox.ShowAsync("Noch nicht implementiert").ConfigureAwait(true); });
+        
         Export = ReactiveCommand.CreateFromTask(ExportToJson, _spoolManager.Count.Select(i => i != 0).ObserveOn(RxApp.MainThreadScheduler));
 
         PrintAll = ReactiveCommand.CreateFromTask(
@@ -142,13 +144,17 @@ public class MainWindowViewModel : ViewModelBase, IAsyncDisposable
     public int CurrentTab
     {
         get;
-        [UsedImplicitly] set => this.RaiseAndSetIfChanged(ref field, value);
+        [UsedImplicitly] 
+        set => this.RaiseAndSetIfChanged(ref field, value);
     }
 
-    [UsedImplicitly] public string PriceValue => _priceValue.Value;
-
+    [UsedImplicitly] 
+    public string PriceValue => _priceValue.Value;
+    
     public IObservableCollection<TabViewModel> Tabs { get; } = new ObservableCollectionExtended<TabViewModel>();
 
+    public ReactiveCommand<Unit, Unit> Options { get; }
+    
     public ReactiveCommand<Unit, Unit> Edit { get; }
 
     public ReactiveCommand<Unit, Unit> Import { get; }
